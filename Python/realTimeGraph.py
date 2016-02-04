@@ -11,7 +11,7 @@ xar = []
 yar1 = []
 yar2 = []
 
-ser = serial.Serial('COM3', 9600,timeout = 0)
+ser = serial.Serial('dev/ttyUSB0', 9600,timeout = 0)
 fig = plt.figure()
 ax1 = fig.add_subplot(1,1,1)
 

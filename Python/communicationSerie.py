@@ -1,8 +1,9 @@
 from time import sleep
 import serial
 
-ser = serial.Serial('COM3', 9600,timeout = 0) # Establish the connection on a specific port
-#ser.open()
+ser = serial.Serial('/dev/ttyUSB0', 9600,  timeout=0)  # Establish the connection on a specific port
+#for linux OS , serial port should be either "/dev/ttyACM0","/dev/ttyACM1" or "/dev/ttyS0"
+# #ser.open()
 #ser.isopen()
 #ser.write(b'5')
 while True:
