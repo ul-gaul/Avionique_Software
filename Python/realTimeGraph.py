@@ -4,6 +4,51 @@ import matplotlib.animation as animation
 from time import sleep
 import serial
 
+#Section DetectSerial.py
+#--------------------------------------------------------------
+import sys
+import glob
+import serial
+
+
+
+def serial_port():
+    """ Lists serial port names
+
+    :raises EnvironmentError
+        On unsopported or unknown platforms
+    :returns:
+        A list of the serial ports available on the system
+    """
+
+    if sys.platform.startswith('win'):
+        ports = ['COM%s' % (i+1) for i in range(256)]
+    elif sys.platform.startswith('linux') or sys.platform.startswith('cygwin'):
+        # this excludes your current terminal "/dev/tty"
+        ports = glob.glob('/dev/tty[A-Za-z]*')
+    elif sys.platform.startswith('darwin'):
+        ports = glob.glob('/dev/tty.*')
+    else:
+        raise EnvironmentError('Unsupported platform')
+
+    result = []
+    for port in ports:
+        try:
+            s = serial.Serial(port)
+            s.close()
+            result.append(port)
+        except (OSError, serial.SerialException):
+            pass
+    return result
+"""
+if __name__ == '__main__':
+    print(serial_port())
+"""
+portserie = serial_port()[0]
+#--------------------------------------------------------------
+#fin de la section DetectSerial.py
+
+
 DELAY = 50 #delai, en millisecondes, entre les appels de la fonction animate
 
 #values = [(1,2), (2,3), (3,6), (4,9), (5,4), (6,7), (7,7), (8,4), (9,3), (10,7)]
@@ -11,10 +56,7 @@ xar = []
 yar1 = []
 yar2 = []
 
-ser = serial.Serial('/dev/ttyUSB0', 9600,timeout = 0)
-        """
-
-        """
+ser = serial.Serial(portserie, 9600,timeout = 0)
 fig = plt.figure()
 ax1 = fig.add_subplot(1,1,1)
 
