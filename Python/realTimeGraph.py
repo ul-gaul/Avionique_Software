@@ -4,14 +4,17 @@ import matplotlib.animation as animation
 from time import sleep
 import serial
 
-DELAY = 100 #delai, en millisecondes, entre les appels de la fonction animate
+DELAY = 50 #delai, en millisecondes, entre les appels de la fonction animate
 
 #values = [(1,2), (2,3), (3,6), (4,9), (5,4), (6,7), (7,7), (8,4), (9,3), (10,7)]
 xar = []
 yar1 = []
 yar2 = []
 
-ser = serial.Serial('dev/ttyUSB0', 9600,timeout = 0)
+ser = serial.Serial('/dev/ttyUSB0', 9600,timeout = 0)
+        """
+
+        """
 fig = plt.figure()
 ax1 = fig.add_subplot(1,1,1)
 
