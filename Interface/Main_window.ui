@@ -31,7 +31,7 @@
        </spacer>
       </item>
       <item>
-       <widget class="QGraphicsView" name="graphicsView_3"/>
+       <widget class="QGraphicsView" name="speedGraph"/>
       </item>
       <item>
        <spacer name="horizontalSpacer_4">
@@ -49,7 +49,7 @@
      </layout>
     </item>
     <item row="0" column="1">
-     <layout class="QVBoxLayout" name="verticalLayout_2">
+     <layout class="QVBoxLayout" name="vSpeedLayout">
       <item>
        <spacer name="verticalSpacer_5">
         <property name="orientation">
@@ -64,7 +64,7 @@
        </spacer>
       </item>
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_3">
+       <layout class="QHBoxLayout" name="hSpeedLayout">
         <item>
          <spacer name="horizontalSpacer_2">
           <property name="orientation">
@@ -79,10 +79,10 @@
          </spacer>
         </item>
         <item>
-         <widget class="QLCDNumber" name="lcdNumber"/>
+         <widget class="QLCDNumber" name="speedLCD"/>
         </item>
         <item>
-         <widget class="QLabel" name="label">
+         <widget class="QLabel" name="speedLabel">
           <property name="text">
            <string>m/s</string>
           </property>
@@ -121,7 +121,7 @@
        </spacer>
       </item>
       <item>
-       <widget class="QGraphicsView" name="graphicsView_4"/>
+       <widget class="QGraphicsView" name="mapGraph"/>
       </item>
       <item>
        <spacer name="horizontalSpacer_12">
@@ -154,7 +154,7 @@
        </spacer>
       </item>
       <item>
-       <widget class="QGraphicsView" name="graphicsView"/>
+       <widget class="QGraphicsView" name="heightGraph"/>
       </item>
       <item>
        <spacer name="horizontalSpacer_6">
@@ -172,9 +172,9 @@
      </layout>
     </item>
     <item row="1" column="1">
-     <layout class="QGridLayout" name="gridLayout_4">
+     <layout class="QGridLayout" name="instantSpeedAngleLay">
       <item row="1" column="0">
-       <layout class="QHBoxLayout" name="horizontalLayout_4">
+       <layout class="QHBoxLayout" name="instantHeightLay">
         <item>
          <spacer name="horizontalSpacer_7">
           <property name="orientation">
@@ -189,10 +189,10 @@
          </spacer>
         </item>
         <item>
-         <widget class="QLCDNumber" name="lcdNumber_2"/>
+         <widget class="QLCDNumber" name="heightLCD"/>
         </item>
         <item>
-         <widget class="QLabel" name="label_2">
+         <widget class="QLabel" name="heightLabel">
           <property name="text">
            <string>m</string>
           </property>
@@ -214,7 +214,7 @@
        </spacer>
       </item>
       <item row="3" column="0">
-       <layout class="QHBoxLayout" name="horizontalLayout_5">
+       <layout class="QHBoxLayout" name="instantAngleLay">
         <item>
          <spacer name="horizontalSpacer_8">
           <property name="orientation">
@@ -229,10 +229,10 @@
          </spacer>
         </item>
         <item>
-         <widget class="QLCDNumber" name="lcdNumber_3"/>
+         <widget class="QLCDNumber" name="angleLCD"/>
         </item>
         <item>
-         <widget class="QLabel" name="label_3">
+         <widget class="QLabel" name="angleLabel">
           <property name="text">
            <string>°</string>
           </property>
@@ -284,7 +284,7 @@
        </spacer>
       </item>
       <item>
-       <widget class="QGraphicsView" name="graphicsView_2"/>
+       <widget class="QGraphicsView" name="angleGraph"/>
       </item>
       <item>
        <spacer name="horizontalSpacer_10">
@@ -302,7 +302,7 @@
      </layout>
     </item>
     <item row="2" column="0" colspan="3">
-     <layout class="QHBoxLayout" name="horizontalLayout">
+     <layout class="QHBoxLayout" name="AnalysisLayout">
       <item>
        <spacer name="horizontalSpacer">
         <property name="orientation">
