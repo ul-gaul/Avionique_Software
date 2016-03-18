@@ -15,4 +15,5 @@ class MainWindow(QtGui.QMainWindow,Ui_MainWindow):
 
     def open_flightData(self):
         flight_data = flightData(self)
+        flight_data.exec_()
 
