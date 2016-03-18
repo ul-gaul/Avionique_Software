@@ -7,7 +7,7 @@ from flight_data import flightData
 class MainWindow(QtGui.QMainWindow,Ui_MainWindow):
     def __init__(self, parent=None):
         QtGui.QMainWindow.__init__(self,parent)
-        self.setupUI(parent)
+        self.setupUi(parent)
         self.init_widgets()
 
     def init_widgets(self):
@@ -16,4 +16,11 @@ class MainWindow(QtGui.QMainWindow,Ui_MainWindow):
     def open_flightData(self):
         flight_data = flightData(self)
         flight_data.exec_()
+
+if __name__ == '__main__':
+    a = QtGui.QApplication(sys.argv)
+    f = QtGui.QMainWindow()
+    MainWindow(f)
+    f.show()
+    a.exec_()
 
