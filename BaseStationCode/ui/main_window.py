@@ -11,15 +11,15 @@ class MainWindow(QtGui.QMainWindow,Ui_MainWindow):
 
     def init_widgets(self):
         self.flightDataPush.clicked.connect(self.open_flightData)
-        #self.analysisPush.clicked.connect(self.open_analyseDialog())
+        self.analysisPush.clicked.connect(self.open_analyseDialog())
 
     def open_flightData(self):
         flight_data = flightData(self)
         flight_data.exec_()
 
-    #def open_analyseDialog(self):
-       # postData = analysisData(self)
-        #postData.exec_()
+    def open_analyseDialog(self):
+        postData = analysisData(self)
+        postData.exec_()
 
 
 
