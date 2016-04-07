@@ -15,11 +15,19 @@ class MainWindow(QtGui.QMainWindow,Ui_MainWindow):
 
     def open_flightData(self):
         flight_data = flightData(self)
-        flight_data.exec_()
+        result = flight_data.exec_()
+        if result == 2: #Si result = 2, ouvre le dialog d'analyse
+            self.open_analyseDialog()
 
     def open_analyseDialog(self):
         postData = analysisData(self)
-        postData.exec_()
+        results = postData.exec_()
+        if results == 11:
+            self.close()
+
+
+
+
 
 
 

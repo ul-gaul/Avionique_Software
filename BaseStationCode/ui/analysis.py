@@ -5,12 +5,16 @@ class analysisData(QtGui.QDialog, Ui_Dialog):
     def __init__(self,Parent=None):
         QtGui.QDialog.__init__(self,Parent)
         self.setupUi(self)
+        self.init_widgets()
 
     def init_widgets(self):
 
-        self.returnPush.clicked.connect(self.Retour)
+        self.returnPush.clicked.connect(self.ReturnMainWindow)
+        self.closePush.clicked.connect(self.CloseProgramm)
 
     def ReturnMainWindow(self):
 
-        Retour = MainWindow(self)
-        Retour.exec()
+        self.close()
+
+    def CloseProgramm(self):
+        self.done(11)
