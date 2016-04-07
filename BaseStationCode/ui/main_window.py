@@ -1,7 +1,7 @@
 from .main_windowUI import Ui_MainWindow
 from PyQt4 import QtGui
 from .flight_data import flightData
-from .analyse import AnalyseRocketData
+from .analysis import analysisData
 
 class MainWindow(QtGui.QMainWindow,Ui_MainWindow):
     def __init__(self, parent=None):
@@ -18,7 +18,7 @@ class MainWindow(QtGui.QMainWindow,Ui_MainWindow):
         flight_data.exec_()
 
     def open_analyseWindow(self):
-        postData = AnalyseRocketData(self)
+        postData = analysisData(self)
         postData.exec_()
 
 

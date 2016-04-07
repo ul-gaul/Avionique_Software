@@ -7,11 +7,5 @@ class flightData(QtGui.QDialog,Ui_Dialog):
         QtGui.QDialog.__init__(self,parent)
         self.setupUi(self)
 
-    def init_widgets(selfself):
-        self.analyseButton.clicked.connect(self.open_analyseWindow())
-
-    def open_analyseWindow(self):
-        rocketData = AnalyseRocketData(self)
-        rocketData.exec_()
 
 
