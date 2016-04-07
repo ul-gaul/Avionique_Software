@@ -7,4 +7,4 @@ if __name__ == '__main__':
     f = QtGui.QMainWindow()
     MainWindow(f)
     f.show()
-    a.exec_()
+    sys.exit(a.exec())
