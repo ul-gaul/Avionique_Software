@@ -13,39 +13,35 @@ class FlightData(QtGui.QDialog, Ui_Dialog):
 
 
         self.figure = plt.figure() # FlightData.figure = matplotlib.pyplot.figure()
-        self.canvas = FigureCanvas(self.figure)
-        self.canvas1 = FigureCanvas(self.figure)
-        self.canvas2 = FigureCanvas(self.figure)
-        self.canvas3 = FigureCanvas(self.figure)
-        ax = self.figure.add_subplot(111)
-        ax.hold(False)
-
-        self.speedLayout.addWidget(self.canvas) # Créé un widget et met le canvas
-
-
-        self.heightLayout.addWidget(self.canvas1)
-
-        self.mapLayout.addWidget(self.canvas2)
-
-        self.angleLayout.addWidget(self.canvas3)
-
+#       Creates a figure widget self.name = FigureCanvas(self.figure)
+        self.speedGraph = FigureCanvas(self.figure)
+        self.heightGraph = FigureCanvas(self.figure)
+        self.mapGraph = FigureCanvas(self.figure)
+        self.angleGraph = FigureCanvas(self.figure)
+# -------------------------------------------------------------
+        self.speedLayout.addWidget(self.speedGraph)  # insert widget "speedGraph" in speedLayout
+        self.heightLayout.addWidget(self.heightGraph)  # insert widget "heightGraph" in heightLayout
+        self.mapLayout.addWidget(self.mapGraph)  # insert widget "mapGraph" in mapLayout
+        self.angleLayout.addWidget(self.angleGraph)  # insert widget "angleGraph" in angleLayout
+        self.ax = self.figure.add_subplot(111)
+        self.ax.hold(False)
         self.init_widgets()
-
 
     def init_widgets(self):
         self.analyseButton.clicked.connect(self.open_analysedata)
-        #self.plotte()
+        self.draw_plot()
 
     def open_analysedata(self):
         self.done(2)  # Ferme et delete la fenêtre Dialog et retourne 2 comme valeur à results dans main_window.py
 
-    def plotte(self):
+    def draw_plot(self):
         data = [random.random() for i in range(10)]
         s = sum(data)
         avg = round(s/len(data), 4)
         print(avg)
-
-        ax.plot(data, '*-')
+#        ax = self.figure.add_subplot(111)
+#        ax.hold(False)
+        self.ax.plot(data, '-*')
 """
         data1 = [random.random() for i in range(10)]
         c = sum(data1)
