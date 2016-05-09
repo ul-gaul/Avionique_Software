@@ -7,6 +7,7 @@ Created on Thu Mar 24 12:03:00 2016
 
 import struct
 
+
 class RocketData:
 
     DATA_FORMAT = ">fffffffffffffff"
@@ -77,7 +78,7 @@ class RocketData:
         :param data_buffer: String d'octets
         """
 
-        data_array
+        data_array = struct.unpack_from(self.DATA_FORMAT,data_buffer)
     
 class RocketPacket:
     def __init__(self):

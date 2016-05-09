@@ -1,6 +1,6 @@
 from .main_windowUI import Ui_MainWindow
 from PyQt4 import QtGui
-from .flight_data import flightData
+from .flight_data import FlightData
 from .analysis import analysisData
 
 class MainWindow(QtGui.QMainWindow,Ui_MainWindow):
@@ -14,7 +14,7 @@ class MainWindow(QtGui.QMainWindow,Ui_MainWindow):
         self.analysisPush.clicked.connect(self.open_analyseDialog)
 
     def open_flightData(self):
-        flight_data = flightData(self)
+        flight_data = FlightData(self)
         result = flight_data.exec_()
         if result == 2: #Si result = 2, ouvre le dialog d'analyse
             self.open_analyseDialog()
