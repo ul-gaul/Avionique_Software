@@ -45,18 +45,3 @@ class FlightData(QtGui.QDialog, Ui_Dialog):
         self.axs[target].plot(data, '-*')
         self.canvas[target].draw_idle()
 
-
-"""        self.figure = plt.figure() # FlightData.figure = matplotlib.pyplot.figure()
-#       Creates a figure widget self.name = FigureCanvas(self.figure)
-        self.speedGraph = FigureCanvas(self.figure)
-        self.heightGraph = FigureCanvas(self.figure)
-        self.mapGraph = FigureCanvas(self.figure)
-        self.angleGraph = FigureCanvas(self.figure)
-# -------------------------------------------------------------
-        self.speedLayout.addWidget(self.speedGraph)  # insert widget "speedGraph" in speedLayout
-        self.heightLayout.addWidget(self.heightGraph)  # insert widget "heightGraph" in heightLayout
-        self.mapLayout.addWidget(self.mapGraph)  # insert widget "mapGraph" in mapLayout
-        self.angleLayout.addWidget(self.angleGraph)  # insert widget "angleGraph" in angleLayout
-        self.ax = self.figure.add_subplot(111)
-        self.ax.hold(False)
-        self.init_widgets()"""
