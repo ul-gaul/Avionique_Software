@@ -1,9 +1,7 @@
 from PyQt4 import QtGui
 from .flight_dataUI import Ui_Dialog
-import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
-from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as NavigationToolbar
 import random
 
 
@@ -27,21 +25,22 @@ class FlightData(QtGui.QDialog, Ui_Dialog):
         self.heightLayout.addWidget(self.canvas['height'])
         self.mapLayout.addWidget(self.canvas['map'])
         self.angleLayout.addWidget(self.canvas['angle'])
-        data = [random.random() for i in range(10)]
-#        s = sum(data)
-#        avg = round(s/len(data), 4)
-#        print(avg)
-#        ax = self.figure.add_subplot(111)
-#        ax.hold(False)
-        self.draw_plot('speed', data)
+
     def init_widgets(self):
         self.analyseButton.clicked.connect(self.open_analysedata)
-        #self.draw_plot()
+
 
     def open_analysedata(self):
-        self.done(2)  # Ferme et delete la fenêtre Dialog et retourne 2 comme valeur à results dans main_window.py
+        self.done(2)  # Closes and deletes Dialog Window and return the interger 2 to main_window.py which will
+        #               connect to and open analysis.py
 
     def draw_plot(self, target, data):
         self.axs[target].plot(data, '-*')
         self.canvas[target].draw_idle()
+
+    def generate_random_data(self, time):
+        data = [random.random() for i in range(10)]
+        i = 0
+        while i < time:
+            i+= 
 
