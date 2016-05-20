@@ -38,9 +38,3 @@ class FlightData(QtGui.QDialog, Ui_Dialog):
         self.axs[target].plot(data, '-*')
         self.canvas[target].draw_idle()
 
-    def generate_random_data(self, time):
-        data = [random.random() for i in range(10)]
-        i = 0
-        while i < time:
-            i+= 
-
