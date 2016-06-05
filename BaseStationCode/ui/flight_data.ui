@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>868</width>
-    <height>617</height>
+    <width>746</width>
+    <height>534</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -52,7 +52,19 @@
         </spacer>
        </item>
        <item>
-        <widget class="QLCDNumber" name="speedLCD"/>
+        <widget class="QLCDNumber" name="speedLCD">
+         <property name="styleSheet">
+          <string notr="true">QLCDNumber{
+    color: rgb(0, 0, 0);    
+}</string>
+         </property>
+         <property name="smallDecimalPoint">
+          <bool>false</bool>
+         </property>
+         <property name="segmentStyle">
+          <enum>QLCDNumber::Flat</enum>
+         </property>
+        </widget>
        </item>
        <item>
         <widget class="QLabel" name="speedLabel">
@@ -115,7 +127,11 @@
         </spacer>
        </item>
        <item>
-        <widget class="QLCDNumber" name="heightLCD"/>
+        <widget class="QLCDNumber" name="heightLCD">
+         <property name="segmentStyle">
+          <enum>QLCDNumber::Flat</enum>
+         </property>
+        </widget>
        </item>
        <item>
         <widget class="QLabel" name="heightLabel">
@@ -168,7 +184,11 @@
         </spacer>
        </item>
        <item>
-        <widget class="QLCDNumber" name="angleLCD"/>
+        <widget class="QLCDNumber" name="angleLCD">
+         <property name="segmentStyle">
+          <enum>QLCDNumber::Flat</enum>
+         </property>
+        </widget>
        </item>
        <item>
         <widget class="QLabel" name="angleLabel">
@@ -225,6 +245,20 @@
    </item>
    <item row="2" column="0" colspan="3">
     <layout class="QHBoxLayout" name="AnalysisLayout">
+     <item>
+      <widget class="QPushButton" name="startButton">
+       <property name="text">
+        <string>Start</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="stopButton">
+       <property name="text">
+        <string>Arrêter la lecture</string>
+       </property>
+      </widget>
+     </item>
      <item>
       <spacer name="horizontalSpacer">
        <property name="orientation">
