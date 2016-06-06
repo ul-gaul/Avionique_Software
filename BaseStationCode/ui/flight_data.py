@@ -1,4 +1,4 @@
-from PyQt4 import QtGui, QtCore
+from PyQt4 import QtGui
 from .flight_dataUI import Ui_Dialog
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
@@ -30,12 +30,14 @@ class FlightData(QtGui.QDialog, Ui_Dialog):
         self.angleLayout.addWidget(self.canvas['angle'])  # Creates the canvas for angle
         self.init_widgets()  # Once the Dialog exist, automatically initiate self.init_widgets
 
+
+
+
     def init_widgets(self):
         self.analyseButton.clicked.connect(self.open_analysedata)
         #self.stopButton.clicked.connect(self.stop_plotting)
         self.startButton.clicked.connect(self.start_plotting)
         self.showlcd([10,2,14])
-
 
     def open_analysedata(self):
         self.done(2)  # Closes and deletes Dialog Window and return the integer 2 to main_window.py which will
@@ -47,6 +49,7 @@ class FlightData(QtGui.QDialog, Ui_Dialog):
     def start_plotting(self):
         for pn in ['speed', 'height', 'map', 'angle']:
             self.ani = Animation.FuncAnimation(self.figs[pn], self.generate_random_list, 1000)
+
 
     def draw_plot(self, target, data):
         self.axs[target].plot(data, '-*')  # Will plot with one of the 4 plot_names and any given data in a list
@@ -64,9 +67,10 @@ class FlightData(QtGui.QDialog, Ui_Dialog):
 
         for j in range(i):
             data_list.append(random.randrange(0,100))
+            data_list1.append(-(j**2))
 
         for j in data_list:
-            data_list1.append(j+random.randrange(-10,10))
+            #data_list1.append(j+random.randrange(-10,10))
             data_list2.append(j*random.randrange(0,5))
             data_list3.append(j/random.randrange(1,10))
         self.draw_plot("speed", data_list)
@@ -98,8 +102,6 @@ class FlightData(QtGui.QDialog, Ui_Dialog):
         self.draw_plot("angle", yar3)
 
     def showlcd(self, data):
-        palette = self.speedLCD.palette()
-        palette.setColor(palette.WindowText, QtGui.QColor(85, 85, 255))
         speed = data[len(data)-1]
         text = str(speed)
         self.speedLCD.display(text)
