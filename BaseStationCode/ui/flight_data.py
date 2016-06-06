@@ -6,6 +6,7 @@ import random
 import time
 import matplotlib.animation as Animation
 import numpy as np
+import
 
 
 class FlightData(QtGui.QDialog, Ui_Dialog):

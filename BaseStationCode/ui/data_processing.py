@@ -16,3 +16,4 @@ class DataProcessing():
     def speed_norm(self):
         for j in range(len(self.acc)):
             self.speed.append(self.speed[j]+self.acc[j]*self.timestamp)
+
