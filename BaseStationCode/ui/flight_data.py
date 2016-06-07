@@ -31,8 +31,9 @@ class FlightData(QtGui.QDialog, Ui_Dialog):
         self.angleLayout.addWidget(self.canvas['angle'])  # Creates the canvas for angle
         self.init_widgets()  # Once the Dialog exist, automatically initiate self.
         self.hold_plotting = False
-        while self.hold_plotting == True:
-            self.ani = Animation.FuncAnimation(self.figs["height"], self.generate_random_list, 1000, blit=True)
+        self.ani = None
+        #while self.hold_plotting == True:
+        #    self.ani = Animation.FuncAnimation(self.figs["height"], self.generate_random_list, 1000, blit=True)
 
 
 
@@ -52,12 +53,13 @@ class FlightData(QtGui.QDialog, Ui_Dialog):
 
     def start_plotting(self):
         self.hold_plotting = True
+        self.ani = Animation.FuncAnimation(self.figs["height"], self.generate_random_list, interval=1000)
         """for pn in ['speed', 'height', 'map', 'angle']:
             self.ani = Animation.FuncAnimation(self.figs[pn], self.generate_random_list, 1000)"""
 
     def draw_plot(self, target, data):
         self.axs[target].plot(data, '-*')  # Will plot with one of the 4 plot_names and any given data in a list
-        self.canvas[target].draw_idle()
+        self.canvas[target].draw()
 
     def generate_random_list(self, i):
         data_list = []
