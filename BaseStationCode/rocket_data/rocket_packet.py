@@ -9,6 +9,7 @@ import struct
 
 class RocketData:
 
+
     def __init__(self, data_buffer):
         self.format = ">fffffffffffffffff"
 
@@ -46,10 +47,15 @@ class RocketData:
         return True
 
 """
+>>>>>>> origin/fix_ui
 class RocketPacket:
     def __init__(self):
         self.rocket_data = RocketData()
         self.crc32 = 0
+<<<<<<< HEAD
+        
+    
+=======
  """
 
 if __name__ == "__main__":
