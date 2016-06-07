@@ -3,10 +3,10 @@ from .analysisUI import Ui_Dialog
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 
+
 class analysisData(QtGui.QDialog, Ui_Dialog):
     def __init__(self,Parent=None):
         QtGui.QDialog.__init__(self,Parent)
-
         self.setupUi(self)
         self.figs = {}
         self.canvas = {}
@@ -38,7 +38,6 @@ class analysisData(QtGui.QDialog, Ui_Dialog):
 
     def CloseProgramm(self):
         self.done(11)
-
 
     def draw_plot(self, target, data):
         self.axs[target].plot(data, '-*')

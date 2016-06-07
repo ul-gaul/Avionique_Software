@@ -116,3 +116,5 @@ class FlightData(QtGui.QDialog, Ui_Dialog):
         self.speedLCD.display(text)
 
 
+
+

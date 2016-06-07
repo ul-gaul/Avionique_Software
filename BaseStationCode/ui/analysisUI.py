@@ -111,6 +111,7 @@ class Ui_Dialog(object):
         spacerItem13 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.postTempTitleLayout.addItem(spacerItem13)
         self.postTemperatureLayout.addLayout(self.postTempTitleLayout)
+
         spacerItem14 = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
         self.postTemperatureLayout.addItem(spacerItem14)
         self.postTempGraphLayout = QtGui.QVBoxLayout()
