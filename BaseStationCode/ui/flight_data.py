@@ -6,23 +6,35 @@ import random
 import time
 import matplotlib.animation as Animation
 import numpy as np
-from .data_processing import DataProcessing
+#from .data_processing import DataProcessing
+from ..communication.serialReader import SerialReader as SR
+from ..rocket_data import rocket_packet
 
 class LoopThread(QtCore.QThread):
     def __init__(self):
         QtCore.QThread.__init__(self)
         self.fd = FlightData()
-
+        self.checkThread = True
+        self.signal = QtCore.SIGNAL("signal")
     def run(self):
+        while True:
+            self.emit(self.signal,"Hi from Thread")
+            time.sleep(1)
+            print("Still on baby")
 
+    def stop(self):
+        self.connect(self.fd, self.fd.signal, self.terminate)
 
 class FlightData(QtGui.QDialog, Ui_Dialog):
     def __init__(self, parent=None):
         QtGui.QDialog.__init__(self, parent)
         self.setupUi(self)
+        self.signal = QtCore.SIGNAL("signal")
+
         self.figs = {}  # Empty Dictionnary
         self.canvas = {}  # Empty Dictionnary
         self.axs = {}  # Empty Dictionnary
+
         plot_names = ['speed', 'height', 'map', 'angle']
         for pn in plot_names:
             fig = Figure()  # Give the variable fig the function Figure()
@@ -35,6 +47,7 @@ class FlightData(QtGui.QDialog, Ui_Dialog):
         self.data_list1 = []
         self.data_list2 = []
         self.data_list3 = []
+        self.end_flag = False
         self.speedLayout.addWidget(self.canvas['speed'])  # Creates the canvas for speed
         self.heightLayout.addWidget(self.canvas['height'])  # Creates the canvas for height
         self.mapLayout.addWidget(self.canvas['map'])  # Creates the canvas for map
@@ -45,29 +58,32 @@ class FlightData(QtGui.QDialog, Ui_Dialog):
 
     def init_widgets(self):
         self.analyseButton.clicked.connect(self.open_analysedata)
-        #self.stopButton.clicked.connect(self.stop_plotting)
+        self.stopButton.clicked.connect(self.stop_plotting)
         self.startButton.clicked.connect(self.start_plotting)
         #self.showlcd([10, 2, 14])
 
+
     def open_analysedata(self):
         self.done(2)  # Closes and deletes Dialog Window and return the integer 2 to main_window.py which will
-        #               connect to and open analysis.py
+        #              connect to and open analysis.py
 
     def stop_plotting(self):
-        #kill thread
-        return None
+        self.end_flag = True
+        self.ani._stop()
+        self.data_thread.quit()
+        self.emit(self.signal, "Hi from main")
 
     def start_plotting(self):
         self.ani = Animation.FuncAnimation(self.figs["speed"], self.generate_random_list, interval= 1000)
+        self.data_thread = LoopThread()
+        self.data_thread.start()
+        self.connect(self.data_thread, self.data_thread.signal, self.draw_plots)
+
+    def draw_plots(self):
         self.draw_plot("speed", self.data_list)
         self.draw_plot("height", self.data_list1)
         self.draw_plot("map", self.data_list2)
         self.draw_plot("angle", self.data_list3)
-        self.data_thread = LoopThread()
-        self.data_thread.start()
-
-    def read_thread(self):
-        return None
 
     def draw_plot(self, target, data):
         self.axs[target].plot(data, '-*')  # Will plot with one of the 4 plot_names and any given data in a list
@@ -84,11 +100,6 @@ class FlightData(QtGui.QDialog, Ui_Dialog):
         self.data_list1.append(j+random.randrange(-10, 10))
         self.data_list2.append(j*random.randrange(0, 5))
         self.data_list3.append(j/random.randrange(1, 10))
-        print("It works")
-        """self.draw_plot("speed", self.data_list)
-        self.draw_plot("height", self.data_list1)
-        self.draw_plot("map", self.data_list2)
-        self.draw_plot("angle", self.data_list3)"""
 
     def generate_cosinus(self, i):
         cos = np.cos
