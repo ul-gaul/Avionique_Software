@@ -20,9 +20,11 @@ class LoopThread(QtCore.QThread):
         while True:
             self.emit(self.signal,"Hi from Thread")
             time.sleep(1)
+            # As long as thread is on
             print("Still on baby")
 
     def stop(self):
+        """Thread is supposed to end there"""
         self.connect(self.fd, self.fd.signal, self.terminate)
 
 class FlightData(QtGui.QDialog, Ui_Dialog):
@@ -56,7 +58,7 @@ class FlightData(QtGui.QDialog, Ui_Dialog):
         #self.ani = Animation.FuncAnimation(self.figs["speed"], self.generate_random_list, interval = 1000)
 
 
-    def init_widgets(self):
+    def init_widgets(self)
         self.analyseButton.clicked.connect(self.open_analysedata)
         self.stopButton.clicked.connect(self.stop_plotting)
         self.startButton.clicked.connect(self.start_plotting)
