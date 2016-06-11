@@ -1,4 +1,4 @@
-from PyQt4 import QtGui
+from PyQt4 import QtGui, QtCore
 from .flight_dataUI import Ui_Dialog
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
@@ -7,6 +7,13 @@ import time
 import matplotlib.animation as Animation
 import numpy as np
 from .data_processing import DataProcessing
+
+class LoopThread(QtCore.QThread):
+    def __init__(self):
+        QtCore.QThread.__init__(self)
+        self.fd = FlightData()
+
+    def run(self):
 
 
 class FlightData(QtGui.QDialog, Ui_Dialog):
@@ -23,22 +30,22 @@ class FlightData(QtGui.QDialog, Ui_Dialog):
             ax = fig.add_subplot(1, 1, 1)  # Creates a plot
 
             self.figs[pn] = fig  # Each string of plot_names are a Figure()
-            self.axs[pn] = ax  # Each string of plot_names are a plot defined by ax
-
+            self.axs[pn] = ax  # Each string of plot_names are a plot defined by ax"""
+        self.data_list = []
+        self.data_list1 = []
+        self.data_list2 = []
+        self.data_list3 = []
         self.speedLayout.addWidget(self.canvas['speed'])  # Creates the canvas for speed
         self.heightLayout.addWidget(self.canvas['height'])  # Creates the canvas for height
         self.mapLayout.addWidget(self.canvas['map'])  # Creates the canvas for map
         self.angleLayout.addWidget(self.canvas['angle'])  # Creates the canvas for angle
         self.init_widgets()  # Once the Dialog exist, automatically initiate self.
-        self.hold_plotting = False
-        while self.hold_plotting == True:
-            self.ani = Animation.FuncAnimation(self.figs["height"], self.generate_random_list, 1000, blit=True)
-
+        #self.ani = Animation.FuncAnimation(self.figs["speed"], self.generate_random_list, interval = 1000)
 
 
     def init_widgets(self):
         self.analyseButton.clicked.connect(self.open_analysedata)
-        self.stopButton.clicked.connect(self.stop_plotting)
+        #self.stopButton.clicked.connect(self.stop_plotting)
         self.startButton.clicked.connect(self.start_plotting)
         #self.showlcd([10, 2, 14])
 
@@ -47,45 +54,41 @@ class FlightData(QtGui.QDialog, Ui_Dialog):
         #               connect to and open analysis.py
 
     def stop_plotting(self):
-        self.hold_plotting = False
-
+        #kill thread
+        return None
 
     def start_plotting(self):
-        self.hold_plotting = True
-        """for pn in ['speed', 'height', 'map', 'angle']:
-            self.ani = Animation.FuncAnimation(self.figs[pn], self.generate_random_list, 1000)"""
+        self.ani = Animation.FuncAnimation(self.figs["speed"], self.generate_random_list, interval= 1000)
+        self.draw_plot("speed", self.data_list)
+        self.draw_plot("height", self.data_list1)
+        self.draw_plot("map", self.data_list2)
+        self.draw_plot("angle", self.data_list3)
+        self.data_thread = LoopThread()
+        self.data_thread.start()
+
+    def read_thread(self):
+        return None
 
     def draw_plot(self, target, data):
         self.axs[target].plot(data, '-*')  # Will plot with one of the 4 plot_names and any given data in a list
-        self.canvas[target].draw_idle()
+        self.canvas[target].draw()
 
     def generate_random_list(self, i):
-        data_list = []
-        data_list1 = []
-        data_list2 = []
-        data_list3 = []
-
         self.axs["height"].clear()
         self.axs["speed"].clear()
         self.axs["map"].clear()
         self.axs["angle"].clear()
 
-        for j in range(i):
-            data_list.append(random.randrange(0, 100))
-            data_list1.append(-(j**2))
-
-        for j in data_list:
-            #data_list1.append(j+random.randrange(-10, 10))
-            data_list2.append(j*random.randrange(0, 5))
-            data_list3.append(j/random.randrange(1, 10))
-#        if target == "speed":
-        self.draw_plot("speed", data_list)
-#        elif target is "height":
-        self.draw_plot("height", data_list1)
-#        elif target is "map":
-        self.draw_plot("map", data_list2)
-#        elif target == "angle":
-        self.draw_plot("angle", data_list3)
+        self.data_list.append(random.randrange(0, 100))
+        j = self.data_list[len(self.data_list)-1]
+        self.data_list1.append(j+random.randrange(-10, 10))
+        self.data_list2.append(j*random.randrange(0, 5))
+        self.data_list3.append(j/random.randrange(1, 10))
+        print("It works")
+        """self.draw_plot("speed", self.data_list)
+        self.draw_plot("height", self.data_list1)
+        self.draw_plot("map", self.data_list2)
+        self.draw_plot("angle", self.data_list3)"""
 
     def generate_cosinus(self, i):
         cos = np.cos
@@ -109,12 +112,7 @@ class FlightData(QtGui.QDialog, Ui_Dialog):
         self.draw_plot("map", self.yar2)
         self.draw_plot("angle", yar3)
 
-
     def showlcd(self, data):
         speed = data[len(data)-1]
         text = str(speed)
         self.speedLCD.display(text)
-
-
-
-
