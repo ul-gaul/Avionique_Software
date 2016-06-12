@@ -9,6 +9,7 @@ import struct
 
 class RocketData:
 
+
     def __init__(self, data_buffer):
         self.format = "<fffffffffffffffffBc"
         self.data_buffer = data_buffer

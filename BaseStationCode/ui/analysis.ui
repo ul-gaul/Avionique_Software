@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>837</width>
-    <height>580</height>
+    <width>850</width>
+    <height>590</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -70,9 +70,6 @@
               </spacer>
              </item>
             </layout>
-           </item>
-           <item>
-            <widget class="QGraphicsView" name="accGraph"/>
            </item>
            <item>
             <spacer name="verticalSpacer">
@@ -140,9 +137,6 @@
               </spacer>
              </item>
             </layout>
-           </item>
-           <item>
-            <widget class="QGraphicsView" name="speedGraph"/>
            </item>
            <item>
             <spacer name="verticalSpacer_2">
@@ -214,9 +208,6 @@
               </spacer>
              </item>
             </layout>
-           </item>
-           <item>
-            <widget class="QGraphicsView" name="heightGraph"/>
            </item>
            <item>
             <spacer name="verticalSpacer_3">
@@ -297,11 +288,20 @@
             </layout>
            </item>
            <item>
-            <layout class="QVBoxLayout" name="postTempGraphLayout">
-             <item>
-              <widget class="QGraphicsView" name="postTempGraph"/>
-             </item>
-            </layout>
+            <spacer name="verticalSpacer_4">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <layout class="QVBoxLayout" name="postTempGraphLayout"/>
            </item>
           </layout>
          </item>
@@ -358,11 +358,20 @@
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="subAngleLayout">
-             <item>
-              <widget class="QGraphicsView" name="angleGraph"/>
-             </item>
-            </layout>
+            <spacer name="verticalSpacer_5">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="subAngleLayout"/>
            </item>
           </layout>
          </item>
@@ -415,11 +424,20 @@
           </layout>
          </item>
          <item>
-          <layout class="QVBoxLayout" name="subStressLayout">
-           <item>
-            <widget class="QGraphicsView" name="stressGraph"/>
-           </item>
-          </layout>
+          <spacer name="verticalSpacer_6">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <layout class="QVBoxLayout" name="subStressLayout"/>
          </item>
         </layout>
        </item>
@@ -459,9 +477,6 @@
     </layout>
    </item>
   </layout>
-  <zorder>postAnalysisWidget</zorder>
-  <zorder>layoutWidget</zorder>
-  <zorder>horizontalSpacer_15</zorder>
  </widget>
  <resources/>
  <connections/>
