@@ -28,7 +28,7 @@ class DataProcessing:
 
         self.acc = []
         self.speed = [0]
-        self.acccheckpoint = 0
+        self.acheckpoint = 0
 
 
     def fetch_data(self):
@@ -51,34 +51,38 @@ class DataProcessing:
             self.data["long2"].append(self.dataliste[j].longitude_2)
             self.data["temp1"].append(self.dataliste[j].temperature_1)
             self.data["temp2"].append(self.dataliste[j].temperature_2)
-            """self.data["time"].append(RD.timeStamp)
-            self.data["accx"].append(RD.acceleration_x)
-            self.data["accy"].append(RD.acceleration_y)
-            self.data["accz"].append(RD.acceleration_z)
-            self.data["angx"].append(RD.angular_speed_x)
-            self.data["angy"].append(RD.angular_speed_y)
-            self.data["angz"].append(RD.angular_speed_z)
-            self.data["magx"].append(RD.magnetic_field_x)
-            self.data["magy"].append(RD.magnetic_field_y)
-            self.data["magz"].append(RD.magnetic_field_z)
-            self.data["alt"].append(RD.altitude)
-            self.data["lat1"].append(RD.latitude_1)
-            self.data["lat2"].append(RD.latitude_2)
-            self.data["long1"].append(RD.longitude_1)
-            self.data["long2"].append(RD.longitude_2)
-            self.data["temp1"],append(RD.temperature_1)
-            self.data["temp2"].append(RD.temperature_2)"""
 
         self.dataliste = []
+        self.acc_normalisation()
+        self.speed_norm()
 
     def acc_normalisation(self):
+
         if len(self.data["accx"]) == len(self.data["accy"]) and len(self.data["accx"]) == len(self.data["accz"]):
 
             for j in range(len(self.data["accx"])):
-                self.acc.append(sqrt((self.data["accx"][j]**2)+(self.data["accy"][j]**2)+(self.data["accz"][j]**2)))
-                self.acccheckpoint += 1
+                self.acc.append(sqrt((self.data["accx"][j+self.acheckpoint]**2)+(self.data["accy"][j+self.acheckpoint]**2)+(self.data["accz"][j+self.acheckpoint]**2)))
+            self.acheckpoint = len(self.data["accx"])
 
     def speed_norm(self):
         for j in range(len(self.acc)):
             self.speed.append(self.speed[j]+self.acc[j]*self.data["time"][j])
 
+
+"""self.data["time"].append(RD.timeStamp)
+self.data["accx"].append(RD.acceleration_x)
+self.data["accy"].append(RD.acceleration_y)
+self.data["accz"].append(RD.acceleration_z)
+self.data["angx"].append(RD.angular_speed_x)
+self.data["angy"].append(RD.angular_speed_y)
+self.data["angz"].append(RD.angular_speed_z)
+self.data["magx"].append(RD.magnetic_field_x)
+self.data["magy"].append(RD.magnetic_field_y)
+self.data["magz"].append(RD.magnetic_field_z)
+self.data["alt"].append(RD.altitude)
+self.data["lat1"].append(RD.latitude_1)
+self.data["lat2"].append(RD.latitude_2)
+self.data["long1"].append(RD.longitude_1)
+self.data["long2"].append(RD.longitude_2)
+self.data["temp1"],append(RD.temperature_1)
+self.data["temp2"].append(RD.temperature_2)"""
