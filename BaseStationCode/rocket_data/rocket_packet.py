@@ -11,12 +11,8 @@ class RocketData:
 
 
     def __init__(self, data_buffer):
-        self.format = ">fffffffffffffffff"
-
-        """
-         Compute checksum
-        """
-
+        self.format = "<fffffffffffffffffBc"
+        self.data_buffer = data_buffer
         newData = struct.unpack(self.format, data_buffer)
 
         self.timeStamp = newData[0]
@@ -43,20 +39,12 @@ class RocketData:
         self.temperature_1 = newData[15]
         self.temperature_2 = newData[16]
 
-    def checkSum(self):
-        return True
+        self.checkSum = newData[17]
 
-"""
->>>>>>> origin/fix_ui
-class RocketPacket:
-    def __init__(self):
-        self.rocket_data = RocketData()
-        self.crc32 = 0
-<<<<<<< HEAD
-        
-    
-=======
- """
+    def validateCheckSum(self):
+        checkSum = 255 - sum(self.data_buffer[0:-2])%256
+        return checkSum == self.checkSum
+
 
 if __name__ == "__main__":
     pass
