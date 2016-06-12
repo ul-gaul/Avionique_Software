@@ -26,7 +26,7 @@ class DataProcessing:
 
         self.acc = []
         self.speed = [0]
-        self.acccheckpoint = 0
+        self.acheckpoint = 0
 
     def add_data(self, dataList):
         for j in range(len(dataList)):
@@ -49,13 +49,13 @@ class DataProcessing:
             self.data["temp2"].append(dataList[j].temperature_2)
 
     def acc_normalisation(self):
+
         if len(self.data["accx"]) == len(self.data["accy"]) and len(self.data["accx"]) == len(self.data["accz"]):
 
             for j in range(len(self.data["accx"])):
-                self.acc.append(sqrt((self.data["accx"][j]**2)+(self.data["accy"][j]**2)+(self.data["accz"][j]**2)))
-                self.acccheckpoint += 1
+                self.acc.append(sqrt((self.data["accx"][j+self.acheckpoint]**2)+(self.data["accy"][j+self.acheckpoint]**2)+(self.data["accz"][j+self.acheckpoint]**2)))
+            self.acheckpoint = len(self.data["accx"])
 
     def speed_norm(self):
         for j in range(len(self.acc)):
             self.speed.append(self.speed[j]+self.acc[j]*self.data["time"][j])
-
