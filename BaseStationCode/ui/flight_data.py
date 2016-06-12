@@ -13,11 +13,9 @@ from ..rocket_data import rocket_packet
 class LoopThread(QtCore.QThread):
     def __init__(self):
         QtCore.QThread.__init__(self)
-        self.fd = FlightData()
         self.checkThread = True
         self.signal = QtCore.SIGNAL("signal")
         self.exitFlag = False
-        self.connect(self.fd, self.fd.signal, self.stop)
 
     def run(self):
         while True:
@@ -32,6 +30,7 @@ class LoopThread(QtCore.QThread):
     def stop(self):
         """Thread is supposed to end there"""
         self.exitFlag = True
+
 
 class FlightData(QtGui.QDialog, Ui_Dialog):
     def __init__(self, parent=None):
@@ -90,13 +89,13 @@ class FlightData(QtGui.QDialog, Ui_Dialog):
         """Ends the plotting and the thread"""
         self.end_flag = True
         self.ani._stop()
-        self.data_thread.quit()
-        self.emit(self.signal, "Hi from main")
+        self.data_thread.stop()
+        #self.emit(self.signal, "Hi from main")
 
     def start_plotting(self):
         """Starts the thread and the drawing of each plot,
         calls the method fetch_data/generate_random_listevery 1 second"""
-        self.ani = Animation.FuncAnimation(self.figs["speed"], self.generate_random_list, interval= 1000)
+        self.ani = Animation.FuncAnimation(self.figs["speed"], self.generate_random_list, interval= 100)
         #for pn in ["speed", "height", "map", "angle"]:
             #self.ani = Animation.FuncAnimation(self.figs[pn], self.fetch_data, interval = 1000)
         self.data_thread = LoopThread()
@@ -129,6 +128,8 @@ class FlightData(QtGui.QDialog, Ui_Dialog):
         self.data_list1.append(j+random.randrange(-10, 10))
         self.data_list2.append(j*random.randrange(0, 5))
         self.data_list3.append(j/random.randrange(1, 10))
+
+        #self.draw_plots()
 
     def fetch_data(self,i):
         self.axs["height"].clear()
