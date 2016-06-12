@@ -17,10 +17,8 @@ class MainWindow(QtGui.QMainWindow,Ui_MainWindow):
 
     def open_flightData(self):
         flight_data = FlightData(self)
-        #ani = Animation.FuncAnimation(flight_data.figs["speed"], flight_data.generate_random_list, 500)
 
         result = flight_data.exec_()
-        print(type(flight_data.ani))
         if result == 2: #Si result = 2, ouvre le dialog d'analyse
             self.open_analyseDialog()
 

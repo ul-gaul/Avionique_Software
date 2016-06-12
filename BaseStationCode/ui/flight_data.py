@@ -7,13 +7,13 @@ import time
 import matplotlib.animation as Animation
 import numpy as np
 from .data_processing import DataProcessing
-from ..communication.serialReader import SerialReader as SR
+from ..communication.serialReader import SerialReader
 from ..rocket_data import rocket_packet
 
 class LoopThread(QtCore.QThread):
-    def __init__(self):
+    def __init__(self, flightdata):
         QtCore.QThread.__init__(self)
-        self.checkThread = True
+        self.flightdata = flightdata
         self.signal = QtCore.SIGNAL("signal")
         self.exitFlag = False
 
@@ -22,6 +22,8 @@ class LoopThread(QtCore.QThread):
             if self.exitFlag == True:
                 break
             else:
+                dataList = self.flightdata.serialReader.get()
+                self.flightdata.data_proc.add_data(dataList)
                 self.emit(self.signal,"Hi from Thread")
                 time.sleep(1)
 
@@ -38,8 +40,11 @@ class FlightData(QtGui.QDialog, Ui_Dialog):
         """Creates shortcut for signal emission to threads"""
         self.signal = QtCore.SIGNAL("signal")
 
-        """Load DataProcessing"""
+        """Create DataProcessing"""
         self.data_proc = DataProcessing()
+
+        """Create the serialReader"""
+        self.serialReader = SerialReader("acquisition.csv")
 
         """Initialize figs, canvas and axs"""
         self.figs = {}  # Empty Dictionnary
@@ -87,16 +92,16 @@ class FlightData(QtGui.QDialog, Ui_Dialog):
         """Ends the plotting and the thread"""
         self.ani._stop()
         self.data_thread.stop()
+        self.serialReader.exit()
 
     def start_plotting(self):
         """Starts the thread and the drawing of each plot,
         calls the method fetch_data/generate_random_listevery 1 second"""
         self.ani = Animation.FuncAnimation(self.figs["speed"], self.generate_random_list, interval= 100)
-        #for pn in ["speed", "height", "map", "angle"]:
-            #self.ani = Animation.FuncAnimation(self.figs[pn], self.fetch_data, interval = 1000)
-        self.data_thread = LoopThread()
-        self.data_thread.start()
+        self.serialReader.start()
+        self.data_thread = LoopThread(self)
         self.connect(self.data_thread, self.data_thread.signal, self.draw_plots)
+        self.data_thread.start()
 
     def draw_plots(self):
         """self.draw_plot("height", self.data_proc.data["alt"])

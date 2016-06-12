@@ -1,5 +1,3 @@
-__author__ = 'Maxime'
-
 import time
 import serial
 import sys
@@ -13,10 +11,13 @@ import datetime
 
 class SerialReader(threading.Thread):
 
-    def __init__(self, port, csv_file):
+    def __init__(self, csv_file):
         super(SerialReader, self).__init__()
         self.RocketDataList = []
-        self.port = port
+
+        self.port = serial.Serial()
+        self.port.baudrate = 9600
+        self.port.timeout = 0.2
 
         self.csvFile = open(csv_file, 'w',  newline= '')
         self.writer = csv.writer(self.csvFile)
@@ -27,6 +28,9 @@ class SerialReader(threading.Thread):
         self.dataMutex = threading.Lock()
 
     def run(self):
+        portNumber = serial_port()[0]
+        self.port.port = portNumber
+        self.port.open()
         while True:
             # check if exit was requested
             if self.exitFlag:
@@ -59,11 +63,9 @@ class SerialReader(threading.Thread):
             self.exitFlag = True
 
 if __name__ == "__main__":
-    portNumber = serial_port()[0]
-    port = serial.Serial(portNumber, 9600,timeout = 0.2)
-    reader = SerialReader(port, "../acquisition.csv")
+    reader = SerialReader("test.csv")
     reader.start()
-    time.sleep(2)
+    time.sleep(4)
     list = reader.get()
     print(list[0].angular_speed_x)
     reader.exit()
