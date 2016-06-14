@@ -116,7 +116,7 @@ class FlightData(QtGui.QDialog, Ui_Dialog):
     def draw_plot(self, target,data):
         """Call plot function and draw on the target key in self.axs and self.canvas,
         with the desired data, usually a list"""
-        self.axs[target].plot(data, '-*')
+        self.axs[target].plot(self.data_plot.data["time"], data, '-*')
         self.canvas[target].draw()
 
     def generate_random_list(self, i):
