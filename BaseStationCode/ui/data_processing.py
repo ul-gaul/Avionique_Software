@@ -23,7 +23,7 @@ class DataProcessing:
         self.data["long2"] = []
         self.data["temp1"] = []
         self.data["temp2"] = []
-        self.data["verticalSpeed"] = [0]
+        self.data["verticalSpeed"] = []
         self.data["meanlat"] = []
         self.data["meanlong"] = []
 
@@ -53,8 +53,10 @@ class DataProcessing:
             self.data["meanlat"].append((dataList[j].latitude_1 + dataList[j].latitude_2)/2)
             self.data["meanlong"].append((dataList[j].longitude_1 + dataList[j].longitude_2)/2)
 
-        if len(self.data["alt"]) > 1:
-            self.data["verticalSpeed"].append((self.data["alt"][-1] - self.data["alt"][-2])/(self.data["time"][-1] - self.data["time"][-2]))
+            if len(self.data["alt"]) == 1:
+                self.data["verticalSpeed"].append(0)
+            if len(self.data["alt"]) > 1:
+                self.data["verticalSpeed"].append((self.data["alt"][-1] - self.data["alt"][-2])/(self.data["time"][-1] - self.data["time"][-2]))
 
     def acc_normalisation(self):
         if len(self.data["accx"]) == len(self.data["accy"]) and len(self.data["accx"]) == len(self.data["accz"]):

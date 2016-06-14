@@ -28,7 +28,7 @@ class LoopThread(QtCore.QThread):
                 dataList = self.flightdata.serialReader.get()
                 self.flightdata.data_proc.add_data(dataList)
                 self.emit(self.signal, "Hi from Thread")
-                time.sleep(1)
+                time.sleep(2)
 
     def stop(self):
         """Thread is ended when called"""
@@ -80,6 +80,8 @@ class FlightData(QtGui.QDialog, Ui_Dialog):
         self.stopButton.clicked.connect(self.stop_plotting)
         self.startButton.clicked.connect(self.start_plotting)
         self.exitPush.clicked.connect(self.exit_UI)
+        self.heightLCD.setNumDigits(7)
+        self.speedLCD.setNumDigits(7)
 
     def exit_UI(self):
         self.done(3)
@@ -114,13 +116,13 @@ class FlightData(QtGui.QDialog, Ui_Dialog):
         self.draw_plot("angle", self.data_proc.data["temp1"])
         self.draw_plot("angle", self.data_proc.data["temp2"])
         self.draw_plot("map", self.data_proc.data["accx"])
-        self.showlcd(self.data_proc.data["speed"], self.data_proc.data["alt"], self.data_proc.data["meantlat"], self.data_proc.data["meantlong"])
+        self.showlcd(self.data_proc.data["verticalSpeed"], self.data_proc.data["alt"], self.data_proc.data["meanlat"], self.data_proc.data["meanlong"])
 
 
     def draw_plot(self, target,data):
         """Call plot function and draw on the target key in self.axs and self.canvas,
         with the desired data, usually a list"""
-        self.axs[target].plot(self.data_plot.data["time"], data, '-*')
+        self.axs[target].plot(self.data_proc.data["time"], data, '--')
         self.canvas[target].draw()
 
     def generate_random_list(self, i):
@@ -136,10 +138,25 @@ class FlightData(QtGui.QDialog, Ui_Dialog):
         self.data_list3.append(j/random.randrange(1, 10))
 
     def showlcd(self, sp, alt, lat, long):
-        speed = sp[len(sp) - 1]
-        height = alt[len(alt) - 1]
-        lattitude = lat[len(lat) - 1]
-        longitude = long[len(long) - 1]
+        if sp != []:
+            speed = round(sp[-1], 2)
+        else:
+            speed = None
+
+        if alt != []:
+            height = round(alt[-1], 2)
+        else:
+            height = None
+
+        if lat != []:
+            lattitude = lat[-1]
+        else:
+            lattitude = None
+
+        if long != []:
+            longitude = long[-1]
+        else:
+            longitude = None
 
         coords_text = str(lattitude) + ";" + str(longitude)
         speed_text = str(speed)

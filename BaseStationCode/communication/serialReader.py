@@ -42,7 +42,7 @@ class SerialReader(threading.Thread):
                 pass
 
             # read data from the serial port
-            data = self.port.readline()
+            data = self.port.read(70)
             #print(data)
             RData = RocketData(data)
 
@@ -65,7 +65,7 @@ class SerialReader(threading.Thread):
 if __name__ == "__main__":
     reader = SerialReader("test.csv")
     reader.start()
-    time.sleep(4)
+    time.sleep(60)
     list = reader.get()
     print(list[0].angular_speed_x)
     reader.exit()

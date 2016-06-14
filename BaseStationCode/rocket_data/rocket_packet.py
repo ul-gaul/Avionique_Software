@@ -13,6 +13,7 @@ class RocketData:
     def __init__(self, data_buffer):
         self.format = "<fffffffffffffffffBc"
         self.data_buffer = data_buffer
+        #print(len(data_buffer))
         newData = struct.unpack(self.format, data_buffer)
 
         self.timeStamp = newData[0]
