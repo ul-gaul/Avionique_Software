@@ -97,22 +97,22 @@ class FlightData(QtGui.QDialog, Ui_Dialog):
     def start_plotting(self):
         """Starts the thread and the drawing of each plot,
         calls the method fetch_data/generate_random_listevery 1 second"""
-        self.ani = Animation.FuncAnimation(self.figs["speed"], self.generate_random_list, interval= 100)
         self.serialReader.start()
         self.data_thread = LoopThread(self)
         self.connect(self.data_thread, self.data_thread.signal, self.draw_plots)
         self.data_thread.start()
 
     def draw_plots(self):
-        """self.draw_plot("height", self.data_proc.data["alt"])
+        self.axs["height"].clear()
+        self.axs["speed"].clear()
+        self.axs["map"].clear()
+        self.axs["angle"].clear()
+
+        self.draw_plot("height", self.data_proc.data["alt"])
         self.draw_plot("speed", )
-        self.draw_plot("angle", self.data_proc.data[])
+        """self.draw_plot("angle", self.data_proc.data[])
         self.draw_plot("map", self.data_proc.data[])"""
 
-        self.draw_plot("speed", self.data_list)
-        self.draw_plot("height", self.data_list1)
-        self.draw_plot("map", self.data_list2)
-        self.draw_plot("angle", self.data_list3)
 
     def draw_plot(self, target, data):
         self.axs[target].plot(data, '-*')  # Will plot with one of the 4 plot_names and any given data in a list
@@ -129,35 +129,6 @@ class FlightData(QtGui.QDialog, Ui_Dialog):
         self.data_list1.append(j+random.randrange(-10, 10))
         self.data_list2.append(j*random.randrange(0, 5))
         self.data_list3.append(j/random.randrange(1, 10))
-
-    def fetch_data(self,i):
-        self.axs["height"].clear()
-        self.axs["speed"].clear()
-        self.axs["map"].clear()
-        self.axs["angle"].clear()
-        self.data_proc.fetch_data()
-
-    def generate_cosinus(self, i):
-        cos = np.cos
-        yar = []
-        yar1 = []
-        yar2 = []
-        yar3 = []
-        for pn in ['speed', 'height', 'map', 'angle']:
-            self.axs[pn].clear()
-
-        for j in range(i):
-            yar.append((cos((i*500/1000)*np.pi)))
-
-        for obj in yar:
-            yar1.append(obj/4)
-            yar2.append(obj*20)
-            yar3.append(obj/10)
-
-        self.draw_plot("height", yar)
-        self.draw_plot("speed", yar1)
-        self.draw_plot("map", self.yar2)
-        self.draw_plot("angle", yar3)
 
     def showlcd(self, data):
         speed = data[len(data)-1]
