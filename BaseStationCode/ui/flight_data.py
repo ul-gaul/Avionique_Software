@@ -10,6 +10,7 @@ from .data_processing import DataProcessing
 from ..communication.serialReader import SerialReader
 from ..rocket_data import rocket_packet
 
+
 class LoopThread(QtCore.QThread):
     def __init__(self, flightdata):
         QtCore.QThread.__init__(self)
@@ -19,12 +20,14 @@ class LoopThread(QtCore.QThread):
 
     def run(self):
         while True:
-            if self.exitFlag == True:
+            if self.exitFlag:
                 break
+
             else:
+                """Update the data list in data_processing every iteration then emit a signal to main"""
                 dataList = self.flightdata.serialReader.get()
                 self.flightdata.data_proc.add_data(dataList)
-                self.emit(self.signal,"Hi from Thread")
+                self.emit(self.signal, "Hi from Thread")
                 time.sleep(1)
 
     def stop(self):
@@ -77,7 +80,6 @@ class FlightData(QtGui.QDialog, Ui_Dialog):
         self.stopButton.clicked.connect(self.stop_plotting)
         self.startButton.clicked.connect(self.start_plotting)
 
-
     def open_analysedata(self):
         """Closes and deletes Dialog Window and return the integer 2
         to main_window.py which will connect to and open analysis.py"""
@@ -104,15 +106,17 @@ class FlightData(QtGui.QDialog, Ui_Dialog):
         self.axs["angle"].clear()
         """Draw updated data in graphs and LCD widgets"""
         self.draw_plot("height", self.data_proc.data["alt"])
-        self.draw_plot("speed", self.data_proc.data["verticalSpeed"] )
+        self.draw_plot("speed", self.data_proc.data["verticalSpeed"])
         self.draw_plot("angle", self.data_proc.data["temp1"])
         self.draw_plot("angle", self.data_proc.data["temp2"])
-        self.draw_plot("map", -self.data_proc.data["accx"])
-        self.showlcd(self.data_proc.data["speed"], self.data_proc.data["alt"], self.data_proc.data["meantlat"], self.data_proc.data["meantlong"] )
+        self.draw_plot("map", self.data_proc.data["accx"])
+        self.showlcd(self.data_proc.data["speed"], self.data_proc.data["alt"], self.data_proc.data["meantlat"], self.data_proc.data["meantlong"])
 
 
     def draw_plot(self, target,data):
-        self.axs[target].plot(data, '-*')  # Will plot with one of the 4 plot_names and any given data in a list
+        """Call plot function and draw on the target key in self.axs and self.canvas,
+        with the desired data, usually a list"""
+        self.axs[target].plot(data, '-*')
         self.canvas[target].draw()
 
     def generate_random_list(self, i):
@@ -128,18 +132,15 @@ class FlightData(QtGui.QDialog, Ui_Dialog):
         self.data_list3.append(j/random.randrange(1, 10))
 
     def showlcd(self, sp, alt, lat, long):
-        speed = sp[len(sp)-1]
-        height = alt[len(alt)-1]
-        lattitude = lat[len(lat)-1]
-        longitude = long[len(long)-1]
+        speed = sp[len(sp) - 1]
+        height = alt[len(alt) - 1]
+        lattitude = lat[len(lat) - 1]
+        longitude = long[len(long) - 1]
 
-        coords_text = str(lattitude)+ ";" + str(longitude)
+        coords_text = str(lattitude) + ";" + str(longitude)
         speed_text = str(speed)
         height_text = str(height)
 
         self.angleLCD.display(coords_text)
         self.heightLCD.display(height_text)
         self.speedLCD.display(speed_text)
-
-
-
