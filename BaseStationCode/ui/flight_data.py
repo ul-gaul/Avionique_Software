@@ -69,12 +69,13 @@ class FlightData(QtGui.QDialog, Ui_Dialog):
 
         self.init_widgets()  # Once the Dialog exist, automatically initiate self.
 
+        self.Atimer = 0
+
     def init_widgets(self):
         """Connect the buttons to their respective method"""
         self.analyseButton.clicked.connect(self.open_analysedata)
         self.stopButton.clicked.connect(self.stop_plotting)
         self.startButton.clicked.connect(self.start_plotting)
-        #self.showlcd([10, 2, 14])
 
 
     def open_analysedata(self):
@@ -96,20 +97,21 @@ class FlightData(QtGui.QDialog, Ui_Dialog):
         self.data_thread.start()
 
     def draw_plots_LCD(self):
+        """Clear graphs"""
         self.axs["height"].clear()
         self.axs["speed"].clear()
         self.axs["map"].clear()
         self.axs["angle"].clear()
-
+        """Draw updated data in graphs and LCD widgets"""
         self.draw_plot("height", self.data_proc.data["alt"])
-        self.draw_plot("speed", )
-        self.draw_plot("angle", self.data_proc.data[temp1], self.data_proc[temp2])
-        self.draw_plot("map", self.data_proc[])
-        self.draw_plot("map", self.data_proc.data[])
-        self.showlcd(self.data_proc["speed"], self.data_proc["alt"])
+        self.draw_plot("speed", self.data_proc.data["verticalSpeed"] )
+        self.draw_plot("angle", self.data_proc.data["temp1"])
+        self.draw_plot("angle", self.data_proc.data["temp2"])
+        self.draw_plot("map", -self.data_proc.data["accx"])
+        self.showlcd(self.data_proc.data["speed"], self.data_proc.data["alt"], self.data_proc.data["meantlat"], self.data_proc.data["meantlong"] )
 
 
-    def draw_plot(self, target, data):
+    def draw_plot(self, target,data):
         self.axs[target].plot(data, '-*')  # Will plot with one of the 4 plot_names and any given data in a list
         self.canvas[target].draw()
 
@@ -125,10 +127,19 @@ class FlightData(QtGui.QDialog, Ui_Dialog):
         self.data_list2.append(j*random.randrange(0, 5))
         self.data_list3.append(j/random.randrange(1, 10))
 
-    def showlcd(self, sp, alt):
+    def showlcd(self, sp, alt, lat, long):
         speed = sp[len(sp)-1]
         height = alt[len(alt)-1]
+        lattitude = lat[len(lat)-1]
+        longitude = long[len(long)-1]
+
+        coords_text = str(lattitude)+ ";" + str(longitude)
         speed_text = str(speed)
         height_text = str(height)
-        self.heightLCD.display(text)
-        self.speedLCD.display(text)
+
+        self.angleLCD.display(coords_text)
+        self.heightLCD.display(height_text)
+        self.speedLCD.display(speed_text)
+
+
+
