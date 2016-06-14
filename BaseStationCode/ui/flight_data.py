@@ -158,10 +158,12 @@ class FlightData(QtGui.QDialog, Ui_Dialog):
         else:
             longitude = None
 
-        coords_text = str(lattitude) + ";" + str(longitude)
+        coords_lat = str(lattitude)
+        coords_long = str(longitude)
         speed_text = str(speed)
         height_text = str(height)
 
-        self.angleLCD.display(coords_text)
+        self.latLCD.display(coords_lat)
+        self.longLCD.display(coords_long)
         self.heightLCD.display(height_text)
         self.speedLCD.display(speed_text)
