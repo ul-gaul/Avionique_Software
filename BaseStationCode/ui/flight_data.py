@@ -61,12 +61,6 @@ class FlightData(QtGui.QDialog, Ui_Dialog):
             self.figs[pn] = fig  # Each string of plot_names are a Figure()
             self.axs[pn] = ax  # Each string of plot_names are a plot defined by ax
 
-        """Initiate the data_list for the method generate_random_list"""
-        self.data_list = []
-        self.data_list1 = []
-        self.data_list2 = []
-        self.data_list3 = []
-
         """Create the canvas widget in the UI"""
         self.speedLayout.addWidget(self.canvas['speed'])  # Creates the canvas for speed
         self.heightLayout.addWidget(self.canvas['height'])  # Creates the canvas for height
@@ -90,7 +84,6 @@ class FlightData(QtGui.QDialog, Ui_Dialog):
 
     def stop_plotting(self):
         """Ends the plotting and the thread"""
-        self.ani._stop()
         self.data_thread.stop()
         self.serialReader.exit()
 
