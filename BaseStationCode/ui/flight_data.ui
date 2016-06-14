@@ -14,13 +14,6 @@
    <string>Dialog</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0">
-    <layout class="QHBoxLayout" name="speedLayout">
-     <property name="sizeConstraint">
-      <enum>QLayout::SetDefaultConstraint</enum>
-     </property>
-    </layout>
-   </item>
    <item row="0" column="1">
     <layout class="QVBoxLayout" name="vSpeedLayout">
      <item>
@@ -102,12 +95,6 @@
       </spacer>
      </item>
     </layout>
-   </item>
-   <item row="0" column="2">
-    <layout class="QHBoxLayout" name="mapLayout"/>
-   </item>
-   <item row="1" column="0">
-    <layout class="QHBoxLayout" name="heightLayout"/>
    </item>
    <item row="1" column="1">
     <layout class="QGridLayout" name="instantSpeedAngleLay">
@@ -240,9 +227,6 @@
      </item>
     </layout>
    </item>
-   <item row="1" column="2">
-    <layout class="QHBoxLayout" name="angleLayout"/>
-   </item>
    <item row="2" column="0" colspan="3">
     <layout class="QHBoxLayout" name="AnalysisLayout">
      <item>
@@ -276,6 +260,50 @@
       <widget class="QPushButton" name="analyseButton">
        <property name="text">
         <string>Démarrer l'analyse</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="0" column="2">
+    <layout class="QVBoxLayout" name="mapLayout">
+     <item>
+      <widget class="QLabel" name="mapGraphLab">
+       <property name="text">
+        <string>Coordonnéesl</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="1" column="2">
+    <layout class="QVBoxLayout" name="angleLayout">
+     <item>
+      <widget class="QLabel" name="angleGraphLab">
+       <property name="text">
+        <string>Angle</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="1" column="0">
+    <layout class="QVBoxLayout" name="heightLayout">
+     <item>
+      <widget class="QLabel" name="heightGraphLab">
+       <property name="text">
+        <string>Altitude</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="0" column="0">
+    <layout class="QVBoxLayout" name="speedLayout">
+     <item>
+      <widget class="QLabel" name="speedGraphLab">
+       <property name="text">
+        <string>Vitesse</string>
        </property>
       </widget>
      </item>
