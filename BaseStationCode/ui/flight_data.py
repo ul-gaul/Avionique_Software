@@ -28,7 +28,7 @@ class LoopThread(QtCore.QThread):
                 dataList = self.flightdata.serialReader.get()
                 self.flightdata.data_proc.add_data(dataList)
                 self.emit(self.signal, "Hi from Thread")
-                time.sleep(2)
+                time.sleep(0.5)
 
     def stop(self):
         """Thread is ended when called"""
@@ -163,7 +163,7 @@ class FlightData(QtGui.QDialog, Ui_Dialog):
         speed_text = str(speed)
         height_text = str(height)
 
-        self.latLCD.display(coords_lat)
+        self.LatLCD.display(coords_lat)
         self.longLCD.display(coords_long)
         self.heightLCD.display(height_text)
         self.speedLCD.display(speed_text)

@@ -19,7 +19,7 @@ class SerialReader(threading.Thread):
         self.port.baudrate = 9600
         self.port.timeout = 0.2
 
-        self.csvFile = open(csv_file, 'w',  newline= '')
+        self.csvFile = open(csv_file, 'a',  newline= '')
         self.writer = csv.writer(self.csvFile)
         self.writer.writerow(["Starting new data acquisition : " + str(datetime.datetime.now()), None])
 
