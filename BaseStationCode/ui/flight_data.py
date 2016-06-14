@@ -92,10 +92,10 @@ class FlightData(QtGui.QDialog, Ui_Dialog):
         calls the method fetch_data/generate_random_listevery 1 second"""
         self.serialReader.start()
         self.data_thread = LoopThread(self)
-        self.connect(self.data_thread, self.data_thread.signal, self.draw_plots)
+        self.connect(self.data_thread, self.data_thread.signal, self.draw_plots_LCD)
         self.data_thread.start()
 
-    def draw_plots(self):
+    def draw_plots_LCD(self):
         self.axs["height"].clear()
         self.axs["speed"].clear()
         self.axs["map"].clear()
@@ -103,8 +103,10 @@ class FlightData(QtGui.QDialog, Ui_Dialog):
 
         self.draw_plot("height", self.data_proc.data["alt"])
         self.draw_plot("speed", )
-        """self.draw_plot("angle", self.data_proc.data[])
-        self.draw_plot("map", self.data_proc.data[])"""
+        self.draw_plot("angle", self.data_proc.data[temp1], self.data_proc[temp2])
+        self.draw_plot("map", self.data_proc[])
+        self.draw_plot("map", self.data_proc.data[])
+        self.showlcd(self.data_proc["speed"], self.data_proc["alt"])
 
 
     def draw_plot(self, target, data):
@@ -123,7 +125,10 @@ class FlightData(QtGui.QDialog, Ui_Dialog):
         self.data_list2.append(j*random.randrange(0, 5))
         self.data_list3.append(j/random.randrange(1, 10))
 
-    def showlcd(self, data):
-        speed = data[len(data)-1]
-        text = str(speed)
+    def showlcd(self, sp, alt):
+        speed = sp[len(sp)-1]
+        height = alt[len(alt)-1]
+        speed_text = str(speed)
+        height_text = str(height)
+        self.heightLCD.display(text)
         self.speedLCD.display(text)
