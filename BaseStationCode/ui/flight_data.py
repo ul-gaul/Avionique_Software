@@ -79,6 +79,10 @@ class FlightData(QtGui.QDialog, Ui_Dialog):
         self.analyseButton.clicked.connect(self.open_analysedata)
         self.stopButton.clicked.connect(self.stop_plotting)
         self.startButton.clicked.connect(self.start_plotting)
+        self.exitPush.clicked.connect(self.exit_UI)
+
+    def exit_UI(self):
+        self.done(3)
 
     def open_analysedata(self):
         """Closes and deletes Dialog Window and return the integer 2

@@ -21,6 +21,8 @@ class MainWindow(QtGui.QMainWindow,Ui_MainWindow):
         result = flight_data.exec_()
         if result == 2: #Si result = 2, ouvre le dialog d'analyse
             self.open_analyseDialog()
+        elif result ==3:
+            sys.exit()
 
     def open_analyseDialog(self):
         postData = analysisData(self)
