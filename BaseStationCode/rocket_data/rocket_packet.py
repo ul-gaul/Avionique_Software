@@ -8,12 +8,10 @@ import struct
 
 
 class RocketData:
-
-
     def __init__(self, data_buffer):
-        self.format = "<fffffffffffffffffBc"
+        self.format = "<fffffffffffffffffB"
         self.data_buffer = data_buffer
-        #print(len(data_buffer))
+        # print(len(data_buffer))
         newData = struct.unpack(self.format, data_buffer)
 
         self.timeStamp = newData[0]
@@ -43,8 +41,40 @@ class RocketData:
         self.checkSum = newData[17]
 
     def validateCheckSum(self):
-        checkSum = 255 - sum(self.data_buffer[0:-2])%256
-        return checkSum == self.checkSum
+        checkSum = sum(self.data_buffer[0:-2])%256
+        if checkSum == self.checkSum:
+            return True
+        else:
+            print("Invalid Checksum : data = {}, calculated = {}".format(self.checkSum, checkSum))
+            return False
+
+
+    def print_data(self):
+        print("Time Stamp = {}".format(self.timeStamp))
+
+        print("Ang Speed X = {}".format(self.angular_speed_x))
+        print("Ang Speed Y = {}".format(self.angular_speed_y))
+        print("Ang Speed Z = {}".format(self.angular_speed_z))
+
+        print("Accel X = {}".format(self.acceleration_x))
+        print("Accel Y = {}".format(self.acceleration_y))
+        print("Accel Z = {}".format(self.acceleration_z))
+
+        print("Magnet X = {}".format(self.magnetic_field_x))
+        print("Magnet Y = {}".format(self.magnetic_field_y))
+        print("Magnet Z = {}".format(self.magnetic_field_z))
+
+        print("Altitude = {}".format(self.altitude))
+
+        print("Latitude 1 = {}".format(self.latitude_1))
+        print("Longitude 1 = {}".format(self.longitude_1))
+        print("Latitude 2 = {}".format(self.latitude_2))
+        print("Longitude 2 = {}".format(self.longitude_2))
+
+        print("Temp 1 = {}".format(self.temperature_1))
+        print("Temp 2 = {}".format(self.temperature_2))
+
+        print("Checksum = {}\n\n".format(self.checkSum))
 
 
 if __name__ == "__main__":
