@@ -12,11 +12,11 @@ class AcquisitionThread(Thread):
     def __init__(self, acquisition_queue):
         super(AcquisitionThread, self).__init__()
         self.acquisition_queue = acquisition_queue
-        port_nb = serial_port()[0]
-        self.device = Serial(port_nb, baudrate=self.BAUDRATE, timeout=0.2)
         self.exit_flag = False
 
     def run(self):
+        port_nb = serial_port()[0]
+        self.device = Serial(port_nb, baudrate=self.BAUDRATE, timeout=0.2)
         while not self.exit_flag:
             c = self.device.read(1)
             if c == self.START_CHARACTER:
@@ -29,6 +29,9 @@ class AcquisitionThread(Thread):
                 checksum_validated = True
                 if checksum_validated:
                     self.acquisition_queue.put(rocket_data)
+        self.device.close()
+
+
 
     def stop(self):
         self.exit_flag = True

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'test_window.ui'
+# Form implementation generated from reading ui file 'light_display_window.ui'
 #
 # Created by: PyQt4 UI code generator 4.11.4
 #
@@ -22,11 +22,11 @@ except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
 
-class Ui_TestWindow(object):
-    def setupUi(self, TestWindow):
-        TestWindow.setObjectName(_fromUtf8("TestWindow"))
-        TestWindow.resize(683, 301)
-        self.centralwidget = QtGui.QWidget(TestWindow)
+class Ui_LightDisplayWindow(object):
+    def setupUi(self, LightDisplayWindow):
+        LightDisplayWindow.setObjectName(_fromUtf8("LightDisplayWindow"))
+        LightDisplayWindow.resize(683, 301)
+        self.centralwidget = QtGui.QWidget(LightDisplayWindow)
         self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
         self.gridLayout = QtGui.QGridLayout(self.centralwidget)
         self.gridLayout.setObjectName(_fromUtf8("gridLayout"))
@@ -126,28 +126,28 @@ class Ui_TestWindow(object):
         spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout_3.addItem(spacerItem)
         self.gridLayout.addLayout(self.horizontalLayout_3, 1, 0, 1, 1)
-        TestWindow.setCentralWidget(self.centralwidget)
-        self.menubar = QtGui.QMenuBar(TestWindow)
+        LightDisplayWindow.setCentralWidget(self.centralwidget)
+        self.menubar = QtGui.QMenuBar(LightDisplayWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 683, 21))
         self.menubar.setObjectName(_fromUtf8("menubar"))
-        TestWindow.setMenuBar(self.menubar)
-        self.statusbar = QtGui.QStatusBar(TestWindow)
+        LightDisplayWindow.setMenuBar(self.menubar)
+        self.statusbar = QtGui.QStatusBar(LightDisplayWindow)
         self.statusbar.setObjectName(_fromUtf8("statusbar"))
-        TestWindow.setStatusBar(self.statusbar)
+        LightDisplayWindow.setStatusBar(self.statusbar)
 
-        self.retranslateUi(TestWindow)
-        QtCore.QMetaObject.connectSlotsByName(TestWindow)
+        self.retranslateUi(LightDisplayWindow)
+        QtCore.QMetaObject.connectSlotsByName(LightDisplayWindow)
 
-    def retranslateUi(self, TestWindow):
-        TestWindow.setWindowTitle(_translate("TestWindow", "Rocket Data", None))
-        self.label_8.setText(_translate("TestWindow", "Time (s)", None))
-        self.label_9.setText(_translate("TestWindow", "Altitude (m)", None))
-        self.label_10.setText(_translate("TestWindow", "Acceleration Z (m/s^2) ", None))
-        self.label_11.setText(_translate("TestWindow", "Latitude", None))
-        self.label_12.setText(_translate("TestWindow", "Vertical Speed (km/h)", None))
-        self.label_13.setText(_translate("TestWindow", "Max Altitude (m)", None))
-        self.label_14.setText(_translate("TestWindow", "Temperature (C degrees)", None))
-        self.label_15.setText(_translate("TestWindow", "Longitude", None))
-        self.start_button.setText(_translate("TestWindow", "Start", None))
-        self.stop_button.setText(_translate("TestWindow", "Stop", None))
+    def retranslateUi(self, LightDisplayWindow):
+        LightDisplayWindow.setWindowTitle(_translate("LightDisplayWindow", "Rocket Data", None))
+        self.label_8.setText(_translate("LightDisplayWindow", "Time (s)", None))
+        self.label_9.setText(_translate("LightDisplayWindow", "Altitude (m)", None))
+        self.label_10.setText(_translate("LightDisplayWindow", "Acceleration Z (m/s^2) ", None))
+        self.label_11.setText(_translate("LightDisplayWindow", "Latitude", None))
+        self.label_12.setText(_translate("LightDisplayWindow", "Vertical Speed (km/h)", None))
+        self.label_13.setText(_translate("LightDisplayWindow", "Max Altitude (m)", None))
+        self.label_14.setText(_translate("LightDisplayWindow", "Temperature (C degrees)", None))
+        self.label_15.setText(_translate("LightDisplayWindow", "Longitude", None))
+        self.start_button.setText(_translate("LightDisplayWindow", "Start", None))
+        self.stop_button.setText(_translate("LightDisplayWindow", "Stop", None))
 
