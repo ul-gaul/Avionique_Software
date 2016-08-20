@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>794</width>
-    <height>362</height>
+    <width>683</width>
+    <height>301</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -26,12 +26,18 @@
             <property name="text">
              <string>Time (s)</string>
             </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
            </widget>
           </item>
           <item>
            <widget class="QLabel" name="label_9">
             <property name="text">
              <string>Altitude (m)</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
             </property>
            </widget>
           </item>
@@ -40,12 +46,18 @@
             <property name="text">
              <string>Acceleration Z (m/s^2) </string>
             </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
            </widget>
           </item>
           <item>
            <widget class="QLabel" name="label_11">
             <property name="text">
              <string>Latitude</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
             </property>
            </widget>
           </item>
@@ -94,12 +106,18 @@
             <property name="text">
              <string>Vertical Speed (km/h)</string>
             </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
            </widget>
           </item>
           <item>
            <widget class="QLabel" name="label_13">
             <property name="text">
              <string>Max Altitude (m)</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
             </property>
            </widget>
           </item>
@@ -108,12 +126,18 @@
             <property name="text">
              <string>Temperature (C degrees)</string>
             </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
            </widget>
           </item>
           <item>
            <widget class="QLabel" name="label_15">
             <property name="text">
              <string>Longitude</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
             </property>
            </widget>
           </item>
@@ -193,7 +217,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>794</width>
+     <width>683</width>
      <height>21</height>
     </rect>
    </property>
