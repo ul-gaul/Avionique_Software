@@ -35,10 +35,10 @@ if __name__ == "__main__":
             data = device.read(PACKET_SIZE)
 
             rocket_data = RocketData(data)
-            checksum_validated = rocket_data.validateCheckSum()
-            # checksum_validated = True
+            # checksum_validated = rocket_data.validateCheckSum()
+            checksum_validated = True
             print("Checksum validated : {}".format(checksum_validated))
             if checksum_validated: # TODO Validate checksum for real!!!
                 rocket_data.print_data()
-                writer.writerow([rocket_data.timeStamp, rocket_data.angular_speed_x, rocket_data.angular_speed_y, rocket_data.angular_speed_z, rocket_data.acceleration_x, rocket_data.acceleration_y, rocket_data.acceleration_z, rocket_data.magnetic_field_x, rocket_data.magnetic_field_y, rocket_data.magnetic_field_z, rocket_data.altitude, rocket_data.latitude_1, rocket_data.longitude_1, rocket_data.latitude_2, rocket_data.longitude_2, rocket_data.temperature_1, rocket_data.temperature_2] + [None])
+                writer.writerow([rocket_data.time_stamp, rocket_data.angular_speed_x, rocket_data.angular_speed_y, rocket_data.angular_speed_z, rocket_data.acceleration_x, rocket_data.acceleration_y, rocket_data.acceleration_z, rocket_data.magnetic_field_x, rocket_data.magnetic_field_y, rocket_data.magnetic_field_z, rocket_data.altitude, rocket_data.latitude_1, rocket_data.longitude_1, rocket_data.latitude_2, rocket_data.longitude_2, rocket_data.temperature_1, rocket_data.temperature_2] + [None])
                 csv_file.flush()

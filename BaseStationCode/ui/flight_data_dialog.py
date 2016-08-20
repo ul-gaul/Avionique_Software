@@ -1,4 +1,8 @@
+from queue import Queue, Empty
+
 from PyQt4 import QtGui, QtCore
+
+from rocket_data.csv_data_writer import CsvDataWriter
 from .flight_dataUI import Ui_Dialog
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
@@ -7,47 +11,44 @@ import time
 import matplotlib.animation as Animation
 import numpy as np
 from .data_processing import DataProcessing
-from ..communication.serialReader import SerialReader
-from ..rocket_data import rocket_packet
+from communication.serial_reader import AcquisitionThread
 
 
-class LoopThread(QtCore.QThread):
-    def __init__(self, flightdata):
+class DataHandlingThread(QtCore.QThread):
+    data_received = QtCore.pyqtSignal()
+
+    def __init__(self, acquisition_queue, data_processing):
         QtCore.QThread.__init__(self)
-        self.flightdata = flightdata
-        self.signal = QtCore.SIGNAL("signal")
-        self.exitFlag = False
+        self.acquisition_queue = acquisition_queue
+        self.data_proc = data_processing
+        self.exit_flag = True
 
     def run(self):
-        while True:
-            if self.exitFlag:
-                break
-
-            else:
-                """Update the data list in data_processing every iteration then emit a signal to main"""
-                dataList = self.flightdata.serialReader.get()
-                self.flightdata.data_proc.add_data(dataList)
-                self.emit(self.signal, "Hi from Thread")
-                time.sleep(0.5)
+        self.exit_flag = False
+        csv_writer = CsvDataWriter()
+        while not self.exit_flag:
+            try :
+                rocket_data = self.acquisition_queue.get(block=False, timeout=2)
+                # rocket_data.print_data()
+                csv_writer.write_line(rocket_data)
+                self.data_proc.add_data(rocket_data)
+                self.data_received.emit()
+            except Empty:
+                pass
 
     def stop(self):
-        """Thread is ended when called"""
-        self.exitFlag = True
+        self.exit_flag = True
 
 
-class FlightData(QtGui.QDialog, Ui_Dialog):
+class FlightDataDialog(QtGui.QDialog, Ui_Dialog):
     def __init__(self, parent=None):
         QtGui.QDialog.__init__(self, parent)
         self.setupUi(self)
 
-        """Creates shortcut for signal emission to threads"""
-        self.signal = QtCore.SIGNAL("signal")
-
-        """Create DataProcessing"""
         self.data_proc = DataProcessing()
-
-        """Create the serialReader"""
-        self.serialReader = SerialReader("acquisition.csv")
+        queue = Queue(maxsize=100000)
+        self.acquisition_thread = AcquisitionThread(queue)
+        self.data_handling_thread = DataHandlingThread(queue, self.data_proc)
 
         """Initialize figs, canvas and axs"""
         self.figs = {}  # Empty Dictionnary
@@ -76,10 +77,14 @@ class FlightData(QtGui.QDialog, Ui_Dialog):
 
     def init_widgets(self):
         """Connect the buttons to their respective method"""
-        self.analyseButton.clicked.connect(self.open_analysedata)
+        # self.analyseButton.clicked.connect(self.open_analysedata)
+        self.analyseButton.setEnabled(False)
         self.stopButton.clicked.connect(self.stop_plotting)
+        self.stopButton.setEnabled(False)
         self.startButton.clicked.connect(self.start_plotting)
         self.exitPush.clicked.connect(self.exit_UI)
+        self.data_handling_thread.data_received.connect(self.draw_plots_LCD)
+
         self.heightLCD.setNumDigits(7)
         self.speedLCD.setNumDigits(7)
 
@@ -93,36 +98,40 @@ class FlightData(QtGui.QDialog, Ui_Dialog):
 
     def stop_plotting(self):
         """Ends the plotting and the thread"""
-        self.data_thread.stop()
-        self.serialReader.exit()
+        self.startButton.setEnabled(True)
+        self.stopButton.setEnabled(False)
+        self.data_handling_thread.stop()
+        self.acquisition_thread.stop()
 
     def start_plotting(self):
         """Starts the thread and the drawing of each plot,
         calls the method fetch_data/generate_random_listevery 1 second"""
-        self.serialReader.start()
-        self.data_thread = LoopThread(self)
-        self.connect(self.data_thread, self.data_thread.signal, self.draw_plots_LCD)
-        self.data_thread.start()
+        # TODO : Reset plots before plotting
+        self.startButton.setEnabled(False)
+        self.stopButton.setEnabled(True)
+        self.acquisition_thread.start()
+        self.data_handling_thread.start()
 
     def draw_plots_LCD(self):
         """Clear graphs"""
-        self.axs["height"].clear()
-        self.axs["speed"].clear()
-        self.axs["map"].clear()
-        self.axs["angle"].clear()
-        """Draw updated data in graphs and LCD widgets"""
-        self.draw_plot("height", self.data_proc.data["alt"])
-        self.draw_plot("speed", self.data_proc.data["verticalSpeed"])
-        self.draw_plot("angle", self.data_proc.data["temp1"])
-        self.draw_plot("angle", self.data_proc.data["temp2"])
-        self.draw_plot("map", self.data_proc.data["accx"])
-        self.showlcd(self.data_proc.data["verticalSpeed"], self.data_proc.data["alt"], self.data_proc.data["meanlat"], self.data_proc.data["meanlong"])
+        # TODO : uncomment this section and optimize speed (for now, if acquisition sampling frequency is over 0.2 Hz, it doesn't work because it's too slow)
+        # self.axs["height"].clear()
+        # self.axs["speed"].clear()
+        # self.axs["map"].clear()
+        # self.axs["angle"].clear()
+        # """Draw updated data in graphs and LCD widgets"""
+        # self.draw_plot("height", self.data_proc.split_data["alt"])
+        # self.draw_plot("speed", self.data_proc.split_data["verticalSpeed"])
+        # self.draw_plot("angle", self.data_proc.split_data["temp1"])
+        # self.draw_plot("angle", self.data_proc.split_data["temp2"])
+        # self.draw_plot("map", self.data_proc.split_data["accx"])
+        self.showlcd(self.data_proc.split_data["verticalSpeed"], self.data_proc.split_data["alt"], self.data_proc.split_data["meanlat"], self.data_proc.split_data["meanlong"])
 
 
     def draw_plot(self, target,data):
         """Call plot function and draw on the target key in self.axs and self.canvas,
         with the desired data, usually a list"""
-        self.axs[target].plot(self.data_proc.data["time"], data, '--')
+        self.axs[target].plot(self.data_proc.split_data["time"], data, '--')
         self.canvas[target].draw()
 
     def generate_random_list(self, i):

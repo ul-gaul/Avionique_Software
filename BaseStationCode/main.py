@@ -1,5 +1,5 @@
 
-from BaseStationCode.ui.main_window import MainWindow
+from ui.main_window import MainWindow
 from PyQt4 import QtGui
 import sys
 import time

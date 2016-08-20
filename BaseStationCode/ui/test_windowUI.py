@@ -1,0 +1,145 @@
+# -*- coding: utf-8 -*-
+
+# Form implementation generated from reading ui file 'test_window.ui'
+#
+# Created by: PyQt4 UI code generator 4.11.4
+#
+# WARNING! All changes made in this file will be lost!
+
+from PyQt4 import QtCore, QtGui
+
+try:
+    _fromUtf8 = QtCore.QString.fromUtf8
+except AttributeError:
+    def _fromUtf8(s):
+        return s
+
+try:
+    _encoding = QtGui.QApplication.UnicodeUTF8
+    def _translate(context, text, disambig):
+        return QtGui.QApplication.translate(context, text, disambig, _encoding)
+except AttributeError:
+    def _translate(context, text, disambig):
+        return QtGui.QApplication.translate(context, text, disambig)
+
+class Ui_TestWindow(object):
+    def setupUi(self, TestWindow):
+        TestWindow.setObjectName(_fromUtf8("TestWindow"))
+        TestWindow.resize(794, 362)
+        self.centralwidget = QtGui.QWidget(TestWindow)
+        self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
+        self.gridLayout = QtGui.QGridLayout(self.centralwidget)
+        self.gridLayout.setObjectName(_fromUtf8("gridLayout"))
+        self.horizontalLayout_4 = QtGui.QHBoxLayout()
+        self.horizontalLayout_4.setObjectName(_fromUtf8("horizontalLayout_4"))
+        self.horizontalLayout = QtGui.QHBoxLayout()
+        self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
+        self.verticalLayout_2 = QtGui.QVBoxLayout()
+        self.verticalLayout_2.setObjectName(_fromUtf8("verticalLayout_2"))
+        self.label_8 = QtGui.QLabel(self.centralwidget)
+        self.label_8.setObjectName(_fromUtf8("label_8"))
+        self.verticalLayout_2.addWidget(self.label_8)
+        self.label_9 = QtGui.QLabel(self.centralwidget)
+        self.label_9.setObjectName(_fromUtf8("label_9"))
+        self.verticalLayout_2.addWidget(self.label_9)
+        self.label_10 = QtGui.QLabel(self.centralwidget)
+        self.label_10.setObjectName(_fromUtf8("label_10"))
+        self.verticalLayout_2.addWidget(self.label_10)
+        self.label_11 = QtGui.QLabel(self.centralwidget)
+        self.label_11.setObjectName(_fromUtf8("label_11"))
+        self.verticalLayout_2.addWidget(self.label_11)
+        self.horizontalLayout.addLayout(self.verticalLayout_2)
+        self.verticalLayout = QtGui.QVBoxLayout()
+        self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
+        self.time_lcd = QtGui.QLCDNumber(self.centralwidget)
+        self.time_lcd.setNumDigits(8)
+        self.time_lcd.setObjectName(_fromUtf8("time_lcd"))
+        self.verticalLayout.addWidget(self.time_lcd)
+        self.altitude_lcd = QtGui.QLCDNumber(self.centralwidget)
+        self.altitude_lcd.setNumDigits(9)
+        self.altitude_lcd.setObjectName(_fromUtf8("altitude_lcd"))
+        self.verticalLayout.addWidget(self.altitude_lcd)
+        self.acceleration_z_lcd = QtGui.QLCDNumber(self.centralwidget)
+        self.acceleration_z_lcd.setNumDigits(6)
+        self.acceleration_z_lcd.setObjectName(_fromUtf8("acceleration_z_lcd"))
+        self.verticalLayout.addWidget(self.acceleration_z_lcd)
+        self.latitude_lcd = QtGui.QLCDNumber(self.centralwidget)
+        self.latitude_lcd.setNumDigits(11)
+        self.latitude_lcd.setObjectName(_fromUtf8("latitude_lcd"))
+        self.verticalLayout.addWidget(self.latitude_lcd)
+        self.horizontalLayout.addLayout(self.verticalLayout)
+        self.horizontalLayout_4.addLayout(self.horizontalLayout)
+        self.horizontalLayout_2 = QtGui.QHBoxLayout()
+        self.horizontalLayout_2.setObjectName(_fromUtf8("horizontalLayout_2"))
+        self.verticalLayout_3 = QtGui.QVBoxLayout()
+        self.verticalLayout_3.setObjectName(_fromUtf8("verticalLayout_3"))
+        self.label_12 = QtGui.QLabel(self.centralwidget)
+        self.label_12.setObjectName(_fromUtf8("label_12"))
+        self.verticalLayout_3.addWidget(self.label_12)
+        self.label_13 = QtGui.QLabel(self.centralwidget)
+        self.label_13.setObjectName(_fromUtf8("label_13"))
+        self.verticalLayout_3.addWidget(self.label_13)
+        self.label_14 = QtGui.QLabel(self.centralwidget)
+        self.label_14.setObjectName(_fromUtf8("label_14"))
+        self.verticalLayout_3.addWidget(self.label_14)
+        self.label_15 = QtGui.QLabel(self.centralwidget)
+        self.label_15.setObjectName(_fromUtf8("label_15"))
+        self.verticalLayout_3.addWidget(self.label_15)
+        self.horizontalLayout_2.addLayout(self.verticalLayout_3)
+        self.verticalLayout_4 = QtGui.QVBoxLayout()
+        self.verticalLayout_4.setObjectName(_fromUtf8("verticalLayout_4"))
+        self.speed_lcd = QtGui.QLCDNumber(self.centralwidget)
+        self.speed_lcd.setNumDigits(8)
+        self.speed_lcd.setObjectName(_fromUtf8("speed_lcd"))
+        self.verticalLayout_4.addWidget(self.speed_lcd)
+        self.max_altitude_lcd = QtGui.QLCDNumber(self.centralwidget)
+        self.max_altitude_lcd.setNumDigits(9)
+        self.max_altitude_lcd.setObjectName(_fromUtf8("max_altitude_lcd"))
+        self.verticalLayout_4.addWidget(self.max_altitude_lcd)
+        self.temperature_lcd = QtGui.QLCDNumber(self.centralwidget)
+        self.temperature_lcd.setNumDigits(6)
+        self.temperature_lcd.setObjectName(_fromUtf8("temperature_lcd"))
+        self.verticalLayout_4.addWidget(self.temperature_lcd)
+        self.longitude_lcd = QtGui.QLCDNumber(self.centralwidget)
+        self.longitude_lcd.setNumDigits(11)
+        self.longitude_lcd.setObjectName(_fromUtf8("longitude_lcd"))
+        self.verticalLayout_4.addWidget(self.longitude_lcd)
+        self.horizontalLayout_2.addLayout(self.verticalLayout_4)
+        self.horizontalLayout_4.addLayout(self.horizontalLayout_2)
+        self.gridLayout.addLayout(self.horizontalLayout_4, 0, 0, 1, 1)
+        self.horizontalLayout_3 = QtGui.QHBoxLayout()
+        self.horizontalLayout_3.setObjectName(_fromUtf8("horizontalLayout_3"))
+        self.start_button = QtGui.QPushButton(self.centralwidget)
+        self.start_button.setObjectName(_fromUtf8("start_button"))
+        self.horizontalLayout_3.addWidget(self.start_button)
+        self.stop_button = QtGui.QPushButton(self.centralwidget)
+        self.stop_button.setObjectName(_fromUtf8("stop_button"))
+        self.horizontalLayout_3.addWidget(self.stop_button)
+        spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.horizontalLayout_3.addItem(spacerItem)
+        self.gridLayout.addLayout(self.horizontalLayout_3, 1, 0, 1, 1)
+        TestWindow.setCentralWidget(self.centralwidget)
+        self.menubar = QtGui.QMenuBar(TestWindow)
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 794, 21))
+        self.menubar.setObjectName(_fromUtf8("menubar"))
+        TestWindow.setMenuBar(self.menubar)
+        self.statusbar = QtGui.QStatusBar(TestWindow)
+        self.statusbar.setObjectName(_fromUtf8("statusbar"))
+        TestWindow.setStatusBar(self.statusbar)
+
+        self.retranslateUi(TestWindow)
+        QtCore.QMetaObject.connectSlotsByName(TestWindow)
+
+    def retranslateUi(self, TestWindow):
+        TestWindow.setWindowTitle(_translate("TestWindow", "Rocket Data", None))
+        self.label_8.setText(_translate("TestWindow", "Time (s)", None))
+        self.label_9.setText(_translate("TestWindow", "Altitude (m)", None))
+        self.label_10.setText(_translate("TestWindow", "Acceleration Z (m/s^2) ", None))
+        self.label_11.setText(_translate("TestWindow", "Latitude", None))
+        self.label_12.setText(_translate("TestWindow", "Vertical Speed (km/h)", None))
+        self.label_13.setText(_translate("TestWindow", "Max Altitude (m)", None))
+        self.label_14.setText(_translate("TestWindow", "Temperature (C degrees)", None))
+        self.label_15.setText(_translate("TestWindow", "Longitude", None))
+        self.start_button.setText(_translate("TestWindow", "Start", None))
+        self.stop_button.setText(_translate("TestWindow", "Stop", None))
+

@@ -14,7 +14,7 @@ class RocketData:
         # print(len(data_buffer))
         newData = struct.unpack(self.format, data_buffer)
 
-        self.timeStamp = newData[0]
+        self.time_stamp = newData[0]
 
         self.angular_speed_x = newData[1]
         self.angular_speed_y = newData[2]
@@ -50,7 +50,7 @@ class RocketData:
 
 
     def print_data(self):
-        print("Time Stamp = {}".format(self.timeStamp))
+        print("Time Stamp = {}".format(self.time_stamp))
 
         print("Ang Speed X = {}".format(self.angular_speed_x))
         print("Ang Speed Y = {}".format(self.angular_speed_y))
