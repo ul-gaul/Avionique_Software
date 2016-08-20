@@ -18,7 +18,7 @@ if __name__ == "__main__":
     # device = serial.Serial("COM7", baudrate=BAUDRATE, timeout=0.2)
 
     # initializing csv file
-    file_name = "{}_acquisition_data_basic.csv".format(datetime.now().strftime("%Y%m%d_%H%M%S"))
+    file_name = "output_files/{}_acquisition_data_basic.csv".format(datetime.now().strftime("%Y%m%d_%H%M%S"))
     print("File Name = {}".format(file_name))
     csv_file = open(file_name, 'a', newline='')
     writer = csv.writer(csv_file)
