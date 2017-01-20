@@ -5,42 +5,79 @@ Created on Thu Mar 24 12:03:00 2016
 @author: Maxime
 """
 import struct
+import os
 
 
 class RocketData:
     def __init__(self, data_buffer):
-        self.format = "<fffffffffffffffffB"
+        self.format = "<ffffffffffffffffffffffBBBBBBfffffBBB"
         self.data_buffer = data_buffer
-        # print(len(data_buffer))
-        newData = struct.unpack(self.format, data_buffer)
+        new_data = struct.unpack(self.format, data_buffer)
 
-        self.time_stamp = newData[0]
+        self.time_stamp = new_data[0]
 
-        self.angular_speed_x = newData[1]
-        self.angular_speed_y = newData[2]
-        self.angular_speed_z = newData[3]
+        # Vitesse angulaire en radian par seconde
+        self.angular_speed_x = new_data[1]
+        self.angular_speed_y = new_data[2]
+        self.angular_speed_z = new_data[3]
 
-        self.acceleration_x = newData[4]
-        self.acceleration_y = newData[5]
-        self.acceleration_z = newData[6]
+        # Acceleration en g
+        self.acceleration_x = new_data[4]
+        self.acceleration_y = new_data[5]
+        self.acceleration_z = new_data[6]
 
-        self.magnetic_field_x = newData[7]
-        self.magnetic_field_y = newData[8]
-        self.magnetic_field_z = newData[9]
+        # Champ magnetique en Gauss
+        self.magnetic_field_x = new_data[7]
+        self.magnetic_field_y = new_data[8]
+        self.magnetic_field_z = new_data[9]
 
-        self.altitude = newData[10]
+        # Altitude en metres
+        self.altitude = new_data[10]
 
-        self.latitude_1 = newData[11]
-        self.longitude_1 = newData[12]
-        self.latitude_2 = newData[13]
-        self.longitude_2 = newData[14]
+        # Coordonnees GPS en degres
+        self.latitude_1 = new_data[11]
+        self.longitude_1 = new_data[12]
+        self.latitude_2 = new_data[13]
+        self.longitude_2 = new_data[14]
 
-        self.temperature_1 = newData[15]
-        self.temperature_2 = newData[16]
+        # Temperature en degres Celsius
+        self.temperature_1 = new_data[15]
+        self.temperature_2 = new_data[16]
+        self.temperature_3 = new_data[17]
+        # TODO: il peut y avoir plus de valeur de temperature
 
-        self.checkSum = newData[17]
+        self.date = new_data[18]
+
+        # Orientation en degres TODO: remplacer par un quaternion
+        self.euler_x = new_data[19]
+        self.euler_y = new_data[20]
+        self.euler_z = new_data[21]
+
+        # etat des systemes
+        self.acquisition_board_state_1 = new_data[22]
+        self.acquisition_board_state_2 = new_data[23]
+        self.acquisition_board_state_3 = new_data[24]
+        self.power_supply_state_1 = new_data[25]
+        self.power_supply_state_2 = new_data[26]
+        self.payload_board_state_1 = new_data[27]
+
+        # donnees alimentation
+        self.voltage = new_data[28]
+        self.current = new_data[29]
+
+        # donnees payload
+        self.angSpeed_payload_x = new_data[30]
+        self.angSpeed_payload_y = new_data[31]
+        self.angSpeed_payload_z = new_data[32]
+
+        # donnees de controler
+        self.camera = new_data[33]
+        self.deployment = new_data[34]
+
+        self.checkSum = new_data[35]
 
     def validateCheckSum(self):
+        # TODO: s'entendre avec l'equipe d'acquisition pour la formule a utiliser
         checkSum = sum(self.data_buffer[0:-2])%256
         if checkSum == self.checkSum:
             return True
@@ -48,34 +85,56 @@ class RocketData:
             print("Invalid Checksum : data = {}, calculated = {}".format(self.checkSum, checkSum))
             return False
 
-
     def print_data(self):
-        print("Time Stamp = {}".format(self.time_stamp))
+        # FIXME: convertir en methode __str__ et transferer la gestion de la console dans la fonction appelante
+        os.system('cls' if os.name == 'nt' else 'clear')
 
-        print("Ang Speed X = {}".format(self.angular_speed_x))
-        print("Ang Speed Y = {}".format(self.angular_speed_y))
-        print("Ang Speed Z = {}".format(self.angular_speed_z))
+        print("Time Stamp               : {}\n".format(self.time_stamp))
 
-        print("Accel X = {}".format(self.acceleration_x))
-        print("Accel Y = {}".format(self.acceleration_y))
-        print("Accel Z = {}".format(self.acceleration_z))
+        print("Ang Speed X              : {}".format(self.angular_speed_x))
+        print("Ang Speed Y              : {}".format(self.angular_speed_y))
+        print("Ang Speed Z              : {}\n".format(self.angular_speed_z))
 
-        print("Magnet X = {}".format(self.magnetic_field_x))
-        print("Magnet Y = {}".format(self.magnetic_field_y))
-        print("Magnet Z = {}".format(self.magnetic_field_z))
+        print("Accel X                  : {}".format(self.acceleration_x))
+        print("Accel Y                  : {}".format(self.acceleration_y))
+        print("Accel Z                  : {}\n".format(self.acceleration_z))
 
-        print("Altitude = {}".format(self.altitude))
+        print("Magnet X                 : {}".format(self.magnetic_field_x))
+        print("Magnet Y                 : {}".format(self.magnetic_field_y))
+        print("Magnet Z                 : {}\n".format(self.magnetic_field_z))
 
-        print("Latitude 1 = {}".format(self.latitude_1))
-        print("Longitude 1 = {}".format(self.longitude_1))
-        print("Latitude 2 = {}".format(self.latitude_2))
-        print("Longitude 2 = {}".format(self.longitude_2))
+        print("Altitude                 : {}\n".format(self.altitude))
 
-        print("Temp 1 = {}".format(self.temperature_1))
-        print("Temp 2 = {}".format(self.temperature_2))
+        print("Latitude 1               : {}".format(self.latitude_1))
+        print("Longitude 1              : {}".format(self.longitude_1))
+        print("Latitude 2               : {}".format(self.latitude_2))
+        print("Longitude 2              : {}\n".format(self.longitude_2))
 
-        print("Checksum = {}\n\n".format(self.checkSum))
+        print("Temp 1                   : {}".format(self.temperature_1))
+        print("Temp 2                   : {}".format(self.temperature_2))
+        print("Temp 3                   : {}\n".format(self.temperature_3))
 
+        print("Date                      : {}\n".format(self.date))
 
-if __name__ == "__main__":
-    pass
+        print("Euler X                   : {}".format(self.euler_x))
+        print("Euler Y                   : {}".format(self.euler_y))
+        print("Euler Z                   : {}\n".format(self.euler_z))
+
+        print("Etat board acquisition 1  : {}".format(self.acquisition_board_state_1))
+        print("Etat board acquisition 2  : {}".format(self.acquisition_board_state_2))
+        print("Etat board acquisition 3  : {}".format(self.acquisition_board_state_3))
+        print("Etat board alimentation 1 : {}".format(self.power_supply_state_1))
+        print("Etat board alimentation 2 : {}".format(self.power_supply_state_2))
+        print("Etat board payload        : {}\n".format(self.payload_board_state_1))
+
+        print("Voltage                   : {}".format(self.voltage))
+        print("Courant                   : {}\n".format(self.current))
+
+        print("Payload Ang Speed X       : {}".format(self.angSpeed_payload_x))
+        print("Payload Ang Speed Y       : {}".format(self.angSpeed_payload_y))
+        print("Payload Ang Speed Z       : {}\n".format(self.angSpeed_payload_z))
+
+        print("Camera                    : {}".format(self.camera))
+        print("Deploiment                : {}\n".format(self.deployment))
+
+        print("Checksum                  : {}".format(self.checkSum))
