@@ -11,7 +11,7 @@ import time
 import matplotlib.animation as Animation
 import numpy as np
 from .data_processing import DataProcessing
-from communication.serial_reader import AcquisitionThread
+from communication.serial_reader import SerialReader
 
 
 class DataHandlingThread(QtCore.QThread):
@@ -47,7 +47,7 @@ class FlightDataDialog(QtGui.QDialog, Ui_Dialog):
 
         self.data_proc = DataProcessing()
         queue = Queue(maxsize=100000)
-        self.acquisition_thread = AcquisitionThread(queue)
+        self.acquisition_thread = SerialReader(queue)
         self.data_handling_thread = DataHandlingThread(queue, self.data_proc)
 
         """Initialize figs, canvas and axs"""

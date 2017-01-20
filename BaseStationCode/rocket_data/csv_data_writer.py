@@ -2,7 +2,7 @@ import csv
 import os
 from datetime import datetime
 
-from rocket_data.rocket_packet import RocketData
+from rocket_data.rocket_packet import RocketPacket
 
 
 class CsvDataWriter:

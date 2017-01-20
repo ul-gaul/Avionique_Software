@@ -2,7 +2,7 @@ import serial
 import csv
 from datetime import datetime
 
-from rocket_data.rocket_packet import RocketData
+from rocket_data.rocket_packet import RocketPacket
 from communication.DetectSerial import serial_port
 
 
@@ -34,7 +34,7 @@ if __name__ == "__main__":
                 pass
             data = device.read(PACKET_SIZE)
 
-            rocket_data = RocketData(data)
+            rocket_data = RocketPacket(data)
             # checksum_validated = rocket_data.validateCheckSum()
             checksum_validated = True
             print("Checksum validated : {}".format(checksum_validated))

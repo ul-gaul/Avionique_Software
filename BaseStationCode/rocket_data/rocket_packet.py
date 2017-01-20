@@ -8,7 +8,7 @@ import struct
 import os
 
 
-class RocketData:
+class RocketPacket:
     def __init__(self, data_buffer):
         self.format = "<ffffffffffffffffffffffBBBBBBfffffBBB"
         self.data_buffer = data_buffer
@@ -74,15 +74,15 @@ class RocketData:
         self.camera = new_data[33]
         self.deployment = new_data[34]
 
-        self.checkSum = new_data[35]
+        self.checksum = new_data[35]
 
-    def validateCheckSum(self):
+    def validate_checksum(self):
         # TODO: s'entendre avec l'equipe d'acquisition pour la formule a utiliser
-        checkSum = sum(self.data_buffer[0:-2])%256
-        if checkSum == self.checkSum:
+        checksum = sum(self.data_buffer[0:-2]) % 256
+        if checksum == self.checksum:
             return True
         else:
-            print("Invalid Checksum : data = {}, calculated = {}".format(self.checkSum, checkSum))
+            print("Invalid Checksum : data = {}, calculated = {}".format(self.checksum, checksum))
             return False
 
     def print_data(self):
@@ -137,4 +137,4 @@ class RocketData:
         print("Camera                    : {}".format(self.camera))
         print("Deploiment                : {}\n".format(self.deployment))
 
-        print("Checksum                  : {}".format(self.checkSum))
+        print("Checksum                  : {}".format(self.checksum))
