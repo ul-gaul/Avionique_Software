@@ -1,23 +1,26 @@
 import glob
 import sys
+import struct
+import serial
 from threading import Thread
 
-import serial
-from serial import Serial
-
-from src.Producer import Producer
+from src.producer import Producer
 from src.rocket_packet import RocketPacket
 
 
 class SerialReader(Producer):
-    PACKET_SIZE = 69
-
-    def __init__(self, baudrate=9600, start_character=b's'):
+    def __init__(self, baudrate=9600, start_character=b's', packet_size=121,
+                 packet_format="<fffffffffffffffffffffffBBBBBBfffffBBB"):
         super().__init__()
-        self.port = Serial()
+        self.port = serial.Serial()
         self.port.baudrate = baudrate
         self.port.timeout = 0.2
+
+        # TODO: a confirmer avec l'equipe d'acquisition
         self.start_character = start_character
+        self.packet_size = packet_size
+        self.format = packet_format
+
         self.flightData = []
         self.thread = Thread(target=self.run)
 
@@ -32,12 +35,16 @@ class SerialReader(Producer):
             c = self.port.read(1)
             if c == self.start_character:
                 # FIXME: peut creer une boucle infinie lors de l'arret de la transmission
-                while self.port.inWaiting() < self.PACKET_SIZE:
+                while self.port.inWaiting() < self.packet_size:
                     pass
-                data = self.port.read(self.PACKET_SIZE)
 
-                rocket_packet = RocketPacket(data)
-                if rocket_packet.validate_checksum():
+                data_array = self.port.read(self.packet_size)
+                tmp_list = struct.unpack(self.format, data_array)
+                data_list = tmp_list[:-1]
+                checksum = tmp_list[-1]
+
+                if self.validate_checksum(data_array[:-1], checksum):
+                    rocket_packet = RocketPacket(data_list)
                     self.rocket_packets.put(rocket_packet)
                     # TODO: decider si on ecrit dans le csv seulement a la fin, ou au fur et a mesure
                     self.flightData.append(rocket_packet)
@@ -75,3 +82,13 @@ class SerialReader(Producer):
             except (OSError, serial.SerialException):
                 pass
         return result
+
+    @staticmethod
+    def validate_checksum(data_array, expected_checksum):
+        # TODO: s'entendre avec l'equipe d'acquisition pour la formule a utiliser
+        checksum = sum(data_array[0:-1]) % 256
+        if checksum == expected_checksum:
+            return True
+        else:
+            print("Invalid Checksum : expected = {}, calculated = {}".format(expected_checksum, checksum))
+            return False

@@ -4,86 +4,71 @@ Created on Thu Mar 24 12:03:00 2016
 
 @author: Maxime
 """
-import struct
 import os
 
 
 class RocketPacket:
-    def __init__(self, data_buffer):
-        self.format = "<ffffffffffffffffffffffBBBBBBfffffBBB"
-        self.data_buffer = data_buffer
-        new_data = struct.unpack(self.format, data_buffer)
-
-        self.time_stamp = new_data[0]
+    def __init__(self, data_list):
+        self.time_stamp = data_list[0]
 
         # Vitesse angulaire en radian par seconde
-        self.angular_speed_x = new_data[1]
-        self.angular_speed_y = new_data[2]
-        self.angular_speed_z = new_data[3]
+        self.angular_speed_x = data_list[1]
+        self.angular_speed_y = data_list[2]
+        self.angular_speed_z = data_list[3]
 
         # Acceleration en g
-        self.acceleration_x = new_data[4]
-        self.acceleration_y = new_data[5]
-        self.acceleration_z = new_data[6]
+        self.acceleration_x = data_list[4]
+        self.acceleration_y = data_list[5]
+        self.acceleration_z = data_list[6]
 
         # Champ magnetique en Gauss
-        self.magnetic_field_x = new_data[7]
-        self.magnetic_field_y = new_data[8]
-        self.magnetic_field_z = new_data[9]
+        self.magnetic_field_x = data_list[7]
+        self.magnetic_field_y = data_list[8]
+        self.magnetic_field_z = data_list[9]
 
         # Altitude en metres
-        self.altitude = new_data[10]
+        self.altitude = data_list[10]
 
         # Coordonnees GPS en degres
-        self.latitude_1 = new_data[11]
-        self.longitude_1 = new_data[12]
-        self.latitude_2 = new_data[13]
-        self.longitude_2 = new_data[14]
+        self.latitude_1 = data_list[11]
+        self.longitude_1 = data_list[12]
+        self.latitude_2 = data_list[13]
+        self.longitude_2 = data_list[14]
 
         # Temperature en degres Celsius
-        self.temperature_1 = new_data[15]
-        self.temperature_2 = new_data[16]
-        self.temperature_3 = new_data[17]
+        self.temperature_1 = data_list[15]
+        self.temperature_2 = data_list[16]
+        self.temperature_3 = data_list[17]
         # TODO: il peut y avoir plus de valeur de temperature
 
-        self.date = new_data[18]
+        self.date = data_list[18]
 
-        # Orientation en degres TODO: remplacer par un quaternion
-        self.euler_x = new_data[19]
-        self.euler_y = new_data[20]
-        self.euler_z = new_data[21]
+        # Orientation sous forme de quaternion
+        self.quaternion_w = data_list[19]
+        self.quaternion_x = data_list[20]
+        self.quaternion_y = data_list[21]
+        self.quaternion_z = data_list[22]
 
         # etat des systemes
-        self.acquisition_board_state_1 = new_data[22]
-        self.acquisition_board_state_2 = new_data[23]
-        self.acquisition_board_state_3 = new_data[24]
-        self.power_supply_state_1 = new_data[25]
-        self.power_supply_state_2 = new_data[26]
-        self.payload_board_state_1 = new_data[27]
+        self.acquisition_board_state_1 = data_list[23]
+        self.acquisition_board_state_2 = data_list[24]
+        self.acquisition_board_state_3 = data_list[25]
+        self.power_supply_state_1 = data_list[26]
+        self.power_supply_state_2 = data_list[27]
+        self.payload_board_state_1 = data_list[28]
 
         # donnees alimentation
-        self.voltage = new_data[28]
-        self.current = new_data[29]
+        self.voltage = data_list[29]
+        self.current = data_list[30]
 
         # donnees payload
-        self.angSpeed_payload_x = new_data[30]
-        self.angSpeed_payload_y = new_data[31]
-        self.angSpeed_payload_z = new_data[32]
+        self.angSpeed_payload_x = data_list[31]
+        self.angSpeed_payload_y = data_list[32]
+        self.angSpeed_payload_z = data_list[33]
 
         # donnees de controler
-        self.camera = new_data[33]
-        self.deployment = new_data[34]
-
-        self.checksum = new_data[35]
-
-    def validate_checksum(self):
-        # TODO: s'entendre avec l'equipe d'acquisition pour la formule a utiliser
-        checksum = sum(self.data_buffer[0:-2]) % 256
-        if checksum == self.checksum:
-            return True
-        else:
-            print("Invalid Checksum : data = {}, calculated = {}".format(self.checksum, checksum))
-            return False
+        self.camera = data_list[34]
+        self.deployment = data_list[35]
 
     def print_data(self):
         # FIXME: convertir en methode __str__ et transferer la gestion de la console dans la fonction appelante
@@ -116,9 +101,10 @@ class RocketPacket:
 
         print("Date                      : {}\n".format(self.date))
 
-        print("Euler X                   : {}".format(self.euler_x))
-        print("Euler Y                   : {}".format(self.euler_y))
-        print("Euler Z                   : {}\n".format(self.euler_z))
+        print("Quaternion W                   : {}".format(self.quaternion_w))
+        print("Quaternion X                   : {}".format(self.quaternion_x))
+        print("Quaternion Y                   : {}".format(self.quaternion_y))
+        print("Quaternion Z                   : {}\n".format(self.quaternion_z))
 
         print("Etat board acquisition 1  : {}".format(self.acquisition_board_state_1))
         print("Etat board acquisition 2  : {}".format(self.acquisition_board_state_2))
@@ -136,5 +122,3 @@ class RocketPacket:
 
         print("Camera                    : {}".format(self.camera))
         print("Deploiment                : {}\n".format(self.deployment))
-
-        print("Checksum                  : {}".format(self.checksum))
