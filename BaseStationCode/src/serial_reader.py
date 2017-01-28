@@ -1,10 +1,12 @@
-from threading import Thread
-from serial import Serial
-from rocket_data.rocket_packet import RocketPacket
-from src.producer import Producer
-import sys
 import glob
+import sys
+from threading import Thread
+
 import serial
+from serial import Serial
+
+from src.Producer import Producer
+from src.rocket_packet import RocketPacket
 
 
 class SerialReader(Producer):

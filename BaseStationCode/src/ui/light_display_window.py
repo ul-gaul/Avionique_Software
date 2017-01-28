@@ -1,10 +1,11 @@
-from PyQt4 import QtGui, QtCore
 from queue import Queue, Empty
 
-from communication.serial_reader import SerialReader
-from rocket_data.csv_data_writer import CsvDataWriter
-from ui.light_display_windowUI import Ui_LightDisplayWindow
-from rocket_data.rocket_packet import RocketPacket
+from PyQt4 import QtGui, QtCore
+
+from src.csv_data_writer import CsvDataWriter
+from src.rocket_packet import RocketPacket
+from src.serial_reader import SerialReader
+from src.ui.light_display_windowUI import Ui_LightDisplayWindow
 
 
 class HandlingDataThread(QtCore.QThread):

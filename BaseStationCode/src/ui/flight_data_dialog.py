@@ -1,17 +1,14 @@
+import random
 from queue import Queue, Empty
 
 from PyQt4 import QtGui, QtCore
-
-from rocket_data.csv_data_writer import CsvDataWriter
-from .flight_dataUI import Ui_Dialog
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
-import random
-import time
-import matplotlib.animation as Animation
-import numpy as np
+
+from src.csv_data_writer import CsvDataWriter
+from src.serial_reader import SerialReader
 from .data_processing import DataProcessing
-from communication.serial_reader import SerialReader
+from .flight_dataUI import Ui_Dialog
 
 
 class DataHandlingThread(QtCore.QThread):
