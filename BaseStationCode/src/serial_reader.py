@@ -85,8 +85,7 @@ class SerialReader(Producer):
 
     @staticmethod
     def validate_checksum(data_array, expected_checksum):
-        # TODO: s'entendre avec l'equipe d'acquisition pour la formule a utiliser
-        checksum = sum(data_array[0:-1]) % 256
+        checksum = sum(data_array) % 256
         if checksum == expected_checksum:
             return True
         else:
