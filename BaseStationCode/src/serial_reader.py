@@ -34,20 +34,23 @@ class SerialReader(Producer):
         while self.is_running:
             c = self.port.read(1)
             if c == self.start_character:
-                # FIXME: peut creer une boucle infinie lors de l'arret de la transmission
-                while self.port.inWaiting() < self.packet_size:
-                    pass
-
                 data_array = self.port.read(self.packet_size)
-                tmp_list = struct.unpack(self.format, data_array)
-                data_list = tmp_list[:-1]
-                checksum = tmp_list[-1]
+                try:
+                    tmp_list = struct.unpack(self.format, data_array)
+                    data_list = tmp_list[:-1]
+                    checksum = tmp_list[-1]
 
-                if self.validate_checksum(data_array[:-1], checksum):
-                    rocket_packet = RocketPacket(data_list)
-                    self.rocket_packets.put(rocket_packet)
-                    # TODO: decider si on ecrit dans le csv seulement a la fin, ou au fur et a mesure
-                    self.flightData.append(rocket_packet)
+                    if self.validate_checksum(data_array[:-1], checksum):
+                        rocket_packet = RocketPacket(data_list)
+                        self.rocket_packets.put(rocket_packet)
+                        # TODO: decider si on ecrit dans le csv seulement a la fin, ou au fur et a mesure
+                        self.flightData.append(rocket_packet)
+                except struct.error:
+                    """
+                    This error can occur if we don't read enough bytes on the serial port or if the packet format is
+                    incorrect.
+                    """
+                    print("Invalid packet")
         self.port.close()
 
     def stop(self):
