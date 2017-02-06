@@ -36,12 +36,10 @@ class SerialReader(Producer):
             if c == self.start_character:
                 data_array = self.port.read(self.packet_size)
                 try:
-                    tmp_list = struct.unpack(self.format, data_array)
-                    data_list = tmp_list[:-1]
-                    checksum = tmp_list[-1]
+                    data_list = struct.unpack(self.format, data_array)
 
-                    if self.validate_checksum(data_array[:-1], checksum):
-                        rocket_packet = RocketPacket(data_list)
+                    if self.validate_checksum(data_array):
+                        rocket_packet = RocketPacket(data_list[:-1])
                         self.rocket_packets.put(rocket_packet)
                         # TODO: decider si on ecrit dans le csv seulement a la fin, ou au fur et a mesure
                         self.flightData.append(rocket_packet)
@@ -87,10 +85,10 @@ class SerialReader(Producer):
         return result
 
     @staticmethod
-    def validate_checksum(data_array, expected_checksum):
+    def validate_checksum(data_array):
         checksum = sum(data_array) % 256
-        if checksum == expected_checksum:
+        if checksum == 255:
             return True
         else:
-            print("Invalid Checksum : expected = {}, calculated = {}".format(expected_checksum, checksum))
+            print("Invalid Checksum : expected = 255, calculated = {}".format(checksum))
             return False
