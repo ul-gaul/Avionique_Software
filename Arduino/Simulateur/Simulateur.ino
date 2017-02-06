@@ -1,91 +1,18 @@
-#include "math.h"
-#define numData 17
+#include "rocketData.h"
+#include "sensors.h"
+
+#define START_BYTE 's'
 
 int timestamp = 0;
 
-struct rocketPacket
-{
-  float array[numData];
-};
-
-byte computeCheckSum(byte array[numData*sizeof(float)])
+byte computeCheckSum(byte *data)
 {
   byte sum = 0;
-  for(int i = 0; i < numData*sizeof(float); i++)
+  for(int i = 0; i < sizeof(RocketData); i++)
   {
-    sum += array[i];
+    sum += data[i];
   }
-  return sum;
-}
-
-float accel(int timestamp)
-{
-  if(timestamp < 150)
-  {
-    return (-4.0/9.0);
-  }
-  else
-  {
-    return 0.0;
-  }
-}
-
-float altitude(int timestamp)
-{
-  if(timestamp < 150)
-  {
-    return -(4.0/9.0)*(timestamp-150)*(timestamp-150) + 10000;
-  }
-  else if (timestamp >= 150 && timestamp < 3275)
-  {
-    return 10000-16.0*timestamp/5;
-  }
-  else
-  {
-    return 0.0;
-  }
-}
-
-float latitude(int timestamp)
-{
-  if(timestamp < 150)
-  {
-    return 0.0;
-  }
-  else if(timestamp >= 150 && timestamp < 3275)
-  {
-    return 1.0*(timestamp-150);
-  }
-  else
-  {
-    return 3125.0;
-  }
-}
-
-float longitude(int timestamp)
-{
-  if(timestamp < 150)
-  {
-    return 0.0;
-  }
-  else if(timestamp >= 150 && timestamp < 3275)
-  {
-    return -0.5*(timestamp-150);
-  }
-  else
-  {
-    return -1562.5;
-  }
-}
-
-float temperature1(int timestamp)
-{
-  return 3*cos(timestamp*M_PI/25) + 100;
-}
-
-float temperature2(int timestamp)
-{
-  return 2*sin(timestamp*M_PI/25) + 102;
+  return ~sum;
 }
 
 void setup()
@@ -96,41 +23,55 @@ void setup()
 
 void loop()
 {
-  rocketPacket rp;
-  rp.array[0] = timestamp;
-  rp.array[1] = 0;
-  rp.array[2] = 0;
-  rp.array[3] = 0;
-  rp.array[4] = accel(timestamp);
-  rp.array[5] = 0;
-  rp.array[6] = 0;
-  rp.array[7] = 0;
-  rp.array[8] = 0;
-  rp.array[9] = 0;
-  rp.array[10] = altitude(timestamp);
-  rp.array[11] = latitude(timestamp);
-  rp.array[12] = longitude(timestamp);
-  rp.array[13] = latitude(timestamp);
-  rp.array[14] = longitude(timestamp);
-  rp.array[15] = temperature1(timestamp);
-  rp.array[16] = temperature2(timestamp);
-  
-  byte packet[sizeof(rp)+1];
-  memcpy(packet, &rp, sizeof(rp));
-  byte checkSum = computeCheckSum(packet);
-  packet[sizeof(packet)-1] = ~checkSum;
+  RocketPacket rp;
+  rp.rocketData.timeStamp = timestamp;
+  rp.rocketData.angSpeedX = 0;
+  rp.rocketData.angSpeedY = 0;
+  rp.rocketData.angSpeedZ = 0;
+  rp.rocketData.accelX = 0;
+  rp.rocketData.accelY = accel(timestamp);
+  rp.rocketData.accelZ = 0;
+  rp.rocketData.magnetX = 0;
+  rp.rocketData.magnetY = 0;
+  rp.rocketData.magnetZ = 0;
+  rp.rocketData.altitude = altitude(timestamp);
+  rp.rocketData.latitude1 = latitude(timestamp);
+  rp.rocketData.longitude1 = longitude(timestamp);
+  rp.rocketData.latitude2 = latitude(timestamp);
+  rp.rocketData.longitude2 = longitude(timestamp);
+  rp.rocketData.temperature1 = temperature1(timestamp);
+  rp.rocketData.temperature2 = temperature2(timestamp);
+  rp.rocketData.temperature3 = temperature1(timestamp);
+  rp.rocketData.timeStampDate = 0;
+  rp.rocketData.quaterniona = 0;
+  rp.rocketData.quaternionb = 0;
+  rp.rocketData.quaternionc = 0;
+  rp.rocketData.quaterniond = 0;
+  rp.rocketData.etatBoardAcquisition1 = 255;
+  rp.rocketData.etatBoardAcquisition2 = 255;
+  rp.rocketData.etatBoardAcquisition3 = 255;
+  rp.rocketData.etatBoardAlim1 = 255;
+  rp.rocketData.etatBoardAlim2 = 255;
+  rp.rocketData.etatBoardPayload1 = etatBoard(timestamp);
+  rp.rocketData.voltage = 3.3;
+  rp.rocketData.courant = 0.001;
+  rp.rocketData.angSpeedXPayload = 0;
+  rp.rocketData.angSpeedYPayload = 0;
+  rp.rocketData.angSpeedZPayload = 0;
+  rp.rocketData.camera = 128;
+  rp.rocketData.deploiement = 255;
+
+  //Calcul du checksum
+  byte dataBuffer[sizeof(RocketData)];
+  memcpy(dataBuffer, &(rp.rocketData), sizeof(RocketData));
+  rp.checksum = computeCheckSum(dataBuffer);
 
   //Envoi du packet sur le port serie
-  Serial.write(packet, sizeof(packet));
-  Serial.write("\n");
-  /*
-  for(int i = 0; i < 17; i++)
-  {
-    Serial.print(rp.array[i]);
-    Serial.print(" ");
-  }
-  Serial.print("\n");
-  */
+  byte packetBuffer[sizeof(RocketPacket)];
+  memcpy(packetBuffer, &rp, sizeof(RocketPacket));
+  Serial.write(START_BYTE);
+  Serial.write(packetBuffer, sizeof(RocketPacket));
+
   timestamp++;
   delay(200);
 }
