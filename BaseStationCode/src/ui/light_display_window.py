@@ -1,14 +1,15 @@
-from PyQt4 import QtGui, QtCore
 from queue import Queue, Empty
 
-from communication.serial_reader import AcquisitionThread
-from rocket_data.csv_data_writer import CsvDataWriter
-from ui.light_display_windowUI import Ui_LightDisplayWindow
-from rocket_data.rocket_packet import RocketData
+from PyQt4 import QtGui, QtCore
+
+from src.csv_data_writer import CsvDataWriter
+from src.rocket_packet import RocketPacket
+from src.serial_reader import SerialReader
+from src.ui.light_display_windowUI import Ui_LightDisplayWindow
 
 
 class HandlingDataThread(QtCore.QThread):
-    data_received = QtCore.pyqtSignal(RocketData)
+    data_received = QtCore.pyqtSignal(RocketPacket)
 
     def __init__(self, acquisition_queue):
         QtCore.QThread.__init__(self)
@@ -58,7 +59,7 @@ class LightDisplayWindow(QtGui.QMainWindow):
     def init_data_acquisition(self):
         self.handling_data_thread = HandlingDataThread(self.queue)
         self.handling_data_thread.data_received.connect(self.update_lcds)
-        self.acquisition_thread = AcquisitionThread(self.queue)
+        self.acquisition_thread = SerialReader(self.queue)
 
     def start_acquisition(self):
         self.ui.start_button.setEnabled(False)

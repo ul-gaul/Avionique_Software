@@ -1,6 +1,8 @@
 import sys
+
 from PyQt4 import QtGui
-from ui.light_display_window import LightDisplayWindow
+
+from src.ui.light_display_window import LightDisplayWindow
 
 if __name__ == "__main__":
     a = QtGui.QApplication(sys.argv)

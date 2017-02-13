@@ -1,8 +1,8 @@
-
-from ui.main_window import MainWindow
-from PyQt4 import QtGui
 import sys
-import time
+
+from PyQt4 import QtGui
+
+from src.ui import MainWindow
 
 if __name__ == '__main__':
     a = QtGui.QApplication(sys.argv)

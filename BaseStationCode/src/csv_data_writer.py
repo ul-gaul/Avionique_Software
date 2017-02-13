@@ -2,8 +2,6 @@ import csv
 import os
 from datetime import datetime
 
-from rocket_data.rocket_packet import RocketData
-
 
 class CsvDataWriter:
     HEADER_FIELDS = ["TIME STAMP",
