@@ -1,9 +1,9 @@
 # pylint: skip-file
 
-from FileReader import FileReader
+from BaseStationCode.src.FileReader import FileReader
 import time
 
-myFileReader = FileReader(".\\BaseStationCode\\input_files\\TestFile.csv")
+myFileReader = FileReader("..\\input_files\\TestFile.csv")
 
 allPacket = myFileReader.get_data()
 
