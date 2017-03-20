@@ -193,7 +193,7 @@
         </property>
         <property name="font">
          <font>
-          <pointsize>12</pointsize>
+          <pointsize>16</pointsize>
          </font>
         </property>
         <property name="styleSheet">
@@ -201,6 +201,7 @@
 	background-color: rgb(236,0,0);
 	border: 1px solid black;
 	border-radius: 8px;
+	color: white;
 }</string>
         </property>
         <property name="text">
@@ -246,7 +247,7 @@
         </property>
         <property name="font">
          <font>
-          <pointsize>12</pointsize>
+          <pointsize>16</pointsize>
          </font>
         </property>
         <property name="styleSheet">
@@ -254,6 +255,7 @@
 	background-color: rgb(236, 0, 0);
 	border: 1px solid black;
 	border-radius: 8px;
+	color: white;
 }</string>
         </property>
         <property name="text">
@@ -323,10 +325,6 @@
      </layout>
     </item>
    </layout>
-   <zorder>horizontalSpacer_4</zorder>
-   <zorder>horizontalLayoutWidget</zorder>
-   <zorder>horizontalLayoutWidget_2</zorder>
-   <zorder>horizontalLayoutWidget_3</zorder>
    <zorder>verticalSpacer</zorder>
    <zorder>verticalSpacer_2</zorder>
   </widget>

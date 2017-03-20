@@ -77,12 +77,13 @@ class Ui_MainWindow(object):
         self.pushButton.setMinimumSize(QtCore.QSize(225, 180))
         self.pushButton.setBaseSize(QtCore.QSize(0, 0))
         font = QtGui.QFont()
-        font.setPointSize(12)
+        font.setPointSize(16)
         self.pushButton.setFont(font)
         self.pushButton.setStyleSheet("#pushButton {\n"
 "    background-color: rgb(236,0,0);\n"
 "    border: 1px solid black;\n"
 "    border-radius: 8px;\n"
+"    color: white;\n"
 "}")
         self.pushButton.setIconSize(QtCore.QSize(20, 20))
         self.pushButton.setObjectName("pushButton")
@@ -97,12 +98,13 @@ class Ui_MainWindow(object):
         self.pushButton_2.setSizePolicy(sizePolicy)
         self.pushButton_2.setMinimumSize(QtCore.QSize(225, 180))
         font = QtGui.QFont()
-        font.setPointSize(12)
+        font.setPointSize(16)
         self.pushButton_2.setFont(font)
         self.pushButton_2.setStyleSheet("#pushButton_2 {\n"
 "    background-color: rgb(236, 0, 0);\n"
 "    border: 1px solid black;\n"
 "    border-radius: 8px;\n"
+"    color: white;\n"
 "}")
         self.pushButton_2.setObjectName("pushButton_2")
         self.horizontalLayout_3.addWidget(self.pushButton_2)
