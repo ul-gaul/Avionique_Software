@@ -6,109 +6,91 @@
 #
 # WARNING! All changes made in this file will be lost!
 
-import pyqtgraph as pg
-from random import randint
 from PyQt5 import QtCore, QtGui, QtWidgets
-
 
 class Ui_data(object):
     def setupUi(self, data):
         data.setObjectName("data")
         data.resize(1082, 638)
         data.setAutoFillBackground(False)
-        data.setStyleSheet("QDialog\n{\n    background: white;\n}")
-        self.horizontalLayout = QtWidgets.QHBoxLayout(data)
-        self.horizontalLayout.setObjectName("horizontalLayout")
+        data.setStyleSheet("QDialog\n"
+"{\n"
+"    background: white;\n"
+"}")
+        self.verticalLayout_5 = QtWidgets.QVBoxLayout(data)
+        self.verticalLayout_5.setObjectName("verticalLayout_5")
+        self.horizontalLayout_4 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_4.setObjectName("horizontalLayout_4")
         self.verticalLayout = QtWidgets.QVBoxLayout()
         self.verticalLayout.setObjectName("verticalLayout")
         spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.verticalLayout.addItem(spacerItem)
-
-        x = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
-
-        self.frame_2 = pg.PlotWidget(title="Some Plotting")
-        self.frame_2.setWindowTitle("Random Plotting")
-        self.frame_2.plotItem.plot(x)
-
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding,
-                                           QtWidgets.QSizePolicy.MinimumExpanding)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.frame_2.sizePolicy().hasHeightForWidth())
-        self.frame_2.setSizePolicy(sizePolicy)
-        self.frame_2.setMinimumSize(QtCore.QSize(400, 150))
-        self.frame_2.setStyleSheet("QFrame\n"
-                                   "{\n"
-                                   "    border: 1px solid black;\n"
-                                   "}")
-        self.frame_2.setFrameShape(QtWidgets.QFrame.StyledPanel)
-        self.frame_2.setFrameShadow(QtWidgets.QFrame.Raised)
-        self.frame_2.setObjectName("frame_2")
-        self.verticalLayout.addWidget(self.frame_2)
-        spacerItem1 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum,
-                                            QtWidgets.QSizePolicy.MinimumExpanding)
-        self.verticalLayout.addItem(spacerItem1)
-
-        y = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
-
-        self.frame = pg.PlotWidget(title="Some Other Plotting")
-        self.frame.setWindowTitle("Not So Random Plotting")
-        self.frame.plotItem.plot(y)
-
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding,
-                                           QtWidgets.QSizePolicy.MinimumExpanding)
+        self.frame = QtWidgets.QFrame(data)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.MinimumExpanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.frame.sizePolicy().hasHeightForWidth())
         self.frame.setSizePolicy(sizePolicy)
         self.frame.setMinimumSize(QtCore.QSize(400, 150))
         self.frame.setStyleSheet("QFrame\n"
-                                 "{\n"
-                                 "    border: 1px solid black;\n"
-                                 "}")
+"{\n"
+"    border: 1px solid black;\n"
+"}")
         self.frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame.setObjectName("frame")
         self.verticalLayout.addWidget(self.frame)
+        spacerItem1 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.MinimumExpanding)
+        self.verticalLayout.addItem(spacerItem1)
+        self.frame_2 = QtWidgets.QFrame(data)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.MinimumExpanding)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.frame_2.sizePolicy().hasHeightForWidth())
+        self.frame_2.setSizePolicy(sizePolicy)
+        self.frame_2.setMinimumSize(QtCore.QSize(400, 150))
+        self.frame_2.setStyleSheet("QFrame\n"
+"{\n"
+"    border: 1px solid black;\n"
+"}")
+        self.frame_2.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        self.frame_2.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.frame_2.setObjectName("frame_2")
+        self.verticalLayout.addWidget(self.frame_2)
         spacerItem2 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.verticalLayout.addItem(spacerItem2)
-        self.horizontalLayout.addLayout(self.verticalLayout)
+        self.horizontalLayout_4.addLayout(self.verticalLayout)
         spacerItem3 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout.addItem(spacerItem3)
+        self.horizontalLayout_4.addItem(spacerItem3)
         self.verticalLayout_2 = QtWidgets.QVBoxLayout()
         self.verticalLayout_2.setObjectName("verticalLayout_2")
         spacerItem4 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.verticalLayout_2.addItem(spacerItem4)
-
-        self.frame_4 = QtWidgets.QFrame(data)
-
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding,
-                                           QtWidgets.QSizePolicy.MinimumExpanding)
+        self.frame_3 = QtWidgets.QFrame(data)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.MinimumExpanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.frame_4.sizePolicy().hasHeightForWidth())
-        self.frame_4.setSizePolicy(sizePolicy)
-        self.frame_4.setMinimumSize(QtCore.QSize(200, 400))
-        self.frame_4.setStyleSheet("QFrame\n"
-                                   "{\n"
-                                   "    border: 1px solid black;\n"
-                                   "}")
-        self.frame_4.setFrameShape(QtWidgets.QFrame.StyledPanel)
-        self.frame_4.setFrameShadow(QtWidgets.QFrame.Raised)
-        self.frame_4.setObjectName("frame_4")
-        self.verticalLayout_2.addWidget(self.frame_4)
+        sizePolicy.setHeightForWidth(self.frame_3.sizePolicy().hasHeightForWidth())
+        self.frame_3.setSizePolicy(sizePolicy)
+        self.frame_3.setMinimumSize(QtCore.QSize(200, 400))
+        self.frame_3.setStyleSheet("QFrame\n"
+"{\n"
+"    border: 1px solid black;\n"
+"}")
+        self.frame_3.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        self.frame_3.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.frame_3.setObjectName("frame_3")
+        self.verticalLayout_2.addWidget(self.frame_3)
         spacerItem5 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.verticalLayout_2.addItem(spacerItem5)
-
         self.pushButton = QtWidgets.QPushButton(data)
-
         self.pushButton.setObjectName("pushButton")
         self.verticalLayout_2.addWidget(self.pushButton)
         spacerItem6 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.verticalLayout_2.addItem(spacerItem6)
-        self.horizontalLayout.addLayout(self.verticalLayout_2)
+        self.horizontalLayout_4.addLayout(self.verticalLayout_2)
         spacerItem7 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout.addItem(spacerItem7)
+        self.horizontalLayout_4.addItem(spacerItem7)
         self.verticalLayout_3 = QtWidgets.QVBoxLayout()
         self.verticalLayout_3.setObjectName("verticalLayout_3")
         spacerItem8 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
@@ -135,38 +117,32 @@ class Ui_data(object):
         spacerItem12 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.verticalLayout_4.addItem(spacerItem12)
         self.horizontalLayout_2.addLayout(self.verticalLayout_4)
-
-        self.frame_6 = QtWidgets.QFrame(data)
-
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding,
-                                           QtWidgets.QSizePolicy.MinimumExpanding)
+        self.frame_4 = QtWidgets.QFrame(data)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.MinimumExpanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.frame_6.sizePolicy().hasHeightForWidth())
-        self.frame_6.setSizePolicy(sizePolicy)
-        self.frame_6.setMinimumSize(QtCore.QSize(75, 0))
-        self.frame_6.setStyleSheet("QFrame\n"
-                                   "{\n"
-                                   "    border: 1px solid black;\n"
-                                   "}")
-        self.frame_6.setFrameShape(QtWidgets.QFrame.StyledPanel)
-        self.frame_6.setFrameShadow(QtWidgets.QFrame.Raised)
-        self.frame_6.setObjectName("frame_6")
-        self.horizontalLayout_2.addWidget(self.frame_6)
-
+        sizePolicy.setHeightForWidth(self.frame_4.sizePolicy().hasHeightForWidth())
+        self.frame_4.setSizePolicy(sizePolicy)
+        self.frame_4.setMinimumSize(QtCore.QSize(75, 0))
+        self.frame_4.setStyleSheet("QFrame\n"
+"{\n"
+"    border: 1px solid black;\n"
+"}")
+        self.frame_4.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        self.frame_4.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.frame_4.setObjectName("frame_4")
+        self.horizontalLayout_2.addWidget(self.frame_4)
         self.frame_5 = QtWidgets.QFrame(data)
-
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding,
-                                           QtWidgets.QSizePolicy.MinimumExpanding)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.MinimumExpanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.frame_5.sizePolicy().hasHeightForWidth())
         self.frame_5.setSizePolicy(sizePolicy)
         self.frame_5.setMinimumSize(QtCore.QSize(75, 0))
         self.frame_5.setStyleSheet("QFrame\n"
-                                   "{\n"
-                                   "    border: 1px solid black;\n"
-                                   "}")
+"{\n"
+"    border: 1px solid black;\n"
+"}")
         self.frame_5.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame_5.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_5.setObjectName("frame_5")
@@ -174,45 +150,59 @@ class Ui_data(object):
         self.verticalLayout_3.addLayout(self.horizontalLayout_2)
         spacerItem13 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.verticalLayout_3.addItem(spacerItem13)
-
-        # self.frame_3 = QtWidgets.QFrame(data)
-
-        z = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
-
-        self.frame_3 = pg.PlotWidget(title="Some Other Other Plotting")
-        self.frame_3.setWindowTitle("Really Not So Random Plotting")
-        self.frame_3.plotItem.plot(z)
-
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding,
-                                           QtWidgets.QSizePolicy.MinimumExpanding)
+        self.frame_6 = QtWidgets.QFrame(data)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.MinimumExpanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.frame_3.sizePolicy().hasHeightForWidth())
-        self.frame_3.setSizePolicy(sizePolicy)
-        self.frame_3.setStyleSheet("QFrame\n"
-                                   "{\n"
-                                   "    border: 1px solid black;\n"
-                                   "}")
-        self.frame_3.setFrameShape(QtWidgets.QFrame.StyledPanel)
-        self.frame_3.setFrameShadow(QtWidgets.QFrame.Raised)
-        self.frame_3.setObjectName("frame_3")
-        self.verticalLayout_3.addWidget(self.frame_3)
+        sizePolicy.setHeightForWidth(self.frame_6.sizePolicy().hasHeightForWidth())
+        self.frame_6.setSizePolicy(sizePolicy)
+        self.frame_6.setStyleSheet("QFrame\n"
+"{\n"
+"    border: 1px solid black;\n"
+"}")
+        self.frame_6.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        self.frame_6.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.frame_6.setObjectName("frame_6")
+        self.verticalLayout_3.addWidget(self.frame_6)
         spacerItem14 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.verticalLayout_3.addItem(spacerItem14)
-        self.horizontalLayout.addLayout(self.verticalLayout_3)
-
-        self.pushButton.clicked.connect(self.buttonLogic)
+        self.horizontalLayout_4.addLayout(self.verticalLayout_3)
+        self.verticalLayout_5.addLayout(self.horizontalLayout_4)
+        spacerItem15 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        self.verticalLayout_5.addItem(spacerItem15)
+        self.horizontalSlider = QtWidgets.QSlider(data)
+        self.horizontalSlider.setStyleSheet("#horizontalSlider::groove:horizontal {\n"
+"    border: 1px solid #999999;\n"
+"    height: 14px;\n"
+"    border-radius: 9px;\n"
+"}\n"
+"/*\n"
+"#horizontalSlider::handle:horizontal {\n"
+"    width: 14px;\n"
+"     background-image: url(:/slider.png);\n"
+"}\n"
+"*/\n"
+"#horizontalSlider::add-page:qlineargradient {\n"
+"background: lightgrey;\n"
+"border-top-right-radius: 7px;\n"
+"border-bottom-right-radius: 7px;\n"
+"border-top-left-radius: 0px;\n"
+"border-bottom-left-radius: 0px;\n"
+"}\n"
+"\n"
+"#horizontalSlider::sub-page:qlineargradient {\n"
+"background: rgb(236, 0, 0);\n"
+"border-top-right-radius: 0px;\n"
+"border-bottom-right-radius: 0px;\n"
+"border-top-left-radius: 7px;\n"
+"border-bottom-left-radius: 7px;\n"
+"}")
+        self.horizontalSlider.setOrientation(QtCore.Qt.Horizontal)
+        self.horizontalSlider.setObjectName("horizontalSlider")
+        self.verticalLayout_5.addWidget(self.horizontalSlider)
 
         self.retranslateUi(data)
         QtCore.QMetaObject.connectSlotsByName(data)
-
-    def buttonLogic(self):
-        myRandomList = []
-        for i in range(1, 20, 1):
-            myRandomList += [randint(0, 20)]
-
-        self.frame.plotItem.clear()
-        self.frame.plotItem.plot(myRandomList)
 
     def retranslateUi(self, data):
         _translate = QtCore.QCoreApplication.translate
@@ -222,10 +212,10 @@ class Ui_data(object):
 
 if __name__ == "__main__":
     import sys
-
     app = QtWidgets.QApplication(sys.argv)
     data = QtWidgets.QDialog()
     ui = Ui_data()
     ui.setupUi(data)
     data.show()
     sys.exit(app.exec_())
+
