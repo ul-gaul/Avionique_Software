@@ -1,9 +1,8 @@
-
+import sy
 from ui.main_window import MainWindow
 from PyQt5 import QtGui
 import sys
-import time
-
+from src.ui import MainWindow
 if __name__ == '__main__':
     a = QtGui.QApplication(sys.argv)
     f = QtGui.QMainWindow()
