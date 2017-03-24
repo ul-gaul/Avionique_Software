@@ -1,9 +1,13 @@
 import csv
 import os
-from datetime import datetime
+from datetime import datetime as d
+from PyQt5.QtWidgets import (QApplication, QWidget,  QSizePolicy, QSpacerItem, QFileDialog, QTextEdit, QVBoxLayout, QPushButton, QHBoxLayout, QTextBrowser, )
+#from ..rocket_data import rocket_packet
+from PyQt5.QtGui import QIcon
+import sys
 
+class CsvDataWriter(QWidget):
 
-class CsvDataWriter:
     HEADER_FIELDS = ["TIME STAMP",
                      "ANG SPEED X",
                      "ANG SPEED Y",
@@ -22,10 +26,45 @@ class CsvDataWriter:
                      "TEMPERATURE 1",
                      "TEMPERATURE 2"]
 
-    def __init__(self):
-        self.filename = os.path.join("output_files",
-                                     "{}_acquisition_data.csv".format(datetime.now().strftime("%Y%m%d_%H%M%S")))
-        self.write_header()
+    def __init__(self, parent=None):
+
+        super().__init__(parent=parent)
+        self.initUI()
+
+    def initUI(self):
+
+        vbox = QVBoxLayout(self)
+        hbox = QHBoxLayout()
+        self.textBrowser = QTextBrowser(self)
+        self.textBrowser.setFontPointSize(7)
+        save_btn = QPushButton("Save", self)
+        save_btn.clicked.connect(self.saveCSV)
+        spacerItem = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        vbox.addItem(spacerItem)
+        #self.textBrowser.insertPlainText((", ".join(self.HEADER_FIELDS)))
+        #for num in range(len(self.HEADER_FIELDS)):
+            #self.textBrowser.insertPlainText(", " + self.HEADER_FIELDS[num])
+        vbox.addWidget((self.textBrowser))
+        spacerItem1 = QSpacerItem(10,20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        hbox.addItem(spacerItem1)
+        hbox.addWidget(save_btn)
+        vbox.addLayout(hbox)
+
+        self.setGeometry(300, 300, 1085, 250)
+        self.setWindowTitle("Rocket Packet Preview")
+
+
+    def saveCSV(self):
+
+        self.filename, _ = QFileDialog.getSaveFileName(self, "Save File",
+        d.now().strftime("%Y-%m-%d_%Hh%M")+".csv", "All Files (*);; CSV Files (*.csv)")
+        if self.filename:
+            print("Saved %s in %s" % (d.now().strftime("%Y-%m-%d_%Hh%M")+".csv",
+                  self.filename))
+            with open(self.filename, "w") as file:
+                self.write_header()
+                #self.write_line()
+                self.filename.close()
 
     def write_header(self):
         with open(self.filename, 'a', newline='') as csv_file:
@@ -56,4 +95,17 @@ class CsvDataWriter:
                              "LONGITUDE 2" : rocket_data.longitude_2,
                              "TEMPERATURE 1" : rocket_data.temperature_1,
                              "TEMPERATURE 2" : rocket_data.temperature_2})
+"""For testing purpose"""
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    f = CsvDataWriter()
+    f.show()
+    sys.exit(app.exec_())
+
+
+
+
+
+
+
 
