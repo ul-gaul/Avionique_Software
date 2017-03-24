@@ -1,6 +1,6 @@
 from queue import Queue, Empty
 
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore
 
 from rocket_data.csv_data_writer import CsvDataWriter
 from .flight_dataUI import Ui_Dialog
@@ -11,7 +11,7 @@ import time
 import matplotlib.animation as Animation
 import numpy as np
 from .data_processing import DataProcessing
-from communication.serial_reader import AcquisitionThread
+#from communication.serial_reader import AcquisitionThread
 
 
 class DataHandlingThread(QtCore.QThread):
@@ -40,7 +40,7 @@ class DataHandlingThread(QtCore.QThread):
         self.exit_flag = True
 
 
-class FlightDataDialog(QtGui.QDialog, Ui_Dialog):
+class FlightDataDialog(QtGui, Ui_Dialog):
     def __init__(self, parent=None):
         QtGui.QDialog.__init__(self, parent)
         self.setupUi(self)

@@ -1,4 +1,4 @@
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore
 from .analyseUI import Ui_QDialog
 
 class AnalyseRocketData(QtGui.QDialog, Ui_QDialog):

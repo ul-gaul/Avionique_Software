@@ -1,5 +1,5 @@
 from .main_windowUI import Ui_MainWindow
-from PyQt4 import QtGui
+from PyQt5 import QtGui
 from .flight_data_dialog import FlightDataDialog
 from .analysis import analysisData
 import sys
