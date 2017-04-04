@@ -448,9 +448,9 @@
    <item row="1" column="0">
     <layout class="QHBoxLayout" name="menuLayout">
      <item>
-      <widget class="QPushButton" name="returnPush">
+      <widget class="QPushButton" name="openCsvFile">
        <property name="text">
-        <string>Retour</string>
+        <string>Open</string>
        </property>
       </widget>
      </item>
@@ -466,6 +466,13 @@
         </size>
        </property>
       </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="returnPush">
+       <property name="text">
+        <string>Retour</string>
+       </property>
+      </widget>
      </item>
      <item>
       <widget class="QPushButton" name="closePush">

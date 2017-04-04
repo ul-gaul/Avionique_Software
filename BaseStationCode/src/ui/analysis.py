@@ -3,7 +3,14 @@ from .analysisUI import Ui_Dialog
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 
+from PyQt5 import QtGui, QtCore
+from .analysisUI import Ui_Dialog
 
+class AnalyseRocketData(QtGui.QDialog, Ui_Dialog):
+    def __init__(self,parent=None):
+        QtGui.QDialog.__init__(self,parent)
+        self.setupUi(self)
+        
 class analysisData(QtGui.QDialog, Ui_Dialog):
     def __init__(self,Parent=None):
         QtGui.QDialog.__init__(self,Parent)

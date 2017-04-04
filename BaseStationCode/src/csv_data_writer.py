@@ -1,9 +1,7 @@
 import csv
-import os
 from datetime import datetime as d
 from PyQt5.QtWidgets import (QApplication, QWidget,  QSizePolicy, QSpacerItem, QFileDialog, QTextEdit, QVBoxLayout, QPushButton, QHBoxLayout, QTextBrowser, )
 #from ..rocket_data import rocket_packet
-from PyQt5.QtGui import QIcon
 import sys
 
 class CsvDataWriter(QWidget):
@@ -41,6 +39,7 @@ class CsvDataWriter(QWidget):
         save_btn.clicked.connect(self.saveCSV)
         spacerItem = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
         vbox.addItem(spacerItem)
+        """Possibilité de se faire un "preview" de ce qu'aurait l'aire le fichier CSV"""
         #self.textBrowser.insertPlainText((", ".join(self.HEADER_FIELDS)))
         #for num in range(len(self.HEADER_FIELDS)):
             #self.textBrowser.insertPlainText(", " + self.HEADER_FIELDS[num])
@@ -60,7 +59,7 @@ class CsvDataWriter(QWidget):
         d.now().strftime("%Y-%m-%d_%Hh%M")+".csv", "All Files (*);; CSV Files (*.csv)")
         if self.filename:
             print("Saved %s in %s" % (d.now().strftime("%Y-%m-%d_%Hh%M")+".csv",
-                  self.filename))
+                  self.filename)) # On peut afficher possiblement dans le GUI une confirmation que le fichier a été enregistré
             with open(self.filename, "w") as file:
                 self.write_header()
                 #self.write_line()
