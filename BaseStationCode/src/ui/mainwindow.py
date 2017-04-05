@@ -1,5 +1,5 @@
 from .mainwindowUI import Ui_MainWindow
-from PyQt5.QtWidgets import QFileDialog
+from PyQt5.QtWidgets import QFileDialog, QApplication
 from PyQt5 import QtCore, QtGui
 from datetime import datetime as d
 
@@ -11,11 +11,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.initUI()
 
     def initUI(self):
-        self.pushButton.clicked.connec
+        self.pushButton.clicked.connect(self.saveFileName)
+        self.pushButton_2.clicked.connect(self.openFileName)
 
     def openFileName(self):
 
-        self.filename, _= QFileDialog.getOpenFileName(self, "Open File")
+        self.filename, _= QFileDialog.getOpenFileName(self, "Open File", "CSV Files (*.csv)")
 
     def saveFileName(self):
 
