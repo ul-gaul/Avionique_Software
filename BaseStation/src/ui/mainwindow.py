@@ -12,7 +12,7 @@ class MainWindow(Ui_MainWindow):
         self.initUI()
 
     def initUI(self):
-        self.label.setPixmap(QtGui.QPixmap("ui/logo.jpg"))
+        self.label.setPixmap(QtGui.QPixmap("resources/logo.jpg"))
         self.pushButton.clicked.connect(self.openRT)
         self.pushButton_2.clicked.connect(self.openRP)
 

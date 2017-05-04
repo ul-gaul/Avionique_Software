@@ -3,7 +3,7 @@
 from BaseStationCode.src.FileReader import FileReader
 import time
 
-myFileReader = FileReader("..\\input_files\\TestFile.csv")
+myFileReader = FileReader("resources/TestFile.csv")
 
 allPacket = myFileReader.get_data()
 

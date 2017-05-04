@@ -13,7 +13,7 @@ class Data(Ui_Data):
         self.initUI()
 
     def initUI(self):
-        self.label.setPixmap(QtGui.QPixmap("ui/logo.jpg"))
+        self.label.setPixmap(QtGui.QPixmap("resources/logo.jpg"))
 
     def openFileName(self):
 
