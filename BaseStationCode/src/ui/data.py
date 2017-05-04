@@ -1,19 +1,23 @@
-from .dataUI import Ui_data
-from PyQt5.QtWidgets import QWidget, QFileDialog, QMainWindow
+from datetime import datetime as d
+from PyQt5.QtWidgets import QWidget, QFileDialog
 from PyQt5 import QtCore, QtGui
 
-class Data(QMainWindow, Ui_data):
+from .dataUI import Ui_Data
 
-    def __init__(self):
-        super.__init__()
+
+class Data(Ui_Data):
+
+    def __init__(self, main_window):
+        self.filename = ""
+        self.setupUi(main_window)
         self.initUI()
 
     def initUI(self):
-        pass
+        self.label.setPixmap(QtGui.QPixmap("ui/logo.jpg"))
 
     def openFileName(self):
 
-        self.filename, _= QFileDialog.getOpenFileName(self, "Open File", "CSV Files (*.csv)")
+        self.filename, _ = QFileDialog.getOpenFileName(self, "Open File", "CSV Files (*.csv)")
 
     def saveFileName(self):
 
