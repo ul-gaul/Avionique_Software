@@ -17,9 +17,10 @@ class Data(Ui_Data):
 
     def openFileName(self):
 
-        self.filename, _ = QFileDialog.getOpenFileName(self, "Open File", "CSV Files (*.csv)")
+        self.filename, _ = QFileDialog.getOpenFileName(caption="Open File", filter="CSV Files (*.csv)")
 
     def saveFileName(self):
 
-        self.filename, _ = QFileDialog.getSaveFileName(self, "Save File", d.now().strftime("%Y-%m-%d_%Hh%Mm")+".csv",
-                                                       "All Files (*);; CSV Files (*.csv)")
+        self.filename, _ = QFileDialog.getSaveFileName(caption="Save File",
+                                                       directory=d.now().strftime("%Y-%m-%d_%Hh%Mm")+".csv",
+                                                       filter="All Files (*);; CSV Files (*.csv)")
