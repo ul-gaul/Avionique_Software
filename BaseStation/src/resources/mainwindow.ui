@@ -82,7 +82,7 @@
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <spacer name="horizontalSpacer_2">
+       <spacer name="horizontalSpacer">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
@@ -120,16 +120,13 @@
         <property name="text">
          <string/>
         </property>
-        <property name="pixmap">
-         <pixmap>logo.jpg</pixmap>
-        </property>
         <property name="scaledContents">
          <bool>true</bool>
         </property>
        </widget>
       </item>
       <item>
-       <spacer name="horizontalSpacer">
+       <spacer name="horizontalSpacer_2">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
@@ -144,7 +141,7 @@
      </layout>
     </item>
     <item>
-     <spacer name="verticalSpacer_2">
+     <spacer name="verticalSpacer">
       <property name="orientation">
        <enum>Qt::Vertical</enum>
       </property>
@@ -157,7 +154,7 @@
      </spacer>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
       <item>
        <spacer name="horizontalSpacer_3">
         <property name="orientation">
@@ -195,14 +192,6 @@
          <font>
           <pointsize>16</pointsize>
          </font>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">#pushButton {
-	background-color: rgb(236,0,0);
-	border: 1px solid black;
-	border-radius: 8px;
-	color: white;
-}</string>
         </property>
         <property name="text">
          <string>Real Time</string>
@@ -250,14 +239,6 @@
           <pointsize>16</pointsize>
          </font>
         </property>
-        <property name="styleSheet">
-         <string notr="true">#pushButton_2 {
-	background-color: rgb(236, 0, 0);
-	border: 1px solid black;
-	border-radius: 8px;
-	color: white;
-}</string>
-        </property>
         <property name="text">
          <string>Replay</string>
         </property>
@@ -279,7 +260,7 @@
      </layout>
     </item>
     <item>
-     <spacer name="verticalSpacer">
+     <spacer name="verticalSpacer_2">
       <property name="orientation">
        <enum>Qt::Vertical</enum>
       </property>
@@ -292,7 +273,7 @@
      </spacer>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_4">
+     <layout class="QHBoxLayout" name="horizontalLayout_3">
       <property name="sizeConstraint">
        <enum>QLayout::SetMinimumSize</enum>
       </property>
@@ -325,8 +306,8 @@
      </layout>
     </item>
    </layout>
-   <zorder>verticalSpacer</zorder>
    <zorder>verticalSpacer_2</zorder>
+   <zorder>verticalSpacer</zorder>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <widget class="QMenuBar" name="menuBar">
