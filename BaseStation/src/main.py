@@ -1,6 +1,9 @@
 import sys
 from PyQt5 import QtWidgets
 
+import ctypes
+myappid = 'C:\\Users\Lord\Anaconda3\python.exe' # arbitrary string
+ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
 from src.ui.mainwindow import MainWindow
 
 # FIXME: CLEAN UP THIS SHIT !!!!!!!!
