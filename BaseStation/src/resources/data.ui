@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MainWindow</class>
- <widget class="QMainWindow" name="MainWindow">
+ <class>Data</class>
+ <widget class="QMainWindow" name="Data">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -17,12 +17,6 @@
    <string notr="true"/>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <property name="styleSheet">
-    <string notr="true">#centralwidget
-{
-	background: white;
-}</string>
-   </property>
    <layout class="QVBoxLayout" name="verticalLayout_5">
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_1">
@@ -58,9 +52,6 @@
         </property>
         <property name="text">
          <string/>
-        </property>
-        <property name="pixmap">
-         <pixmap>logo.jpg</pixmap>
         </property>
         <property name="scaledContents">
          <bool>true</bool>
@@ -100,12 +91,6 @@
             <height>150</height>
            </size>
           </property>
-          <property name="styleSheet">
-           <string notr="true">QFrame
-{
-	border: 1px solid red;
-}</string>
-          </property>
          </widget>
         </item>
         <item>
@@ -137,12 +122,6 @@
             <width>400</width>
             <height>150</height>
            </size>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">QFrame
-{
-	border: 1px solid red;
-}</string>
           </property>
          </widget>
         </item>
@@ -196,12 +175,6 @@
             <height>400</height>
            </size>
           </property>
-          <property name="styleSheet">
-           <string notr="true">QFrame
-{
-	border: 1px solid red;
-}</string>
-          </property>
           <property name="frameShape">
            <enum>QFrame::StyledPanel</enum>
           </property>
@@ -254,12 +227,6 @@
               <width>280</width>
               <height>73</height>
              </size>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">#widget
-{
-	border: 1px solid red;
-}</string>
             </property>
             <layout class="QHBoxLayout" name="horizontalLayout"/>
            </widget>
@@ -315,12 +282,6 @@
               <height>273</height>
              </size>
             </property>
-            <property name="styleSheet">
-             <string notr="true">QFrame
-{
-	border: 1px solid red;
-}</string>
-            </property>
             <property name="frameShape">
              <enum>QFrame::StyledPanel</enum>
             </property>
@@ -342,12 +303,6 @@
               <width>75</width>
               <height>273</height>
              </size>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">QFrame
-{
-	border: 1px solid red;
-}</string>
             </property>
             <property name="frameShape">
              <enum>QFrame::StyledPanel</enum>
@@ -389,12 +344,6 @@
             <height>100</height>
            </size>
           </property>
-          <property name="styleSheet">
-           <string notr="true">QFrame
-{
-	border: 1px solid red;
-}</string>
-          </property>
          </widget>
         </item>
         <item>
@@ -421,41 +370,6 @@
      <widget class="QSlider" name="horizontalSlider">
       <property name="enabled">
        <bool>true</bool>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">#horizontalSlider::groove:horizontal {
-	border: 1px solid #999999;
-	height: 14px;
-	border-radius: 9px;
-}
-
-#horizontalSlider::handle:horizontal {
-	width: 10px;
-    height: 16px;
-    border-top-right-radius: 7px;
-    border-bottom-right-radius: 7px;
-    border-top-left-radius: 7px;
-    border-bottom-left-radius: 7px;
-    border: 2px solid white;
-    background: rgb(236, 0, 0);
- 	/*background-image: url(:/slider.png);*/
-}
-
-#horizontalSlider::add-page:qlineargradient {
-background: lightgrey;
-border-top-right-radius: 7px;
-border-bottom-right-radius: 7px;
-border-top-left-radius: 0px;
-border-bottom-left-radius: 0px;
-}
-
-#horizontalSlider::sub-page:qlineargradient {
-background: rgb(236, 0, 0);
-border-top-right-radius: 0px;
-border-bottom-right-radius: 0px;
-border-top-left-radius: 7px;
-border-bottom-left-radius: 7px;
-}</string>
       </property>
       <property name="maximum">
        <number>100</number>

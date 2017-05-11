@@ -8,11 +8,15 @@ from .dataUI import Ui_Data
 class Data(Ui_Data):
 
     def __init__(self, main_window):
+        self.main_window = main_window
         self.filename = ""
-        self.setupUi(main_window)
+        self.setupUi(self.main_window)
         self.initUI()
 
     def initUI(self):
+        f = open("resources/data.css", 'r')
+        stylesheet = f.read()
+        self.main_window.setStyleSheet(stylesheet)
         self.label.setPixmap(QtGui.QPixmap("resources/logo.jpg"))
 
     def openFileName(self):

@@ -14,10 +14,6 @@ class Ui_Data(object):
         MainWindow.resize(1229, 747)
         MainWindow.setStyleSheet("")
         self.centralwidget = QtWidgets.QWidget(MainWindow)
-        self.centralwidget.setStyleSheet("#centralwidget\n"
-"{\n"
-"    background: white;\n"
-"}")
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayout_5 = QtWidgets.QVBoxLayout(self.centralwidget)
         self.verticalLayout_5.setObjectName("verticalLayout_5")
@@ -50,10 +46,6 @@ class Ui_Data(object):
         sizePolicy.setHeightForWidth(self.graphicsView.sizePolicy().hasHeightForWidth())
         self.graphicsView.setSizePolicy(sizePolicy)
         self.graphicsView.setMinimumSize(QtCore.QSize(400, 150))
-        self.graphicsView.setStyleSheet("QFrame\n"
-"{\n"
-"    border: 1px solid red;\n"
-"}")
         self.graphicsView.setObjectName("graphicsView")
         self.verticalLayout.addWidget(self.graphicsView)
         spacerItem2 = QtWidgets.QSpacerItem(20, 70, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
@@ -65,10 +57,6 @@ class Ui_Data(object):
         sizePolicy.setHeightForWidth(self.graphicsView_2.sizePolicy().hasHeightForWidth())
         self.graphicsView_2.setSizePolicy(sizePolicy)
         self.graphicsView_2.setMinimumSize(QtCore.QSize(400, 150))
-        self.graphicsView_2.setStyleSheet("QFrame\n"
-"{\n"
-"    border: 1px solid red;\n"
-"}")
         self.graphicsView_2.setObjectName("graphicsView_2")
         self.verticalLayout.addWidget(self.graphicsView_2)
         spacerItem3 = QtWidgets.QSpacerItem(20, 70, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
@@ -85,10 +73,6 @@ class Ui_Data(object):
         sizePolicy.setHeightForWidth(self.frame_3.sizePolicy().hasHeightForWidth())
         self.frame_3.setSizePolicy(sizePolicy)
         self.frame_3.setMinimumSize(QtCore.QSize(200, 400))
-        self.frame_3.setStyleSheet("QFrame\n"
-"{\n"
-"    border: 1px solid red;\n"
-"}")
         self.frame_3.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame_3.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_3.setObjectName("frame_3")
@@ -106,10 +90,6 @@ class Ui_Data(object):
         sizePolicy.setHeightForWidth(self.widget.sizePolicy().hasHeightForWidth())
         self.widget.setSizePolicy(sizePolicy)
         self.widget.setMinimumSize(QtCore.QSize(280, 73))
-        self.widget.setStyleSheet("#widget\n"
-"{\n"
-"    border: 1px solid red;\n"
-"}")
         self.widget.setObjectName("widget")
         self.horizontalLayout = QtWidgets.QHBoxLayout(self.widget)
         self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
@@ -132,10 +112,6 @@ class Ui_Data(object):
         sizePolicy.setHeightForWidth(self.frame_4.sizePolicy().hasHeightForWidth())
         self.frame_4.setSizePolicy(sizePolicy)
         self.frame_4.setMinimumSize(QtCore.QSize(75, 273))
-        self.frame_4.setStyleSheet("QFrame\n"
-"{\n"
-"    border: 1px solid red;\n"
-"}")
         self.frame_4.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame_4.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_4.setObjectName("frame_4")
@@ -147,10 +123,6 @@ class Ui_Data(object):
         sizePolicy.setHeightForWidth(self.frame_5.sizePolicy().hasHeightForWidth())
         self.frame_5.setSizePolicy(sizePolicy)
         self.frame_5.setMinimumSize(QtCore.QSize(75, 273))
-        self.frame_5.setStyleSheet("QFrame\n"
-"{\n"
-"    border: 1px solid red;\n"
-"}")
         self.frame_5.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame_5.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_5.setObjectName("frame_5")
@@ -165,10 +137,6 @@ class Ui_Data(object):
         sizePolicy.setHeightForWidth(self.graphicsView_3.sizePolicy().hasHeightForWidth())
         self.graphicsView_3.setSizePolicy(sizePolicy)
         self.graphicsView_3.setMinimumSize(QtCore.QSize(295, 100))
-        self.graphicsView_3.setStyleSheet("QFrame\n"
-"{\n"
-"    border: 1px solid red;\n"
-"}")
         self.graphicsView_3.setObjectName("graphicsView_3")
         self.verticalLayout_3.addWidget(self.graphicsView_3)
         spacerItem10 = QtWidgets.QSpacerItem(20, 70, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
@@ -177,39 +145,6 @@ class Ui_Data(object):
         self.verticalLayout_5.addLayout(self.horizontalLayout_2)
         self.horizontalSlider = QtWidgets.QSlider(self.centralwidget)
         self.horizontalSlider.setEnabled(True)
-        self.horizontalSlider.setStyleSheet("#horizontalSlider::groove:horizontal {\n"
-"    border: 1px solid #999999;\n"
-"    height: 14px;\n"
-"    border-radius: 9px;\n"
-"}\n"
-"\n"
-"#horizontalSlider::handle:horizontal {\n"
-"    width: 10px;\n"
-"    height: 16px;\n"
-"    border-top-right-radius: 7px;\n"
-"    border-bottom-right-radius: 7px;\n"
-"    border-top-left-radius: 7px;\n"
-"    border-bottom-left-radius: 7px;\n"
-"    border: 2px solid white;\n"
-"    background: rgb(236, 0, 0);\n"
-"     /*background-image: url(:/slider.png);*/\n"
-"}\n"
-"\n"
-"#horizontalSlider::add-page:qlineargradient {\n"
-"background: lightgrey;\n"
-"border-top-right-radius: 7px;\n"
-"border-bottom-right-radius: 7px;\n"
-"border-top-left-radius: 0px;\n"
-"border-bottom-left-radius: 0px;\n"
-"}\n"
-"\n"
-"#horizontalSlider::sub-page:qlineargradient {\n"
-"background: rgb(236, 0, 0);\n"
-"border-top-right-radius: 0px;\n"
-"border-bottom-right-radius: 0px;\n"
-"border-top-left-radius: 7px;\n"
-"border-bottom-left-radius: 7px;\n"
-"}")
         self.horizontalSlider.setMaximum(100)
         self.horizontalSlider.setPageStep(1)
         self.horizontalSlider.setSliderPosition(0)
