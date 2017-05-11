@@ -4,14 +4,17 @@ from .data import Data
 from PyQt5 import QtCore, QtGui
 
 
-class MainWindow(Ui_MainWindow):
+class MainWindow(Ui_MainWindow, QMainWindow):
 
     def __init__(self, main_window):
+        super().__init__()
         self.main_window = main_window
         self.setupUi(self.main_window)
         self.initUI()
 
     def initUI(self):
+        """  """
+        self.setWindowIcon(QtGui.QIcon("logo.jpg"))
         self.label.setPixmap(QtGui.QPixmap("resources/logo.jpg"))
         self.pushButton.clicked.connect(self.openRT)
         self.pushButton_2.clicked.connect(self.openRP)
