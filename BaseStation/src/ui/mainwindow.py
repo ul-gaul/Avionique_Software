@@ -13,8 +13,14 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         self.initUI()
 
     def initUI(self):
+
         """  """
         self.setWindowIcon(QtGui.QIcon("logo.jpg"))
+
+        f = open("resources/mainwindow.css", 'r')
+        stylesheet = f.read()
+        self.main_window.setStyleSheet(stylesheet)
+
         self.label.setPixmap(QtGui.QPixmap("resources/logo.jpg"))
         self.pushButton.clicked.connect(self.openRT)
         self.pushButton_2.clicked.connect(self.openRP)

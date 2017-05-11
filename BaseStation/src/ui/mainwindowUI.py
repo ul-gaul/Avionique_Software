@@ -78,12 +78,6 @@ class Ui_MainWindow(object):
         font = QtGui.QFont()
         font.setPointSize(16)
         self.pushButton.setFont(font)
-        self.pushButton.setStyleSheet("#pushButton {\n"
-"    background-color: rgb(236,0,0);\n"
-"    border: 1px solid black;\n"
-"    border-radius: 8px;\n"
-"    color: white;\n"
-"}")
         self.pushButton.setIconSize(QtCore.QSize(20, 20))
         self.pushButton.setObjectName("pushButton")
         self.horizontalLayout_2.addWidget(self.pushButton)
@@ -99,12 +93,6 @@ class Ui_MainWindow(object):
         font = QtGui.QFont()
         font.setPointSize(16)
         self.pushButton_2.setFont(font)
-        self.pushButton_2.setStyleSheet("#pushButton_2 {\n"
-"    background-color: rgb(236, 0, 0);\n"
-"    border: 1px solid black;\n"
-"    border-radius: 8px;\n"
-"    color: white;\n"
-"}")
         self.pushButton_2.setObjectName("pushButton_2")
         self.horizontalLayout_2.addWidget(self.pushButton_2)
         spacerItem5 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
