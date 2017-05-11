@@ -1,6 +1,7 @@
 from datetime import datetime as d
-from PyQt5.QtWidgets import QWidget, QFileDialog
+from PyQt5.QtWidgets import QWidget, QFileDialog, QApplication
 from PyQt5 import QtCore, QtGui
+from PyQt5.QtGui import QIcon
 
 from .dataUI import Ui_Data
 
@@ -18,6 +19,8 @@ class Data(Ui_Data):
         stylesheet = f.read()
         self.main_window.setStyleSheet(stylesheet)
         self.label.setPixmap(QtGui.QPixmap("resources/logo.jpg"))
+        QApplication.setWindowIcon(QtGui.QIcon("resource/logo.jpg"))
+
 
     def openFileName(self):
 
