@@ -1,13 +1,15 @@
 from .mainwindowUI import Ui_MainWindow
 from PyQt5.QtWidgets import QFileDialog, QApplication, QMainWindow
-from .data import Data
-from PyQt5 import QtCore, QtGui
+from .dataRT import Data_RT
+from PyQt5.QtGui import QIcon, QPixmap
 
 
-class MainWindow(Ui_MainWindow, QMainWindow):
+
+
+
+class MainWindow(Ui_MainWindow):
 
     def __init__(self, main_window):
-        super().__init__()
         self.main_window = main_window
         self.setupUi(self.main_window)
         self.initUI()
@@ -15,19 +17,18 @@ class MainWindow(Ui_MainWindow, QMainWindow):
     def initUI(self):
 
         """  """
-        self.setWindowIcon(QtGui.QIcon("logo.jpg"))
-
+        self.main_window.setWindowIcon(QIcon("resources/logo.jpg"))
         f = open("resources/mainwindow.css", 'r')
         stylesheet = f.read()
         self.main_window.setStyleSheet(stylesheet)
 
-        self.label.setPixmap(QtGui.QPixmap("resources/logo.jpg"))
+        self.label.setPixmap(QPixmap("resources/logo.jpg"))
         self.pushButton.clicked.connect(self.openRT)
         self.pushButton_2.clicked.connect(self.openRP)
 
     def openRT(self):
         """  """
-        real_time_dialog = Data(self.main_window)
+        real_time_dialog = Data_RT(self.main_window)
         real_time_dialog.saveFileName()
 
 
