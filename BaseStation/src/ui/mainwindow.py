@@ -1,10 +1,8 @@
 from .mainwindowUI import Ui_MainWindow
 from PyQt5.QtWidgets import QFileDialog, QApplication, QMainWindow
-from .dataRT import Data_RT
+from src.ui.data import Data
+from src.ui.dataRT import DataRT
 from PyQt5.QtGui import QIcon, QPixmap
-
-
-
 
 
 class MainWindow(Ui_MainWindow):
@@ -15,7 +13,6 @@ class MainWindow(Ui_MainWindow):
         self.initUI()
 
     def initUI(self):
-
         """  """
         self.main_window.setWindowIcon(QIcon("resources/logo.jpg"))
         f = open("resources/mainwindow.css", 'r')
@@ -28,15 +25,10 @@ class MainWindow(Ui_MainWindow):
 
     def openRT(self):
         """  """
-        real_time_dialog = Data_RT(self.main_window)
+        real_time_dialog = DataRT(self.main_window)
         real_time_dialog.saveFileName()
-
 
     def openRP(self):
         """   """
         replay_dialog = Data(self.main_window)
         replay_dialog.openFileName()
-
-
-
-
