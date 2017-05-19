@@ -2,7 +2,6 @@ import sys
 import ctypes
 from PyQt5 import QtWidgets
 from src.ui.mainwindow import MainWindow
-from src.ui.dataRT import DataRT
 
 # FIXME: CLEAN UP ALL THIS SHIT ...
 myappid = 'C:\\Users\Lord\Anaconda3\python.exe'  # arbitrary string
@@ -26,7 +25,6 @@ sys.excepthook = my_exception_hook
 
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
-    main_window = QtWidgets.QMainWindow()
-    ui = MainWindow(main_window)
-    main_window.show()
+    window = MainWindow()
+    window.show()
     sys.exit(app.exec_())

@@ -1,3 +1,8 @@
+QMainWindow
+{
+	background: white;
+}
+
 QPushButton
 {
 	background-color: rgb(236,0,0);

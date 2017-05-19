@@ -1,12 +1,13 @@
-from .data import Data
+from src.ui.data_widget import DataWidget
 from PyQt5 import QtWidgets
 
 
-class DataRT(Data):
+class RealTimeWidget(DataWidget):
 
-    def __init__(self, main_window):
-        super().__init__(main_window)
+    def __init__(self, parent=None):
+        super().__init__(parent)
         self.is_acquiring = False
+        self.start_stop_button = None
         self.init_button_and_timer()
 
     def init_button_and_timer(self):

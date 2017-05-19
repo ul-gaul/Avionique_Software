@@ -1,11 +1,16 @@
-#centralwidget
+QMainWindow
 {
-    background: white;
+	background: white;
 }
 
 QFrame
 {
     border: 1px solid red;
+}
+
+QStackedWidget
+{
+    border: 0px;
 }
 
 #label
