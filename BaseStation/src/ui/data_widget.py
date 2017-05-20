@@ -9,6 +9,9 @@ class DataWidget(QtWidgets.QWidget):
         super().__init__(parent)
         self.horizontalSlider = None
         self.setup_ui()
+        self.horizontalLayout_5 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_5.setObjectName("horizontalLayout_5")
+        self.horizontalLayout.addLayout(self.horizontalLayout_5)
         self.setup_slider()
         self.label.setPixmap(QtGui.QPixmap("resources/logo.jpg"))
         #self.main_window.setWindowIcon(QtGui.QIcon("resource/logo.jpg"))
@@ -172,3 +175,18 @@ class DataWidget(QtWidgets.QWidget):
         self.horizontalSlider.setTickPosition(QtWidgets.QSlider.NoTicks)
         self.horizontalSlider.setObjectName("horizontalSlider")
         self.verticalLayout_4.addWidget(self.horizontalSlider)
+
+    def set_minimum_expanding_size_policy(self, widget):
+        size_policy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding,
+                                            QtWidgets.QSizePolicy.MinimumExpanding)
+        size_policy.setHorizontalStretch(0)
+        size_policy.setVerticalStretch(0)
+        size_policy.setHeightForWidth(widget.sizePolicy().hasHeightForWidth())
+        widget.setSizePolicy(size_policy)
+
+    def init_button(self, button, object_name, text, callback):
+        self.set_minimum_expanding_size_policy(button)
+        button.setObjectName(object_name)
+        button.setText(text)
+        button.clicked.connect(callback)
+        self.horizontalLayout_5.addWidget(button)
