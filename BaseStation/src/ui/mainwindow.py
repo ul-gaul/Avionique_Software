@@ -3,6 +3,7 @@ from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtGui import QIcon
 from src.ui.homewidget import HomeWidget
 from src.ui.real_time_widget import RealTimeWidget
+from src.ui.replay_widget import ReplayWidget
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -30,11 +31,7 @@ class MainWindow(QtWidgets.QMainWindow):
                                                          directory=d.now().strftime("%Y-%m-%d_%Hh%Mm")+".csv",
                                                          filter="All Files (*);; CSV Files (*.csv)")
         self.real_time_widget = RealTimeWidget(self)
-        self.central_widget.addWidget(self.real_time_widget)
-        self.central_widget.setCurrentWidget(self.real_time_widget)
-        self.setup_menu_bar()
-        self.set_stylesheet("resources/data.css")
-        #real_time_dialog = DataRT(self.main_window)
+        self.open_new_widget(self.real_time_widget)
 
     def open_replay(self):
         """   """
@@ -42,8 +39,14 @@ class MainWindow(QtWidgets.QMainWindow):
         filename = QtWidgets.QFileDialog.getSaveFileName(caption="Save File",
                                                          directory=d.now().strftime("%Y-%m-%d_%Hh%Mm")+".csv",
                                                          filter="All Files (*);; CSV Files (*.csv)")
-        #replay_dialog = Data(self.main_window)
-        #replay_dialog.openFileName()
+        self.replay_widget = ReplayWidget(self)
+        self.open_new_widget(self.replay_widget)
+
+    def open_new_widget(self, widget):
+        self.central_widget.addWidget(widget)
+        self.central_widget.setCurrentWidget(widget)
+        self.setup_menu_bar()
+        self.set_stylesheet("resources/data.css")
 
     def setup_menu_bar(self):
         self.menuBar = QtWidgets.QMenuBar(self)
