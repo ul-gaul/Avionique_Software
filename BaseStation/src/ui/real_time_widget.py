@@ -1,5 +1,5 @@
 from src.ui.data_widget import DataWidget
-from PyQt5.QtWidgets import QHBoxLayout, QLCDNumber, QPushButton
+from PyQt5.QtWidgets import QLCDNumber, QPushButton
 
 
 class RealTimeWidget(DataWidget):

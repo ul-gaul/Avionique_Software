@@ -1,5 +1,5 @@
 from PyQt5 import QtWidgets, QtCore, QtGui
-from pyqtgraph import PlotWidget
+import pyqtgraph as pqtg
 from src.ui.ExtendedQSlider import ExtendedQSlider
 
 
@@ -8,13 +8,17 @@ class DataWidget(QtWidgets.QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.horizontalSlider = None
+        self.set_black_on_white_graph_colors()
         self.setup_ui()
         self.horizontalLayout_5 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_5.setObjectName("horizontalLayout_5")
         self.horizontalLayout.addLayout(self.horizontalLayout_5)
         self.setup_slider()
         self.label.setPixmap(QtGui.QPixmap("resources/logo.jpg"))
-        #self.main_window.setWindowIcon(QtGui.QIcon("resource/logo.jpg"))
+
+    def set_black_on_white_graph_colors(self):
+        pqtg.setConfigOption('background', 'w')
+        pqtg.setConfigOption('foreground', 'k')
 
     def setup_ui(self):
         self.setObjectName("Form")
@@ -43,7 +47,7 @@ class DataWidget(QtWidgets.QWidget):
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         self.verticalLayout = QtWidgets.QVBoxLayout()
         self.verticalLayout.setObjectName("verticalLayout")
-        self.graphicsView = PlotWidget(self)
+        self.graphicsView = pqtg.PlotWidget(self)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding,
                                            QtWidgets.QSizePolicy.MinimumExpanding)
         sizePolicy.setHorizontalStretch(0)
@@ -55,7 +59,7 @@ class DataWidget(QtWidgets.QWidget):
         self.verticalLayout.addWidget(self.graphicsView)
         spacerItem2 = QtWidgets.QSpacerItem(20, 70, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
         self.verticalLayout.addItem(spacerItem2)
-        self.graphicsView_2 = PlotWidget(self)
+        self.graphicsView_2 = pqtg.PlotWidget(self)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding,
                                            QtWidgets.QSizePolicy.MinimumExpanding)
         sizePolicy.setHorizontalStretch(0)
@@ -142,7 +146,7 @@ class DataWidget(QtWidgets.QWidget):
         self.verticalLayout_3.addLayout(self.horizontalLayout_3)
         spacerItem9 = QtWidgets.QSpacerItem(20, 70, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
         self.verticalLayout_3.addItem(spacerItem9)
-        self.graphicsView_3 = PlotWidget(self)
+        self.graphicsView_3 = pqtg.PlotWidget(self)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding,
                                            QtWidgets.QSizePolicy.MinimumExpanding)
         sizePolicy.setHorizontalStretch(0)
