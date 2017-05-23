@@ -8,65 +8,109 @@ import os
 
 
 class RocketPacket:
-    def __init__(self, data_list):
-        self.time_stamp = data_list[0]
+    format = "<fffffffffffffffffffffffBBBBBBfffffBB"
+    size_in_bytes = 120
+
+    def __init__(self, data_list=None):
+        self.time_stamp = []
 
         # Vitesse angulaire en radian par seconde
+        self.angular_speed_x = []
+        self.angular_speed_y = []
+        self.angular_speed_z = []
+
+        # Acceleration en g
+        self.acceleration_x = []
+        self.acceleration_y = []
+        self.acceleration_z = []
+
+        # Champ magnetique en Gauss
+        self.magnetic_field_x = []
+        self.magnetic_field_y = []
+        self.magnetic_field_z = []
+
+        # Altitude en metres
+        self.altitude = []
+
+        # Coordonnees GPS en degres
+        self.latitude_1 = []
+        self.longitude_1 = []
+        self.latitude_2 = []
+        self.longitude_2 = []
+
+        # Temperature en degres Celsius
+        self.temperature_1 = []
+        self.temperature_2 = []
+        self.temperature_3 = []
+        # TODO: il peut y avoir plus de valeur de temperature
+
+        self.date = []
+
+        # Orientation sous forme de quaternion
+        self.quaternion_w = []
+        self.quaternion_x = []
+        self.quaternion_y = []
+        self.quaternion_z = []
+
+        # etat des systemes
+        self.acquisition_board_state_1 = []
+        self.acquisition_board_state_2 = []
+        self.acquisition_board_state_3 = []
+        self.power_supply_state_1 = []
+        self.power_supply_state_2 = []
+        self.payload_board_state_1 = []
+
+        # donnees alimentation
+        self.voltage = []
+        self.current = []
+
+        # donnees payload
+        self.angSpeed_payload_x = []
+        self.angSpeed_payload_y = []
+        self.angSpeed_payload_z = []
+
+        # donnees de controler
+        self.camera = []
+        self.deployment = []
+
+        if data_list is not None:
+            self.fill(data_list)
+
+    def fill(self, data_list):
+        self.time_stamp = data_list[0]
         self.angular_speed_x = data_list[1]
         self.angular_speed_y = data_list[2]
         self.angular_speed_z = data_list[3]
-
-        # Acceleration en g
         self.acceleration_x = data_list[4]
         self.acceleration_y = data_list[5]
         self.acceleration_z = data_list[6]
-
-        # Champ magnetique en Gauss
         self.magnetic_field_x = data_list[7]
         self.magnetic_field_y = data_list[8]
         self.magnetic_field_z = data_list[9]
-
-        # Altitude en metres
         self.altitude = data_list[10]
-
-        # Coordonnees GPS en degres
         self.latitude_1 = data_list[11]
         self.longitude_1 = data_list[12]
         self.latitude_2 = data_list[13]
         self.longitude_2 = data_list[14]
-
-        # Temperature en degres Celsius
         self.temperature_1 = data_list[15]
         self.temperature_2 = data_list[16]
         self.temperature_3 = data_list[17]
-        # TODO: il peut y avoir plus de valeur de temperature
-
         self.date = data_list[18]
-
-        # Orientation sous forme de quaternion
         self.quaternion_w = data_list[19]
         self.quaternion_x = data_list[20]
         self.quaternion_y = data_list[21]
         self.quaternion_z = data_list[22]
-
-        # etat des systemes
         self.acquisition_board_state_1 = data_list[23]
         self.acquisition_board_state_2 = data_list[24]
         self.acquisition_board_state_3 = data_list[25]
         self.power_supply_state_1 = data_list[26]
         self.power_supply_state_2 = data_list[27]
         self.payload_board_state_1 = data_list[28]
-
-        # donnees alimentation
         self.voltage = data_list[29]
         self.current = data_list[30]
-
-        # donnees payload
         self.angSpeed_payload_x = data_list[31]
         self.angSpeed_payload_y = data_list[32]
         self.angSpeed_payload_z = data_list[33]
-
-        # donnees de controler
         self.camera = data_list[34]
         self.deployment = data_list[35]
 

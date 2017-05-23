@@ -9,17 +9,16 @@ from src.rocket_packet import RocketPacket
 
 
 class SerialReader(Producer):
-    def __init__(self, baudrate=9600, start_character=b's', packet_size=121,
-                 packet_format="<fffffffffffffffffffffffBBBBBBfffffBBB"):
+    def __init__(self, baudrate=9600, start_character=b's'):
         super().__init__()
         self.port = serial.Serial()
         self.port.baudrate = baudrate
         self.port.timeout = 0.2
+        self.start_character = start_character  # TODO: a confirmer avec l'equipe d'acquisition
 
-        # TODO: a confirmer avec l'equipe d'acquisition
-        self.start_character = start_character
-        self.packet_size = packet_size
-        self.format = packet_format
+        # RocketPacket data + 1 byte for checksum
+        self.num_bytes_to_read = RocketPacket.size_in_bytes + 1
+        self.format = RocketPacket.format + "B"
 
         self.flightData = []
         self.thread = Thread(target=self.run)
@@ -34,7 +33,7 @@ class SerialReader(Producer):
         while self.is_running:
             c = self.port.read(1)
             if c == self.start_character:
-                data_array = self.port.read(self.packet_size)
+                data_array = self.port.read(self.num_bytes_to_read)
                 try:
                     data_list = struct.unpack(self.format, data_array)
 
