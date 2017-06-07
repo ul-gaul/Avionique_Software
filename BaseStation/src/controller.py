@@ -2,10 +2,13 @@ from threading import Thread
 from src.serial_reader import SerialReader
 from src.FileReader import FileReader
 from src.consumer import Consumer
+from src.ui.mainwindow import MainWindow
 
 
 class Controller:
-    def __init__(self):
+    def __init__(self, main_window):
+        assert isinstance(main_window, MainWindow)
+        self.main_window = main_window
         self.filename = ""
         self.is_running = False
         self.producer = None
@@ -21,6 +24,8 @@ class Controller:
             self.consumer.update()
             if self.consumer.has_new_data:
                 # TODO: draw plots and update
+                self.main_window.real_time_widget.altitude_curve.setData(self.consumer["altitude"])
+                self.main_window.real_time_widget.target_altitude_line.setData([10000 for i in range(len(self.consumer["altitude"]))])
                 self.consumer.has_new_data = False
 
     def init_real_time_mode(self):

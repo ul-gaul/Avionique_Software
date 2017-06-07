@@ -10,13 +10,18 @@ class DataWidget(QtWidgets.QWidget):
         self.horizontalSlider = None
         self.set_black_on_white_graph_colors()
         self.setup_ui()
+
+        self.altitude_curve = self.graphicsView.plot([0], [0])
+        self.target_altitude_line = self.graphicsView.plot([0], [0], pen=pqtg.mkPen(color='r', width=5))
+
         self.horizontalLayout_5 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_5.setObjectName("horizontalLayout_5")
         self.horizontalLayout.addLayout(self.horizontalLayout_5)
         self.setup_slider()
         self.label.setPixmap(QtGui.QPixmap("resources/logo.jpg"))
 
-    def set_black_on_white_graph_colors(self):
+    @staticmethod
+    def set_black_on_white_graph_colors():
         pqtg.setConfigOption('background', 'w')
         pqtg.setConfigOption('foreground', 'k')
 
@@ -180,7 +185,8 @@ class DataWidget(QtWidgets.QWidget):
         self.horizontalSlider.setObjectName("horizontalSlider")
         self.verticalLayout_4.addWidget(self.horizontalSlider)
 
-    def set_minimum_expanding_size_policy(self, widget):
+    @staticmethod
+    def set_minimum_expanding_size_policy(widget):
         size_policy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding,
                                             QtWidgets.QSizePolicy.MinimumExpanding)
         size_policy.setHorizontalStretch(0)

@@ -1,9 +1,11 @@
 from src.rocket_packet import RocketPacket
+from src.producer import Producer
 
 
 class Consumer:
 
     def __init__(self, producer):
+        assert isinstance(producer, Producer)
         self.producer = producer
         self.data = {}
         self.has_new_data = False
@@ -17,7 +19,9 @@ class Consumer:
         rocket_packets = self.producer.get_data()
         if len(rocket_packets) > 0:
             for packet in rocket_packets:
-                # TODO: extract data from packets and process it
-                pass
+                for key, value in packet.__dict__.items():
+                    self.data[key].append(value)
             self.has_new_data = True
 
+    def __getitem__(self, key):
+        return self.data[key]
