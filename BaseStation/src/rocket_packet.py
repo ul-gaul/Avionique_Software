@@ -12,66 +12,66 @@ class RocketPacket:
     size_in_bytes = 120
 
     def __init__(self, data_list=None):
-        self.time_stamp = []
+        self.time_stamp = 0
 
         # Vitesse angulaire en radian par seconde
-        self.angular_speed_x = []
-        self.angular_speed_y = []
-        self.angular_speed_z = []
+        self.angular_speed_x = 0
+        self.angular_speed_y = 0
+        self.angular_speed_z = 0
 
         # Acceleration en g
-        self.acceleration_x = []
-        self.acceleration_y = []
-        self.acceleration_z = []
+        self.acceleration_x = 0
+        self.acceleration_y = 0
+        self.acceleration_z = 0
 
         # Champ magnetique en Gauss
-        self.magnetic_field_x = []
-        self.magnetic_field_y = []
-        self.magnetic_field_z = []
+        self.magnetic_field_x = 0
+        self.magnetic_field_y = 0
+        self.magnetic_field_z = 0
 
         # Altitude en metres
-        self.altitude = []
+        self.altitude = 0
 
         # Coordonnees GPS en degres
-        self.latitude_1 = []
-        self.longitude_1 = []
-        self.latitude_2 = []
-        self.longitude_2 = []
+        self.latitude_1 = 0
+        self.longitude_1 = 0
+        self.latitude_2 = 0
+        self.longitude_2 = 0
 
         # Temperature en degres Celsius
-        self.temperature_1 = []
-        self.temperature_2 = []
-        self.temperature_3 = []
+        self.temperature_1 = 0
+        self.temperature_2 = 0
+        self.temperature_3 = 0
         # TODO: il peut y avoir plus de valeur de temperature
 
-        self.date = []
+        self.date = 0
 
         # Orientation sous forme de quaternion
-        self.quaternion_w = []
-        self.quaternion_x = []
-        self.quaternion_y = []
-        self.quaternion_z = []
+        self.quaternion_w = 0
+        self.quaternion_x = 0
+        self.quaternion_y = 0
+        self.quaternion_z = 0
 
         # etat des systemes
-        self.acquisition_board_state_1 = []
-        self.acquisition_board_state_2 = []
-        self.acquisition_board_state_3 = []
-        self.power_supply_state_1 = []
-        self.power_supply_state_2 = []
-        self.payload_board_state_1 = []
+        self.acquisition_board_state_1 = 0
+        self.acquisition_board_state_2 = 0
+        self.acquisition_board_state_3 = 0
+        self.power_supply_state_1 = 0
+        self.power_supply_state_2 = 0
+        self.payload_board_state_1 = 0
 
         # donnees alimentation
-        self.voltage = []
-        self.current = []
+        self.voltage = 0
+        self.current = 0
 
         # donnees payload
-        self.angSpeed_payload_x = []
-        self.angSpeed_payload_y = []
-        self.angSpeed_payload_z = []
+        self.angSpeed_payload_x = 0
+        self.angSpeed_payload_y = 0
+        self.angSpeed_payload_z = 0
 
         # donnees de controler
-        self.camera = []
-        self.deployment = []
+        self.camera = 0
+        self.deployment = 0
 
         if data_list is not None:
             self.fill(data_list)
