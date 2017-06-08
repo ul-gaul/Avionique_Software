@@ -4,13 +4,14 @@ from PyQt5.QtGui import QIcon
 from src.ui.homewidget import HomeWidget
 from src.ui.real_time_widget import RealTimeWidget
 from src.ui.replay_widget import ReplayWidget
+from src.controller import Controller
 
 
 class MainWindow(QtWidgets.QMainWindow):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-
+        self.controller = Controller()
         self.central_widget = QtWidgets.QStackedWidget()
         self.setCentralWidget(self.central_widget)
         self.home_widget = HomeWidget(self)
@@ -32,6 +33,7 @@ class MainWindow(QtWidgets.QMainWindow):
                                                          filter="All Files (*);; CSV Files (*.csv)")
         self.real_time_widget = RealTimeWidget(self)
         self.open_new_widget(self.real_time_widget)
+        self.controller.init_real_time_mode(self.real_time_widget)
 
     def open_replay(self):
         """   """
@@ -41,6 +43,7 @@ class MainWindow(QtWidgets.QMainWindow):
                                                          filter="All Files (*);; CSV Files (*.csv)")
         self.replay_widget = ReplayWidget(self)
         self.open_new_widget(self.replay_widget)
+        self.controller.init_replay_mode(self.replay_widget)
 
     def open_new_widget(self, widget):
         self.central_widget.addWidget(widget)

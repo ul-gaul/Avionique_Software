@@ -200,3 +200,8 @@ class DataWidget(QtWidgets.QWidget):
         button.setText(text)
         button.clicked.connect(callback)
         self.horizontalLayout_5.addWidget(button)
+
+    def draw_altitude(self, values, target_altitude):
+        assert isinstance(values, list)
+        self.altitude_curve.setData(values)
+        self.target_altitude_line.setData([target_altitude] * len(values))

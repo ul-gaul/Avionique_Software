@@ -26,7 +26,5 @@ sys.excepthook = my_exception_hook
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
     window = MainWindow()
-    print("1")
     window.show()
-    print("2")
     sys.exit(app.exec_())

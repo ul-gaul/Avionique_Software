@@ -2,17 +2,18 @@ from threading import Thread
 from src.serial_reader import SerialReader
 from src.FileReader import FileReader
 from src.consumer import Consumer
-from src.ui.mainwindow import MainWindow
+from src.ui.real_time_widget import RealTimeWidget
+from src.ui.replay_widget import ReplayWidget
 
 
 class Controller:
-    def __init__(self, main_window):
-        assert isinstance(main_window, MainWindow)
-        self.main_window = main_window
+    def __init__(self):
+        self.data_widget = None
         self.filename = ""
         self.is_running = False
         self.producer = None
         self.consumer = None
+        self.target_altitude = 10000
         self.thread = Thread(self.drawing_thread)
 
     def set_filename(self, filename):
@@ -23,26 +24,35 @@ class Controller:
         while self.is_running:
             self.consumer.update()
             if self.consumer.has_new_data:
-                # TODO: draw plots and update
-                self.main_window.real_time_widget.altitude_curve.setData(self.consumer["altitude"])
-                self.main_window.real_time_widget.target_altitude_line.setData([10000 for i in range(len(self.consumer["altitude"]))])
+                self.draw_plots()
                 self.consumer.has_new_data = False
 
-    def init_real_time_mode(self):
-        self.producer = SerialReader()
-        self.start_thread()
+    def draw_plots(self):
+        # TODO: draw plots and update
+        self.data_widget.draw_altitude(self.consumer["altitude"], self.target_altitude)
 
-    def init_replay_mode(self):
+    def init_real_time_mode(self, real_time_widget):
+        assert isinstance(real_time_widget, RealTimeWidget)
+        self.data_widget = real_time_widget
+        self.producer = SerialReader()
+
+    def init_replay_mode(self, replay_widget):
+        assert isinstance(replay_widget, ReplayWidget)
+        self.data_widget = replay_widget
         self.producer = FileReader(self.filename)
-        self.start_thread()
+        self.consumer = Consumer(self.producer)
+        self.consumer.update()
+        self.draw_plots()
 
     def start_thread(self):
         self.consumer = Consumer(self.producer)
+        self.producer.start()
         self.is_running = True
         self.thread.start()
 
     def stop_thread(self):
         self.is_running = False
         self.thread.join()
+        self.producer.stop()
 
     # TODO: add ui event processing methods here
