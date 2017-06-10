@@ -114,6 +114,19 @@ class RocketPacket:
         self.camera = data_list[34]
         self.deployment = data_list[35]
 
+    @staticmethod
+    def keys():
+        return ["time_stamp", "angular_speed_x", "angular_speed_y", "angular_speed_z", "acceleration_x",
+                "acceleration_y", "acceleration_z", "magnetic_field_x", "magnetic_field_y", "magnetic_field_z",
+                "altitude", "latitude_1", "longitude_1", "latitude_2", "longitude_2", "temperature_1", "temperature_2",
+                "temperature_3", "date", "quaternion_w", "quaternion_x", "quaternion_y", "quaternion_z",
+                "acquisition_board_state_1", "acquisition_board_state_2", "acquisition_board_state_3",
+                "power_supply_state_1", "power_supply_state_2", "payload_board_state_1", "voltage", "current",
+                "angSpeed_payload_x", "angSpeed_payload_y", "angSpeed_payload_z", "camera", "deployment"]
+
+    def items(self):
+        return self.__dict__.items()
+
     def print_data(self):
         # FIXME: convertir en methode __str__ et transferer la gestion de la console dans la fonction appelante
         os.system('cls' if os.name == 'nt' else 'clear')

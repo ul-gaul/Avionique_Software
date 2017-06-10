@@ -9,17 +9,17 @@ class Consumer:
         self.producer = producer
         self.data = {}
         self.has_new_data = False
-        self.create_keys_from_packet_format(RocketPacket())
+        self.create_keys_from_packet_format()
 
-    def create_keys_from_packet_format(self, rocket_packet):
-        for key in rocket_packet.__dict__.keys():
+    def create_keys_from_packet_format(self):
+        for key in RocketPacket.keys():
             self.data[key] = []
 
     def update(self):
         rocket_packets = self.producer.get_data()
         if len(rocket_packets) > 0:
             for packet in rocket_packets:
-                for key, value in packet.__dict__.items():
+                for key, value in packet.items():
                     self.data[key].append(value)
             self.has_new_data = True
 
