@@ -9,12 +9,12 @@ from src.rocket_packet import RocketPacket
 
 
 class SerialReader(Producer):
-    def __init__(self, baudrate=9600, start_character=b's'):
+    def __init__(self, baudrate=57600, start_character=b's', frequency=1):
         super().__init__()
         self.port = serial.Serial()
         self.port.baudrate = baudrate
-        self.port.timeout = 0.2
-        self.start_character = start_character  # TODO: a confirmer avec l'equipe d'acquisition
+        self.port.timeout = frequency
+        self.start_character = start_character
 
         # RocketPacket data + 1 byte for checksum
         self.num_bytes_to_read = RocketPacket.size_in_bytes + 1

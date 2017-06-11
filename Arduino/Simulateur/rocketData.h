@@ -18,11 +18,6 @@ typedef struct
   	float accelY;
   	float accelZ;
   
-  	//Magnetic Fields in Gauss (su on utilise le mpu6050 on aura pas ces valeurs là)
-  	float magnetX;
-  	float magnetY;
-  	float magnetZ;
-  
   	//Altitude in meter (avec un bmp180)
   	float altitude;
   

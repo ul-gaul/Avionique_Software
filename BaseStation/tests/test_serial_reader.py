@@ -2,11 +2,12 @@ from src.serial_reader import SerialReader
 from time import sleep
 
 if __name__ == "__main__":
-    reader = SerialReader()
+    freq = 1
+    reader = SerialReader(frequency=freq)
     reader.start()
-    for i in range(200):
+    for i in range(int(30*(1.0/freq))):
         packets = reader.get_data()
-        if len(packets) > 0:
-            packets[-1].print_data()
-        sleep(0.2)
+        for packet in packets:
+            print(packet)
+        sleep(freq)
     reader.stop()

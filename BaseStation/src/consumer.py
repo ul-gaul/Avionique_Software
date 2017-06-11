@@ -19,6 +19,7 @@ class Consumer:
         rocket_packets = self.producer.get_data()
         if len(rocket_packets) > 0:
             for packet in rocket_packets:
+                print(packet)
                 for key, value in packet.items():
                     self.data[key].append(value)
             self.has_new_data = True

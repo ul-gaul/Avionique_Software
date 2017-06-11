@@ -2,6 +2,7 @@
 #include "sensors.h"
 
 #define START_BYTE 's'
+#define FREQUENCY 1
 
 int timestamp = 0;
 
@@ -18,7 +19,7 @@ byte computeCheckSum(byte *data)
 void setup()
 {
   // put your setup code here, to run once:
-  Serial.begin(9600);
+  Serial.begin(57600);
 }
 
 void loop()
@@ -31,9 +32,6 @@ void loop()
   rp.rocketData.accelX = 0;
   rp.rocketData.accelY = accel(timestamp);
   rp.rocketData.accelZ = 0;
-  rp.rocketData.magnetX = 0;
-  rp.rocketData.magnetY = 0;
-  rp.rocketData.magnetZ = 0;
   rp.rocketData.altitude = altitude(timestamp);
   rp.rocketData.latitude1 = latitude(timestamp);
   rp.rocketData.longitude1 = longitude(timestamp);
@@ -73,5 +71,5 @@ void loop()
   Serial.write(packetBuffer, sizeof(RocketPacket));
 
   timestamp++;
-  delay(200);
+  delay(1000 * FREQUENCY);
 }
