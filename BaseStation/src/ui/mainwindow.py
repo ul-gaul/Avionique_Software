@@ -28,17 +28,18 @@ class MainWindow(QtWidgets.QMainWindow):
     def open_real_time(self):
         """  """
         print("real time")
-        filename = QtWidgets.QFileDialog.getSaveFileName(caption="Save File",
-                                                         directory=d.now().strftime("%Y-%m-%d_%Hh%Mm")+".csv",
-                                                         filter="All Files (*);; CSV Files (*.csv)")
-        self.real_time_widget = RealTimeWidget(self)
+        filename, _ = QtWidgets.QFileDialog.getSaveFileName(caption="Save File",
+                                                            directory=d.now().strftime("%Y-%m-%d_%Hh%Mm")+".csv",
+                                                            filter="All Files (*);; CSV Files (*.csv)")
+        print(filename)
+        self.real_time_widget = RealTimeWidget(self.controller.real_time_button_callback, parent=self)
         self.open_new_widget(self.real_time_widget)
-        self.controller.init_real_time_mode(self.real_time_widget)
+        self.controller.init_real_time_mode(self.real_time_widget, filename)
 
     def open_replay(self):
         """   """
         print("replay")
-        filename = QtWidgets.QFileDialog.getSaveFileName(caption="Save File",
+        filename, _ = QtWidgets.QFileDialog.getSaveFileName(caption="Save File",
                                                          directory=d.now().strftime("%Y-%m-%d_%Hh%Mm")+".csv",
                                                          filter="All Files (*);; CSV Files (*.csv)")
         self.replay_widget = ReplayWidget(self)

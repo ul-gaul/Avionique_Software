@@ -15,7 +15,7 @@ class CsvFileWriter:
 
     def save(self):
         if self.filename:
-            print("Saved data in %s" % self.filename)  # TODO: write on the status bar of the GUI instead
+            print("Saved data in " + str(self.filename))  # TODO: write on the status bar of the GUI instead
             with open(self.filename, "w", newline='') as csv_file:
                 writer = csv.DictWriter(csv_file, fieldnames=self.header, delimiter=',')
                 writer.writeheader()

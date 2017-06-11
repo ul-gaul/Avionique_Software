@@ -14,7 +14,7 @@ class Controller:
         self.producer = None
         self.consumer = None
         self.target_altitude = 10000
-        self.thread = Thread(self.drawing_thread)
+        self.thread = Thread(target=self.drawing_thread)
 
     def set_filename(self, filename):
         assert isinstance(filename, str)
@@ -31,10 +31,10 @@ class Controller:
         # TODO: draw plots and update
         self.data_widget.draw_altitude(self.consumer["altitude"], self.target_altitude)
 
-    def init_real_time_mode(self, real_time_widget):
+    def init_real_time_mode(self, real_time_widget, save_file_path):
         assert isinstance(real_time_widget, RealTimeWidget)
         self.data_widget = real_time_widget
-        self.producer = SerialReader()
+        self.producer = SerialReader(frequency=0.2, save_file_path=save_file_path)
 
     def init_replay_mode(self, replay_widget):
         assert isinstance(replay_widget, ReplayWidget)
@@ -43,6 +43,16 @@ class Controller:
         self.consumer = Consumer(self.producer)
         self.consumer.update()
         self.draw_plots()
+
+    def real_time_button_callback(self):
+        self.is_running = not self.is_running
+        if self.is_running:
+            self.start_thread()
+            button_string = "Arrêter l'acquisition"
+        else:
+            self.stop_thread()
+            button_string = "Démarrer l'acquisition"
+        return button_string
 
     def start_thread(self):
         self.consumer = Consumer(self.producer)

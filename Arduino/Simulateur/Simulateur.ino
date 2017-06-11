@@ -2,7 +2,7 @@
 #include "sensors.h"
 
 #define START_BYTE 's'
-#define FREQUENCY 1
+#define FREQUENCY 5
 
 int timestamp = 0;
 
@@ -71,5 +71,5 @@ void loop()
   Serial.write(packetBuffer, sizeof(RocketPacket));
 
   timestamp++;
-  delay(1000 * FREQUENCY);
+  delay(1000 * (1.0 / FREQUENCY));
 }

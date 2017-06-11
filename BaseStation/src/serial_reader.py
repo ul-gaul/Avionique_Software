@@ -6,11 +6,13 @@ from threading import Thread
 
 from src.producer import Producer
 from src.rocket_packet import RocketPacket
+from src.csv_file_writer import CsvFileWriter
 
 
 class SerialReader(Producer):
-    def __init__(self, baudrate=57600, start_character=b's', frequency=1):
+    def __init__(self, save_file_path=None, baudrate=57600, start_character=b's', frequency=1):
         super().__init__()
+        self.save_file_path = save_file_path
         self.port = serial.Serial()
         self.port.baudrate = baudrate
         self.port.timeout = frequency
@@ -52,7 +54,9 @@ class SerialReader(Producer):
 
     def stop(self):
         super().stop()
-        # TODO: save dans le fichier csv avec le module de sauvegarde
+        if self.save_file_path is not None:
+            csv_file_writer = CsvFileWriter(self.save_file_path, self.flightData)
+            csv_file_writer.save()
 
     @staticmethod
     def detect_serial():
