@@ -2,6 +2,9 @@ from src.rocket_packet import RocketPacket
 from src.producer import Producer
 
 
+METERS2FEET = 3.28084
+
+
 class Consumer:
 
     def __init__(self, producer):
@@ -14,6 +17,7 @@ class Consumer:
     def create_keys_from_packet_format(self):
         for key in RocketPacket.keys():
             self.data[key] = []
+            self.data["altitude_feet"] = []
 
     def update(self):
         rocket_packets = self.producer.get_data()
@@ -22,6 +26,7 @@ class Consumer:
                 print(packet)
                 for key, value in packet.items():
                     self.data[key].append(value)
+                self.data["altitude_feet"].append(packet.altitude * METERS2FEET)
             self.has_new_data = True
 
     def __getitem__(self, key):

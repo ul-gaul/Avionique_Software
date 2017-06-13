@@ -1,8 +1,12 @@
 #include "sensors.h"
 
-float accel(int timestamp)
+float accel(int timestamp)  //TODO
 {
-  if(timestamp < 150)
+  if(timestamp < T_TAKEOFF * FREQUENCY)
+  {
+    return -9.8;
+  }
+  else if(timestamp < T_PARACHUTE * FREQUENCY)
   {
     return (-4.0/9.0);
   }
@@ -14,21 +18,34 @@ float accel(int timestamp)
 
 float altitude(int timestamp)
 {
-  if(timestamp < 150)
+  float t = (timestamp - T_TAKEOFF) * FREQUENCY;
+  if(timestamp < T_TAKEOFF * FREQUENCY)
   {
-    return -(4.0/9.0)*(timestamp-150)*(timestamp-150) + 10000;
+    return 0;
   }
-  else if (timestamp >= 150 && timestamp < 3275)
+  else if(timestamp < T_ENGINE * FREQUENCY)
   {
-    return 10000-16.0*timestamp/5;
+    return 30.123 * t * t;
+  }
+  else if (timestamp < T_APOGEE * FREQUENCY)
+  {
+    return -0.626 * t * t + 138.373 * t;
+  }
+  else if (timestamp < T_PARACHUTE * FREQUENCY)
+  {
+    return -20.15 * t + 3571.75;
+  }
+  else if (timestamp < T_LANDING * FREQUENCY)
+  {
+    return -7.35 * t + 1690.45;
   }
   else
   {
-    return 0.0;
+    return 0;
   }
 }
 
-float latitude(int timestamp)
+float latitude(int timestamp) //TODO
 {
   if(timestamp < 150)
   {
@@ -44,7 +61,7 @@ float latitude(int timestamp)
   }
 }
 
-float longitude(int timestamp)
+float longitude(int timestamp)  //TODO
 {
   if(timestamp < 150)
   {
@@ -72,17 +89,13 @@ float temperature2(int timestamp)
 
 uint8_t etatBoard(int timestamp)
 {
-  if(timestamp < 30)
+  if(timestamp < T_BOARD_ON * FREQUENCY)
   {
     return 0;
   }
-  else if(timestamp >= 30 && timestamp < 150)
-  {
-    return 255;
-  }
   else
   {
-    return 128;
+    return 255;
   }
 }
 

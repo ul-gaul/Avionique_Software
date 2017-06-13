@@ -1,6 +1,8 @@
 #ifndef _rocketData_h
 #define _rocketData_h
 
+#include "Arduino.h"
+
 typedef struct
 {
     //Time Stamp

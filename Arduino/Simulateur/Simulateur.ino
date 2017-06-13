@@ -2,7 +2,6 @@
 #include "sensors.h"
 
 #define START_BYTE 's'
-#define FREQUENCY 5
 
 int timestamp = 0;
 
@@ -45,11 +44,11 @@ void loop()
   rp.rocketData.quaternionb = 0;
   rp.rocketData.quaternionc = 0;
   rp.rocketData.quaterniond = 0;
-  rp.rocketData.etatBoardAcquisition1 = 255;
-  rp.rocketData.etatBoardAcquisition2 = 255;
-  rp.rocketData.etatBoardAcquisition3 = 255;
-  rp.rocketData.etatBoardAlim1 = 255;
-  rp.rocketData.etatBoardAlim2 = 255;
+  rp.rocketData.etatBoardAcquisition1 = etatBoard(timestamp);
+  rp.rocketData.etatBoardAcquisition2 = etatBoard(timestamp);
+  rp.rocketData.etatBoardAcquisition3 = etatBoard(timestamp);
+  rp.rocketData.etatBoardAlim1 = etatBoard(timestamp);
+  rp.rocketData.etatBoardAlim2 = etatBoard(timestamp);
   rp.rocketData.etatBoardPayload1 = etatBoard(timestamp);
   rp.rocketData.voltage = 3.3;
   rp.rocketData.courant = 0.001;

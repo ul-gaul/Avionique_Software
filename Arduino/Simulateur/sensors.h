@@ -4,6 +4,17 @@
 #include "Arduino.h"
 #include "math.h"
 
+#define FREQUENCY     1     //Sampling frequency (Hz)
+#define H_APOGEE      3067  //Apogee (m)
+#define H_ENGINE      610   //End of combustion altitude (m)
+#define H_PARACHUTE   610   //Main parachute deploiment altitude (m)
+#define T_BOARD_ON    5     //Delay before the boards are turned on (sec)
+#define T_TAKEOFF     10    //Delay before takeoff (sec)
+#define T_ENGINE      14.5  //Delay before end of combustion (sec)
+#define T_APOGEE      35    //Delay before apogee (sec)
+#define T_PARACHUTE   157   //Delay before main parachute deploiment (sec)
+#define T_LANDING     240   //Delay before landing (sec)
+
 float accel(int timestamp);
 float altitude(int timestamp);
 float latitude(int timestamp);
