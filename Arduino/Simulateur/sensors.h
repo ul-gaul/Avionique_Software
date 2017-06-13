@@ -4,7 +4,7 @@
 #include "Arduino.h"
 #include "math.h"
 
-#define FREQUENCY     1     //Sampling frequency (Hz)
+#define FREQUENCY     5.0     //Sampling frequency (Hz)
 #define H_APOGEE      3067  //Apogee (m)
 #define H_ENGINE      610   //End of combustion altitude (m)
 #define H_PARACHUTE   610   //Main parachute deploiment altitude (m)

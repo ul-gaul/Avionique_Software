@@ -12,7 +12,7 @@ class DataWidget(QtWidgets.QWidget):
         self.setup_ui()
 
         self.altitude_curve = self.graphicsView.plot([0], [0], pen=pqtg.mkPen(color='k', width=3))
-        self.target_altitude_line = self.graphicsView.plot([0], [0], pen=pqtg.mkPen(color='r', width=5))
+        self.target_altitude_line = self.graphicsView.plot([0], [0], pen=pqtg.mkPen(color='r', width=3))
 
         self.horizontalLayout_5 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_5.setObjectName("horizontalLayout_5")

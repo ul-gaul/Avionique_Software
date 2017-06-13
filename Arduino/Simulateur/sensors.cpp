@@ -18,7 +18,7 @@ float accel(int timestamp)  //TODO
 
 float altitude(int timestamp)
 {
-  float t = (timestamp - T_TAKEOFF) * FREQUENCY;
+  float t = (float)timestamp / FREQUENCY - T_TAKEOFF;
   if(timestamp < T_TAKEOFF * FREQUENCY)
   {
     return 0;

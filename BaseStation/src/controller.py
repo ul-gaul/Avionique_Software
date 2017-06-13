@@ -34,7 +34,7 @@ class Controller:
     def init_real_time_mode(self, real_time_widget, save_file_path):
         assert isinstance(real_time_widget, RealTimeWidget)
         self.data_widget = real_time_widget
-        self.producer = SerialReader(frequency=1, save_file_path=save_file_path)
+        self.producer = SerialReader(frequency=5, save_file_path=save_file_path)
 
     def init_replay_mode(self, replay_widget):
         assert isinstance(replay_widget, ReplayWidget)
