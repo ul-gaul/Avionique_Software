@@ -13,7 +13,7 @@ QStackedWidget
     border: 0px;
 }
 
-#label
+QLabel
 {
     border: 0px;
 }

@@ -26,12 +26,22 @@ class Controller:
             self.consumer.update()
             if self.consumer.has_new_data:
                 self.draw_plots()
+                self.update_leds()
                 self.consumer.has_new_data = False
 
     def draw_plots(self):
         # TODO: draw plots and update
         self.data_widget.draw_altitude(self.consumer["altitude_feet"])
         self.data_widget.draw_map(self.consumer["easting"], self.consumer["northing"])
+
+    def update_leds(self):
+        # FIXME: optimize this by updating the leds only on status change
+        self.data_widget.set_led_state(1, self.consumer["acquisition_board_state_1"][-1])
+        self.data_widget.set_led_state(2, self.consumer["acquisition_board_state_2"][-1])
+        self.data_widget.set_led_state(3, self.consumer["acquisition_board_state_3"][-1])
+        self.data_widget.set_led_state(4, self.consumer["power_supply_state_1"][-1])
+        self.data_widget.set_led_state(5, self.consumer["power_supply_state_2"][-1])
+        self.data_widget.set_led_state(6, self.consumer["payload_board_state_1"][-1])
 
     def init_real_time_mode(self, real_time_widget, save_file_path):
         assert isinstance(real_time_widget, RealTimeWidget)
@@ -59,6 +69,7 @@ class Controller:
 
     def start_thread(self):
         self.consumer = Consumer(self.producer, self.sampling_frequency)
+        #self.consumer.led_callback = self.data_widget.set_led_state
         self.producer.start()
         self.is_running = True
         self.thread.start()

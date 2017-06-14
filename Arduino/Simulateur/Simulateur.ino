@@ -48,7 +48,7 @@ void loop()
   rp.rocketData.etatBoardAcquisition2 = etatBoard(timestamp);
   rp.rocketData.etatBoardAcquisition3 = etatBoard(timestamp);
   rp.rocketData.etatBoardAlim1 = etatBoard(timestamp);
-  rp.rocketData.etatBoardAlim2 = etatBoard(timestamp);
+  rp.rocketData.etatBoardAlim2 = 0;
   rp.rocketData.etatBoardPayload1 = etatBoard(timestamp);
   rp.rocketData.voltage = 3.3;
   rp.rocketData.courant = 0.001;
