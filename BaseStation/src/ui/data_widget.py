@@ -11,6 +11,9 @@ class DataWidget(QtWidgets.QWidget):
         self.set_black_on_white_graph_colors()
         self.setup_ui()
 
+        self.graphicsView.plotItem.setTitle("Altitude")
+        self.graphicsView.plotItem.setLabel("bottom", "Temps", "Sec")
+        self.graphicsView.plotItem.setLabel("left", "Altitude (ft)")
         self.altitude_curve = self.graphicsView.plot([0], [0], pen=pqtg.mkPen(color='k', width=3))
         self.target_altitude_line = self.graphicsView.plot([0], [0], pen=pqtg.mkPen(color='r', width=3))
 
@@ -52,7 +55,7 @@ class DataWidget(QtWidgets.QWidget):
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         self.verticalLayout = QtWidgets.QVBoxLayout()
         self.verticalLayout.setObjectName("verticalLayout")
-        self.graphicsView = pqtg.PlotWidget(self, title="Altitude")
+        self.graphicsView = pqtg.PlotWidget(self)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding,
                                            QtWidgets.QSizePolicy.MinimumExpanding)
         sizePolicy.setHorizontalStretch(0)
