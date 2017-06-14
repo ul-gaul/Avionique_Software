@@ -45,35 +45,53 @@ float altitude(int timestamp)
   }
 }
 
-float latitude(int timestamp) //TODO
+float latitude(int timestamp)
 {
-  if(timestamp < 150)
+  float t = (float)timestamp / FREQUENCY - T_TAKEOFF;
+  if(timestamp < T_TAKEOFF * FREQUENCY)
   {
-    return 0.0;
+    return 32.990524;
   }
-  else if(timestamp >= 150 && timestamp < 3275)
+  else if(timestamp < T_APOGEE * FREQUENCY)
   {
-    return 1.0*(timestamp-150);
+    return 0.00001836 * t + 32.990524;
+  }
+  else if (timestamp < T_PARACHUTE * FREQUENCY)
+  {
+    return -0.000007254 * t + 32.991164;
+  }
+  else if (timestamp < T_LANDING * FREQUENCY)
+  {
+    return -0.000071927 * t + 33.000671;
   }
   else
   {
-    return 3125.0;
+    return 32.984128;
   }
 }
 
-float longitude(int timestamp)  //TODO
+float longitude(int timestamp)
 {
-  if(timestamp < 150)
+  float t = (float)timestamp / FREQUENCY - T_TAKEOFF;
+  if(timestamp < T_TAKEOFF * FREQUENCY)
   {
-    return 0.0;
+    return -106.975250;
   }
-  else if(timestamp >= 150 && timestamp < 3275)
+  else if(timestamp < T_APOGEE * FREQUENCY)
   {
-    return -0.5*(timestamp-150);
+    return 0.000021 * t - 106.975250;
+  }
+  else if (timestamp < T_PARACHUTE * FREQUENCY)
+  {
+    return 0.000008934 * t - 106.974948;
+  }
+  else if (timestamp < T_LANDING * FREQUENCY)
+  {
+    return -0.000082204 * t - 106.9615509;
   }
   else
   {
-    return -1562.5;
+    return -106.980458;
   }
 }
 
