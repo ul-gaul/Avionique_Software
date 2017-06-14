@@ -7,3 +7,4 @@ Groupe Aérospatial Université Laval, Team Software
 - PyQt5: http://pyqt.sourceforge.net/Docs/PyQt5/installation.html
 - PyQtGraph: http://www.pyqtgraph.org/
 - PyOpenGl: http://pyopengl.sourceforge.net/
+- pyproj: https://pypi.python.org/pypi/pyproj?
