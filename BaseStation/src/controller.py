@@ -14,6 +14,7 @@ class Controller:
         self.producer = None
         self.consumer = None
         self.target_altitude = 10000
+        self.sampling_frequency = 5
         self.thread = Thread(target=self.drawing_thread)
 
     def set_filename(self, filename):
@@ -29,18 +30,20 @@ class Controller:
 
     def draw_plots(self):
         # TODO: draw plots and update
-        self.data_widget.draw_altitude(self.consumer["altitude_feet"], self.target_altitude)
+        self.data_widget.draw_altitude(self.consumer["altitude_feet"])
+        self.data_widget.draw_map(self.consumer["easting"], self.consumer["northing"])
 
     def init_real_time_mode(self, real_time_widget, save_file_path):
         assert isinstance(real_time_widget, RealTimeWidget)
         self.data_widget = real_time_widget
-        self.producer = SerialReader(frequency=5, save_file_path=save_file_path)
+        self.data_widget.set_target_altitude(self.target_altitude)
+        self.producer = SerialReader(sampling_frequency=self.sampling_frequency, save_file_path=save_file_path)
 
     def init_replay_mode(self, replay_widget):
         assert isinstance(replay_widget, ReplayWidget)
         self.data_widget = replay_widget
         self.producer = FileReader(self.filename)
-        self.consumer = Consumer(self.producer)
+        self.consumer = Consumer(self.producer, self.sampling_frequency)
         self.consumer.update()
         self.draw_plots()
 
@@ -55,7 +58,7 @@ class Controller:
         return button_string
 
     def start_thread(self):
-        self.consumer = Consumer(self.producer)
+        self.consumer = Consumer(self.producer, self.sampling_frequency)
         self.producer.start()
         self.is_running = True
         self.thread.start()

@@ -15,7 +15,12 @@ class DataWidget(QtWidgets.QWidget):
         self.graphicsView.plotItem.setLabel("bottom", "Temps", "Sec")
         self.graphicsView.plotItem.setLabel("left", "Altitude (ft)")
         self.altitude_curve = self.graphicsView.plot([0], [0], pen=pqtg.mkPen(color='k', width=3))
-        self.target_altitude_line = self.graphicsView.plot([0], [0], pen=pqtg.mkPen(color='r', width=3))
+
+        self.graphicsView_2.plotItem.setTitle("Position relative au camp")
+        self.graphicsView_2.plotItem.setLabel("bottom", "Est", "m")
+        self.graphicsView_2.plotItem.setLabel("left", "Nord", "m")
+        self.graphicsView_2.plotItem.showGrid(x=True, y=True)
+        self.positions_on_map = self.graphicsView_2.plot([0], [0], pen=pqtg.mkPen(color='k', width=3))
 
         self.horizontalLayout_5 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_5.setObjectName("horizontalLayout_5")
@@ -204,7 +209,14 @@ class DataWidget(QtWidgets.QWidget):
         button.clicked.connect(callback)
         self.horizontalLayout_5.addWidget(button)
 
-    def draw_altitude(self, values, target_altitude):
+    def set_target_altitude(self, altitude):
+        self.graphicsView.plotItem.addLine(y=altitude, pen=pqtg.mkPen(color='r', width=3))
+
+    def draw_altitude(self, values):
         assert isinstance(values, list)
-        self.target_altitude_line.setData([target_altitude] * len(values))
         self.altitude_curve.setData(values)
+
+    def draw_map(self, eastings, northings):
+        assert isinstance(eastings, list)
+        assert isinstance(northings, list)
+        self.positions_on_map.setData(eastings, northings)

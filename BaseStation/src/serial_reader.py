@@ -10,12 +10,12 @@ from src.csv_file_writer import CsvFileWriter
 
 
 class SerialReader(Producer):
-    def __init__(self, save_file_path=None, baudrate=57600, start_character=b's', frequency=1):
+    def __init__(self, save_file_path=None, baudrate=57600, start_character=b's', sampling_frequency=1):
         super().__init__()
         self.save_file_path = save_file_path
         self.port = serial.Serial()
         self.port.baudrate = baudrate
-        self.port.timeout = frequency
+        self.port.timeout = sampling_frequency
         self.start_character = start_character
 
         # RocketPacket data + 1 byte for checksum
@@ -42,7 +42,6 @@ class SerialReader(Producer):
                     if self.validate_checksum(data_array):
                         rocket_packet = RocketPacket(data_list[:-1])
                         self.rocket_packets.put(rocket_packet)
-                        # TODO: decider si on ecrit dans le csv seulement a la fin, ou au fur et a mesure
                         self.flightData.append(rocket_packet)
                 except struct.error:
                     """
