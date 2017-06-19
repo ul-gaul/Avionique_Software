@@ -61,6 +61,10 @@ class Consumer:
             self.data["easting"].append(easting - self.base_camp_easting)
             self.data["northing"].append(northing - self.base_camp_northing)
 
+    def get_rocket_rotation(self):
+        return (self.data["quaternion_w"][-1], self.data["quaternion_x"][-1], self.data["quaternion_y"][-1],
+                self.data["quaternion_z"][-1])
+
     # def update_leds(self):
     #     if self.led_callback is not None:
     #         #self.data["acquisition_board_state_1"][-1]

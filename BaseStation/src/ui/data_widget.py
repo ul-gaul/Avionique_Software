@@ -1,5 +1,7 @@
 from PyQt5 import QtWidgets, QtCore, QtGui
 import pyqtgraph as pqtg
+import pyqtgraph.opengl as gl
+import numpy as np
 from src.ui.ExtendedQSlider import ExtendedQSlider
 
 
@@ -31,6 +33,18 @@ class DataWidget(QtWidgets.QWidget):
         self.graphicsView_2.plotItem.setLabel("left", "Nord", "m")
         self.graphicsView_2.plotItem.showGrid(x=True, y=True)
         self.positions_on_map = self.graphicsView_2.plot([0], [0], pen=pqtg.mkPen(color='k', width=3))
+
+        cylinder_mesh = gl.MeshData.cylinder(rows=10, cols=10, radius=[1.0, 1.0], length=5.0)
+        cone_mesh = gl.MeshData.cylinder(rows=10, cols=10, radius=[1.0, 0.], length=2.0)
+        colors = np.zeros((cone_mesh.faceCount(), 4))
+        colors[:, :] = [255, 0, 0, 1]
+        cone_mesh.setFaceColors(colors)
+        self.cylinder_mesh_item = gl.GLMeshItem(meshdata=cylinder_mesh, smooth=False, drawEdges=True, shader="balloon",
+                                                computeNormals=False)
+        self.cone_mesh_item = gl.GLMeshItem(meshdata=cone_mesh, smooth=False, drawEdges=True, computeNormals=False)
+        self.cone_mesh_item.translate(0, 0, 5)
+        self.glView.addItem(self.cylinder_mesh_item)
+        self.glView.addItem(self.cone_mesh_item)
 
     @staticmethod
     def set_black_on_white_graph_colors():
@@ -93,18 +107,23 @@ class DataWidget(QtWidgets.QWidget):
         self.horizontalLayout_2.addItem(spacerItem4)
         self.verticalLayout_2 = QtWidgets.QVBoxLayout()
         self.verticalLayout_2.setObjectName("verticalLayout_2")
-        self.frame_3 = QtWidgets.QFrame(self)
+        self.glView = gl.GLViewWidget(self)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding,
                                            QtWidgets.QSizePolicy.MinimumExpanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.frame_3.sizePolicy().hasHeightForWidth())
-        self.frame_3.setSizePolicy(sizePolicy)
-        self.frame_3.setMinimumSize(QtCore.QSize(200, 400))
-        self.frame_3.setFrameShape(QtWidgets.QFrame.StyledPanel)
-        self.frame_3.setFrameShadow(QtWidgets.QFrame.Raised)
-        self.frame_3.setObjectName("frame_3")
-        self.verticalLayout_2.addWidget(self.frame_3)
+        sizePolicy.setHeightForWidth(self.glView.sizePolicy().hasHeightForWidth())
+        self.glView.setSizePolicy(sizePolicy)
+        self.glView.setMinimumSize(QtCore.QSize(200, 400))
+        self.glView.setCameraPosition(distance=15)
+        gx = gl.GLGridItem()
+        gx.scale(1, 1, 1)
+        self.glView.addItem(gx)
+        axis = gl.GLAxisItem(glOptions="additive")
+        axis.setSize(5, 5, 5)
+        self.glView.addItem(axis)
+        self.glView.setObjectName("glView")
+        self.verticalLayout_2.addWidget(self.glView)
         spacerItem5 = QtWidgets.QSpacerItem(20, 50, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
         self.verticalLayout_2.addItem(spacerItem5)
         self.horizontalLayout_4 = QtWidgets.QHBoxLayout()
@@ -351,3 +370,6 @@ class DataWidget(QtWidgets.QWidget):
         assert isinstance(eastings, list)
         assert isinstance(northings, list)
         self.positions_on_map.setData(eastings, northings)
+
+    def rotate_rocket_model(self, w, x, y, z):
+        pass
