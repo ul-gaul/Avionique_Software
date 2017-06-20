@@ -97,12 +97,32 @@ float longitude(int timestamp)
 
 float temperature1(int timestamp)
 {
-  return 3*cos(timestamp*M_PI/25) + 100;
+  return 5*cos(timestamp*M_PI/25) + 45;
 }
 
 float temperature2(int timestamp)
 {
   return 2*sin(timestamp*M_PI/25) + 102;
+}
+
+float quaternionA(int timestamp)
+{
+  return (5*timestamp)%360;
+}
+
+float quaternionB(int timestamp)
+{
+  return 0.5;
+}
+
+float quaternionC(int timestamp)
+{
+  return 0;
+}
+
+float quaternionD(int timestamp)
+{
+  return 0.5;
 }
 
 uint8_t etatBoard(int timestamp)

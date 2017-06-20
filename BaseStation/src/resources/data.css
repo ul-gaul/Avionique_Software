@@ -60,6 +60,16 @@ QLabel
     border-bottom-left-radius: 7px;
 }
 
+#verticalSlider::handle:vertical
+{
+    width: 10px;
+    height: 8px;
+    border: 2px solid white;
+    background: solid black;
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
+}
+
 QPushButton
 {
 	background-color: rgb(236,0,0);

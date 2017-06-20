@@ -13,6 +13,9 @@ class DataWidget(QtWidgets.QWidget):
         self.set_black_on_white_graph_colors()
         self.setup_ui()
 
+        self.on_stylesheet = self.get_stylesheet("resources/led_on.css")
+        self.off_stylesheet = self.get_stylesheet("resources/led_off.css")
+
         self.leds = [self.led_1, self.led_2, self.led_3, self.led_4, self.led_5, self.led_6]
         for i in range(1, 7):
             self.set_led_state(i, False)
@@ -34,17 +37,23 @@ class DataWidget(QtWidgets.QWidget):
         self.graphicsView_2.plotItem.showGrid(x=True, y=True)
         self.positions_on_map = self.graphicsView_2.plot([0], [0], pen=pqtg.mkPen(color='k', width=3))
 
-        cylinder_mesh = gl.MeshData.cylinder(rows=10, cols=10, radius=[1.0, 1.0], length=5.0)
-        cone_mesh = gl.MeshData.cylinder(rows=10, cols=10, radius=[1.0, 0.], length=2.0)
+        cylinder_mesh = gl.MeshData.cylinder(rows=2, cols=4, radius=[1.0, 1.0], length=5.0)
+        cone_mesh = gl.MeshData.cylinder(rows=2, cols=4, radius=[1.0, 0.], length=2.0)
         colors = np.zeros((cone_mesh.faceCount(), 4))
         colors[:, :] = [255, 0, 0, 1]
         cone_mesh.setFaceColors(colors)
-        self.cylinder_mesh_item = gl.GLMeshItem(meshdata=cylinder_mesh, smooth=False, drawEdges=True, shader="balloon",
+        self.cylinder_mesh_item = gl.GLMeshItem(meshdata=cylinder_mesh, smooth=False, drawEdges=False,
                                                 computeNormals=False)
-        self.cone_mesh_item = gl.GLMeshItem(meshdata=cone_mesh, smooth=False, drawEdges=True, computeNormals=False)
+        self.cone_mesh_item = gl.GLMeshItem(meshdata=cone_mesh, smooth=False, drawEdges=False, computeNormals=False)
+        self.cone_mesh_item.setParentItem(self.cylinder_mesh_item)
         self.cone_mesh_item.translate(0, 0, 5)
+        self.rocket_vector = gl.GLLinePlotItem(pos=np.array([[0, 0, 0], [3, 0, 0]]), color=[255, 0, 255, 1])
+        self.rocket_vector.setParentItem(self.cylinder_mesh_item)
         self.glView.addItem(self.cylinder_mesh_item)
         self.glView.addItem(self.cone_mesh_item)
+        self.glView.addItem(self.rocket_vector)
+
+        self.gradient.setPixmap(QtGui.QPixmap("resources/gradient.png"))
 
     @staticmethod
     def set_black_on_white_graph_colors():
@@ -105,6 +114,7 @@ class DataWidget(QtWidgets.QWidget):
         self.horizontalLayout_2.addLayout(self.verticalLayout)
         spacerItem4 = QtWidgets.QSpacerItem(90, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_2.addItem(spacerItem4)
+
         self.verticalLayout_2 = QtWidgets.QVBoxLayout()
         self.verticalLayout_2.setObjectName("verticalLayout_2")
         self.glView = gl.GLViewWidget(self)
@@ -155,6 +165,7 @@ class DataWidget(QtWidgets.QWidget):
         self.verticalLayout_3.setObjectName("verticalLayout_3")
         self.horizontalLayout_3 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
+
         self.frame_4 = QtWidgets.QFrame(self)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding,
                                            QtWidgets.QSizePolicy.MinimumExpanding)
@@ -279,21 +290,36 @@ class DataWidget(QtWidgets.QWidget):
         self.horizontalLayout_12.addWidget(self.label_7)
         self.verticalLayout_6.addLayout(self.horizontalLayout_12)
         self.horizontalLayout_3.addWidget(self.frame_4)
-        self.frame_5 = QtWidgets.QFrame(self)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding,
-                                           QtWidgets.QSizePolicy.MinimumExpanding)
+        spacerItem9 = QtWidgets.QSpacerItem(20, 20, QtWidgets.QSizePolicy.MinimumExpanding,
+                                            QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_3.addItem(spacerItem9)
+
+        self.gradient = QtWidgets.QLabel(self)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.MinimumExpanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.frame_5.sizePolicy().hasHeightForWidth())
-        self.frame_5.setSizePolicy(sizePolicy)
-        self.frame_5.setMinimumSize(QtCore.QSize(75, 273))
-        self.frame_5.setFrameShape(QtWidgets.QFrame.StyledPanel)
-        self.frame_5.setFrameShadow(QtWidgets.QFrame.Raised)
-        self.frame_5.setObjectName("frame_5")
-        self.horizontalLayout_3.addWidget(self.frame_5)
+        sizePolicy.setHeightForWidth(self.gradient.sizePolicy().hasHeightForWidth())
+        self.gradient.setSizePolicy(sizePolicy)
+        self.gradient.setMinimumSize(QtCore.QSize(50, 273))
+        self.gradient.setMaximumSize(QtCore.QSize(100, 400))
+        self.gradient.setText("")
+        self.gradient.setObjectName("gradient")
+        self.horizontalLayout_3.addWidget(self.gradient)
+        self.verticalSlider = QtWidgets.QSlider(self)
+        self.verticalSlider.setMaximum(100)
+        self.verticalSlider.setTracking(False)
+        self.verticalSlider.setOrientation(QtCore.Qt.Vertical)
+        self.verticalSlider.setTickPosition(QtWidgets.QSlider.TicksRight)
+        self.verticalSlider.setTickInterval(10)
+        self.verticalSlider.setObjectName("verticalSlider")
+        self.horizontalLayout_3.addWidget(self.verticalSlider)
+
+        spacerItem10 = QtWidgets.QSpacerItem(20, 20, QtWidgets.QSizePolicy.MinimumExpanding,
+                                             QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_3.addItem(spacerItem10)
         self.verticalLayout_3.addLayout(self.horizontalLayout_3)
-        spacerItem9 = QtWidgets.QSpacerItem(20, 70, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
-        self.verticalLayout_3.addItem(spacerItem9)
+        spacerItem11 = QtWidgets.QSpacerItem(20, 70, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
+        self.verticalLayout_3.addItem(spacerItem11)
         self.graphicsView_3 = pqtg.PlotWidget(self)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding,
                                            QtWidgets.QSizePolicy.MinimumExpanding)
@@ -304,8 +330,8 @@ class DataWidget(QtWidgets.QWidget):
         self.graphicsView_3.setMinimumSize(QtCore.QSize(295, 100))
         self.graphicsView_3.setObjectName("graphicsView_3")
         self.verticalLayout_3.addWidget(self.graphicsView_3)
-        spacerItem10 = QtWidgets.QSpacerItem(20, 70, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
-        self.verticalLayout_3.addItem(spacerItem10)
+        spacerItem12 = QtWidgets.QSpacerItem(20, 70, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
+        self.verticalLayout_3.addItem(spacerItem12)
         self.horizontalLayout_2.addLayout(self.verticalLayout_3)
         self.verticalLayout_4.addLayout(self.horizontalLayout_2)
 
@@ -321,6 +347,11 @@ class DataWidget(QtWidgets.QWidget):
         self.label_5.setText("Power supply 1")
         self.label_6.setText("Power supply 2")
         self.label_7.setText("Payload board")
+
+    @staticmethod
+    def get_stylesheet(path):
+        with open(path) as f:
+            return f.read()
 
     def setup_slider(self):
         self.horizontalSlider = ExtendedQSlider(self)
@@ -352,12 +383,9 @@ class DataWidget(QtWidgets.QWidget):
 
     def set_led_state(self, led_num, is_on):
         if is_on:
-            stylesheet_path = "resources/led_on.css"
+            self.leds[led_num - 1].setStyleSheet(self.on_stylesheet)
         else:
-            stylesheet_path = "resources/led_off.css"
-        f = open(stylesheet_path, 'r')
-        style_sheet = f.read()
-        self.leds[led_num - 1].setStyleSheet(style_sheet)
+            self.leds[led_num - 1].setStyleSheet(self.off_stylesheet)
 
     def set_target_altitude(self, altitude):
         self.graphicsView.plotItem.addLine(y=altitude, pen=pqtg.mkPen(color='r', width=3))
@@ -372,4 +400,16 @@ class DataWidget(QtWidgets.QWidget):
         self.positions_on_map.setData(eastings, northings)
 
     def rotate_rocket_model(self, w, x, y, z):
-        pass
+        tr = pqtg.Transform3D()
+        tr.rotate(w, x, y, z)
+        self.cylinder_mesh_item.setTransform(tr)
+
+    def set_thermometer_value(self, temperature):
+        if temperature < 0:
+            value = 0
+        elif temperature > 100:
+            value = 100
+        else:
+            value = round(temperature)
+
+        self.verticalSlider.setValue(value)

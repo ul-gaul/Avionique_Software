@@ -40,10 +40,10 @@ void loop()
   rp.rocketData.temperature2 = temperature2(timestamp);
   rp.rocketData.temperature3 = temperature1(timestamp);
   rp.rocketData.timeStampDate = 0;
-  rp.rocketData.quaterniona = 0;
-  rp.rocketData.quaternionb = 0;
-  rp.rocketData.quaternionc = 0;
-  rp.rocketData.quaterniond = 0;
+  rp.rocketData.quaterniona = quaternionA(timestamp);
+  rp.rocketData.quaternionb = quaternionB(timestamp);
+  rp.rocketData.quaternionc = quaternionC(timestamp);
+  rp.rocketData.quaterniond = quaternionD(timestamp);
   rp.rocketData.etatBoardAcquisition1 = etatBoard(timestamp);
   rp.rocketData.etatBoardAcquisition2 = etatBoard(timestamp);
   rp.rocketData.etatBoardAcquisition3 = etatBoard(timestamp);

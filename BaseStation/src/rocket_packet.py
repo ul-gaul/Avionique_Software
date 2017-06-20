@@ -36,7 +36,7 @@ class RocketPacket:
         # Temperature en degres Celsius
         self.temperature_1 = 0
         self.temperature_2 = 0
-        self.temperature_3 = 0
+        self.temperature_3 = 0  # average between temperature_1 and temperature_2
 
         self.date = 0
 

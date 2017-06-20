@@ -4,7 +4,7 @@
 #include "Arduino.h"
 #include "math.h"
 
-#define FREQUENCY     5.0     //Sampling frequency (Hz)
+#define FREQUENCY     1.0     //Sampling frequency (Hz)
 #define H_APOGEE      3067  //Apogee (m)
 #define H_ENGINE      610   //End of combustion altitude (m)
 #define H_PARACHUTE   610   //Main parachute deploiment altitude (m)
@@ -21,6 +21,10 @@ float latitude(int timestamp);
 float longitude(int timestamp);
 float temperature1(int timestamp);
 float temperature2(int timestamp);
+float quaternionA(int timestamp);
+float quaternionB(int timestamp);
+float quaternionC(int timestamp);
+float quaternionD(int timestamp);
 uint8_t etatBoard(int timestamp);
 
 #endif

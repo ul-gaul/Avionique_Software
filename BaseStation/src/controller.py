@@ -1,4 +1,6 @@
 from threading import Thread
+import time
+from PyQt5 import QtWidgets
 from src.serial_reader import SerialReader
 from src.FileReader import FileReader
 from src.consumer import Consumer
@@ -14,7 +16,8 @@ class Controller:
         self.producer = None
         self.consumer = None
         self.target_altitude = 10000
-        self.sampling_frequency = 5
+        self.sampling_frequency = 1
+        self.fps = 0
         self.thread = Thread(target=self.drawing_thread)
 
     def set_filename(self, filename):
@@ -22,18 +25,27 @@ class Controller:
         self.filename = filename
 
     def drawing_thread(self):
+        last_time = time.time()
         while self.is_running:
             self.consumer.update()
             if self.consumer.has_new_data:
                 self.draw_plots()
                 self.update_leds()
+                self.update_thermometer()
+                self.update_timer()
                 self.consumer.has_new_data = False
+                now = time.time()
+                dt = now - last_time
+                last_time = now
+                QtWidgets.QApplication.processEvents()
+                if dt < 1.0 / self.sampling_frequency:
+                    time.sleep(1.0 / self.sampling_frequency - dt)
 
     def draw_plots(self):
         # TODO: draw plots and update
         self.data_widget.draw_altitude(self.consumer["altitude_feet"])
         self.data_widget.draw_map(self.consumer["easting"], self.consumer["northing"])
-        self.data_widget.rotate_rocket_model(self.consumer.get_rocket_rotation())
+        #self.data_widget.rotate_rocket_model(*self.consumer.get_rocket_rotation())
 
     def update_leds(self):
         # FIXME: optimize this by updating the leds only on status change
@@ -43,6 +55,12 @@ class Controller:
         self.data_widget.set_led_state(4, self.consumer["power_supply_state_1"][-1])
         self.data_widget.set_led_state(5, self.consumer["power_supply_state_2"][-1])
         self.data_widget.set_led_state(6, self.consumer["payload_board_state_1"][-1])
+
+    def update_thermometer(self):
+        self.data_widget.set_thermometer_value(self.consumer.get_average_temperature())
+
+    def update_timer(self):
+        self.data_widget.set_time(self.consumer["time_stamp"][-1] / float(self.sampling_frequency))
 
     def init_real_time_mode(self, real_time_widget, save_file_path):
         assert isinstance(real_time_widget, RealTimeWidget)

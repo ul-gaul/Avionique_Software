@@ -18,3 +18,6 @@ class RealTimeWidget(DataWidget):
     def update_button_text(self):
         text = self.start_stop_button_callback()
         self.start_stop_button.setText(text)
+
+    def set_time(self, time):
+        self.lcdNumber.display(time)

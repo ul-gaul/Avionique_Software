@@ -62,8 +62,11 @@ class Consumer:
             self.data["northing"].append(northing - self.base_camp_northing)
 
     def get_rocket_rotation(self):
-        return (self.data["quaternion_w"][-1], self.data["quaternion_x"][-1], self.data["quaternion_y"][-1],
-                self.data["quaternion_z"][-1])
+        return self.data["quaternion_w"][-1], self.data["quaternion_x"][-1], self.data["quaternion_y"][-1], \
+               self.data["quaternion_z"][-1]
+
+    def get_average_temperature(self):
+        return self.data["temperature_3"][-1]
 
     # def update_leds(self):
     #     if self.led_callback is not None:
