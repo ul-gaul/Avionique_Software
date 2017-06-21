@@ -29,12 +29,11 @@ typedef struct
 
     //Temperature in Celsius degrees
     float temperature1;
-    float temperature2;
-    float temperature3; //on a seulement 2 capteurs dans la fusée, le 3e va être la moyenne des deux...
-    //add more temperature entries here if needed
 
     //nouveau depuis 2016/2017:
-    float timeStampDate; //date du module RTC
+    float timeHour;
+    float timeMinute;
+    float timeSecond; //date du module RTC
 
     //position avec le bno055
     float quaterniona;

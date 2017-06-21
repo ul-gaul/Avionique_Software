@@ -37,9 +37,9 @@ void loop()
   rp.rocketData.latitude2 = latitude(timestamp);
   rp.rocketData.longitude2 = longitude(timestamp);
   rp.rocketData.temperature1 = temperature1(timestamp);
-  rp.rocketData.temperature2 = temperature2(timestamp);
-  rp.rocketData.temperature3 = temperature1(timestamp);
-  rp.rocketData.timeStampDate = 0;
+  rp.rocketData.timeHour = 0;
+  rp.rocketData.timeMinute = 0;
+  rp.rocketData.timeSecond = 0;
   rp.rocketData.quaterniona = quaternionA(timestamp);
   rp.rocketData.quaternionb = quaternionB(timestamp);
   rp.rocketData.quaternionc = quaternionC(timestamp);
@@ -52,9 +52,9 @@ void loop()
   rp.rocketData.etatBoardPayload1 = etatBoard(timestamp);
   rp.rocketData.voltage = 3.3;
   rp.rocketData.courant = 0.001;
-  rp.rocketData.angSpeedXPayload = 0;
-  rp.rocketData.angSpeedYPayload = 0;
-  rp.rocketData.angSpeedZPayload = 0;
+  rp.rocketData.angSpeedXPayload = payloadX(timestamp);
+  rp.rocketData.angSpeedYPayload = payloadY(timestamp);
+  rp.rocketData.angSpeedZPayload = payloadZ(timestamp);
   rp.rocketData.camera = 128;
   rp.rocketData.deploiement = 255;
 

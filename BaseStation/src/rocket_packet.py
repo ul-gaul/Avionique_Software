@@ -35,10 +35,10 @@ class RocketPacket:
 
         # Temperature en degres Celsius
         self.temperature_1 = 0
-        self.temperature_2 = 0
-        self.temperature_3 = 0  # average between temperature_1 and temperature_2
 
-        self.date = 0
+        self.time_hour = 0
+        self.time_minute = 0  # average between temperature_1 and temperature_2
+        self.time_second = 0
 
         # Orientation sous forme de quaternion
         self.quaternion_w = 0
@@ -84,9 +84,9 @@ class RocketPacket:
         self.latitude_2 = data_list[10]
         self.longitude_2 = data_list[11]
         self.temperature_1 = data_list[12]
-        self.temperature_2 = data_list[13]
-        self.temperature_3 = data_list[14]
-        self.date = data_list[15]
+        self.time_hour = data_list[13]
+        self.time_minute = data_list[14]
+        self.time_second = data_list[15]
         self.quaternion_w = data_list[16]
         self.quaternion_x = data_list[17]
         self.quaternion_y = data_list[18]
@@ -109,7 +109,7 @@ class RocketPacket:
     def keys():
         return ["time_stamp", "angular_speed_x", "angular_speed_y", "angular_speed_z", "acceleration_x",
                 "acceleration_y", "acceleration_z", "altitude", "latitude_1", "longitude_1", "latitude_2",
-                "longitude_2", "temperature_1", "temperature_2", "temperature_3", "date", "quaternion_w",
+                "longitude_2", "temperature_1", "time_hour", "time_minute", "time_second", "quaternion_w",
                 "quaternion_x", "quaternion_y", "quaternion_z", "acquisition_board_state_1",
                 "acquisition_board_state_2", "acquisition_board_state_3", "power_supply_state_1",
                 "power_supply_state_2", "payload_board_state_1", "voltage", "current", "angSpeed_payload_x",
@@ -128,33 +128,33 @@ class RocketPacket:
         # FIXME: convertir en methode __str__ et transferer la gestion de la console dans la fonction appelante
         os.system('cls' if os.name == 'nt' else 'clear')
 
-        print("Time Stamp               : {}\n".format(self.time_stamp))
+        print("Time Stamp                : {}\n".format(self.time_stamp))
 
-        print("Ang Speed X              : {}".format(self.angular_speed_x))
-        print("Ang Speed Y              : {}".format(self.angular_speed_y))
-        print("Ang Speed Z              : {}\n".format(self.angular_speed_z))
+        print("Ang Speed X               : {}".format(self.angular_speed_x))
+        print("Ang Speed Y               : {}".format(self.angular_speed_y))
+        print("Ang Speed Z               : {}\n".format(self.angular_speed_z))
 
-        print("Accel X                  : {}".format(self.acceleration_x))
-        print("Accel Y                  : {}".format(self.acceleration_y))
-        print("Accel Z                  : {}\n".format(self.acceleration_z))
+        print("Accel X                   : {}".format(self.acceleration_x))
+        print("Accel Y                   : {}".format(self.acceleration_y))
+        print("Accel Z                   : {}\n".format(self.acceleration_z))
 
-        print("Altitude                 : {}\n".format(self.altitude))
+        print("Altitude                  : {}\n".format(self.altitude))
 
-        print("Latitude 1               : {}".format(self.latitude_1))
-        print("Longitude 1              : {}".format(self.longitude_1))
-        print("Latitude 2               : {}".format(self.latitude_2))
-        print("Longitude 2              : {}\n".format(self.longitude_2))
+        print("Latitude 1                : {}".format(self.latitude_1))
+        print("Longitude 1               : {}".format(self.longitude_1))
+        print("Latitude 2                : {}".format(self.latitude_2))
+        print("Longitude 2               : {}\n".format(self.longitude_2))
 
-        print("Temp 1                   : {}".format(self.temperature_1))
-        print("Temp 2                   : {}".format(self.temperature_2))
-        print("Temp 3                   : {}\n".format(self.temperature_3))
+        print("Temperature               : {}\n".format(self.temperature_1))
 
-        print("Date                      : {}\n".format(self.date))
+        print("Hour                      : {}".format(self.time_hour))
+        print("Minute                    : {}".format(self.time_minute))
+        print("Second                    : {}\n".format(self.time_second))
 
-        print("Quaternion W                   : {}".format(self.quaternion_w))
-        print("Quaternion X                   : {}".format(self.quaternion_x))
-        print("Quaternion Y                   : {}".format(self.quaternion_y))
-        print("Quaternion Z                   : {}\n".format(self.quaternion_z))
+        print("Quaternion W              : {}".format(self.quaternion_w))
+        print("Quaternion X              : {}".format(self.quaternion_x))
+        print("Quaternion Y              : {}".format(self.quaternion_y))
+        print("Quaternion Z              : {}\n".format(self.quaternion_z))
 
         print("Etat board acquisition 1  : {}".format(self.acquisition_board_state_1))
         print("Etat board acquisition 2  : {}".format(self.acquisition_board_state_2))

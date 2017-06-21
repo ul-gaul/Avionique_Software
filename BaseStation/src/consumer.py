@@ -66,7 +66,7 @@ class Consumer:
                self.data["quaternion_z"][-1]
 
     def get_average_temperature(self):
-        return self.data["temperature_3"][-1]
+        return self.data["temperature_1"][-1]
 
     # def update_leds(self):
     #     if self.led_callback is not None:

@@ -136,4 +136,18 @@ uint8_t etatBoard(int timestamp)
     return 255;
   }
 }
+  float payloadX(int timestamp)
+  {
+    return 5.0;
+  }
+  
+  float payloadY(int timestamp)
+  {
+    return 1023.0;
+  }
+  
+  float payloadZ(int timestamp)
+  {
+    return 600.0;
+  }
 

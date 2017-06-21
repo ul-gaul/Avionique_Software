@@ -26,5 +26,8 @@ float quaternionB(int timestamp);
 float quaternionC(int timestamp);
 float quaternionD(int timestamp);
 uint8_t etatBoard(int timestamp);
+float payloadX(int timestamp);
+float payloadY(int timestamp);
+float payloadZ(int timestamp);
 
 #endif
