@@ -1,5 +1,8 @@
 from PyQt5 import QtWidgets, QtCore, QtGui
 import pyqtgraph as pqtg
+from src.ui.gl_rocket import GlRocket
+from OpenGL.GL import *
+from OpenGL.GLU import *
 import pyqtgraph.opengl as gl
 import numpy as np
 from src.ui.ExtendedQSlider import ExtendedQSlider
@@ -37,6 +40,7 @@ class DataWidget(QtWidgets.QWidget):
         self.graphicsView_2.plotItem.showGrid(x=True, y=True)
         self.positions_on_map = self.graphicsView_2.plot([0], [0], pen=pqtg.mkPen(color='k', width=3))
 
+        """
         cylinder_mesh = gl.MeshData.cylinder(rows=2, cols=10, radius=[1.0, 1.0], length=5.0)
         cone_mesh = gl.MeshData.cylinder(rows=2, cols=10, radius=[1.0, 0.], length=2.0)
         colors = np.zeros((cone_mesh.faceCount(), 4))
@@ -52,6 +56,9 @@ class DataWidget(QtWidgets.QWidget):
         self.glView.addItem(self.cylinder_mesh_item)
         self.glView.addItem(self.cone_mesh_item)
         self.glView.addItem(self.rocket_vector)
+        """
+
+        #self.glRocket.draw_rocket()
 
         self.gradient.setPixmap(QtGui.QPixmap("resources/gradient.png"))
 
@@ -114,9 +121,10 @@ class DataWidget(QtWidgets.QWidget):
         self.horizontalLayout_2.addLayout(self.verticalLayout)
         spacerItem4 = QtWidgets.QSpacerItem(90, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_2.addItem(spacerItem4)
-
         self.verticalLayout_2 = QtWidgets.QVBoxLayout()
         self.verticalLayout_2.setObjectName("verticalLayout_2")
+
+        """
         self.glView = gl.GLViewWidget(self)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding,
                                            QtWidgets.QSizePolicy.MinimumExpanding)
@@ -134,6 +142,22 @@ class DataWidget(QtWidgets.QWidget):
         self.glView.addItem(axis)
         self.glView.setObjectName("glView")
         self.verticalLayout_2.addWidget(self.glView)
+        """
+        """
+        self.openGLWidget = QtWidgets.QOpenGLWidget(self)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding,
+                                           QtWidgets.QSizePolicy.MinimumExpanding)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.openGLWidget.sizePolicy().hasHeightForWidth())
+        self.openGLWidget.setSizePolicy(sizePolicy)
+        self.openGLWidget.setMinimumSize(QtCore.QSize(200, 400))
+        self.openGLWidget.setObjectName("openGLWidget")
+        self.verticalLayout_2.addWidget(self.openGLWidget)
+        """
+        self.glRocket = GlRocket(self)
+        self.verticalLayout_2.addWidget(self.glRocket)
+
         spacerItem5 = QtWidgets.QSpacerItem(20, 50, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
         self.verticalLayout_2.addItem(spacerItem5)
         self.horizontalLayout_4 = QtWidgets.QHBoxLayout()
@@ -473,9 +497,10 @@ class DataWidget(QtWidgets.QWidget):
         self.positions_on_map.setData(eastings, northings)
 
     def rotate_rocket_model(self, w, x, y, z):
-        tr = pqtg.Transform3D()
-        tr.rotate(w, x, y, z)
-        self.cylinder_mesh_item.setTransform(tr)
+        #tr = pqtg.Transform3D()
+        #tr.rotate(w, x, y, z)
+        #self.cylinder_mesh_item.setTransform(tr)
+        self.glRocket.rotate_rocket(w, x, y, z)
 
     def set_thermometer_value(self, temperature):
         if temperature < 0:
