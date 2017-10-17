@@ -48,11 +48,13 @@ class Consumer:
     def manage_coordinates(self, packet):
         easting, northing = self.geo_converter(packet.longitude_1, packet.latitude_1)
 
-        if packet.time_stamp == CAMP_POSITION_MEASUREMENT_DELAY * self.sampling_frequency:
+        num_packets_received = len(self.data["time_stamp"])
+
+        if num_packets_received == CAMP_POSITION_MEASUREMENT_DELAY * self.sampling_frequency:
             self.base_camp_easting = sum(self.data["initial_easting"]) / len(self.data["initial_easting"])
             self.base_camp_northing = sum(self.data["initial_northing"]) / len(self.data["initial_northing"])
 
-        if packet.time_stamp < CAMP_POSITION_MEASUREMENT_DELAY * self.sampling_frequency:
+        if num_packets_received < CAMP_POSITION_MEASUREMENT_DELAY * self.sampling_frequency:
             self.data["initial_easting"].append(easting)
             self.data["initial_northing"].append(northing)
             self.data["easting"].append(0)

@@ -41,6 +41,7 @@ class SerialReader(Producer):
 
                     if self.validate_checksum(data_array):
                         rocket_packet = RocketPacket(data_list[:-1])
+                        print(rocket_packet)
                         self.rocket_packets.put(rocket_packet)
                         self.flightData.append(rocket_packet)
                 except struct.error:
