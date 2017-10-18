@@ -1,7 +1,7 @@
 import sys
 import ctypes
 from PyQt5 import QtWidgets
-from src.ui.mainwindow import MainWindow
+from BaseStation.src.ui.mainwindow import MainWindow
 
 # FIXME: CLEAN UP ALL THIS SHIT ...
 myappid = 'C:\\Users\Lord\Anaconda3\python.exe'  # arbitrary string

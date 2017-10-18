@@ -1,11 +1,11 @@
 from threading import Thread
 import time
 from PyQt5 import QtWidgets
-from src.serial_reader import SerialReader
-from src.FileReader import FileReader
-from src.consumer import Consumer
-from src.ui.real_time_widget import RealTimeWidget
-from src.ui.replay_widget import ReplayWidget
+from BaseStation.src.serial_reader import SerialReader
+from BaseStation.src.FileReader import FileReader
+from BaseStation.src.consumer import Consumer
+from BaseStation.src.ui.real_time_widget import RealTimeWidget
+from BaseStation.src.ui.replay_widget import ReplayWidget
 
 
 class Controller:

@@ -1,10 +1,10 @@
 from datetime import datetime as d
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtGui import QIcon
-from src.ui.homewidget import HomeWidget
-from src.ui.real_time_widget import RealTimeWidget
-from src.ui.replay_widget import ReplayWidget
-from src.controller import Controller
+from BaseStation.src.ui.homewidget import HomeWidget
+from BaseStation.src.ui.real_time_widget import RealTimeWidget
+from BaseStation.src.ui.replay_widget import ReplayWidget
+from BaseStation.src.controller import Controller
 
 
 class MainWindow(QtWidgets.QMainWindow):
