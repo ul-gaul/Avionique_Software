@@ -6,7 +6,6 @@ from src.ui.mainwindow import MainWindow
 # FIXME: CLEAN UP ALL THIS SHIT ...
 myappid = 'C:\\Users\Lord\Anaconda3\python.exe'  # arbitrary string
 ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
-#Ceci est un test de Yan
 
 # Back up the reference to the exceptionhook
 sys._excepthook = sys.excepthook
