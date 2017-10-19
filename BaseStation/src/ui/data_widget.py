@@ -1,11 +1,11 @@
 from PyQt5 import QtWidgets, QtCore, QtGui
 import pyqtgraph as pqtg
-from BaseStation.src.ui.gl_rocket import GlRocket
+from src.ui.gl_rocket import GlRocket
 from OpenGL.GL import *
 from OpenGL.GLU import *
 import pyqtgraph.opengl as gl
 import numpy as np
-from BaseStation.src.ui.ExtendedQSlider import ExtendedQSlider
+from src.ui.ExtendedQSlider import ExtendedQSlider
 
 
 class DataWidget(QtWidgets.QWidget):

@@ -1,5 +1,5 @@
 import csv
-from BaseStation.src.rocket_packet import RocketPacket
+from src.rocket_packet import RocketPacket
 
 
 class CsvFileWriter:

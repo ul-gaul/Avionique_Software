@@ -1,6 +1,6 @@
 from pyproj import Proj
-from BaseStation.src.rocket_packet import RocketPacket
-from BaseStation.src.producer import Producer
+from src.rocket_packet import RocketPacket
+from src.producer import Producer
 
 
 METERS2FEET = 3.28084
