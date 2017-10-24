@@ -1,6 +1,6 @@
-from pyproj import Proj
 from src.rocket_packet import RocketPacket
 from src.producer import Producer
+from src.geo_coordinate_converter import GeoCoordinateConverter
 
 
 METERS2FEET = 3.28084
@@ -23,7 +23,7 @@ class Consumer:
         self.data["initial_northing"] = []
         self.base_camp_easting = None
         self.base_camp_northing = None
-        self.geo_converter = Proj("+proj=utm +zone=13s, +north +ellps=WGS84 +datum=WGS84 +units=m +no_defs")
+        self.coordinate_converter = GeoCoordinateConverter("13s")
         #self.led_callback = None
 
     def create_keys_from_packet_format(self):
@@ -46,7 +46,7 @@ class Consumer:
         return self.data[key]
 
     def manage_coordinates(self, packet):
-        easting, northing = self.geo_converter(packet.longitude_1, packet.latitude_1)
+        easting, northing = self.coordinate_converter.from_long_lat_to_utm(packet.longitude_1, packet.latitude_1)
 
         num_packets_received = len(self.data["time_stamp"])
 
