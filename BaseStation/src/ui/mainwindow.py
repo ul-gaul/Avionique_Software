@@ -26,7 +26,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.set_stylesheet("resources/mainwindow.css")
 
     def open_real_time(self):
-        """  """
         print("real time")
         filename, _ = QtWidgets.QFileDialog.getSaveFileName(caption="Save File",
                                                             directory=d.now().strftime("%Y-%m-%d_%Hh%Mm")+".csv",
@@ -37,11 +36,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.controller.init_real_time_mode(self.real_time_widget, filename)
 
     def open_replay(self):
-        """   """
         print("replay")
         filename, _ = QtWidgets.QFileDialog.getSaveFileName(caption="Save File",
-                                                         directory=d.now().strftime("%Y-%m-%d_%Hh%Mm")+".csv",
-                                                         filter="All Files (*);; CSV Files (*.csv)")
+                                                            directory=d.now().strftime("%Y-%m-%d_%Hh%Mm")+".csv",
+                                                            filter="All Files (*);; CSV Files (*.csv)")
         self.replay_widget = ReplayWidget(self)
         self.open_new_widget(self.replay_widget)
         self.controller.init_replay_mode(self.replay_widget)
@@ -74,6 +72,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.menuBar.addAction(self.menuFichiers.menuAction())
 
     def set_stylesheet(self, stylesheet_path):
-        f = open(stylesheet_path, 'r')
-        stylesheet = f.read()
+        file = open(stylesheet_path, 'r')
+        stylesheet = file.read()
         self.setStyleSheet(stylesheet)
