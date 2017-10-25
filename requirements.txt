@@ -1,6 +1,5 @@
 pySerial
 pyQt5
 pyopenGL
--c dsdale24 pyqt5
 pyproj
 pyqtgraph
