@@ -1,1 +1,1 @@
-while read requirement; do conda install --yes $requirement; done < requirements.txt
+while read requirement; do conda install --yes $requirement || pip3 install -r requirements.txt; done < requirements.txt
