@@ -37,12 +37,11 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def open_replay(self):
         print("replay")
-        filename, _ = QtWidgets.QFileDialog.getSaveFileName(caption="Save File",
-                                                            directory=d.now().strftime("%Y-%m-%d_%Hh%Mm")+".csv",
+        filename, _ = QtWidgets.QFileDialog.getOpenFileName(caption="Open File",
                                                             filter="All Files (*);; CSV Files (*.csv)")
         self.replay_widget = ReplayWidget(self)
         self.open_new_widget(self.replay_widget)
-        self.controller.init_replay_mode(self.replay_widget)
+        self.controller.init_replay_mode(self.replay_widget, filename)
 
     def open_new_widget(self, widget):
         self.central_widget.addWidget(widget)

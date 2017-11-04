@@ -11,7 +11,6 @@ from src.ui.replay_widget import ReplayWidget
 class Controller:
     def __init__(self):
         self.data_widget = None
-        self.filename = ""
         self.is_running = False
         self.producer = None
         self.consumer = None
@@ -19,9 +18,6 @@ class Controller:
         self.sampling_frequency = 1
         self.fps = 0
         self.thread = Thread(target=self.drawing_thread)
-
-    def set_filename(self, filename: str):
-        self.filename = filename
 
     def drawing_thread(self):
         last_time = time.time()
@@ -61,16 +57,14 @@ class Controller:
     def update_timer(self):
         self.data_widget.set_time(self.consumer["time_stamp"][-1] / float(self.sampling_frequency))
 
-    def init_real_time_mode(self, real_time_widget, save_file_path):
-        assert isinstance(real_time_widget, RealTimeWidget)
+    def init_real_time_mode(self, real_time_widget: RealTimeWidget, save_file_path: str):
         self.data_widget = real_time_widget
         self.data_widget.set_target_altitude(self.target_altitude)
         self.producer = SerialReader(sampling_frequency=self.sampling_frequency, save_file_path=save_file_path)
 
-    def init_replay_mode(self, replay_widget):
-        assert isinstance(replay_widget, ReplayWidget)
+    def init_replay_mode(self, replay_widget: ReplayWidget, filename: str):
         self.data_widget = replay_widget
-        self.producer = FileReader(self.filename)
+        self.producer = FileReader(filename)
         self.consumer = Consumer(self.producer, self.sampling_frequency)
         self.consumer.update()
         self.draw_plots()

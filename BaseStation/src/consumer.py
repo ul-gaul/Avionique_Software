@@ -10,8 +10,7 @@ CAMP_POSITION_MEASUREMENT_DELAY = 10  # in seconds
 
 class Consumer:
 
-    def __init__(self, producer, sampling_frequency):
-        assert isinstance(producer, Producer)
+    def __init__(self, producer: Producer, sampling_frequency):
         self.producer = producer
         self.sampling_frequency = sampling_frequency
         self.data = {}
