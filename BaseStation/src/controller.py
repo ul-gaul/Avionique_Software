@@ -2,7 +2,7 @@ from threading import Thread
 import time
 from PyQt5 import QtWidgets
 from src.serial_reader import SerialReader
-from src.FileReader import FileReader
+from src.file_reader import FileReader
 from src.consumer import Consumer
 from src.ui.real_time_widget import RealTimeWidget
 from src.ui.replay_widget import ReplayWidget
@@ -20,8 +20,7 @@ class Controller:
         self.fps = 0
         self.thread = Thread(target=self.drawing_thread)
 
-    def set_filename(self, filename):
-        assert isinstance(filename, str)
+    def set_filename(self, filename: str):
         self.filename = filename
 
     def drawing_thread(self):
