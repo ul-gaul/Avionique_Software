@@ -368,13 +368,10 @@ class DataWidget(QtWidgets.QWidget):
     def set_target_altitude(self, altitude):
         self.graphicsView.plotItem.addLine(y=altitude, pen=pqtg.mkPen(color='r', width=3))
 
-    def draw_altitude(self, values):
-        assert isinstance(values, list)
+    def draw_altitude(self, values: list):
         self.altitude_curve.setData(values)
 
-    def draw_map(self, eastings, northings):
-        assert isinstance(eastings, list)
-        assert isinstance(northings, list)
+    def draw_map(self, eastings: list, northings: list):
         self.positions_on_map.setData(eastings, northings)
 
     def rotate_rocket_model(self, w, x, y, z):
