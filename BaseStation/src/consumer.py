@@ -1,6 +1,7 @@
 from src.rocket_packet import RocketPacket
 from src.producer import Producer
 from src.geo_coordinate_converter import GeoCoordinateConverter
+from src.utm_zone import UTMZone
 
 
 METERS2FEET = 3.28084
@@ -23,7 +24,7 @@ class Consumer:
         self.data["initial_northing"] = []
         self.base_camp_easting = None
         self.base_camp_northing = None
-        self.coordinate_converter = GeoCoordinateConverter("13s")
+        self.coordinate_converter = GeoCoordinateConverter(UTMZone.zone_13S)
         #self.led_callback = None
 
     def create_keys_from_packet_format(self):
