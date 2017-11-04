@@ -4,8 +4,16 @@ from PyQt5.QtCore import Qt
 
 class ExtendedQSlider(QSlider):
 
-    def __init__(self, parent):
+    def __init__(self, parent, object_name: str):
         super().__init__(parent)
+        self.setEnabled(True)
+        self.setMaximum(100)
+        self.setPageStep(1)
+        self.setSliderPosition(0)
+        self.setTracking(True)
+        self.setOrientation(Qt.Horizontal)
+        self.setTickPosition(QSlider.NoTicks)
+        self.setObjectName(object_name)
 
     def mousePressEvent(self, q_mouse_event):
         if q_mouse_event.button() == Qt.LeftButton:
