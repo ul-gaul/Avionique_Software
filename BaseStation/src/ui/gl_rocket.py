@@ -31,7 +31,7 @@ class GlRocket(QOpenGLWidget):
         glColor3b(120, 120, 120)
         cyl = gluNewQuadric()
         gluQuadricNormals(cyl, GLU_SMOOTH)
-        gluCylinder(cyl, 0.3, 0.3, 5.5, 50, 5)  # (obj, base radius, top radius, length, res, res)
+        gluCylinder(cyl, 0.3, 0.3, 5.5, 20, 5)  # (obj, base radius, top radius, length, res, res)
 
     def draw_fins(self):
         glColor3b(115, 0, 0)
@@ -59,7 +59,7 @@ class GlRocket(QOpenGLWidget):
         gluCylinder(con, 0.3, 0, 1.5, 50, 5)
 
     def rotate_rocket(self, w, x, y, z):
-        self._rocket_orientation = (w, x, y, z)
+        self._rocket_orientation = (w, x, y, z) # w: matrice de rotation (degré), x,y,z : 0 ou 1, si la matrice de rotation est appliqué ou non.
         self.update()
 
     def paintGL(self):
