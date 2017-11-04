@@ -1,11 +1,8 @@
 from threading import Thread
 import time
 from PyQt5 import QtWidgets
-from src.serial_reader import SerialReader
-from src.file_reader import FileReader
+
 from src.consumer import Consumer
-from src.ui.real_time_widget import RealTimeWidget
-from src.ui.replay_widget import ReplayWidget
 
 
 class Controller:
@@ -17,6 +14,7 @@ class Controller:
         self.target_altitude = 10000
         self.sampling_frequency = 1
         self.fps = 0
+        self.ui_update_functions = [self.update_plots, self.update_leds, self.update_thermometer]
         self.thread = Thread(target=self.drawing_thread)
 
     def drawing_thread(self):
@@ -24,10 +22,7 @@ class Controller:
         while self.is_running:
             self.consumer.update()
             if self.consumer.has_new_data:
-                self.draw_plots()
-                self.update_leds()
-                self.update_thermometer()
-                self.update_timer()
+                self.call_ui_update_functions()
                 self.consumer.has_new_data = False
                 now = time.time()
                 dt = now - last_time
@@ -36,7 +31,7 @@ class Controller:
                 if dt < 1.0 / self.sampling_frequency:
                     time.sleep(1.0 / self.sampling_frequency - dt)
 
-    def draw_plots(self):
+    def update_plots(self):
         # TODO: draw plots and update
         self.data_widget.draw_altitude(self.consumer["altitude_feet"])
         self.data_widget.draw_map(self.consumer["easting"], self.consumer["northing"])
@@ -54,30 +49,9 @@ class Controller:
     def update_thermometer(self):
         self.data_widget.set_thermometer_value(self.consumer.get_average_temperature())
 
-    def update_timer(self):
-        self.data_widget.set_time(self.consumer["time_stamp"][-1] / float(self.sampling_frequency))
-
-    def init_real_time_mode(self, real_time_widget: RealTimeWidget, save_file_path: str):
-        self.data_widget = real_time_widget
-        self.data_widget.set_target_altitude(self.target_altitude)
-        self.producer = SerialReader(sampling_frequency=self.sampling_frequency, save_file_path=save_file_path)
-
-    def init_replay_mode(self, replay_widget: ReplayWidget, filename: str):
-        self.data_widget = replay_widget
-        self.producer = FileReader(filename)
-        self.consumer = Consumer(self.producer, self.sampling_frequency)
-        self.consumer.update()
-        self.draw_plots()
-
-    def real_time_button_callback(self):
-        self.is_running = not self.is_running
-        if self.is_running:
-            self.start_thread()
-            button_string = "Arrêter l'acquisition"
-        else:
-            self.stop_thread()
-            button_string = "Démarrer l'acquisition"
-        return button_string
+    def call_ui_update_functions(self):
+        for function in self.ui_update_functions:
+            function()
 
     def start_thread(self):
         self.consumer = Consumer(self.producer, self.sampling_frequency)
@@ -90,5 +64,3 @@ class Controller:
         self.is_running = False
         self.thread.join()
         self.producer.stop()
-
-    # TODO: add ui event processing methods here

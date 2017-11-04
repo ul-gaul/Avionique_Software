@@ -1,17 +1,19 @@
 from datetime import datetime as d
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtGui import QIcon
+
 from src.ui.homewidget import HomeWidget
 from src.ui.real_time_widget import RealTimeWidget
 from src.ui.replay_widget import ReplayWidget
-from src.controller import Controller
+from src.real_time_controller import RealTimeController
+from src.replay_controller import ReplayController
 
 
 class MainWindow(QtWidgets.QMainWindow):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.controller = Controller()
+        self.controller = None
         self.central_widget = QtWidgets.QStackedWidget()
         self.setCentralWidget(self.central_widget)
         self.home_widget = HomeWidget(self)
@@ -26,22 +28,22 @@ class MainWindow(QtWidgets.QMainWindow):
         self.set_stylesheet("resources/mainwindow.css")
 
     def open_real_time(self):
-        print("real time")
         filename, _ = QtWidgets.QFileDialog.getSaveFileName(caption="Save File",
                                                             directory=d.now().strftime("%Y-%m-%d_%Hh%Mm")+".csv",
                                                             filter="All Files (*);; CSV Files (*.csv)")
         print(filename)
-        self.real_time_widget = RealTimeWidget(self.controller.real_time_button_callback, parent=self)
+        self.real_time_widget = RealTimeWidget(self)
+        self.controller = RealTimeController(self.real_time_widget, filename)
+        self.real_time_widget.set_button_callback(self.controller.real_time_button_callback)
         self.open_new_widget(self.real_time_widget)
-        self.controller.init_real_time_mode(self.real_time_widget, filename)
 
     def open_replay(self):
-        print("replay")
         filename, _ = QtWidgets.QFileDialog.getOpenFileName(caption="Open File",
                                                             filter="All Files (*);; CSV Files (*.csv)")
         self.replay_widget = ReplayWidget(self)
+        self.controller = ReplayController(self.replay_widget, filename)
+        # TODO: bind replay control buttons to callback in the ReplayController
         self.open_new_widget(self.replay_widget)
-        self.controller.init_replay_mode(self.replay_widget, filename)
 
     def open_new_widget(self, widget):
         self.central_widget.addWidget(widget)

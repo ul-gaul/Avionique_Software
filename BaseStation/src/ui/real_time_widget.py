@@ -4,9 +4,9 @@ from PyQt5.QtWidgets import QLCDNumber, QPushButton
 
 class RealTimeWidget(DataWidget):
 
-    def __init__(self, start_stop_button_callback, parent=None):
+    def __init__(self, parent=None):
         super().__init__(parent)
-        self.start_stop_button_callback = start_stop_button_callback
+        self.start_stop_button_callback = lambda: False
         self.start_stop_button = QPushButton(self.widget)
         self.init_button(self.start_stop_button, "start_stop_button", "Démarrer l'acquisition", self.update_button_text)
 
@@ -15,9 +15,15 @@ class RealTimeWidget(DataWidget):
         self.lcdNumber.setObjectName("lcdNumber")
         self.horizontalLayout_5.addWidget(self.lcdNumber)
 
+    def set_button_callback(self, start_stop_button_callback):
+        self.start_stop_button_callback = start_stop_button_callback
+
     def update_button_text(self):
-        text = self.start_stop_button_callback()
-        self.start_stop_button.setText(text)
+        controller_is_running = self.start_stop_button_callback()
+        if controller_is_running:
+            self.start_stop_button.setText("Arrêter l'acquisition")
+        else:
+            self.start_stop_button.setText("Démarrer l'acquisition")
 
     def set_time(self, time):
         self.lcdNumber.display(time)
