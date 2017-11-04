@@ -5,14 +5,12 @@ from OpenGL.GL import *
 from OpenGL.GLU import *
 import pyqtgraph.opengl as gl
 import numpy as np
-from src.ui.ExtendedQSlider import ExtendedQSlider
 
 
 class DataWidget(QtWidgets.QWidget):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.horizontalSlider = None
         self.set_black_on_white_graph_colors()
         self.setup_ui()
 
@@ -26,7 +24,6 @@ class DataWidget(QtWidgets.QWidget):
         self.horizontalLayout_5 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_5.setObjectName("horizontalLayout_5")
         self.horizontalLayout.addLayout(self.horizontalLayout_5)
-        self.setup_slider()
         self.label.setPixmap(QtGui.QPixmap("resources/logo.jpg"))
 
         self.graphicsView.plotItem.setTitle("Altitude")
@@ -449,18 +446,6 @@ class DataWidget(QtWidgets.QWidget):
     def get_stylesheet(path):
         with open(path) as f:
             return f.read()
-
-    def setup_slider(self):
-        self.horizontalSlider = ExtendedQSlider(self)
-        self.horizontalSlider.setEnabled(True)
-        self.horizontalSlider.setMaximum(100)
-        self.horizontalSlider.setPageStep(1)
-        self.horizontalSlider.setSliderPosition(0)
-        self.horizontalSlider.setTracking(True)
-        self.horizontalSlider.setOrientation(QtCore.Qt.Horizontal)
-        self.horizontalSlider.setTickPosition(QtWidgets.QSlider.NoTicks)
-        self.horizontalSlider.setObjectName("horizontalSlider")
-        self.verticalLayout_4.addWidget(self.horizontalSlider)
 
     @staticmethod
     def set_minimum_expanding_size_policy(widget):
