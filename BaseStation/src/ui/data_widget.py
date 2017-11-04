@@ -1,6 +1,8 @@
 from PyQt5 import QtWidgets, QtCore, QtGui
 import pyqtgraph as pqtg
 from src.ui.gl_rocket import GlRocket
+from src.ui.thermometer import Thermometer
+from src.ui.utils import set_minimum_expanding_size_policy
 from OpenGL.GL import *
 from OpenGL.GLU import *
 import pyqtgraph.opengl as gl
@@ -12,6 +14,7 @@ class DataWidget(QtWidgets.QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.set_black_on_white_graph_colors()
+        self.thermometer = None
         self.setup_ui()
 
         self.on_stylesheet = self.get_stylesheet("resources/led_on.css")
@@ -56,8 +59,6 @@ class DataWidget(QtWidgets.QWidget):
         """
 
         #self.glRocket.draw_rocket()
-
-        self.gradient.setPixmap(QtGui.QPixmap("resources/gradient.png"))
 
     @staticmethod
     def set_black_on_white_graph_colors():
@@ -312,91 +313,8 @@ class DataWidget(QtWidgets.QWidget):
         self.verticalLayout_6.addLayout(self.horizontalLayout_12)
         self.horizontalLayout_3.addWidget(self.frame_4)
 
-        self.gridLayout = QtWidgets.QGridLayout()
-        self.gridLayout.setObjectName("gridLayout")
-        self.verticalLayout_7 = QtWidgets.QVBoxLayout()
-        self.verticalLayout_7.setObjectName("verticalLayout_7")
-        self.label_9 = QtWidgets.QLabel(self)
-        self.label_9.setObjectName("label_9")
-        self.verticalLayout_7.addWidget(self.label_9)
-        self.label_10 = QtWidgets.QLabel(self)
-        self.label_10.setObjectName("label_10")
-        self.verticalLayout_7.addWidget(self.label_10)
-        self.label_11 = QtWidgets.QLabel(self)
-        self.label_11.setObjectName("label_11")
-        self.verticalLayout_7.addWidget(self.label_11)
-        self.label_12 = QtWidgets.QLabel(self)
-        self.label_12.setObjectName("label_12")
-        self.verticalLayout_7.addWidget(self.label_12)
-        self.label_13 = QtWidgets.QLabel(self)
-        self.label_13.setObjectName("label_13")
-        self.verticalLayout_7.addWidget(self.label_13)
-        self.label_14 = QtWidgets.QLabel(self)
-        self.label_14.setObjectName("label_14")
-        self.verticalLayout_7.addWidget(self.label_14)
-        self.label_15 = QtWidgets.QLabel(self)
-        self.label_15.setObjectName("label_15")
-        self.verticalLayout_7.addWidget(self.label_15)
-        self.label_16 = QtWidgets.QLabel(self)
-        self.label_16.setObjectName("label_16")
-        self.verticalLayout_7.addWidget(self.label_16)
-        self.label_17 = QtWidgets.QLabel(self)
-        self.label_17.setObjectName("label_17")
-        self.verticalLayout_7.addWidget(self.label_17)
-        self.label_18 = QtWidgets.QLabel(self)
-        self.label_18.setObjectName("label_18")
-        self.verticalLayout_7.addWidget(self.label_18)
-        self.label_19 = QtWidgets.QLabel(self)
-        self.label_19.setObjectName("label_19")
-        self.verticalLayout_7.addWidget(self.label_19)
-        self.gridLayout.addLayout(self.verticalLayout_7, 1, 1, 1, 1)
-        self.label_20 = QtWidgets.QLabel(self)
-        self.label_20.setObjectName("label_20")
-        self.gridLayout.addWidget(self.label_20, 0, 1, 1, 1)
-        self.horizontalLayout_14 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_14.setObjectName("horizontalLayout_14")
-        spacerItem9 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_14.addItem(spacerItem9)
-        self.label_8 = QtWidgets.QLabel(self)
-        self.label_8.setObjectName("label_8")
-        self.horizontalLayout_14.addWidget(self.label_8)
-        spacerItem15 = QtWidgets.QSpacerItem(30, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_14.addItem(spacerItem15)
-        self.gridLayout.addLayout(self.horizontalLayout_14, 0, 0, 1, 1)
-        self.horizontalLayout_13 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_13.setObjectName("horizontalLayout_13")
-        spacerItem10 = QtWidgets.QSpacerItem(20, 20, QtWidgets.QSizePolicy.MinimumExpanding,
-                                             QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_13.addItem(spacerItem10)
-        self.gradient = QtWidgets.QLabel(self)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding,
-                                           QtWidgets.QSizePolicy.MinimumExpanding)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.gradient.sizePolicy().hasHeightForWidth())
-        self.gradient.setSizePolicy(sizePolicy)
-        self.gradient.setMinimumSize(QtCore.QSize(50, 273))
-        self.gradient.setMaximumSize(QtCore.QSize(100, 400))
-        self.gradient.setText("")
-        self.gradient.setObjectName("gradient")
-        self.horizontalLayout_13.addWidget(self.gradient)
-        self.verticalSlider = QtWidgets.QSlider(self)
-        self.verticalSlider.setEnabled(True)
-        self.verticalSlider.setMaximum(100)
-        self.verticalSlider.setTracking(False)
-        self.verticalSlider.setOrientation(QtCore.Qt.Vertical)
-        self.verticalSlider.setInvertedAppearance(False)
-        self.verticalSlider.setTickPosition(QtWidgets.QSlider.TicksBelow)
-        self.verticalSlider.setTickInterval(10)
-        self.verticalSlider.setObjectName("verticalSlider")
-        self.horizontalLayout_13.addWidget(self.verticalSlider)
-        self.gridLayout.addLayout(self.horizontalLayout_13, 1, 0, 1, 1)
-        spacerItem11 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.gridLayout.addItem(spacerItem11, 0, 2, 1, 1)
-        spacerItem12 = QtWidgets.QSpacerItem(20, 20, QtWidgets.QSizePolicy.MinimumExpanding,
-                                             QtWidgets.QSizePolicy.Minimum)
-        self.gridLayout.addItem(spacerItem12, 1, 2, 1, 1)
-        self.horizontalLayout_3.addLayout(self.gridLayout)
+        self.thermometer = Thermometer(self)
+        self.horizontalLayout_3.addWidget(self.thermometer)
 
         self.verticalLayout_3.addLayout(self.horizontalLayout_3)
         spacerItem13 = QtWidgets.QSpacerItem(20, 70, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
@@ -428,36 +346,14 @@ class DataWidget(QtWidgets.QWidget):
         self.label_5.setText("Power supply 1")
         self.label_6.setText("Power supply 2")
         self.label_7.setText("Payload board")
-        self.label_8.setText("Température")
-        self.label_9.setText("100")
-        self.label_10.setText("90")
-        self.label_11.setText("80")
-        self.label_12.setText("70")
-        self.label_13.setText("60")
-        self.label_14.setText("50")
-        self.label_15.setText("40")
-        self.label_16.setText("30")
-        self.label_17.setText("20")
-        self.label_18.setText("10")
-        self.label_19.setText("0")
-        self.label_20.setText("°C")
 
     @staticmethod
     def get_stylesheet(path):
         with open(path) as f:
             return f.read()
 
-    @staticmethod
-    def set_minimum_expanding_size_policy(widget):
-        size_policy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding,
-                                            QtWidgets.QSizePolicy.MinimumExpanding)
-        size_policy.setHorizontalStretch(0)
-        size_policy.setVerticalStretch(0)
-        size_policy.setHeightForWidth(widget.sizePolicy().hasHeightForWidth())
-        widget.setSizePolicy(size_policy)
-
     def init_button(self, button, object_name, text, callback):
-        self.set_minimum_expanding_size_policy(button)
+        set_minimum_expanding_size_policy(button)
         button.setObjectName(object_name)
         button.setText(text)
         button.clicked.connect(callback)
@@ -487,12 +383,5 @@ class DataWidget(QtWidgets.QWidget):
         #self.cylinder_mesh_item.setTransform(tr)
         self.glRocket.rotate_rocket(w, x, y, z)
 
-    def set_thermometer_value(self, temperature):
-        if temperature < 0:
-            value = 0
-        elif temperature > 100:
-            value = 100
-        else:
-            value = round(temperature)
-
-        self.verticalSlider.setValue(value)
+    def set_thermometer_value(self, temperature: float):
+        self.thermometer.set_temperature(temperature)
