@@ -1,0 +1,5 @@
+pySerial
+pyQt5
+pyopenGL
+pyproj
+pyqtgraph
