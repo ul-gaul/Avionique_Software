@@ -15,7 +15,7 @@ class Thermometer(QtWidgets.QWidget):
         self._create_graduation_labels()
         self.gridLayout.addLayout(self.verticalLayout_7, 1, 1, 1, 1)
 
-        self.label_20 = QtWidgets.QLabel(self)
+        self.label_20 = QtWidgets.QLabel(self.parentWidget())
         self.label_20.setObjectName("label_20")
         self.label_20.setText("°C")
         self.gridLayout.addWidget(self.label_20, 0, 1, 1, 1)
@@ -24,7 +24,7 @@ class Thermometer(QtWidgets.QWidget):
         self.horizontalLayout_14.setObjectName("horizontalLayout_14")
         spacerItem9 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_14.addItem(spacerItem9)
-        self.label_8 = QtWidgets.QLabel(self)
+        self.label_8 = QtWidgets.QLabel(self.parentWidget())
         self.label_8.setObjectName("label_8")
         self.label_8.setText("Température")
         self.horizontalLayout_14.addWidget(self.label_8)
@@ -57,13 +57,13 @@ class Thermometer(QtWidgets.QWidget):
             self.verticalLayout_7.addWidget(label)
 
     def _create_graduation_label(self, temperature_graduation: str):
-        label = QtWidgets.QLabel(self)
+        label = QtWidgets.QLabel(self.parentWidget())
         label.setObjectName("thermometer_label_" + temperature_graduation)
         label.setText(temperature_graduation)
         return label
 
     def _create_color_gradient(self):
-        color_gradient = QtWidgets.QLabel(self)
+        color_gradient = QtWidgets.QLabel(self.parentWidget())
         set_minimum_expanding_size_policy(color_gradient)
         color_gradient.setMinimumSize(QtCore.QSize(50, 273))
         color_gradient.setMaximumSize(QtCore.QSize(100, 400))
@@ -73,7 +73,7 @@ class Thermometer(QtWidgets.QWidget):
         return color_gradient
 
     def _create_vertical_slider(self):
-        vertical_slider = QtWidgets.QSlider(self)
+        vertical_slider = QtWidgets.QSlider(self.parentWidget())
         vertical_slider.setEnabled(True)
         vertical_slider.setMaximum(100)
         vertical_slider.setTracking(False)

@@ -314,7 +314,7 @@ class DataWidget(QtWidgets.QWidget):
         self.horizontalLayout_3.addWidget(self.frame_4)
 
         self.thermometer = Thermometer(self)
-        self.horizontalLayout_3.addWidget(self.thermometer)
+        self.horizontalLayout_3.addLayout(self.thermometer.get_layout())
 
         self.verticalLayout_3.addLayout(self.horizontalLayout_3)
         spacerItem13 = QtWidgets.QSpacerItem(20, 70, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
