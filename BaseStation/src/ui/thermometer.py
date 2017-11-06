@@ -35,7 +35,7 @@ class Thermometer(QtWidgets.QWidget):
         left_spacer = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         layout.addItem(left_spacer)
 
-        description_label = QtWidgets.QLabel(self.parentWidget())
+        description_label = QtWidgets.QLabel(self)
         description_label.setObjectName("thermometer_description_label")
         description_label.setText("Température")
         layout.addWidget(description_label)
@@ -45,7 +45,7 @@ class Thermometer(QtWidgets.QWidget):
         self.gridLayout.addLayout(layout, 0, 0, 1, 1)
 
     def _create_temperature_unit(self):
-        temperature_unit_label = QtWidgets.QLabel(self.parentWidget())
+        temperature_unit_label = QtWidgets.QLabel(self)
         temperature_unit_label.setObjectName("thermometer_temperature_unit_label")
         temperature_unit_label.setText("°C")
         self.gridLayout.addWidget(temperature_unit_label, 0, 1, 1, 1)
@@ -70,7 +70,7 @@ class Thermometer(QtWidgets.QWidget):
         self.gridLayout.addLayout(layout, 1, 0, 1, 1)
 
     def _create_color_gradient(self):
-        color_gradient = QtWidgets.QLabel(self.parentWidget())
+        color_gradient = QtWidgets.QLabel(self)
         set_minimum_expanding_size_policy(color_gradient)
         color_gradient.setMinimumSize(QtCore.QSize(50, 273))
         color_gradient.setMaximumSize(QtCore.QSize(100, 400))
@@ -80,7 +80,7 @@ class Thermometer(QtWidgets.QWidget):
         return color_gradient
 
     def _create_vertical_slider(self):
-        vertical_slider = QtWidgets.QSlider(self.parentWidget())
+        vertical_slider = QtWidgets.QSlider(self)
         vertical_slider.setEnabled(True)
         vertical_slider.setMaximum(100)
         vertical_slider.setTracking(False)
@@ -92,7 +92,7 @@ class Thermometer(QtWidgets.QWidget):
         return vertical_slider
 
     def _create_graduation_label(self, temperature_graduation: str):
-        label = QtWidgets.QLabel(self.parentWidget())
+        label = QtWidgets.QLabel(self)
         label.setObjectName("thermometer_label_" + temperature_graduation)
         label.setText(temperature_graduation)
         return label
