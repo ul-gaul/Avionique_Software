@@ -60,7 +60,7 @@ QLabel
     border-bottom-left-radius: 7px;
 }
 
-#verticalSlider::handle:vertical
+#thermometer_verticalSlider::handle:vertical
 {
     width: 10px;
     height: 8px;
