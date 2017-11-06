@@ -203,6 +203,7 @@ class DataWidget(QtWidgets.QWidget):
         self.verticalLayout_6.setContentsMargins(3, 3, 3, 3)
         self.verticalLayout_6.setSpacing(7)
         self.verticalLayout_6.setObjectName("verticalLayout_6")
+
         self.horizontalLayout_7 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_7.setObjectName("horizontalLayout_7")
         self.led_1 = QtWidgets.QPushButton(self.frame_4)
