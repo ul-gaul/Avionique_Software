@@ -3,7 +3,7 @@ import pyqtgraph as pqtg
 from src.ui.gl_rocket import GlRocket
 from src.ui.thermometer import Thermometer
 from src.ui.led import Led
-from src.ui.utils import set_minimum_expanding_size_policy
+from src.ui.utils import *
 from OpenGL.GL import *
 from OpenGL.GLU import *
 import pyqtgraph.opengl as gl
@@ -74,11 +74,7 @@ class DataWidget(QtWidgets.QWidget):
         spacerItem = QtWidgets.QSpacerItem(30, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_1.addItem(spacerItem)
         self.label = QtWidgets.QLabel(self)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.label.sizePolicy().hasHeightForWidth())
-        self.label.setSizePolicy(sizePolicy)
+        set_minimum_size_policy(self.label)
         self.label.setMaximumSize(QtCore.QSize(150, 75))
         self.label.setText("")
         self.label.setScaledContents(True)
@@ -94,12 +90,7 @@ class DataWidget(QtWidgets.QWidget):
         self.verticalLayout.setObjectName("verticalLayout")
 
         self.graphicsView = pqtg.PlotWidget(self)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding,
-                                           QtWidgets.QSizePolicy.MinimumExpanding)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.graphicsView.sizePolicy().hasHeightForWidth())
-        self.graphicsView.setSizePolicy(sizePolicy)
+        set_minimum_expanding_size_policy(self.graphicsView)
         self.graphicsView.setMinimumSize(QtCore.QSize(400, 150))
         self.graphicsView.setObjectName("graphicsView")
         self.verticalLayout.addWidget(self.graphicsView)
@@ -108,12 +99,7 @@ class DataWidget(QtWidgets.QWidget):
         self.verticalLayout.addItem(spacerItem2)
 
         self.graphicsView_2 = pqtg.PlotWidget(self)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding,
-                                           QtWidgets.QSizePolicy.MinimumExpanding)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.graphicsView_2.sizePolicy().hasHeightForWidth())
-        self.graphicsView_2.setSizePolicy(sizePolicy)
+        set_minimum_expanding_size_policy(self.graphicsView_2)
         self.graphicsView_2.setMinimumSize(QtCore.QSize(400, 150))
         self.graphicsView_2.setObjectName("graphicsView_2")
         self.verticalLayout.addWidget(self.graphicsView_2)
@@ -128,12 +114,7 @@ class DataWidget(QtWidgets.QWidget):
 
         """
         self.glView = gl.GLViewWidget(self)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding,
-                                           QtWidgets.QSizePolicy.MinimumExpanding)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.glView.sizePolicy().hasHeightForWidth())
-        self.glView.setSizePolicy(sizePolicy)
+        set_minimum_expanding_size_policy(self.glView)
         self.glView.setMinimumSize(QtCore.QSize(200, 400))
         self.glView.setCameraPosition(distance=15)
         gx = gl.GLGridItem()
@@ -147,12 +128,7 @@ class DataWidget(QtWidgets.QWidget):
         """
         """
         self.openGLWidget = QtWidgets.QOpenGLWidget(self)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding,
-                                           QtWidgets.QSizePolicy.MinimumExpanding)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.openGLWidget.sizePolicy().hasHeightForWidth())
-        self.openGLWidget.setSizePolicy(sizePolicy)
+        set_minimum_expanding_size_policy(self.openGLWidget)
         self.openGLWidget.setMinimumSize(QtCore.QSize(200, 400))
         self.openGLWidget.setObjectName("openGLWidget")
         self.verticalLayout_2.addWidget(self.openGLWidget)
@@ -167,11 +143,7 @@ class DataWidget(QtWidgets.QWidget):
         spacerItem6 = QtWidgets.QSpacerItem(0, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_4.addItem(spacerItem6)
         self.widget = QtWidgets.QWidget(self)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.widget.sizePolicy().hasHeightForWidth())
-        self.widget.setSizePolicy(sizePolicy)
+        set_fixed_size_policy(self.widget)
         self.widget.setMinimumSize(QtCore.QSize(280, 73))
         self.widget.setObjectName("widget")
         self.horizontalLayout = QtWidgets.QHBoxLayout(self.widget)
@@ -193,12 +165,7 @@ class DataWidget(QtWidgets.QWidget):
         self.horizontalLayout_3 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
         self.frame_4 = QtWidgets.QFrame(self)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding,
-                                           QtWidgets.QSizePolicy.MinimumExpanding)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.frame_4.sizePolicy().hasHeightForWidth())
-        self.frame_4.setSizePolicy(sizePolicy)
+        set_minimum_expanding_size_policy(self.frame_4)
         self.frame_4.setMinimumSize(QtCore.QSize(75, 273))
         self.frame_4.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame_4.setFrameShadow(QtWidgets.QFrame.Raised)
@@ -230,12 +197,7 @@ class DataWidget(QtWidgets.QWidget):
         self.verticalLayout_3.addItem(spacerItem13)
 
         self.graphicsView_3 = pqtg.PlotWidget(self)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding,
-                                           QtWidgets.QSizePolicy.MinimumExpanding)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.graphicsView_3.sizePolicy().hasHeightForWidth())
-        self.graphicsView_3.setSizePolicy(sizePolicy)
+        set_minimum_expanding_size_policy(self.graphicsView_3)
         self.graphicsView_3.setMinimumSize(QtCore.QSize(295, 100))
         self.graphicsView_3.setObjectName("graphicsView_3")
         self.verticalLayout_3.addWidget(self.graphicsView_3)
