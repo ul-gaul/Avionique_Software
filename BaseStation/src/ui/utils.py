@@ -23,3 +23,8 @@ def set_size_policy(widget: QWidget, horizontal_policy: QSizePolicy, vertical_po
     size_policy.setVerticalStretch(0)
     size_policy.setHeightForWidth(widget.sizePolicy().hasHeightForWidth())
     widget.setSizePolicy(size_policy)
+
+
+def read_stylesheet(path: str):
+    with open(path) as f:
+        return f.read()

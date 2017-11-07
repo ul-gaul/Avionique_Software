@@ -2,6 +2,7 @@ from PyQt5 import QtWidgets, QtCore, QtGui
 import pyqtgraph as pqtg
 from src.ui.gl_rocket import GlRocket
 from src.ui.thermometer import Thermometer
+from src.ui.led import Led
 from src.ui.utils import set_minimum_expanding_size_policy
 from OpenGL.GL import *
 from OpenGL.GLU import *
@@ -16,9 +17,6 @@ class DataWidget(QtWidgets.QWidget):
         self.set_black_on_white_graph_colors()
         self.thermometer = None
         self.setup_ui()
-
-        self.on_stylesheet = self.get_stylesheet("resources/led_on.css")
-        self.off_stylesheet = self.get_stylesheet("resources/led_off.css")
 
         self.leds = [self.led_1, self.led_2, self.led_3, self.led_4, self.led_5, self.led_6]
         for i in range(1, 7):
@@ -70,6 +68,7 @@ class DataWidget(QtWidgets.QWidget):
         self.resize(1229, 747)
         self.verticalLayout_4 = QtWidgets.QVBoxLayout(self)
         self.verticalLayout_4.setObjectName("verticalLayout_4")
+
         self.horizontalLayout_1 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_1.setObjectName("horizontalLayout_1")
         spacerItem = QtWidgets.QSpacerItem(30, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
@@ -88,10 +87,12 @@ class DataWidget(QtWidgets.QWidget):
         spacerItem1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_1.addItem(spacerItem1)
         self.verticalLayout_4.addLayout(self.horizontalLayout_1)
+
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         self.verticalLayout = QtWidgets.QVBoxLayout()
         self.verticalLayout.setObjectName("verticalLayout")
+
         self.graphicsView = pqtg.PlotWidget(self)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding,
                                            QtWidgets.QSizePolicy.MinimumExpanding)
@@ -102,8 +103,10 @@ class DataWidget(QtWidgets.QWidget):
         self.graphicsView.setMinimumSize(QtCore.QSize(400, 150))
         self.graphicsView.setObjectName("graphicsView")
         self.verticalLayout.addWidget(self.graphicsView)
+
         spacerItem2 = QtWidgets.QSpacerItem(20, 70, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
         self.verticalLayout.addItem(spacerItem2)
+
         self.graphicsView_2 = pqtg.PlotWidget(self)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding,
                                            QtWidgets.QSizePolicy.MinimumExpanding)
@@ -114,6 +117,7 @@ class DataWidget(QtWidgets.QWidget):
         self.graphicsView_2.setMinimumSize(QtCore.QSize(400, 150))
         self.graphicsView_2.setObjectName("graphicsView_2")
         self.verticalLayout.addWidget(self.graphicsView_2)
+
         spacerItem3 = QtWidgets.QSpacerItem(20, 70, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
         self.verticalLayout.addItem(spacerItem3)
         self.horizontalLayout_2.addLayout(self.verticalLayout)
@@ -204,122 +208,27 @@ class DataWidget(QtWidgets.QWidget):
         self.verticalLayout_6.setSpacing(7)
         self.verticalLayout_6.setObjectName("verticalLayout_6")
 
-        self.horizontalLayout_7 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_7.setObjectName("horizontalLayout_7")
-        self.led_1 = QtWidgets.QPushButton(self.frame_4)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.led_1.sizePolicy().hasHeightForWidth())
-        self.led_1.setSizePolicy(sizePolicy)
-        self.led_1.setMinimumSize(QtCore.QSize(32, 32))
-        self.led_1.setMaximumSize(QtCore.QSize(32, 32))
-        self.led_1.setStyleSheet("")
-        self.led_1.setText("")
-        self.led_1.setObjectName("led_1")
-        self.horizontalLayout_7.addWidget(self.led_1)
-        self.label_2 = QtWidgets.QLabel(self.frame_4)
-        self.label_2.setObjectName("label_2")
-        self.horizontalLayout_7.addWidget(self.label_2)
-        self.verticalLayout_6.addLayout(self.horizontalLayout_7)
-        self.horizontalLayout_8 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_8.setObjectName("horizontalLayout_8")
-        self.led_2 = QtWidgets.QPushButton(self.frame_4)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.led_2.sizePolicy().hasHeightForWidth())
-        self.led_2.setSizePolicy(sizePolicy)
-        self.led_2.setMinimumSize(QtCore.QSize(32, 32))
-        self.led_2.setMaximumSize(QtCore.QSize(32, 32))
-        self.led_2.setStyleSheet("")
-        self.led_2.setText("")
-        self.led_2.setObjectName("led_2")
-        self.horizontalLayout_8.addWidget(self.led_2)
-        self.label_3 = QtWidgets.QLabel(self.frame_4)
-        self.label_3.setObjectName("label_3")
-        self.horizontalLayout_8.addWidget(self.label_3)
-        self.verticalLayout_6.addLayout(self.horizontalLayout_8)
-        self.horizontalLayout_9 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_9.setObjectName("horizontalLayout_9")
-        self.led_3 = QtWidgets.QPushButton(self.frame_4)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.led_3.sizePolicy().hasHeightForWidth())
-        self.led_3.setSizePolicy(sizePolicy)
-        self.led_3.setMinimumSize(QtCore.QSize(32, 32))
-        self.led_3.setMaximumSize(QtCore.QSize(32, 32))
-        self.led_3.setStyleSheet("")
-        self.led_3.setText("")
-        self.led_3.setObjectName("led_3")
-        self.horizontalLayout_9.addWidget(self.led_3)
-        self.label_4 = QtWidgets.QLabel(self.frame_4)
-        self.label_4.setObjectName("label_4")
-        self.horizontalLayout_9.addWidget(self.label_4)
-        self.verticalLayout_6.addLayout(self.horizontalLayout_9)
-        self.horizontalLayout_10 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_10.setObjectName("horizontalLayout_10")
-        self.led_4 = QtWidgets.QPushButton(self.frame_4)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.led_4.sizePolicy().hasHeightForWidth())
-        self.led_4.setSizePolicy(sizePolicy)
-        self.led_4.setMinimumSize(QtCore.QSize(32, 32))
-        self.led_4.setMaximumSize(QtCore.QSize(32, 32))
-        self.led_4.setStyleSheet("")
-        self.led_4.setText("")
-        self.led_4.setObjectName("led_4")
-        self.horizontalLayout_10.addWidget(self.led_4)
-        self.label_5 = QtWidgets.QLabel(self.frame_4)
-        self.label_5.setObjectName("label_5")
-        self.horizontalLayout_10.addWidget(self.label_5)
-        self.verticalLayout_6.addLayout(self.horizontalLayout_10)
-        self.horizontalLayout_11 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_11.setObjectName("horizontalLayout_11")
-        self.led_5 = QtWidgets.QPushButton(self.frame_4)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.led_5.sizePolicy().hasHeightForWidth())
-        self.led_5.setSizePolicy(sizePolicy)
-        self.led_5.setMinimumSize(QtCore.QSize(32, 32))
-        self.led_5.setMaximumSize(QtCore.QSize(32, 32))
-        self.led_5.setStyleSheet("")
-        self.led_5.setText("")
-        self.led_5.setObjectName("led_5")
-        self.horizontalLayout_11.addWidget(self.led_5)
-        self.label_6 = QtWidgets.QLabel(self.frame_4)
-        self.label_6.setObjectName("label_6")
-        self.horizontalLayout_11.addWidget(self.label_6)
-        self.verticalLayout_6.addLayout(self.horizontalLayout_11)
-        self.horizontalLayout_12 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_12.setObjectName("horizontalLayout_12")
-        self.led_6 = QtWidgets.QPushButton(self.frame_4)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.led_6.sizePolicy().hasHeightForWidth())
-        self.led_6.setSizePolicy(sizePolicy)
-        self.led_6.setMinimumSize(QtCore.QSize(32, 32))
-        self.led_6.setMaximumSize(QtCore.QSize(32, 32))
-        self.led_6.setStyleSheet("")
-        self.led_6.setText("")
-        self.led_6.setObjectName("led_6")
-        self.horizontalLayout_12.addWidget(self.led_6)
-        self.label_7 = QtWidgets.QLabel(self.frame_4)
-        self.label_7.setObjectName("label_7")
-        self.horizontalLayout_12.addWidget(self.label_7)
-        self.verticalLayout_6.addLayout(self.horizontalLayout_12)
-        self.horizontalLayout_3.addWidget(self.frame_4)
+        self.led_1 = Led(self, "Acquisition board 1")
+        self.verticalLayout_6.addLayout(self.led_1.get_layout())
+        self.led_2 = Led(self, "Acquisition board 2")
+        self.verticalLayout_6.addLayout(self.led_2.get_layout())
+        self.led_3 = Led(self, "Acquisition board 3")
+        self.verticalLayout_6.addLayout(self.led_3.get_layout())
+        self.led_4 = Led(self, "Power supply 1")
+        self.verticalLayout_6.addLayout(self.led_4.get_layout())
+        self.led_5 = Led(self, "Power supply 2")
+        self.verticalLayout_6.addLayout(self.led_5.get_layout())
+        self.led_6 = Led(self, "Payload board")
+        self.verticalLayout_6.addLayout(self.led_6.get_layout())
 
+        self.horizontalLayout_3.addWidget(self.frame_4)
         self.thermometer = Thermometer(self)
         self.horizontalLayout_3.addLayout(self.thermometer.get_layout())
 
         self.verticalLayout_3.addLayout(self.horizontalLayout_3)
         spacerItem13 = QtWidgets.QSpacerItem(20, 70, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
         self.verticalLayout_3.addItem(spacerItem13)
+
         self.graphicsView_3 = pqtg.PlotWidget(self)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding,
                                            QtWidgets.QSizePolicy.MinimumExpanding)
@@ -330,6 +239,7 @@ class DataWidget(QtWidgets.QWidget):
         self.graphicsView_3.setMinimumSize(QtCore.QSize(295, 100))
         self.graphicsView_3.setObjectName("graphicsView_3")
         self.verticalLayout_3.addWidget(self.graphicsView_3)
+
         spacerItem14 = QtWidgets.QSpacerItem(20, 70, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
         self.verticalLayout_3.addItem(spacerItem14)
         self.horizontalLayout_2.addLayout(self.verticalLayout_3)
@@ -341,17 +251,6 @@ class DataWidget(QtWidgets.QWidget):
     def retranslateUi(self):
         _translate = QtCore.QCoreApplication.translate
         self.setWindowTitle(_translate("data", "Form"))
-        self.label_2.setText("Acquisition board 1")
-        self.label_3.setText("Acquisition board 2")
-        self.label_4.setText("Acquisition board 3")
-        self.label_5.setText("Power supply 1")
-        self.label_6.setText("Power supply 2")
-        self.label_7.setText("Payload board")
-
-    @staticmethod
-    def get_stylesheet(path):
-        with open(path) as f:
-            return f.read()
 
     def init_button(self, button, object_name, text, callback):
         set_minimum_expanding_size_policy(button)
@@ -360,11 +259,8 @@ class DataWidget(QtWidgets.QWidget):
         button.clicked.connect(callback)
         self.horizontalLayout_5.addWidget(button)
 
-    def set_led_state(self, led_num, is_on):
-        if is_on:
-            self.leds[led_num - 1].setStyleSheet(self.on_stylesheet)
-        else:
-            self.leds[led_num - 1].setStyleSheet(self.off_stylesheet)
+    def set_led_state(self, led_num: int, is_on: bool):
+        self.leds[led_num - 1].set_state(is_on)
 
     def set_target_altitude(self, altitude):
         self.graphicsView.plotItem.addLine(y=altitude, pen=pqtg.mkPen(color='r', width=3))
