@@ -6,9 +6,10 @@ class Thermometer(QtWidgets.QWidget):
 
     def __init__(self, parent: QtWidgets.QWidget):
         super().__init__(parent)
+        self.vertical_slider = None
 
-        self.gridLayout = QtWidgets.QGridLayout()
-        self.gridLayout.setObjectName("thermometer_grid_layout")
+        self.grid_layout = QtWidgets.QGridLayout()
+        self.grid_layout.setObjectName("thermometer_grid_layout")
 
         self._create_description()
         self._create_temperature_unit()
@@ -17,7 +18,7 @@ class Thermometer(QtWidgets.QWidget):
         self._create_spacers()
 
     def get_layout(self):
-        return self.gridLayout
+        return self.grid_layout
 
     def set_temperature(self, temperature: float):
         if temperature < 0:
@@ -27,7 +28,7 @@ class Thermometer(QtWidgets.QWidget):
         else:
             value = round(temperature)
 
-        self.verticalSlider.setValue(value)
+        self.vertical_slider.setValue(value)
 
     def _create_description(self):
         layout = QtWidgets.QHBoxLayout()
@@ -42,13 +43,13 @@ class Thermometer(QtWidgets.QWidget):
 
         right_spacer = QtWidgets.QSpacerItem(30, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
         layout.addItem(right_spacer)
-        self.gridLayout.addLayout(layout, 0, 0, 1, 1)
+        self.grid_layout.addLayout(layout, 0, 0, 1, 1)
 
     def _create_temperature_unit(self):
         temperature_unit_label = QtWidgets.QLabel(self)
         temperature_unit_label.setObjectName("thermometer_temperature_unit_label")
         temperature_unit_label.setText("°C")
-        self.gridLayout.addWidget(temperature_unit_label, 0, 1, 1, 1)
+        self.grid_layout.addWidget(temperature_unit_label, 0, 1, 1, 1)
 
     def _create_graduation(self):
         layout = QtWidgets.QVBoxLayout()
@@ -56,7 +57,7 @@ class Thermometer(QtWidgets.QWidget):
         for i in range(11):
             label = self._create_graduation_label(str(100 - 10 * i))
             layout.addWidget(label)
-        self.gridLayout.addLayout(layout, 1, 1, 1, 1)
+        self.grid_layout.addLayout(layout, 1, 1, 1, 1)
 
     def _create_gradient_slider(self):
         layout = QtWidgets.QHBoxLayout()
@@ -65,9 +66,9 @@ class Thermometer(QtWidgets.QWidget):
         layout.addItem(spacer)
         color_gradient = self._create_color_gradient()
         layout.addWidget(color_gradient)
-        vertical_slider = self._create_vertical_slider()
-        layout.addWidget(vertical_slider)
-        self.gridLayout.addLayout(layout, 1, 0, 1, 1)
+        self.vertical_slider = self._create_vertical_slider()
+        layout.addWidget(self.vertical_slider)
+        self.grid_layout.addLayout(layout, 1, 0, 1, 1)
 
     def _create_color_gradient(self):
         color_gradient = QtWidgets.QLabel(self)
@@ -99,7 +100,7 @@ class Thermometer(QtWidgets.QWidget):
 
     def _create_spacers(self):
         top_right_spacer = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.gridLayout.addItem(top_right_spacer, 0, 2, 1, 1)
+        self.grid_layout.addItem(top_right_spacer, 0, 2, 1, 1)
         bottom_right_spacer = QtWidgets.QSpacerItem(20, 20, QtWidgets.QSizePolicy.MinimumExpanding,
                                                     QtWidgets.QSizePolicy.Minimum)
-        self.gridLayout.addItem(bottom_right_spacer, 1, 2, 1, 1)
+        self.grid_layout.addItem(bottom_right_spacer, 1, 2, 1, 1)
