@@ -14,7 +14,7 @@ class RealTimeWidget(DataWidget):
         self.lcdNumber = QLCDNumber(self.widget)
         set_minimum_expanding_size_policy(self.lcdNumber)
         self.lcdNumber.setObjectName("lcdNumber")
-        self.horizontalLayout_5.addWidget(self.lcdNumber)
+        self.controls_inner_layout.addWidget(self.lcdNumber)
 
     def set_button_callback(self, start_stop_button_callback):
         self.start_stop_button_callback = start_stop_button_callback

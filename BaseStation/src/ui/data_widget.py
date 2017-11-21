@@ -23,10 +23,6 @@ class DataWidget(QtWidgets.QWidget):
         for i in range(1, 7):
             self.set_led_state(i, False)
 
-        self.horizontalLayout_5 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_5.setObjectName("horizontalLayout_5")
-        self.horizontal_layout.addLayout(self.horizontalLayout_5)
-
         self.graphicsView.plotItem.setTitle("Altitude")
         self.graphicsView.plotItem.setLabel("bottom", "Temps", "Sec")
         self.graphicsView.plotItem.setLabel("left", "Altitude (ft)")
@@ -134,12 +130,12 @@ class DataWidget(QtWidgets.QWidget):
         set_fixed_size_policy(self.widget)
         self.widget.setMinimumSize(QtCore.QSize(280, 73))
         self.widget.setObjectName("widget")
-        self.horizontal_layout = QtWidgets.QHBoxLayout(self.widget)
-        self.horizontal_layout.setContentsMargins(0, 0, 0, 0)
-        self.horizontal_layout.setObjectName("horizontalLayout")
-        self.horizontalLayout_5 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_5.setObjectName("horizontalLayout_5")
-        self.horizontal_layout.addLayout(self.horizontalLayout_5)
+        self.controls_outer_layout = QtWidgets.QHBoxLayout(self.widget)
+        self.controls_outer_layout.setContentsMargins(0, 0, 0, 0)
+        self.controls_outer_layout.setObjectName("controls_outer_layout")
+        self.controls_inner_layout = QtWidgets.QHBoxLayout()
+        self.controls_inner_layout.setObjectName("controls_inner_layout")
+        self.controls_outer_layout.addLayout(self.controls_inner_layout)
         self.horizontalLayout_4.addWidget(self.widget)
         spacerItem7 = QtWidgets.QSpacerItem(0, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_4.addItem(spacerItem7)
@@ -206,7 +202,7 @@ class DataWidget(QtWidgets.QWidget):
         button.setObjectName(object_name)
         button.setText(text)
         button.clicked.connect(callback)
-        self.horizontalLayout_5.addWidget(button)
+        self.controls_inner_layout.addWidget(button)
 
     def set_led_state(self, led_num: int, is_on: bool):
         self.leds[led_num - 1].set_state(is_on)
