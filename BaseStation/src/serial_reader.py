@@ -28,7 +28,7 @@ class SerialReader(Producer):
 
     def start(self):
         ports = self.detect_serial_ports()
-        if len(ports) < 1:
+        if len(ports) <= 0:
             raise DomainError("Aucun récepteur connecté")
         self.port.port = ports[0]
         self.port.open()

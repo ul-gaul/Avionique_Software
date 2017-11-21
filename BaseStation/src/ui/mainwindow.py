@@ -26,7 +26,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.real_time_widget = None
         self.replay_widget = None
         self.menu_bar = None
-        # self.status_bar = None
         self.files_menu = None
         self.new_acquisition_action = None
         self.open_csv_file_action = None
