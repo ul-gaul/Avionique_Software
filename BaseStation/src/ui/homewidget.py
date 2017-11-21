@@ -6,7 +6,6 @@ from src.ui.header import Header
 
 
 class HomeWidget(QtWidgets.QWidget):
-
     def __init__(self, parent=None):
         super().__init__(parent)
         self.real_time_button = None
@@ -22,35 +21,35 @@ class HomeWidget(QtWidgets.QWidget):
         self.header = Header(self, 400, 200)
         self.verticalLayout.addLayout(self.header.get_layout())
 
-        spacerItem2 = QtWidgets.QSpacerItem(20, 178, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
-        self.verticalLayout.addItem(spacerItem2)
+        top_spacer = QtWidgets.QSpacerItem(20, 178, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        self.verticalLayout.addItem(top_spacer)
 
         self.buttons_layout = QtWidgets.QHBoxLayout()
-        self.buttons_layout.setObjectName("horizontalLayout_2")
-        spacerItem3 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.buttons_layout.addItem(spacerItem3)
+        self.buttons_layout.setObjectName("buttons_layout")
+        left_spacer = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.buttons_layout.addItem(left_spacer)
         self.real_time_button = self._create_button("real_time_button", self.parent().open_real_time)
         self.buttons_layout.addWidget(self.real_time_button)
-        spacerItem4 = QtWidgets.QSpacerItem(180, 20, QtWidgets.QSizePolicy.MinimumExpanding,
-                                            QtWidgets.QSizePolicy.Minimum)
-        self.buttons_layout.addItem(spacerItem4)
+        middle_spacer = QtWidgets.QSpacerItem(180, 20, QtWidgets.QSizePolicy.MinimumExpanding,
+                                              QtWidgets.QSizePolicy.Minimum)
+        self.buttons_layout.addItem(middle_spacer)
         self.replay_button = self._create_button("replay_button", self.parent().open_replay)
         self.buttons_layout.addWidget(self.replay_button)
-        spacerItem5 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.buttons_layout.addItem(spacerItem5)
+        right_spacer = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.buttons_layout.addItem(right_spacer)
         self.verticalLayout.addLayout(self.buttons_layout)
 
-        spacerItem6 = QtWidgets.QSpacerItem(20, 178, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
-        self.verticalLayout.addItem(spacerItem6)
+        bottom_spacer = QtWidgets.QSpacerItem(20, 178, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        self.verticalLayout.addItem(bottom_spacer)
 
         self.footer_layout = QtWidgets.QHBoxLayout()
         self.footer_layout.setSizeConstraint(QtWidgets.QLayout.SetMinimumSize)
-        self.footer_layout.setObjectName("horizontalLayout_3")
-        spacerItem7 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.footer_layout.addItem(spacerItem7)
+        self.footer_layout.setObjectName("footer_layout")
+        footer_spacer = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.footer_layout.addItem(footer_spacer)
         self.footer_label = QtWidgets.QLabel(self)
         set_size_policy(self.footer_label, QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
-        self.footer_label.setObjectName("label_2")
+        self.footer_label.setObjectName("footer_label")
         self.footer_layout.addWidget(self.footer_label)
         self.verticalLayout.addLayout(self.footer_layout)
 

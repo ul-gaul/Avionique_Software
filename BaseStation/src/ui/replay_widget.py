@@ -8,7 +8,7 @@ class ReplayWidget(DataWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.horizontalSlider = ExtendedQSlider(self, "horizontalSlider")
-        self.verticalLayout_4.addWidget(self.horizontalSlider)
+        self.main_layout.addWidget(self.horizontalSlider)
         self.rewind_button = QPushButton(self.widget)
         self.init_button(self.rewind_button, "rewind_button", "RW", self.rewind)
         self.play_pause_button = QPushButton(self.widget)

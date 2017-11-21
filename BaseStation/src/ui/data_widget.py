@@ -25,7 +25,7 @@ class DataWidget(QtWidgets.QWidget):
 
         self.horizontalLayout_5 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_5.setObjectName("horizontalLayout_5")
-        self.horizontalLayout.addLayout(self.horizontalLayout_5)
+        self.horizontal_layout.addLayout(self.horizontalLayout_5)
 
         self.graphicsView.plotItem.setTitle("Altitude")
         self.graphicsView.plotItem.setLabel("bottom", "Temps", "Sec")
@@ -66,14 +66,14 @@ class DataWidget(QtWidgets.QWidget):
     def setup_ui(self):
         self.setObjectName("Form")
         self.resize(1229, 747)
-        self.verticalLayout_4 = QtWidgets.QVBoxLayout(self)
-        self.verticalLayout_4.setObjectName("verticalLayout_4")
+        self.main_layout = QtWidgets.QVBoxLayout(self)
+        self.main_layout.setObjectName("main_layout")
 
         self.header = Header(self, 150, 75)
-        self.verticalLayout_4.addLayout(self.header.get_layout())
+        self.main_layout.addLayout(self.header.get_layout())
 
-        self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
+        self.horizontal_layout = QtWidgets.QHBoxLayout()
+        self.horizontal_layout.setObjectName("horizontal_layout")
         self.verticalLayout = QtWidgets.QVBoxLayout()
         self.verticalLayout.setObjectName("verticalLayout")
 
@@ -94,9 +94,9 @@ class DataWidget(QtWidgets.QWidget):
 
         spacerItem3 = QtWidgets.QSpacerItem(20, 70, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
         self.verticalLayout.addItem(spacerItem3)
-        self.horizontalLayout_2.addLayout(self.verticalLayout)
+        self.horizontal_layout.addLayout(self.verticalLayout)
         spacerItem4 = QtWidgets.QSpacerItem(90, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_2.addItem(spacerItem4)
+        self.horizontal_layout.addItem(spacerItem4)
         self.verticalLayout_2 = QtWidgets.QVBoxLayout()
         self.verticalLayout_2.setObjectName("verticalLayout_2")
 
@@ -134,19 +134,19 @@ class DataWidget(QtWidgets.QWidget):
         set_fixed_size_policy(self.widget)
         self.widget.setMinimumSize(QtCore.QSize(280, 73))
         self.widget.setObjectName("widget")
-        self.horizontalLayout = QtWidgets.QHBoxLayout(self.widget)
-        self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
-        self.horizontalLayout.setObjectName("horizontalLayout")
+        self.horizontal_layout = QtWidgets.QHBoxLayout(self.widget)
+        self.horizontal_layout.setContentsMargins(0, 0, 0, 0)
+        self.horizontal_layout.setObjectName("horizontalLayout")
         self.horizontalLayout_5 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_5.setObjectName("horizontalLayout_5")
-        self.horizontalLayout.addLayout(self.horizontalLayout_5)
+        self.horizontal_layout.addLayout(self.horizontalLayout_5)
         self.horizontalLayout_4.addWidget(self.widget)
         spacerItem7 = QtWidgets.QSpacerItem(0, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_4.addItem(spacerItem7)
         self.verticalLayout_2.addLayout(self.horizontalLayout_4)
-        self.horizontalLayout_2.addLayout(self.verticalLayout_2)
+        self.horizontal_layout.addLayout(self.verticalLayout_2)
         spacerItem8 = QtWidgets.QSpacerItem(90, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_2.addItem(spacerItem8)
+        self.horizontal_layout.addItem(spacerItem8)
         self.verticalLayout_3 = QtWidgets.QVBoxLayout()
         self.verticalLayout_3.setObjectName("verticalLayout_3")
 
@@ -192,11 +192,10 @@ class DataWidget(QtWidgets.QWidget):
 
         spacerItem14 = QtWidgets.QSpacerItem(20, 70, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
         self.verticalLayout_3.addItem(spacerItem14)
-        self.horizontalLayout_2.addLayout(self.verticalLayout_3)
-        self.verticalLayout_4.addLayout(self.horizontalLayout_2)
+        self.horizontal_layout.addLayout(self.verticalLayout_3)
+        self.main_layout.addLayout(self.horizontal_layout)
 
         self.retranslateUi()
-        #QtCore.QMetaObject.connectSlotsByName(self)
 
     def retranslateUi(self):
         _translate = QtCore.QCoreApplication.translate
