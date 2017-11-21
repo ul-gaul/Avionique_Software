@@ -19,10 +19,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.home_widget = HomeWidget(self)
         self.real_time_widget = None
         self.replay_widget = None
-        self.menuBar = None
-        self.menuFichiers = None
-        self.actionNouvelle_acquisition = None
-        self.actionOuvrir_un_fichier_CSV = None
+        self.menu_bar = None
+        self.files_menu = None
+        self.new_acquisition_action = None
+        self.open_csv_file_action = None
         self.central_widget.addWidget(self.home_widget)
         self.setWindowIcon(QIcon("resources/logo.jpg"))
         self.set_stylesheet("resources/mainwindow.css")
@@ -45,32 +45,32 @@ class MainWindow(QtWidgets.QMainWindow):
         # TODO: bind replay control buttons to callback in the ReplayController
         self.open_new_widget(self.replay_widget)
 
-    def open_new_widget(self, widget):
+    def open_new_widget(self, widget: QtWidgets.QWidget):
         self.central_widget.addWidget(widget)
         self.central_widget.setCurrentWidget(widget)
         self.setup_menu_bar()
         self.set_stylesheet("resources/data.css")
 
     def setup_menu_bar(self):
-        self.menuBar = QtWidgets.QMenuBar(self)
-        self.menuBar.setGeometry(QtCore.QRect(0, 0, 1229, 26))
-        self.menuBar.setObjectName("menuBar")
-        self.menuFichiers = QtWidgets.QMenu(self.menuBar)
-        self.menuFichiers.setObjectName("menuFichiers")
-        self.menuFichiers.setTitle("Fichiers")
-        self.setMenuBar(self.menuBar)
+        self.menu_bar = QtWidgets.QMenuBar(self)
+        self.menu_bar.setGeometry(QtCore.QRect(0, 0, 1229, 26))
+        self.menu_bar.setObjectName("menu_bar")
+        self.files_menu = QtWidgets.QMenu(self.menu_bar)
+        self.files_menu.setObjectName("files_menu")
+        self.files_menu.setTitle("Fichiers")
+        self.setMenuBar(self.menu_bar)
 
-        self.actionNouvelle_acquisition = QtWidgets.QAction(self)
-        self.actionNouvelle_acquisition.setObjectName("actionNouvelle_acquisition")
-        self.actionNouvelle_acquisition.setText("Nouvelle acquisition")
+        self.new_acquisition_action = QtWidgets.QAction(self)
+        self.new_acquisition_action.setObjectName("new_acquisition_action")
+        self.new_acquisition_action.setText("Nouvelle acquisition")
 
-        self.actionOuvrir_un_fichier_CSV = QtWidgets.QAction(self)
-        self.actionOuvrir_un_fichier_CSV.setObjectName("actionOuvrir_un_fichier_CSV")
-        self.actionOuvrir_un_fichier_CSV.setText("Ouvrir un fichier CSV")
+        self.open_csv_file_action = QtWidgets.QAction(self)
+        self.open_csv_file_action.setObjectName("open_csv_file_action")
+        self.open_csv_file_action.setText("Ouvrir un fichier CSV")
 
-        self.menuFichiers.addAction(self.actionNouvelle_acquisition)
-        self.menuFichiers.addAction(self.actionOuvrir_un_fichier_CSV)
-        self.menuBar.addAction(self.menuFichiers.menuAction())
+        self.files_menu.addAction(self.new_acquisition_action)
+        self.files_menu.addAction(self.open_csv_file_action)
+        self.menu_bar.addAction(self.files_menu.menuAction())
 
     def set_stylesheet(self, stylesheet_path):
         file = open(stylesheet_path, 'r')

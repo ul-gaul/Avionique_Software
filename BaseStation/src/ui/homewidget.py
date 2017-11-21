@@ -1,104 +1,76 @@
+from typing import Callable
 from PyQt5 import QtWidgets, QtCore, QtGui
+
+from src.ui.utils import *
+from src.ui.header import Header
 
 
 class HomeWidget(QtWidgets.QWidget):
-
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.pushButton = None
-        self.pushButton_2 = None
+        self.real_time_button = None
+        self.replay_button = None
         self.setup_ui()
-        self.pushButton.clicked.connect(self.parent().open_real_time)
-        self.pushButton_2.clicked.connect(self.parent().open_replay)
-        self.label.setPixmap(QtGui.QPixmap("resources/logo.jpg"))
 
     def setup_ui(self):
         self.setObjectName("homewidget")
         self.resize(1082, 638)
         self.verticalLayout = QtWidgets.QVBoxLayout(self)
         self.verticalLayout.setObjectName("verticalLayout")
-        self.horizontalLayout = QtWidgets.QHBoxLayout()
-        self.horizontalLayout.setObjectName("horizontalLayout")
-        spacerItem = QtWidgets.QSpacerItem(30, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout.addItem(spacerItem)
-        self.label = QtWidgets.QLabel(self)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.label.sizePolicy().hasHeightForWidth())
-        self.label.setSizePolicy(sizePolicy)
-        self.label.setMinimumSize(QtCore.QSize(0, 0))
-        self.label.setMaximumSize(QtCore.QSize(400, 200))
-        self.label.setText("")
-        self.label.setScaledContents(True)
-        self.label.setObjectName("label")
-        self.horizontalLayout.addWidget(self.label)
-        spacerItem1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout.addItem(spacerItem1)
-        self.verticalLayout.addLayout(self.horizontalLayout)
-        spacerItem2 = QtWidgets.QSpacerItem(20, 178, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
-        self.verticalLayout.addItem(spacerItem2)
-        self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
-        spacerItem3 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_2.addItem(spacerItem3)
-        self.pushButton = QtWidgets.QPushButton(self)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding,
-                                           QtWidgets.QSizePolicy.MinimumExpanding)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.pushButton.sizePolicy().hasHeightForWidth())
-        self.pushButton.setSizePolicy(sizePolicy)
-        self.pushButton.setMinimumSize(QtCore.QSize(225, 180))
-        self.pushButton.setBaseSize(QtCore.QSize(0, 0))
-        font = QtGui.QFont()
-        font.setPointSize(16)
-        self.pushButton.setFont(font)
-        self.pushButton.setIconSize(QtCore.QSize(20, 20))
-        self.pushButton.setObjectName("pushButton")
-        self.horizontalLayout_2.addWidget(self.pushButton)
-        spacerItem4 = QtWidgets.QSpacerItem(180, 20, QtWidgets.QSizePolicy.MinimumExpanding,
-                                            QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_2.addItem(spacerItem4)
-        self.pushButton_2 = QtWidgets.QPushButton(self)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding,
-                                           QtWidgets.QSizePolicy.MinimumExpanding)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.pushButton_2.sizePolicy().hasHeightForWidth())
-        self.pushButton_2.setSizePolicy(sizePolicy)
-        self.pushButton_2.setMinimumSize(QtCore.QSize(225, 180))
-        font = QtGui.QFont()
-        font.setPointSize(16)
-        self.pushButton_2.setFont(font)
-        self.pushButton_2.setObjectName("pushButton_2")
-        self.horizontalLayout_2.addWidget(self.pushButton_2)
-        spacerItem5 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_2.addItem(spacerItem5)
-        self.verticalLayout.addLayout(self.horizontalLayout_2)
-        spacerItem6 = QtWidgets.QSpacerItem(20, 178, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
-        self.verticalLayout.addItem(spacerItem6)
-        self.horizontalLayout_3 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_3.setSizeConstraint(QtWidgets.QLayout.SetMinimumSize)
-        self.horizontalLayout_3.setObjectName("horizontalLayout_3")
-        spacerItem7 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_3.addItem(spacerItem7)
-        self.label_2 = QtWidgets.QLabel(self)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.label_2.sizePolicy().hasHeightForWidth())
-        self.label_2.setSizePolicy(sizePolicy)
-        self.label_2.setObjectName("label_2")
-        self.horizontalLayout_3.addWidget(self.label_2)
-        self.verticalLayout.addLayout(self.horizontalLayout_3)
+
+        self.header = Header(self, 400, 200)
+        self.verticalLayout.addLayout(self.header.get_layout())
+
+        top_spacer = QtWidgets.QSpacerItem(20, 178, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        self.verticalLayout.addItem(top_spacer)
+
+        self.buttons_layout = QtWidgets.QHBoxLayout()
+        self.buttons_layout.setObjectName("buttons_layout")
+        left_spacer = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.buttons_layout.addItem(left_spacer)
+        self.real_time_button = self._create_button("real_time_button", self.parent().open_real_time)
+        self.buttons_layout.addWidget(self.real_time_button)
+        middle_spacer = QtWidgets.QSpacerItem(180, 20, QtWidgets.QSizePolicy.MinimumExpanding,
+                                              QtWidgets.QSizePolicy.Minimum)
+        self.buttons_layout.addItem(middle_spacer)
+        self.replay_button = self._create_button("replay_button", self.parent().open_replay)
+        self.buttons_layout.addWidget(self.replay_button)
+        right_spacer = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.buttons_layout.addItem(right_spacer)
+        self.verticalLayout.addLayout(self.buttons_layout)
+
+        bottom_spacer = QtWidgets.QSpacerItem(20, 178, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        self.verticalLayout.addItem(bottom_spacer)
+
+        self.footer_layout = QtWidgets.QHBoxLayout()
+        self.footer_layout.setSizeConstraint(QtWidgets.QLayout.SetMinimumSize)
+        self.footer_layout.setObjectName("footer_layout")
+        footer_spacer = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.footer_layout.addItem(footer_spacer)
+        self.footer_label = QtWidgets.QLabel(self)
+        set_size_policy(self.footer_label, QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
+        self.footer_label.setObjectName("footer_label")
+        self.footer_layout.addWidget(self.footer_label)
+        self.verticalLayout.addLayout(self.footer_layout)
 
         self.retranslateUi()
-        #QtCore.QMetaObject.connectSlotsByName(self)
+
+    def _create_button(self, name: str, callback: Callable[[], None]):
+        button = QtWidgets.QPushButton(self)
+        set_minimum_expanding_size_policy(button)
+        button.setMinimumSize(QtCore.QSize(225, 180))
+        button.setBaseSize(QtCore.QSize(0, 0))
+        font = QtGui.QFont()
+        font.setPointSize(16)
+        button.setFont(font)
+        button.setIconSize(QtCore.QSize(20, 20))
+        button.setObjectName(name)
+        button.clicked.connect(callback)
+        return button
 
     def retranslateUi(self):
         _translate = QtCore.QCoreApplication.translate
         self.setWindowTitle(_translate("homewidget", "Form"))
-        self.pushButton.setText(_translate("homewidget", "Real Time"))
-        self.pushButton_2.setText(_translate("homewidget", "Replay"))
-        self.label_2.setText(_translate("homewidget", "GAUL, 2017"))
+        self.real_time_button.setText(_translate("homewidget", "Real Time"))
+        self.replay_button.setText(_translate("homewidget", "Replay"))
+        self.footer_label.setText(_translate("homewidget", "GAUL, 2017"))

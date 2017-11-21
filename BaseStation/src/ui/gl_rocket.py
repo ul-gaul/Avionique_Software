@@ -3,15 +3,13 @@ from OpenGL.GLU import *
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QOpenGLWidget, QSizePolicy
 
+from src.ui.utils import set_minimum_expanding_size_policy
+
 
 class GlRocket(QOpenGLWidget):
     def __init__(self, parent):
         super().__init__(parent)
-        size_policy = QSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.MinimumExpanding)
-        size_policy.setHorizontalStretch(0)
-        size_policy.setVerticalStretch(0)
-        size_policy.setHeightForWidth(self.sizePolicy().hasHeightForWidth())
-        self.setSizePolicy(size_policy)
+        set_minimum_expanding_size_policy(self)
         self.setMinimumSize(QtCore.QSize(200, 400))
         self.setObjectName("GlRocket")
         self.vertices = [(0.3, 0, 1), (0.3, 0, 0), (0.7, 0, 0.1), (0.7, 0, 0.5)]
