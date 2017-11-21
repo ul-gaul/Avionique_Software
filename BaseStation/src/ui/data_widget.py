@@ -13,7 +13,7 @@ import numpy as np
 
 class DataWidget(QtWidgets.QWidget):
 
-    def __init__(self, parent=None):
+    def __init__(self, parent):
         super().__init__(parent)
         self.set_black_on_white_graph_colors()
         self.thermometer = None

@@ -4,6 +4,7 @@ import struct
 import serial
 from threading import Thread
 
+from src.domain_error import DomainError
 from src.producer import Producer
 from src.rocket_packet import RocketPacket
 from src.csv_file_writer import CsvFileWriter
@@ -26,7 +27,10 @@ class SerialReader(Producer):
         self.thread = Thread(target=self.run)
 
     def start(self):
-        self.port.port = self.detect_serial()[0]
+        ports = self.detect_serial_ports()
+        if len(ports) < 1:
+            raise DomainError("Aucun récepteur connecté")
+        self.port.port = ports[0]
         self.port.open()
         self.is_running = True
         self.thread.start()
@@ -59,7 +63,7 @@ class SerialReader(Producer):
             csv_file_writer.save()
 
     @staticmethod
-    def detect_serial():
+    def detect_serial_ports():
         """ Lists serial port names
         :raises EnvironmentError
             On unsopported or unknown platforms

@@ -5,6 +5,7 @@ from PyQt5.QtGui import QIcon
 from src.ui.homewidget import HomeWidget
 from src.ui.real_time_widget import RealTimeWidget
 from src.ui.replay_widget import ReplayWidget
+from src.domain_error import DomainError
 from src.real_time_controller import RealTimeController
 from src.replay_controller import ReplayController
 
@@ -16,10 +17,16 @@ class MainWindow(QtWidgets.QMainWindow):
         self.controller = None
         self.central_widget = QtWidgets.QStackedWidget()
         self.setCentralWidget(self.central_widget)
+
+        self.status_bar = QtWidgets.QStatusBar(self)
+        self.status_bar.setObjectName("status_bar")
+        self.setStatusBar(self.status_bar)
+
         self.home_widget = HomeWidget(self)
         self.real_time_widget = None
         self.replay_widget = None
         self.menu_bar = None
+        # self.status_bar = None
         self.files_menu = None
         self.new_acquisition_action = None
         self.open_csv_file_action = None
@@ -77,3 +84,6 @@ class MainWindow(QtWidgets.QMainWindow):
         file = open(stylesheet_path, 'r')
         stylesheet = file.read()
         self.setStyleSheet(stylesheet)
+
+    def notify(self, domain_error: DomainError):
+        self.status_bar.showMessage(domain_error.message, 3000)

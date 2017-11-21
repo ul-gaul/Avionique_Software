@@ -77,3 +77,8 @@ QPushButton
 	border-radius: 8px;
 	color: white;
 }
+
+QStatusBar
+{
+    background: rgb(240, 240, 240);
+}

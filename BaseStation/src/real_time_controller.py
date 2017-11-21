@@ -1,6 +1,7 @@
 from src.ui.real_time_widget import RealTimeWidget
 from src.controller import Controller
 from src.serial_reader import SerialReader
+from src.domain_error import DomainError
 
 
 class RealTimeController(Controller):
@@ -19,7 +20,11 @@ class RealTimeController(Controller):
         # FIXME: this brakes the command query separation principle
         self.is_running = not self.is_running
         if self.is_running:
-            self.start_thread()
+            try:
+                self.start_thread()
+            except DomainError:
+                self.is_running = not self.is_running
+                raise
         else:
             self.stop_thread()
         return self.is_running
