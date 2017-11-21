@@ -1,6 +1,7 @@
-from PyQt5 import QtWidgets, QtCore, QtGui
+from PyQt5 import QtWidgets, QtCore
 import pyqtgraph as pqtg
 from src.ui.gl_rocket import GlRocket
+from src.ui.header import Header
 from src.ui.thermometer import Thermometer
 from src.ui.led import Led
 from src.ui.utils import *
@@ -25,7 +26,6 @@ class DataWidget(QtWidgets.QWidget):
         self.horizontalLayout_5 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_5.setObjectName("horizontalLayout_5")
         self.horizontalLayout.addLayout(self.horizontalLayout_5)
-        self.label.setPixmap(QtGui.QPixmap("resources/logo.jpg"))
 
         self.graphicsView.plotItem.setTitle("Altitude")
         self.graphicsView.plotItem.setLabel("bottom", "Temps", "Sec")
@@ -69,20 +69,8 @@ class DataWidget(QtWidgets.QWidget):
         self.verticalLayout_4 = QtWidgets.QVBoxLayout(self)
         self.verticalLayout_4.setObjectName("verticalLayout_4")
 
-        self.horizontalLayout_1 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_1.setObjectName("horizontalLayout_1")
-        spacerItem = QtWidgets.QSpacerItem(30, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_1.addItem(spacerItem)
-        self.label = QtWidgets.QLabel(self)
-        set_minimum_size_policy(self.label)
-        self.label.setMaximumSize(QtCore.QSize(150, 75))
-        self.label.setText("")
-        self.label.setScaledContents(True)
-        self.label.setObjectName("label")
-        self.horizontalLayout_1.addWidget(self.label)
-        spacerItem1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_1.addItem(spacerItem1)
-        self.verticalLayout_4.addLayout(self.horizontalLayout_1)
+        self.header = Header(self, 150, 75)
+        self.verticalLayout_4.addLayout(self.header.get_layout())
 
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
