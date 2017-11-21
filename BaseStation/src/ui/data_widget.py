@@ -61,7 +61,6 @@ class DataWidget(QtWidgets.QWidget):
 
     def setup_ui(self):
         self.setObjectName("Form")
-        self.resize(1229, 747)
         self.main_layout = QtWidgets.QVBoxLayout(self)
         self.main_layout.setObjectName("main_layout")
 

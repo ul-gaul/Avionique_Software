@@ -50,6 +50,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.central_widget.setCurrentWidget(widget)
         self.setup_menu_bar()
         self.set_stylesheet("resources/data.css")
+        self.showMaximized()
 
     def setup_menu_bar(self):
         self.menu_bar = QtWidgets.QMenuBar(self)
