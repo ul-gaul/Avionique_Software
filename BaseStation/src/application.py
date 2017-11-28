@@ -7,8 +7,8 @@ from src.ui.mainwindow import MainWindow
 class Application:
 
     def __init__(self):
-        self.appUserModelId = "ca.ulaval.gaul.basestation"  # must be a unicode string
-        ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(self.appUserModelId)  # todo: if windows
+        if sys.platform.startswith('win'):
+            Application.set_app_user_model_id()
 
         Application.override_exception_hook()
 
@@ -16,6 +16,11 @@ class Application:
         self.window = MainWindow()
         self.window.show()
         sys.exit(self.app.exec_())
+        
+    @staticmethod
+    def set_app_user_model_id():
+        app_user_model_id = "ca.ulaval.gaul.basestation"  # must be a unicode string
+        ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(app_user_model_id)
 
     @staticmethod
     def override_exception_hook():
