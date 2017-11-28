@@ -16,7 +16,7 @@ class Application:
         self.window = MainWindow()
         self.window.show()
         sys.exit(self.app.exec_())
-        
+
     @staticmethod
     def set_app_user_model_id():
         app_user_model_id = "ca.ulaval.gaul.basestation"  # must be a unicode string

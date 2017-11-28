@@ -77,7 +77,7 @@ class Thermometer(QtWidgets.QWidget):
         color_gradient.setMaximumSize(QtCore.QSize(100, 400))
         color_gradient.setText("")
         color_gradient.setObjectName("thermometer_color_gradient")
-        color_gradient.setPixmap(QtGui.QPixmap("resources/gradient.png"))
+        color_gradient.setPixmap(QtGui.QPixmap("src/resources/gradient.png"))
         return color_gradient
 
     def _create_vertical_slider(self):
