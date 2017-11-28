@@ -25,6 +25,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.open_csv_file_action = None
         self.central_widget.addWidget(self.home_widget)
         self.setWindowIcon(QIcon("src/resources/logo.jpg"))
+        self.setWindowTitle("GAUL BaseStation")
         self.set_stylesheet("src/resources/mainwindow.css")
 
     def open_real_time(self):
