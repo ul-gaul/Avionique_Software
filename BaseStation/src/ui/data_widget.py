@@ -11,6 +11,7 @@ import pyqtgraph.opengl as gl
 import numpy as np
 
 
+# FIXME: make this class abstract
 class DataWidget(QtWidgets.QWidget):
 
     def __init__(self, parent=None):

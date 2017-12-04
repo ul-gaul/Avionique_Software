@@ -10,6 +10,7 @@ from src.csv_file_writer import CsvFileWriter
 
 
 class SerialReader(Producer):
+    # FIXME: pass the FileWriter as a DataPersister interface instead of the file_path
     def __init__(self, save_file_path=None, baudrate=57600, start_character=b's', sampling_frequency=1):
         super().__init__()
         self.save_file_path = save_file_path
@@ -87,6 +88,7 @@ class SerialReader(Producer):
                 pass
         return result
 
+    # FIXME: extract to a Checksum class, implementing a ValidationStrategy interface
     @staticmethod
     def validate_checksum(data_array):
         checksum = sum(data_array) % 256

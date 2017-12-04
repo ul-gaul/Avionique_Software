@@ -5,6 +5,7 @@ from PyQt5 import QtWidgets
 from src.consumer import Consumer
 
 
+# FIXME: this class should be abstract
 class Controller:
     def __init__(self):
         self.data_widget = None
