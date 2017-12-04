@@ -28,8 +28,8 @@ class RealTimeWidget(DataWidget):
         except DomainError as e:
             self.main_window.notify(e)
 
-    def update_button_text(self, is_running: bool):
-        if is_running:
+    def update_button_text(self, is_acquisition_running: bool):
+        if is_acquisition_running:
             self.start_stop_button.setText("Arrêter l'acquisition")
         else:
             self.start_stop_button.setText("Démarrer l'acquisition")
