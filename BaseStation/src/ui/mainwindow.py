@@ -24,12 +24,14 @@ class MainWindow(QtWidgets.QMainWindow):
         self.new_acquisition_action = None
         self.open_csv_file_action = None
         self.central_widget.addWidget(self.home_widget)
-        self.setWindowIcon(QIcon("resources/logo.jpg"))
-        self.set_stylesheet("resources/mainwindow.css")
+        self.setWindowIcon(QIcon("src/resources/logo.jpg"))
+        self.setWindowTitle("GAUL BaseStation")
+        self.set_stylesheet("src/resources/mainwindow.css")
 
     def open_real_time(self):
+        placeholder_path = "./src/resources/" + d.now().strftime("%Y-%m-%d_%Hh%Mm") + ".csv"
         filename, _ = QtWidgets.QFileDialog.getSaveFileName(caption="Save File",
-                                                            directory=d.now().strftime("%Y-%m-%d_%Hh%Mm")+".csv",
+                                                            directory=placeholder_path,
                                                             filter="All Files (*);; CSV Files (*.csv)")
         print(filename)
         self.real_time_widget = RealTimeWidget(self)
@@ -49,7 +51,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.central_widget.addWidget(widget)
         self.central_widget.setCurrentWidget(widget)
         self.setup_menu_bar()
-        self.set_stylesheet("resources/data.css")
+        self.set_stylesheet("src/resources/data.css")
         self.showMaximized()
 
     def setup_menu_bar(self):
