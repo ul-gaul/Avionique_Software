@@ -14,6 +14,7 @@ class FileReader(Producer):
         self.data = []
 
         with open(file, newline='') as csvfile:
+            # TODO: standardize the csv format used by the FileReader and the FileWriter
             spamreader = csv.reader(csvfile, delimiter=',', quoting=csv.QUOTE_NONNUMERIC)
             next(spamreader, None)
             for row in spamreader:
