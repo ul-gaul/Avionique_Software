@@ -29,10 +29,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.set_stylesheet("src/resources/mainwindow.css")
 
     def open_real_time(self):
+        placeholder_path = "./src/resources/" + d.now().strftime("%Y-%m-%d_%Hh%Mm") + ".csv"
         filename, _ = QtWidgets.QFileDialog.getSaveFileName(caption="Save File",
-                                                            directory="./src/resources/" +
-                                                                      d.now().strftime("%Y-%m-%d_%Hh%Mm") +
-                                                                      ".csv",
+                                                            directory=placeholder_path,
                                                             filter="All Files (*);; CSV Files (*.csv)")
         print(filename)
         self.real_time_widget = RealTimeWidget(self)
