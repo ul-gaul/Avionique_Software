@@ -1,6 +1,7 @@
 import unittest
-from tests.consumer_test import ConsumerTest
-from tests.csv_file_writer_test import CsvFileWriterTest
+from tests.test_consumer import ConsumerTest
+from tests.test_csv_file_writer import CsvFileWriterTest
+from tests.test_serial_reader import SerialReaderTest
 
 if __name__ == "__main__":
-    unittest.main() # TODO: use test discovery
+    unittest.main()  # TODO: use test discovery

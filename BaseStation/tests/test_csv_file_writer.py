@@ -1,6 +1,8 @@
 import unittest
 import csv
-import os, errno
+import os
+import errno
+
 from src.rocket_packet import RocketPacket
 from src.csv_file_writer import CsvFileWriter
 

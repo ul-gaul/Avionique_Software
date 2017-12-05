@@ -8,13 +8,14 @@ from src.rocket_packet import RocketPacket
 class ConsumerTest(unittest.TestCase):
 
     def setUp(self):
+        self.sampling_frequency = 1
         self.producer = Producer()
-        self.consumer = Consumer(self.producer)
+        self.consumer = Consumer(self.producer, self.sampling_frequency)
 
     def test_constructor(self):
         self.assertEqual(self.consumer.producer, self.producer, "The Consumer's producer property wasn't set correctly")
         self.assertFalse(self.consumer.has_new_data, "The Consumer's has_new_data property should be False")
-        self.assertEqual(set(RocketPacket().keys()), set(self.consumer.data.keys()))
+        self.assertTrue(set(RocketPacket().keys()).issubset(set(self.consumer.data.keys())))
 
     def test_getitem(self):
         time_stamps = [0, 1, 2, 3, 4, 5]

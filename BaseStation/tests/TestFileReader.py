@@ -1,7 +1,7 @@
 # pylint: skip-file
-
-from BaseStationCode.src.FileReader import FileReader
 import time
+
+from src.file_reader import FileReader
 
 myFileReader = FileReader("resources/TestFile.csv")
 
