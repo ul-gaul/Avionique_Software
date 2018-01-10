@@ -1,4 +1,5 @@
 import unittest
+from tests.persistence.test_csv_data_persister import CsvDataPersisterTest
 from tests.test_consumer import ConsumerTest
 from tests.test_csv_file_writer import CsvFileWriterTest
 from tests.test_serial_reader import SerialReaderTest
