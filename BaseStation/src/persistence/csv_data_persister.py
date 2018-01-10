@@ -14,7 +14,7 @@ class CsvDataPersister(DataPersister):
         headers = RocketPacket.keys()
 
         with open(self.save_file_path, "w", newline='') as csv_file:
-            writer = csv.DictWriter(csv_file, fieldnames=headers, delimiter=',')
+            writer = csv.DictWriter(csv_file, fieldnames=headers, delimiter=',', quoting=csv.QUOTE_NONNUMERIC)
             writer.writeheader()
             for packet in rocket_packets:
                 writer.writerow(packet.__dict__)
