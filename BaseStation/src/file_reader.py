@@ -18,7 +18,7 @@ class FileReader(Producer):
             spamreader = csv.reader(csvfile, delimiter=',', quoting=csv.QUOTE_NONNUMERIC)
             next(spamreader, None)
             for row in spamreader:
-                if len(row) > 35:
+                if len(row) >= len(RocketPacket.keys()):
                     self.data += [RocketPacket(row)]
 
         csvfile.close()
