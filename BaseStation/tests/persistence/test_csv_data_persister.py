@@ -11,9 +11,6 @@ class CsvDataPersisterTest(unittest.TestCase):
 
     FILENAME = "tmp.csv"
 
-    def setUp(self):
-        pass
-
     def test_save(self):
         number_of_fields = len(RocketPacket.keys())
         data_list0 = [i*10 for i in range(number_of_fields)]
