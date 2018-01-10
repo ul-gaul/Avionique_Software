@@ -4,16 +4,16 @@ import struct
 import serial
 from threading import Thread
 
+from src.data_persister import DataPersister
 from src.producer import Producer
 from src.rocket_packet import RocketPacket
-from src.csv_file_writer import CsvFileWriter
 
 
 class SerialReader(Producer):
-    # FIXME: pass the FileWriter as a DataPersister interface instead of the file_path
-    def __init__(self, save_file_path=None, baudrate=57600, start_character=b's', sampling_frequency=1):
+
+    def __init__(self, data_persister: DataPersister, baudrate=57600, start_character=b's', sampling_frequency=1):
         super().__init__()
-        self.save_file_path = save_file_path
+        self.data_persister = data_persister
         self.port = serial.Serial()
         self.port.baudrate = baudrate
         self.port.timeout = sampling_frequency
@@ -55,9 +55,7 @@ class SerialReader(Producer):
 
     def stop(self):
         super().stop()
-        if self.save_file_path is not None:
-            csv_file_writer = CsvFileWriter(self.save_file_path, self.flightData)
-            csv_file_writer.save()
+        self.data_persister.save(self.flightData)   # TODO: unit test this interaction
 
     @staticmethod
     def detect_serial():
