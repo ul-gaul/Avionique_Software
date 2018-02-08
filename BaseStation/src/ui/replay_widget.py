@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QPushButton
-from ui.data_widget import DataWidget
-from ui.ExtendedQSlider import ExtendedQSlider
+from src.ui.data_widget import DataWidget
+from src.ui.ExtendedQSlider import ExtendedQSlider
 
 
 class ReplayWidget(DataWidget):

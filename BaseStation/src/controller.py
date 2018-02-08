@@ -2,7 +2,7 @@ from threading import Thread
 import time
 from PyQt5 import QtWidgets
 
-from consumer import Consumer
+from src.consumer import Consumer
 
 
 # FIXME: this class should be abstract

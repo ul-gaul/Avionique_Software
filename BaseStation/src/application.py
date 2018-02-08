@@ -1,7 +1,7 @@
 import sys
 import ctypes
 from PyQt5 import QtWidgets
-from ui.mainwindow import MainWindow
+from src.ui.mainwindow import MainWindow
 
 
 class Application:

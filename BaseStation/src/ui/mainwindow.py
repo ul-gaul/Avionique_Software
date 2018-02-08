@@ -5,11 +5,11 @@ import sys
 from PyQt5.QtWidgets import QMainWindow, QAction, qApp, QApplication
 from PyQt5.QtGui import QIcon
 
-from ui.homewidget import HomeWidget
-from ui.real_time_widget import RealTimeWidget
-from ui.replay_widget import ReplayWidget
-from real_time_controller import RealTimeController
-from replay_controller import ReplayController
+from src.ui.homewidget import HomeWidget
+from src.ui.real_time_widget import RealTimeWidget
+from src.ui.replay_widget import ReplayWidget
+from src.real_time_controller import RealTimeController
+from src.replay_controller import ReplayController
 
 class MainWindow(QtWidgets.QMainWindow):
 
@@ -28,7 +28,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.central_widget.addWidget(self.home_widget)
         self.setWindowIcon(QIcon("src/resources/logo.jpg"))
         self.setWindowTitle("GAUL BaseStation")
-        self.set_stylesheet("resources/mainwindow.css")
+        self.set_stylesheet("src/resources/mainwindow.css")
 
 
     def add_sim(self):
@@ -70,7 +70,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.central_widget.addWidget(widget)
         self.central_widget.setCurrentWidget(widget)
         self.setup_menu_bar()
-        self.set_stylesheet("resources/data.css")
+        self.set_stylesheet("src/resources/data.css")
         self.showMaximized()
 
     def setup_menu_bar(self):

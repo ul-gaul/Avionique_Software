@@ -1,11 +1,11 @@
 from PyQt5 import QtWidgets, QtCore
 import pyqtgraph as pqtg
-from ui.gl_rocket import GlRocket
-from ui.header import Header
-from ui.thermometer import Thermometer
-from ui.led import Led
-from ui.utils import *
-from ui.mainwindow import *
+from src.ui.gl_rocket import GlRocket
+from src.ui.header import Header
+from src.ui.thermometer import Thermometer
+from src.ui.led import Led
+from src.ui.utils import *
+from src.ui.mainwindow import *
 from OpenGL.GL import *
 from OpenGL.GLU import *
 import pyqtgraph.opengl as gl

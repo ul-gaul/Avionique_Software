@@ -1,6 +1,6 @@
-from ui.real_time_widget import RealTimeWidget
-from controller import Controller
-from serial_reader import SerialReader
+from src.ui.real_time_widget import RealTimeWidget
+from src.controller import Controller
+from src.serial_reader import SerialReader
 
 
 class RealTimeController(Controller):
