@@ -1,6 +1,6 @@
 # pylint: skip-file
-from src.producer import Producer
-from src.rocket_packet import RocketPacket
+from producer import Producer
+from rocket_packet import RocketPacket
 import threading
 import time
 import csv

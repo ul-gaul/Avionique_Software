@@ -1,3 +1,3 @@
-from src.application import Application
+from application import Application
 
 Application()

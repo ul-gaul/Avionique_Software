@@ -1,15 +1,15 @@
 from PyQt5 import QtWidgets, QtCore
 import pyqtgraph as pqtg
-from src.ui.gl_rocket import GlRocket
-from src.ui.header import Header
-from src.ui.thermometer import Thermometer
-from src.ui.led import Led
-from src.ui.utils import *
+from ui.gl_rocket import GlRocket
+from ui.header import Header
+from ui.thermometer import Thermometer
+from ui.led import Led
+from ui.utils import *
+from ui.mainwindow import *
 from OpenGL.GL import *
 from OpenGL.GLU import *
 import pyqtgraph.opengl as gl
 import numpy as np
-
 
 # FIXME: make this class abstract
 class DataWidget(QtWidgets.QWidget):
@@ -215,6 +215,9 @@ class DataWidget(QtWidgets.QWidget):
 
     def draw_map(self, eastings: list, northings: list):
         self.positions_on_map.setData(eastings, northings)
+
+    def show_simulation(self, time, altitude):
+        self.graphicsView.plot(time, altitude, pen=pqtg.mkPen(color='b', width=3))
 
     def rotate_rocket_model(self, w, x, y, z):
         #tr = pqtg.Transform3D()

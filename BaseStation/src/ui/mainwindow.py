@@ -1,13 +1,15 @@
 from datetime import datetime as d
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtGui import QIcon
+import sys
+from PyQt5.QtWidgets import QMainWindow, QAction, qApp, QApplication
+from PyQt5.QtGui import QIcon
 
-from src.ui.homewidget import HomeWidget
-from src.ui.real_time_widget import RealTimeWidget
-from src.ui.replay_widget import ReplayWidget
-from src.real_time_controller import RealTimeController
-from src.replay_controller import ReplayController
-
+from ui.homewidget import HomeWidget
+from ui.real_time_widget import RealTimeWidget
+from ui.replay_widget import ReplayWidget
+from real_time_controller import RealTimeController
+from replay_controller import ReplayController
 
 class MainWindow(QtWidgets.QMainWindow):
 
@@ -26,7 +28,28 @@ class MainWindow(QtWidgets.QMainWindow):
         self.central_widget.addWidget(self.home_widget)
         self.setWindowIcon(QIcon("src/resources/logo.jpg"))
         self.setWindowTitle("GAUL BaseStation")
-        self.set_stylesheet("src/resources/mainwindow.css")
+        self.set_stylesheet("resources/mainwindow.css")
+
+
+    def add_sim(self):
+        filename, _ = QtWidgets.QFileDialog.getOpenFileName(caption="Open File",
+                                                            filter="All Files (*);; CSV Files (*.csv)")
+        with open(filename) as file:
+            datatemp = file.read().splitlines()
+
+        time = []
+        altitude = []
+        for dat in datatemp:
+            data = dat.split(",")
+            time.append(float(data[0]))
+            altitude.append(float(data[1]))
+
+        self.central_widget.currentWidget().show_simulation(time, altitude)
+
+        print(time)
+        print(altitude)
+        print(len(time))
+        print(len(altitude))
 
     def open_real_time(self):
         placeholder_path = "./src/resources/" + d.now().strftime("%Y-%m-%d_%Hh%Mm") + ".csv"
@@ -51,10 +74,23 @@ class MainWindow(QtWidgets.QMainWindow):
         self.central_widget.addWidget(widget)
         self.central_widget.setCurrentWidget(widget)
         self.setup_menu_bar()
-        self.set_stylesheet("src/resources/data.css")
+        self.set_stylesheet("resources/data.css")
         self.showMaximized()
 
     def setup_menu_bar(self):
+
+        exitAct = QAction('&Quitter', self)
+        exitAct.setShortcut('Ctrl+Q')
+        exitAct.setStatusTip("Quitte l'application")
+        exitAct.triggered.connect(self.close)
+
+        opensimAct = QAction('&Ajouter une simulation', self)
+        opensimAct.setShortcut('Ctrl+A')
+        opensimAct.setStatusTip("Ajoute les données d'une simulation OpenRocket aux graphiques")
+        opensimAct.triggered.connect(self.add_sim)
+
+        self.statusBar()
+
         self.menu_bar = QtWidgets.QMenuBar(self)
         self.menu_bar.setGeometry(QtCore.QRect(0, 0, 1229, 26))
         self.menu_bar.setObjectName("menu_bar")
@@ -71,8 +107,12 @@ class MainWindow(QtWidgets.QMainWindow):
         self.open_csv_file_action.setObjectName("open_csv_file_action")
         self.open_csv_file_action.setText("Ouvrir un fichier CSV")
 
+
+
         self.files_menu.addAction(self.new_acquisition_action)
         self.files_menu.addAction(self.open_csv_file_action)
+        self.files_menu.addAction(opensimAct)
+        self.files_menu.addAction(exitAct)
         self.menu_bar.addAction(self.files_menu.menuAction())
 
     def set_stylesheet(self, stylesheet_path):

@@ -1,5 +1,5 @@
 from PyQt5 import QtWidgets, QtCore, QtGui
-from src.ui.utils import set_minimum_expanding_size_policy
+from ui.utils import set_minimum_expanding_size_policy
 
 
 class Thermometer(QtWidgets.QWidget):

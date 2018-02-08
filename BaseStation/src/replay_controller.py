@@ -1,7 +1,7 @@
-from src.consumer import Consumer
-from src.controller import Controller
-from src.file_reader import FileReader
-from src.ui.replay_widget import ReplayWidget
+from consumer import Consumer
+from controller import Controller
+from file_reader import FileReader
+from ui.replay_widget import ReplayWidget
 
 
 class ReplayController(Controller):

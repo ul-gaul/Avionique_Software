@@ -1,5 +1,5 @@
 from PyQt5 import QtWidgets, QtCore
-from src.ui.utils import set_size_policy, read_stylesheet
+from ui.utils import set_size_policy, read_stylesheet
 
 
 class Led(QtWidgets.QWidget):
@@ -9,8 +9,8 @@ class Led(QtWidgets.QWidget):
         self.layout = QtWidgets.QHBoxLayout()
         self.layout.setObjectName("led_layout")
 
-        self.on_stylesheet = read_stylesheet("src/resources/led_on.css")
-        self.off_stylesheet = read_stylesheet("src/resources/led_off.css")
+        self.on_stylesheet = read_stylesheet("resources/led_on.css")
+        self.off_stylesheet = read_stylesheet("resources/led_off.css")
 
         self.light_bulb = QtWidgets.QPushButton(self)
         set_size_policy(self.light_bulb, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)

@@ -1,5 +1,5 @@
-from src.ui.data_widget import DataWidget
-from src.ui.utils import set_minimum_expanding_size_policy
+from ui.data_widget import DataWidget
+from ui.utils import set_minimum_expanding_size_policy
 from PyQt5.QtWidgets import QLCDNumber, QPushButton
 
 

@@ -1,8 +1,8 @@
 from typing import Callable
 from PyQt5 import QtWidgets, QtCore, QtGui
 
-from src.ui.utils import *
-from src.ui.header import Header
+from ui.utils import *
+from ui.header import Header
 
 
 class HomeWidget(QtWidgets.QWidget):

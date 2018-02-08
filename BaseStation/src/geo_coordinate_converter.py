@@ -1,5 +1,5 @@
 from pyproj import Proj
-from src.utm_zone import UTMZone
+from utm_zone import UTMZone
 
 
 class GeoCoordinateConverter:
