@@ -28,6 +28,7 @@ class DataWidget(QtWidgets.QWidget):
         self.graphicsView.plotItem.setLabel("bottom", "Temps", "Sec")
         self.graphicsView.plotItem.setLabel("left", "Altitude (ft)")
         self.altitude_curve = self.graphicsView.plot([0], [0], pen=pqtg.mkPen(color='k', width=3))
+        self.simulation_curve = None
 
         self.graphicsView_2.plotItem.setTitle("Position relative au camp")
         self.graphicsView_2.plotItem.setLabel("bottom", "Est", "m")
@@ -217,10 +218,10 @@ class DataWidget(QtWidgets.QWidget):
         self.positions_on_map.setData(eastings, northings)
 
     def show_simulation(self, time, altitude):
-        self.graphicsView.plot(time, altitude, pen=pqtg.mkPen(color='b', width=3))
-
-    def erase_simulation(self):
-        self.graphicsView.clear()
+        if self.simulation_curve is None:
+            self.simulation_curve = self.graphicsView.plot(time, altitude, pen=pqtg.mkPen(color='b', width=3))
+        else:
+            self.simulation_curve.setData(time, altitude)
 
     def rotate_rocket_model(self, w, x, y, z):
         #tr = pqtg.Transform3D()

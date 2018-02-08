@@ -32,7 +32,6 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
     def add_sim(self):
-        self.central_widget.currentWidget().erase_simulation()
         filename, _ = QtWidgets.QFileDialog.getOpenFileName(caption="Open File",
                                                             filter="All Files (*);; CSV Files (*.csv)")
         with open(filename) as file:
