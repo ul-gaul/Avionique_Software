@@ -32,6 +32,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
     def add_sim(self):
+        self.central_widget.currentWidget().erase_simulation()
         filename, _ = QtWidgets.QFileDialog.getOpenFileName(caption="Open File",
                                                             filter="All Files (*);; CSV Files (*.csv)")
         with open(filename) as file:
@@ -45,11 +46,7 @@ class MainWindow(QtWidgets.QMainWindow):
             altitude.append(float(data[1]))
 
         self.central_widget.currentWidget().show_simulation(time, altitude)
-
-        print(time)
-        print(altitude)
-        print(len(time))
-        print(len(altitude))
+        #TODO: Ajouter le nom de la simulation dans le status bar
 
     def open_real_time(self):
         placeholder_path = "./src/resources/" + d.now().strftime("%Y-%m-%d_%Hh%Mm") + ".csv"

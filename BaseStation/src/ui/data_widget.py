@@ -219,6 +219,9 @@ class DataWidget(QtWidgets.QWidget):
     def show_simulation(self, time, altitude):
         self.graphicsView.plot(time, altitude, pen=pqtg.mkPen(color='b', width=3))
 
+    def erase_simulation(self):
+        self.graphicsView.clear()
+
     def rotate_rocket_model(self, w, x, y, z):
         #tr = pqtg.Transform3D()
         #tr.rotate(w, x, y, z)
