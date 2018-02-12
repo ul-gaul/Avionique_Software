@@ -53,15 +53,14 @@ class SerialDataProducer(DataProducer):
                     print("Invalid packet")
         self.port.close()
 
-    def stop(self):
-        super().stop()
-        self.data_persister.save(self.flightData)   # TODO: unit test this interaction
+    def save(self, filename: str):
+        self.data_persister.save(filename, self.flightData)  # TODO: unit test this interaction
 
     @staticmethod
     def detect_serial():
         """ Lists serial port names
         :raises EnvironmentError
-            On unsopported or unknown platforms
+            On unsupported or unknown platforms
         :returns:
             A list of the serial ports available on the system
         """

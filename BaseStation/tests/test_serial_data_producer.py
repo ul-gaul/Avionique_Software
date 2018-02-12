@@ -9,15 +9,14 @@ class SerialDataProducerTest(unittest.TestCase):
 
     SAVE_FILE_PATH = "foo/bar.csv"
 
-    @unittest.skip("Can't test this without starting the thread")
-    def test_stop_calls_data_persister(self):
-        data_persister = DataPersister(self.SAVE_FILE_PATH)
+    def test_save_should_call_DataPersister_with_flight_data(self):
+        data_persister = DataPersister()
         data_persister.save = MagicMock()
         serial_data_producer = SerialDataProducer(data_persister)
 
-        # serial_data_producer.stop()
+        serial_data_producer.save(self.SAVE_FILE_PATH)
 
-        data_persister.save.assert_called_with(serial_data_producer.flightData)
+        data_persister.save.assert_called_with(self.SAVE_FILE_PATH, serial_data_producer.flightData)
 
     def test_validate_checksum_invalid(self):
         data_array = [0]

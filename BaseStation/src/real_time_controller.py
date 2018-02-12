@@ -10,7 +10,7 @@ class RealTimeController(Controller):
         super().__init__()
         self.data_widget = real_time_widget
         self.data_widget.set_target_altitude(self.target_altitude)
-        csv_data_persister = CsvDataPersister(save_file_path)   # FIXME: this should not be instantiated here
+        csv_data_persister = CsvDataPersister()   # FIXME: this should not be instantiated here
         self.data_producer = SerialDataProducer(csv_data_persister, sampling_frequency=self.sampling_frequency)
         self.ui_update_functions.append(self.update_timer)
 

@@ -1,26 +1,16 @@
-from src.data_producer import DataProducer
-from src.rocket_packet import RocketPacket
 import threading
 import time
-import csv
 import queue
+
+from src.data_producer import DataProducer
+from src.data_persister import DataPersister
 
 
 class FileDataProducer(DataProducer):
 
-    def __init__(self, file):
+    def __init__(self, data_persister: DataPersister, filename: str):
         super().__init__()
-        self.data = []
-
-        with open(file, newline='') as csvfile:
-            # TODO: standardize the csv format used by the FileDataProducer and the FileWriter
-            spamreader = csv.reader(csvfile, delimiter=',', quoting=csv.QUOTE_NONNUMERIC)
-            next(spamreader, None)
-            for row in spamreader:
-                if len(row) >= len(RocketPacket.keys()):
-                    self.data += [RocketPacket(row)]
-
-        csvfile.close()
+        self.data = data_persister.load(filename)
 
         for packet in self.data:
             self.rocket_packets.put(packet)

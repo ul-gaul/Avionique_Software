@@ -13,7 +13,8 @@ class ConsumerTest(unittest.TestCase):
         self.consumer = Consumer(self.producer, self.sampling_frequency)
 
     def test_constructor(self):
-        self.assertEqual(self.consumer.data_producer, self.producer, "The Consumer's data_producer property wasn't set correctly")
+        self.assertEqual(self.consumer.data_producer, self.producer,
+                         "The Consumer's data_producer property wasn't set correctly")
         self.assertFalse(self.consumer.has_new_data, "The Consumer's has_new_data property should be False")
         self.assertTrue(set(RocketPacket().keys()).issubset(set(self.consumer.data.keys())))
 

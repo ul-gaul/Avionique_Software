@@ -8,32 +8,36 @@ from src.persistence.csv_data_persister import CsvDataPersister
 
 
 class CsvDataPersisterTest(unittest.TestCase):
-
     FILENAME = "tmp.csv"
+    NUMBER_OF_FIELDS = len(RocketPacket.keys())
+    ROCKET_PACKET = []
 
-    def test_save(self):
-        number_of_fields = len(RocketPacket.keys())
-        data_list0 = [i*10 for i in range(number_of_fields)]
-        data_list1 = [i*10 + 1 for i in range(number_of_fields)]
-        data_list2 = [i*10 + 2 for i in range(number_of_fields)]
-        rocket_packets = [RocketPacket(data_list0), RocketPacket(data_list1), RocketPacket(data_list2)]
+    def setUp(self):
+        data_list0 = [i * 10 for i in range(self.NUMBER_OF_FIELDS)]
+        data_list1 = [i * 10 + 1 for i in range(self.NUMBER_OF_FIELDS)]
+        data_list2 = [i * 10 + 2 for i in range(self.NUMBER_OF_FIELDS)]
+        self.ROCKET_PACKET = [RocketPacket(data_list0), RocketPacket(data_list1), RocketPacket(data_list2)]
 
-        writer = CsvDataPersister(self.FILENAME)
-        writer.save(rocket_packets)
+    def test_save_should_write_rocketPacket_keys_as_header(self):
+        persister = CsvDataPersister()
 
-        with open(self.FILENAME, newline='') as file:
-            reader = csv.reader(file, delimiter=',')
+        persister.save(self.FILENAME, self.ROCKET_PACKET)
+
+        with open(self.FILENAME, newline=persister.newline) as file:
+            reader = csv.reader(file, delimiter=persister.delimiter)
             header = next(reader)
-            row1 = next(reader)
-            row2 = next(reader)
-            row3 = next(reader)
+        self.assertEqual(header, RocketPacket.keys())
 
-            self.assertEqual(header, RocketPacket.keys())
-            self.assertEqual(row1, [str(i*10) for i in range(number_of_fields)])
-            self.assertEqual(row2, [str(i*10 + 1) for i in range(number_of_fields)])
-            self.assertEqual(row3, [str(i*10 + 2) for i in range(number_of_fields)])
+    def test_export_import(self):
+        persister = CsvDataPersister()
+
+        persister.save(self.FILENAME, self.ROCKET_PACKET)
+
+        loaded_packets = persister.load(self.FILENAME)
+        self.assertEqual(loaded_packets, self.ROCKET_PACKET)
 
     def tearDown(self):
+        self.ROCKET_PACKET = []
         try:
             os.remove(self.FILENAME)
         except OSError as e:
