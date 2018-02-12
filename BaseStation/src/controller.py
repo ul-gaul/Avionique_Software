@@ -36,6 +36,7 @@ class Controller:
         # TODO: draw plots and update
         self.data_widget.draw_altitude(self.consumer["altitude_feet"])
         self.data_widget.draw_map(self.consumer["easting"], self.consumer["northing"])
+        self.data_widget.draw_voltage(self.consumer["voltage"])
         self.data_widget.rotate_rocket_model(*self.consumer.get_rocket_rotation())
 
     def update_leds(self):
@@ -46,6 +47,8 @@ class Controller:
         self.data_widget.set_led_state(4, self.consumer["power_supply_state_1"][-1])
         self.data_widget.set_led_state(5, self.consumer["power_supply_state_2"][-1])
         self.data_widget.set_led_state(6, self.consumer["payload_board_state_1"][-1])
+
+
 
     def update_thermometer(self):
         self.data_widget.set_thermometer_value(self.consumer.get_average_temperature())
