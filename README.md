@@ -1,6 +1,11 @@
 # GaulAvionique
 Groupe Aérospatial Université Laval, Team Software
 
+## Configuration
+Le script de démarrage est **\BaseStation\src\\_\_main\_\_.py**. Assurez-vous que le "working directory" est **\BaseStation**.
+
+Dans PyCharm, ces paramètres peuvent être configurés dans "_Run -> Edit Configurations..._". 
+
 ## Dépendances
 - Python 3.5
 - pySerial: https://pythonhosted.org/pyserial/pyserial.html#installation
