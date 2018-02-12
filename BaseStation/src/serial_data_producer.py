@@ -5,11 +5,11 @@ import serial
 from threading import Thread
 
 from src.data_persister import DataPersister
-from src.producer import Producer
+from src.data_producer import DataProducer
 from src.rocket_packet import RocketPacket
 
 
-class SerialReader(Producer):
+class SerialDataProducer(DataProducer):
 
     def __init__(self, data_persister: DataPersister, baudrate=57600, start_character=b's', sampling_frequency=1):
         super().__init__()

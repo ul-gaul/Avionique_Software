@@ -1,9 +1,9 @@
 # pylint: skip-file
 import time
 
-from src.file_reader import FileReader
+from src.file_data_producer import FileDataProducer
 
-myFileReader = FileReader("resources/TestFile.csv")
+myFileReader = FileDataProducer("resources/TestFile.csv")
 
 allPacket = myFileReader.get_data()
 

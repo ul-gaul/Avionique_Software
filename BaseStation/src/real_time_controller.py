@@ -1,6 +1,6 @@
 from src.ui.real_time_widget import RealTimeWidget
 from src.controller import Controller
-from src.serial_reader import SerialReader
+from src.serial_data_producer import SerialDataProducer
 from src.persistence.csv_data_persister import CsvDataPersister
 
 
@@ -11,7 +11,7 @@ class RealTimeController(Controller):
         self.data_widget = real_time_widget
         self.data_widget.set_target_altitude(self.target_altitude)
         csv_data_persister = CsvDataPersister(save_file_path)   # FIXME: this should not be instantiated here
-        self.producer = SerialReader(csv_data_persister, sampling_frequency=self.sampling_frequency)
+        self.data_producer = SerialDataProducer(csv_data_persister, sampling_frequency=self.sampling_frequency)
         self.ui_update_functions.append(self.update_timer)
 
     def update_timer(self):
