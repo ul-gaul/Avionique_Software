@@ -77,3 +77,13 @@ QPushButton
 	border-radius: 8px;
 	color: white;
 }
+
+QMessageBox QPushButton
+{
+    background-color: lightgrey;
+    border: 1px solid black;
+    border-radius: 0px;
+    color: black;
+    font-size: 15px;
+    padding: 4px;
+}

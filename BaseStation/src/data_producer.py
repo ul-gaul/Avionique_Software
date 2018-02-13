@@ -2,7 +2,7 @@ import queue
 import abc
 
 
-class Producer:
+class DataProducer:
     __metaclass__ = abc.ABCMeta
 
     def __init__(self):
@@ -12,7 +12,7 @@ class Producer:
 
     @abc.abstractmethod
     def start(self):
-        """Demarre l'acquisition"""
+        """Start acquisition thread"""
         pass
 
     def stop(self):
@@ -31,5 +31,5 @@ class Producer:
 
     @abc.abstractmethod
     def run(self):
-        """Fonction du thread d'acquisition"""
+        """Acquisition thread function"""
         pass
