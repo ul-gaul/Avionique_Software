@@ -1,3 +1,7 @@
+from datetime import datetime
+from PyQt5.QtGui import QCloseEvent
+from PyQt5.QtWidgets import QMessageBox, QFileDialog
+
 from src.ui.real_time_widget import RealTimeWidget
 from src.controller import Controller
 from src.serial_data_producer import SerialDataProducer
@@ -25,3 +29,27 @@ class RealTimeController(Controller):
         else:
             self.stop_thread()
         return self.is_running
+
+    def on_close(self, event: QCloseEvent):
+        # TODO: clean this up then add unit tests
+        self.stop_thread()
+        if self.data_producer.has_unsaved_data():
+            message_box = QMessageBox()
+            should_save = message_box.question(self.data_widget, "BaseStation",
+                                               "Vous avez des données non sauvegardées.\nVoulez-vous les sauvegarder?",
+                                               QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel, QMessageBox.Yes)
+            if should_save == QMessageBox.Yes:
+                placeholder_path = "./src/resources/" + datetime.now().strftime("%Y-%m-%d_%Hh%Mm") + ".csv"
+                filename, _ = QFileDialog.getSaveFileName(caption="Save File", directory=placeholder_path,
+                                                          filter="All Files (*);; CSV Files (*.csv)")
+                if filename == "":
+                    event.ignore()
+                else:
+                    self.data_producer.save(filename)
+                    event.accept()
+            elif should_save == QMessageBox.No:
+                event.accept()
+            else:
+                event.ignore()
+        else:
+            event.accept()

@@ -1,6 +1,7 @@
 from threading import Thread
 import time
-from PyQt5 import QtWidgets
+from PyQt5.QtWidgets import QApplication
+from PyQt5.QtGui import QCloseEvent
 
 from src.consumer import Consumer
 
@@ -28,7 +29,7 @@ class Controller:
                 now = time.time()
                 dt = now - last_time
                 last_time = now
-                QtWidgets.QApplication.processEvents()
+                QApplication.processEvents()
                 if dt < 1.0 / self.sampling_frequency:
                     time.sleep(1.0 / self.sampling_frequency - dt)
 
@@ -65,3 +66,7 @@ class Controller:
         self.is_running = False
         self.thread.join()
         self.data_producer.stop()
+
+    def on_close(self, event: QCloseEvent):
+        self.stop_thread()
+        event.accept()

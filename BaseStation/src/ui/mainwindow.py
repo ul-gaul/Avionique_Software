@@ -1,6 +1,5 @@
-from datetime import datetime as d
 from PyQt5 import QtCore
-from PyQt5.QtWidgets import QMainWindow, QStackedWidget, QFileDialog, QWidget, QMenuBar, QMenu, QAction, QMessageBox
+from PyQt5.QtWidgets import QMainWindow, QStackedWidget, QFileDialog, QWidget, QMenuBar, QMenu, QAction
 from PyQt5.QtGui import QIcon, QCloseEvent
 
 from src.ui.homewidget import HomeWidget
@@ -76,25 +75,7 @@ class MainWindow(QMainWindow):
         self.setStyleSheet(stylesheet)
 
     def closeEvent(self, event: QCloseEvent):
-        # TODO: clean this up
-        if self.has_unsaved_data():
-            save = QMessageBox.question(self, "BaseStation",
-                                        "Vous avez des données non sauvegardées.\nVoulez-vous les sauvegarder?",
-                                        QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel, QMessageBox.Yes)
-            if save == QMessageBox.Yes:
-                placeholder_path = "./src/resources/" + d.now().strftime("%Y-%m-%d_%Hh%Mm") + ".csv"
-                filename, _ = QFileDialog.getSaveFileName(caption="Save File", directory=placeholder_path,
-                                                          filter="All Files (*);; CSV Files (*.csv)")
-                if filename == "":
-                    event.ignore()
-                else:
-                    # TODO: save
-                    event.accept()
-            elif save == QMessageBox.No:
-                event.accept()
-            else:
-                event.ignore()
-
-    def has_unsaved_data(self):
-        # TODO: ask SerialDataProducer for unsaved data
-        return isinstance(self.central_widget.currentWidget(), RealTimeWidget)
+        if self.controller is not None:
+            self.controller.on_close(event)
+        else:
+            event.accept()
