@@ -5,6 +5,7 @@ from src.ui.header import Header
 from src.ui.thermometer import Thermometer
 from src.ui.led import Led
 from src.ui.utils import *
+from src.ui.mainwindow import *
 from OpenGL.GL import *
 from OpenGL.GLU import *
 import pyqtgraph.opengl as gl
@@ -28,6 +29,7 @@ class DataWidget(QtWidgets.QWidget):
         self.graphicsView.plotItem.setLabel("bottom", "Temps", "Sec")
         self.graphicsView.plotItem.setLabel("left", "Altitude (ft)")
         self.altitude_curve = self.graphicsView.plot([0], [0], pen=pqtg.mkPen(color='k', width=3))
+        self.simulation_curve = None
 
         self.graphicsView_2.plotItem.setTitle("Position relative au camp")
         self.graphicsView_2.plotItem.setLabel("bottom", "Est", "m")
@@ -215,6 +217,12 @@ class DataWidget(QtWidgets.QWidget):
 
     def draw_map(self, eastings: list, northings: list):
         self.positions_on_map.setData(eastings, northings)
+
+    def show_simulation(self, time, altitude):
+        if self.simulation_curve is None:
+            self.simulation_curve = self.graphicsView.plot(time, altitude, pen=pqtg.mkPen(color='b', width=3))
+        else:
+            self.simulation_curve.setData(time, altitude)
 
     def rotate_rocket_model(self, w, x, y, z):
         #tr = pqtg.Transform3D()
