@@ -68,5 +68,7 @@ class Controller:
         self.data_producer.stop()
 
     def on_close(self, event: QCloseEvent):
-        self.stop_thread()
+        if self.is_running:
+            self.stop_thread()
+
         event.accept()
