@@ -31,7 +31,7 @@ class RealTimeController(Controller):
         return self.is_running
 
     def on_close(self, event: QCloseEvent):
-        # TODO: clean this up then add unit tests
+        # FIXME: clean this up then add unit tests (also this should probably go in a UI class)
         self.stop_thread()
         if self.data_producer.has_unsaved_data():
             message_box = QMessageBox()
