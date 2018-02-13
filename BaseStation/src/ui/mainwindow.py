@@ -1,8 +1,6 @@
 from datetime import datetime as d
 from PyQt5 import QtWidgets, QtCore
-from PyQt5.QtGui import QIcon
-import sys
-from PyQt5.QtWidgets import QMainWindow, QAction, qApp, QApplication
+from PyQt5.QtWidgets import QAction
 from PyQt5.QtGui import QIcon
 
 from src.ui.homewidget import HomeWidget
@@ -10,6 +8,7 @@ from src.ui.real_time_widget import RealTimeWidget
 from src.ui.replay_widget import ReplayWidget
 from src.real_time_controller import RealTimeController
 from src.replay_controller import ReplayController
+
 
 class MainWindow(QtWidgets.QMainWindow):
 
@@ -30,7 +29,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.setWindowTitle("GAUL BaseStation")
         self.set_stylesheet("src/resources/mainwindow.css")
 
-
     def add_sim(self):
         filename, _ = QtWidgets.QFileDialog.getOpenFileName(caption="Open File",
                                                             filter="All Files (*);; CSV Files (*.csv)")
@@ -45,7 +43,7 @@ class MainWindow(QtWidgets.QMainWindow):
             altitude.append(float(data[1]))
 
         self.central_widget.currentWidget().show_simulation(time, altitude)
-        #TODO: Ajouter le nom de la simulation dans le status bar
+        # TODO: Ajouter le nom de la simulation dans le status bar
 
     def open_real_time(self):
         placeholder_path = "./src/resources/" + d.now().strftime("%Y-%m-%d_%Hh%Mm") + ".csv"
@@ -74,16 +72,15 @@ class MainWindow(QtWidgets.QMainWindow):
         self.showMaximized()
 
     def setup_menu_bar(self):
+        exit_act = QAction('&Quitter', self)
+        exit_act.setShortcut('Ctrl+Q')
+        exit_act.setStatusTip("Quitte l'application")
+        exit_act.triggered.connect(self.close)
 
-        exitAct = QAction('&Quitter', self)
-        exitAct.setShortcut('Ctrl+Q')
-        exitAct.setStatusTip("Quitte l'application")
-        exitAct.triggered.connect(self.close)
-
-        opensimAct = QAction('&Ajouter une simulation', self)
-        opensimAct.setShortcut('Ctrl+A')
-        opensimAct.setStatusTip("Ajoute les données d'une simulation OpenRocket aux graphiques")
-        opensimAct.triggered.connect(self.add_sim)
+        opensim_act = QAction('&Ajouter une simulation', self)
+        opensim_act.setShortcut('Ctrl+A')
+        opensim_act.setStatusTip("Ajoute les données d'une simulation OpenRocket aux graphiques")
+        opensim_act.triggered.connect(self.add_sim)
 
         self.statusBar()
 
@@ -103,12 +100,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.open_csv_file_action.setObjectName("open_csv_file_action")
         self.open_csv_file_action.setText("Ouvrir un fichier CSV")
 
-
-
         self.files_menu.addAction(self.new_acquisition_action)
         self.files_menu.addAction(self.open_csv_file_action)
-        self.files_menu.addAction(opensimAct)
-        self.files_menu.addAction(exitAct)
+        self.files_menu.addAction(opensim_act)
+        self.files_menu.addAction(exit_act)
         self.menu_bar.addAction(self.files_menu.menuAction())
 
     def set_stylesheet(self, stylesheet_path):
