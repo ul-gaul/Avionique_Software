@@ -1,6 +1,6 @@
 from datetime import datetime as d
 from PyQt5 import QtWidgets, QtCore
-from PyQt5.QtGui import QIcon
+from PyQt5.QtGui import QIcon, QCloseEvent
 
 from src.ui.homewidget import HomeWidget
 from src.ui.real_time_widget import RealTimeWidget
@@ -35,7 +35,7 @@ class MainWindow(QtWidgets.QMainWindow):
                                                             filter="All Files (*);; CSV Files (*.csv)")
         print(filename)
         self.real_time_widget = RealTimeWidget(self)
-        self.controller = RealTimeController(self.real_time_widget, filename)
+        self.controller = RealTimeController(self.real_time_widget)
         self.real_time_widget.set_button_callback(self.controller.real_time_button_callback)
         self.open_new_widget(self.real_time_widget)
 
@@ -79,3 +79,13 @@ class MainWindow(QtWidgets.QMainWindow):
         file = open(stylesheet_path, 'r')
         stylesheet = file.read()
         self.setStyleSheet(stylesheet)
+
+    def closeEvent(self, event: QCloseEvent):
+        if isinstance(self.central_widget.currentWidget(), RealTimeWidget):
+            save = QtWidgets.QMessageBox.question(self, "BaseStation", "Vous avez des données non sauvegardées.\nVoulez-vous les sauvegarder?", QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No | QtWidgets.QMessageBox.Cancel, QtWidgets.QMessageBox.Yes)
+            if save == QtWidgets.QMessageBox.Cancel:
+                event.ignore()
+                return
+            elif save == QtWidgets.QMessageBox.Yes:
+                print("saving")
+        event.accept()

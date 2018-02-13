@@ -18,6 +18,16 @@ class SerialDataProducerTest(unittest.TestCase):
 
         data_persister.save.assert_called_with(self.SAVE_FILE_PATH, serial_data_producer.flightData)
 
+    def test_no_unsaved_data_after_save(self):
+        data_persister = DataPersister()
+        data_persister.save = MagicMock()
+        serial_data_producer = SerialDataProducer(data_persister)
+        serial_data_producer.unsaved_data = True
+
+        serial_data_producer.save(self.SAVE_FILE_PATH)
+
+        self.assertFalse(serial_data_producer.has_unsaved_data())
+
     def test_validate_checksum_invalid(self):
         data_array = [0]
 

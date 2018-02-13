@@ -24,6 +24,7 @@ class SerialDataProducer(DataProducer):
         self.format = RocketPacket.format + "B"
 
         self.flightData = []
+        self.unsaved_data = False
         self.thread = Thread(target=self.run)
 
     def start(self):
@@ -45,6 +46,7 @@ class SerialDataProducer(DataProducer):
                         print(rocket_packet)
                         self.rocket_packets.put(rocket_packet)
                         self.flightData.append(rocket_packet)
+                        self.unsaved_data = True
                 except struct.error:
                     """
                     This error can occur if we don't read enough bytes on the serial port or if the packet format is
@@ -54,7 +56,11 @@ class SerialDataProducer(DataProducer):
         self.port.close()
 
     def save(self, filename: str):
-        self.data_persister.save(filename, self.flightData)  # TODO: unit test this interaction
+        self.data_persister.save(filename, self.flightData)
+        self.unsaved_data = False
+
+    def has_unsaved_data(self):
+        return self.unsaved_data
 
     @staticmethod
     def detect_serial():
