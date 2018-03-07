@@ -37,6 +37,7 @@ class Controller:
         # TODO: draw plots and update
         self.data_widget.draw_altitude(self.consumer["altitude_feet"])
         self.data_widget.draw_map(self.consumer["easting"], self.consumer["northing"])
+        self.data_widget.draw_voltage(self.consumer["voltage"])
         self.data_widget.rotate_rocket_model(*self.consumer.get_rocket_rotation())
 
     def update_leds(self):
