@@ -78,6 +78,16 @@ QPushButton
 	color: white;
 }
 
+QMessageBox QPushButton
+{
+    background-color: lightgrey;
+    border: 1px solid black;
+    border-radius: 0px;
+    color: black;
+    font-size: 15px;
+    padding: 4px;
+}
+
 QStatusBar
 {
     background: rgb(240, 240, 240);

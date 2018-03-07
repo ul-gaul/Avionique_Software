@@ -5,12 +5,14 @@ from src.ui.header import Header
 from src.ui.thermometer import Thermometer
 from src.ui.led import Led
 from src.ui.utils import *
+from src.ui.mainwindow import *
 from OpenGL.GL import *
 from OpenGL.GLU import *
 import pyqtgraph.opengl as gl
 import numpy as np
 
 
+# FIXME: make this class abstract
 class DataWidget(QtWidgets.QWidget):
 
     def __init__(self, parent):
@@ -27,6 +29,7 @@ class DataWidget(QtWidgets.QWidget):
         self.graphicsView.plotItem.setLabel("bottom", "Temps", "Sec")
         self.graphicsView.plotItem.setLabel("left", "Altitude (ft)")
         self.altitude_curve = self.graphicsView.plot([0], [0], pen=pqtg.mkPen(color='k', width=3))
+        self.simulation_curve = None
 
         self.graphicsView_2.plotItem.setTitle("Position relative au camp")
         self.graphicsView_2.plotItem.setLabel("bottom", "Est", "m")
@@ -34,6 +37,12 @@ class DataWidget(QtWidgets.QWidget):
         self.graphicsView_2.plotItem.showGrid(x=True, y=True)
         self.positions_on_map = self.graphicsView_2.plot([0], [0], pen=pqtg.mkPen(color='k', width=3))
 
+        self.graphicsView_3.plotItem.setTitle("Battery tension")
+        self.graphicsView_3.plotItem.setLabel("bottom", "Temps", "Sec")
+        self.graphicsView_3.plotItem.setLabel("left", "Tension", "Volts")
+        self.graphicsView_3.plotItem.showGrid(x=True, y=True)
+        self.voltage_curve = self.graphicsView_3.plot([0], [0], pen=pqtg.mkPen(color='k', width=3))
+        
         """
         cylinder_mesh = gl.MeshData.cylinder(rows=2, cols=10, radius=[1.0, 1.0], length=5.0)
         cone_mesh = gl.MeshData.cylinder(rows=2, cols=10, radius=[1.0, 0.], length=2.0)
@@ -90,6 +99,7 @@ class DataWidget(QtWidgets.QWidget):
         spacerItem3 = QtWidgets.QSpacerItem(20, 70, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
         self.verticalLayout.addItem(spacerItem3)
         self.horizontal_layout.addLayout(self.verticalLayout)
+
         spacerItem4 = QtWidgets.QSpacerItem(90, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
         self.horizontal_layout.addItem(spacerItem4)
         self.verticalLayout_2 = QtWidgets.QVBoxLayout()
@@ -209,11 +219,20 @@ class DataWidget(QtWidgets.QWidget):
     def set_target_altitude(self, altitude):
         self.graphicsView.plotItem.addLine(y=altitude, pen=pqtg.mkPen(color='r', width=3))
 
+    def draw_voltage(self, values: list):
+        self.voltage_curve.setData(values)
+
     def draw_altitude(self, values: list):
         self.altitude_curve.setData(values)
 
     def draw_map(self, eastings: list, northings: list):
         self.positions_on_map.setData(eastings, northings)
+
+    def show_simulation(self, time, altitude):
+        if self.simulation_curve is None:
+            self.simulation_curve = self.graphicsView.plot(time, altitude, pen=pqtg.mkPen(color='b', width=3))
+        else:
+            self.simulation_curve.setData(time, altitude)
 
     def rotate_rocket_model(self, w, x, y, z):
         #tr = pqtg.Transform3D()

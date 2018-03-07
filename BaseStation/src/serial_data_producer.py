@@ -5,15 +5,16 @@ import serial
 from threading import Thread
 
 from src.domain_error import DomainError
-from src.producer import Producer
+from src.data_persister import DataPersister
+from src.data_producer import DataProducer
 from src.rocket_packet import RocketPacket
-from src.csv_file_writer import CsvFileWriter
 
 
-class SerialReader(Producer):
-    def __init__(self, save_file_path=None, baudrate=57600, start_character=b's', sampling_frequency=1):
+class SerialDataProducer(DataProducer):
+
+    def __init__(self, data_persister: DataPersister, baudrate=57600, start_character=b's', sampling_frequency=1):
         super().__init__()
-        self.save_file_path = save_file_path
+        self.data_persister = data_persister
         self.port = serial.Serial()
         self.port.baudrate = baudrate
         self.port.timeout = sampling_frequency
@@ -24,6 +25,7 @@ class SerialReader(Producer):
         self.format = RocketPacket.format + "B"
 
         self.flightData = []
+        self.unsaved_data = False
         self.thread = Thread(target=self.run)
 
     def start(self):
@@ -48,6 +50,7 @@ class SerialReader(Producer):
                         print(rocket_packet)
                         self.rocket_packets.put(rocket_packet)
                         self.flightData.append(rocket_packet)
+                        self.unsaved_data = True
                 except struct.error:
                     """
                     This error can occur if we don't read enough bytes on the serial port or if the packet format is
@@ -56,17 +59,18 @@ class SerialReader(Producer):
                     print("Invalid packet")
         self.port.close()
 
-    def stop(self):
-        super().stop()
-        if self.save_file_path is not None:
-            csv_file_writer = CsvFileWriter(self.save_file_path, self.flightData)
-            csv_file_writer.save()
+    def save(self, filename: str):
+        self.data_persister.save(filename, self.flightData)
+        self.unsaved_data = False
+
+    def has_unsaved_data(self):
+        return self.unsaved_data
 
     @staticmethod
     def detect_serial_ports():
         """ Lists serial port names
         :raises EnvironmentError
-            On unsopported or unknown platforms
+            On unsupported or unknown platforms
         :returns:
             A list of the serial ports available on the system
         """
@@ -91,6 +95,7 @@ class SerialReader(Producer):
                 pass
         return result
 
+    # FIXME: extract to a Checksum class, implementing a ValidationStrategy interface
     @staticmethod
     def validate_checksum(data_array):
         checksum = sum(data_array) % 256

@@ -1,5 +1,5 @@
 from src.rocket_packet import RocketPacket
-from src.producer import Producer
+from src.data_producer import DataProducer
 from src.geo_coordinate_converter import GeoCoordinateConverter
 from src.utm_zone import UTMZone
 
@@ -10,8 +10,8 @@ CAMP_POSITION_MEASUREMENT_DELAY = 10  # in seconds
 
 class Consumer:
 
-    def __init__(self, producer: Producer, sampling_frequency):
-        self.producer = producer
+    def __init__(self, data_producer: DataProducer, sampling_frequency):
+        self.data_producer = data_producer
         self.sampling_frequency = sampling_frequency
         self.data = {}
         self.has_new_data = False
@@ -31,10 +31,9 @@ class Consumer:
             self.data[key] = []
 
     def update(self):
-        rocket_packets = self.producer.get_data()
+        rocket_packets = self.data_producer.get_data()
         if len(rocket_packets) > 0:
             for packet in rocket_packets:
-                #print(packet)
                 for key, value in packet.items():
                     self.data[key].append(value)
                 self.data["altitude_feet"].append(packet.altitude * METERS2FEET)
