@@ -1,6 +1,6 @@
 from threading import Thread
 import time
-from PyQt5.QtWidgets import QApplication, QStackedWidget
+from PyQt5.QtWidgets import QApplication
 from PyQt5.QtGui import QCloseEvent
 
 from src.consumer import Consumer
