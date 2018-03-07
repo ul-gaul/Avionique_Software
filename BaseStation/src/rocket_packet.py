@@ -119,6 +119,11 @@ class RocketPacket:
             string += str(self.__dict__[key]) + ","
         return string
 
+    def __eq__(self, other):
+        if type(other) is type(self):
+            return self.__dict__ == other.__dict__
+        return False
+
     def print_data(self):
         # FIXME: convertir en methode __str__ et transferer la gestion de la console dans la fonction appelante
         os.system('cls' if os.name == 'nt' else 'clear')

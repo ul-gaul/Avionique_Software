@@ -1,6 +1,7 @@
 from threading import Thread
 import time
-from PyQt5 import QtWidgets
+from PyQt5.QtWidgets import QApplication
+from PyQt5.QtGui import QCloseEvent
 
 from src.consumer import Consumer
 
@@ -10,7 +11,7 @@ class Controller:
     def __init__(self):
         self.data_widget = None
         self.is_running = False
-        self.producer = None
+        self.data_producer = None
         self.consumer = None
         self.target_altitude = 10000
         self.sampling_frequency = 1
@@ -28,7 +29,7 @@ class Controller:
                 now = time.time()
                 dt = now - last_time
                 last_time = now
-                QtWidgets.QApplication.processEvents()
+                QApplication.processEvents()
                 if dt < 1.0 / self.sampling_frequency:
                     time.sleep(1.0 / self.sampling_frequency - dt)
 
@@ -56,13 +57,19 @@ class Controller:
             function()
 
     def start_thread(self):
-        self.consumer = Consumer(self.producer, self.sampling_frequency)
+        self.consumer = Consumer(self.data_producer, self.sampling_frequency)
         #self.consumer.led_callback = self.data_widget.set_led_state
-        self.producer.start()
+        self.data_producer.start()
         self.is_running = True
         self.thread.start()
 
     def stop_thread(self):
         self.is_running = False
         self.thread.join()
-        self.producer.stop()
+        self.data_producer.stop()
+
+    def on_close(self, event: QCloseEvent):
+        if self.is_running:
+            self.stop_thread()
+
+        event.accept()
