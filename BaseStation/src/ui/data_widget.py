@@ -228,11 +228,11 @@ class DataWidget(QtWidgets.QWidget):
     def draw_map(self, eastings: list, northings: list):
         self.positions_on_map.setData(eastings, northings)
 
-    def show_simulation(self, time, altitude):
+    def show_simulation(self, simulation):
         if self.simulation_curve is None:
-            self.simulation_curve = self.graphicsView.plot(time, altitude, pen=pqtg.mkPen(color='b', width=3))
+            self.simulation_curve = self.graphicsView.plot(simulation.time, simulation.altitude, pen=pqtg.mkPen(color='b', width=3))
         else:
-            self.simulation_curve.setData(time, altitude)
+            self.simulation_curve.setData(simulation.time, simulation.altitude)
 
     def rotate_rocket_model(self, w, x, y, z):
         #tr = pqtg.Transform3D()
