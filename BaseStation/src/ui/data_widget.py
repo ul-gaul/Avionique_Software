@@ -43,8 +43,6 @@ class DataWidget(QtWidgets.QWidget):
         self.graphicsView_3.plotItem.showGrid(x=True, y=True)
         self.voltage_curve = self.graphicsView_3.plot([0], [0], pen=pqtg.mkPen(color='k', width=3))
         
-        
-
         """
         cylinder_mesh = gl.MeshData.cylinder(rows=2, cols=10, radius=[1.0, 1.0], length=5.0)
         cone_mesh = gl.MeshData.cylinder(rows=2, cols=10, radius=[1.0, 0.], length=2.0)
@@ -98,20 +96,9 @@ class DataWidget(QtWidgets.QWidget):
         self.graphicsView_2.setObjectName("graphicsView_2")
         self.verticalLayout.addWidget(self.graphicsView_2)
 
-        
-
         spacerItem3 = QtWidgets.QSpacerItem(20, 70, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
         self.verticalLayout.addItem(spacerItem3)
         self.horizontal_layout.addLayout(self.verticalLayout)
-
-
-
-
-
-
-
-
-
 
         spacerItem4 = QtWidgets.QSpacerItem(90, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
         self.horizontal_layout.addItem(spacerItem4)

@@ -48,8 +48,6 @@ class Controller:
         self.data_widget.set_led_state(5, self.consumer["power_supply_state_2"][-1])
         self.data_widget.set_led_state(6, self.consumer["payload_board_state_1"][-1])
 
-
-
     def update_thermometer(self):
         self.data_widget.set_thermometer_value(self.consumer.get_average_temperature())
 
