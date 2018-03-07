@@ -1,10 +1,11 @@
 from PyQt5 import QtCore
-from PyQt5.QtWidgets import QMainWindow, QStackedWidget, QFileDialog, QWidget, QMenuBar, QMenu, QAction, QStatusBar
+from PyQt5.QtWidgets import QMainWindow, QStackedWidget, QFileDialog, QWidget, QMenuBar, QMenu, QAction
 from PyQt5.QtGui import QIcon, QCloseEvent
 
 from src.ui.homewidget import HomeWidget
 from src.ui.real_time_widget import RealTimeWidget
 from src.ui.replay_widget import ReplayWidget
+from src.ui.status_bar import StatusBar
 from src.domain_error import DomainError
 from src.real_time_controller import RealTimeController
 from src.replay_controller import ReplayController
@@ -18,8 +19,7 @@ class MainWindow(QMainWindow):
         self.central_widget = QStackedWidget()
         self.setCentralWidget(self.central_widget)
 
-        self.status_bar = QStatusBar(self)
-        self.status_bar.setObjectName("status_bar")
+        self.status_bar = StatusBar(self)
         self.setStatusBar(self.status_bar)
 
         self.home_widget = HomeWidget(self)
@@ -52,13 +52,14 @@ class MainWindow(QMainWindow):
     def open_real_time(self):
         self.real_time_widget = RealTimeWidget(self)
         self.controller = RealTimeController(self.real_time_widget)
-        self.real_time_widget.set_button_callback(self.controller.real_time_button_callback)
+        self.controller.register_message_listener(self.status_bar)
         self.open_new_widget(self.real_time_widget)
 
     def open_replay(self):
         filename, _ = QFileDialog.getOpenFileName(caption="Open File", filter="All Files (*);; CSV Files (*.csv)")
         self.replay_widget = ReplayWidget(self)
         self.controller = ReplayController(self.replay_widget, filename)
+        self.controller.register_message_listener(self.status_bar)
         # TODO: bind replay control buttons to callback in the ReplayController
         self.open_new_widget(self.replay_widget)
 
@@ -108,9 +109,6 @@ class MainWindow(QMainWindow):
         file = open(stylesheet_path, 'r')
         stylesheet = file.read()
         self.setStyleSheet(stylesheet)
-
-    def notify(self, domain_error: DomainError):
-        self.status_bar.showMessage(domain_error.message, 3000)
 
     def closeEvent(self, event: QCloseEvent):
         if self.controller is not None:

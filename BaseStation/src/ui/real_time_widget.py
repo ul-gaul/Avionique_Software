@@ -1,4 +1,3 @@
-from src.domain_error import DomainError
 from src.ui.data_widget import DataWidget
 from src.ui.utils import set_minimum_expanding_size_policy
 from PyQt5.QtWidgets import QLCDNumber, QPushButton
@@ -8,7 +7,6 @@ class RealTimeWidget(DataWidget):
 
     def __init__(self, parent):
         super().__init__(parent)
-        self.main_window = parent
         self.start_stop_button_callback = lambda: False
         self.start_stop_button = QPushButton(self.widget)
         self.init_button(self.start_stop_button, "start_stop_button", "Démarrer l'acquisition", self.on_button_click)
@@ -22,11 +20,8 @@ class RealTimeWidget(DataWidget):
         self.start_stop_button_callback = start_stop_button_callback
 
     def on_button_click(self):
-        try:
-            controller_is_running = self.start_stop_button_callback()
-            self.update_button_text(controller_is_running)
-        except DomainError as e:
-            self.main_window.notify(e)
+        controller_is_running = self.start_stop_button_callback()
+        self.update_button_text(controller_is_running)
 
     def update_button_text(self, is_acquisition_running: bool):
         if is_acquisition_running:

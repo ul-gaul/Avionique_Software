@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import QApplication
 from PyQt5.QtGui import QCloseEvent
 
 from src.consumer import Consumer
+from src.message_listener import MessageListener
 
 
 # FIXME: this class should be abstract
@@ -17,6 +18,7 @@ class Controller:
         self.sampling_frequency = 1
         self.fps = 0
         self.ui_update_functions = [self.update_plots, self.update_leds, self.update_thermometer]
+        self.message_listeners = []
         self.thread = Thread(target=self.drawing_thread)
 
     def drawing_thread(self):
@@ -73,3 +75,12 @@ class Controller:
             self.stop_thread()
 
         event.accept()
+
+    # TODO: unit test this
+    def register_message_listener(self, message_listener: MessageListener):
+        self.message_listeners.append(message_listener)
+
+    # TODO: unit test this
+    def notify_all_message_listeners(self, message: str, message_type):
+        for message_listener in self.message_listeners:
+            message_listener.notify(message, message_type)
