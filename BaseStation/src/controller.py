@@ -1,9 +1,10 @@
 from threading import Thread
 import time
-from PyQt5.QtWidgets import QApplication
+from PyQt5.QtWidgets import QApplication, QStackedWidget
 from PyQt5.QtGui import QCloseEvent
 
 from src.consumer import Consumer
+from src.openrocketsimulation import OpenRocketSimulation
 
 
 # FIXME: this class should be abstract
@@ -18,6 +19,10 @@ class Controller:
         self.fps = 0
         self.ui_update_functions = [self.update_plots, self.update_leds, self.update_thermometer]
         self.thread = Thread(target=self.drawing_thread)
+
+    def add_open_rocket_simulation(self, filename):
+        simulation = OpenRocketSimulation(filename)
+        self.data_widget.show_simulation(simulation)
 
     def drawing_thread(self):
         last_time = time.time()

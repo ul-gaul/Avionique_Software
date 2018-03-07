@@ -14,6 +14,7 @@ class MainWindow(QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.controller = None
+        self.openrocketsimulation = None
         self.central_widget = QStackedWidget()
         self.setCentralWidget(self.central_widget)
         self.home_widget = HomeWidget(self)
@@ -30,6 +31,10 @@ class MainWindow(QMainWindow):
 
     def add_sim(self):
         filename, _ = QFileDialog.getOpenFileName(caption="Open File", filter="All Files (*);; CSV Files (*.csv)")
+
+        self.controller.add_open_rocket_simulation(filename)
+
+        """filename, _ = QFileDialog.getOpenFileName(caption="Open File", filter="All Files (*);; CSV Files (*.csv)")
         with open(filename) as file:
             datatemp = file.read().splitlines()
 
@@ -40,7 +45,7 @@ class MainWindow(QMainWindow):
             time.append(float(data[0]))
             altitude.append(float(data[1]))
 
-        self.central_widget.currentWidget().show_simulation(time, altitude)
+        self.central_widget.currentWidget().show_simulation(time, altitude)"""
         # TODO: Ajouter le nom de la simulation dans le status bar
 
     def open_real_time(self):
