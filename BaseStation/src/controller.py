@@ -82,11 +82,9 @@ class Controller:
 
         event.accept()
 
-    # TODO: unit test this
     def register_message_listener(self, message_listener: MessageListener):
         self.message_listeners.append(message_listener)
 
-    # TODO: unit test this
     def notify_all_message_listeners(self, message: str, message_type):
         for message_listener in self.message_listeners:
             message_listener.notify(message, message_type)
