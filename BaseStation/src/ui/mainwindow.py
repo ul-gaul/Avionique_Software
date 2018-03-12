@@ -6,7 +6,7 @@ from src.ui.homewidget import HomeWidget
 from src.ui.real_time_widget import RealTimeWidget
 from src.ui.replay_widget import ReplayWidget
 from src.ui.status_bar import StatusBar
-from src.domain_error import DomainError
+from src.message_type import MessageType
 from src.real_time_controller import RealTimeController
 from src.replay_controller import ReplayController
 
@@ -47,7 +47,7 @@ class MainWindow(QMainWindow):
             altitude.append(float(data[1]))
 
         self.central_widget.currentWidget().show_simulation(time, altitude)
-        # TODO: Ajouter le nom de la simulation dans le status bar
+        self.status_bar.notify("Fichier de simulation " + filename + " chargé", MessageType.INFO)
 
     def open_real_time(self):
         self.real_time_widget = RealTimeWidget(self)

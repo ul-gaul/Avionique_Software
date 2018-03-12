@@ -22,7 +22,7 @@ class CsvDataPersister(DataPersister):
                 writer.writeheader()
                 for packet in rocket_packets:
                     writer.writerow(packet.__dict__)
-            print("Saved data in " + filename)  # TODO: write on the status bar of the GUI instead
+            print("Saved data in " + filename)
         except PermissionError:
             raise DomainError("Impossible d'ouvrir le fichier " + filename)
 

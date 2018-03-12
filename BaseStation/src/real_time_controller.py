@@ -55,6 +55,8 @@ class RealTimeController(Controller):
                     event.ignore()
                 else:
                     self.data_producer.save(filename)
+                    message = "Données sauvegardées dans le fichier: " + filename
+                    self.notify_all_message_listeners(message, MessageType.INFO)
                     event.accept()
             elif should_save == QMessageBox.No:
                 event.accept()
