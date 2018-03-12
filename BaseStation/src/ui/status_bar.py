@@ -12,8 +12,6 @@ class StatusBar(QStatusBar, MessageListener):
 
         self.label = QLabel(self)
         self.label.setObjectName("status_bar_label")
-        label_stylesheet = read_stylesheet("src/resources/status_bar_label.css")
-        self.label.setStyleSheet(label_stylesheet)
         self.addWidget(self.label)
 
     def notify(self, message: str, message_type: MessageType):

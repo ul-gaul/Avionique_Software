@@ -5,6 +5,7 @@ from PyQt5.QtGui import QCloseEvent
 
 from src.consumer import Consumer
 from src.message_listener import MessageListener
+from src.message_type import MessageType
 from src.openrocketsimulation import OpenRocketSimulation
 
 
@@ -85,6 +86,6 @@ class Controller:
     def register_message_listener(self, message_listener: MessageListener):
         self.message_listeners.append(message_listener)
 
-    def notify_all_message_listeners(self, message: str, message_type):
+    def notify_all_message_listeners(self, message: str, message_type: MessageType):
         for message_listener in self.message_listeners:
             message_listener.notify(message, message_type)
