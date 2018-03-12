@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import QApplication
 from PyQt5.QtGui import QCloseEvent
 
 from src.consumer import Consumer
+from src.domain_error import DomainError
 from src.message_listener import MessageListener
 from src.message_type import MessageType
 from src.openrocketsimulation import OpenRocketSimulation
@@ -24,8 +25,12 @@ class Controller:
         self.thread = Thread(target=self.drawing_thread)
 
     def add_open_rocket_simulation(self, filename):
-        simulation = OpenRocketSimulation(filename)
-        self.data_widget.show_simulation(simulation)
+        try:
+            simulation = OpenRocketSimulation(filename)
+            self.data_widget.show_simulation(simulation)
+            self.notify_all_message_listeners("Fichier de simulation " + filename + " chargé", MessageType.INFO)
+        except DomainError as error:
+            self.notify_all_message_listeners(error.message, MessageType.ERROR)
 
     def drawing_thread(self):
         last_time = time.time()

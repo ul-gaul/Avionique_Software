@@ -6,7 +6,6 @@ from src.ui.homewidget import HomeWidget
 from src.ui.real_time_widget import RealTimeWidget
 from src.ui.replay_widget import ReplayWidget
 from src.ui.status_bar import StatusBar
-from src.message_type import MessageType
 from src.real_time_controller import RealTimeController
 from src.replay_controller import ReplayController
 
@@ -35,9 +34,10 @@ class MainWindow(QMainWindow):
         self.set_stylesheet("src/resources/mainwindow.css")
 
     def add_sim(self):
-        filename, _ = QFileDialog.getOpenFileName(caption="Open File", filter="All Files (*);; CSV Files (*.csv)")
-        self.controller.add_open_rocket_simulation(filename)
-        self.status_bar.notify("Fichier de simulation " + filename + " chargé", MessageType.INFO)
+        filename, _ = QFileDialog.getOpenFileName(caption="Open File", directory="./src/resources/",
+                                                  filter="All Files (*);; CSV Files (*.csv)")
+        if filename != "":
+            self.controller.add_open_rocket_simulation(filename)
 
     def open_real_time(self):
         self.real_time_widget = RealTimeWidget(self)
@@ -46,12 +46,14 @@ class MainWindow(QMainWindow):
         self.open_new_widget(self.real_time_widget)
 
     def open_replay(self):
-        filename, _ = QFileDialog.getOpenFileName(caption="Open File", filter="All Files (*);; CSV Files (*.csv)")
-        self.replay_widget = ReplayWidget(self)
-        self.controller = ReplayController(self.replay_widget, filename)
-        self.controller.register_message_listener(self.status_bar)
-        # TODO: bind replay control buttons to callback in the ReplayController
-        self.open_new_widget(self.replay_widget)
+        filename, _ = QFileDialog.getOpenFileName(caption="Open File", directory="./src/resources/",
+                                                  filter="All Files (*);; CSV Files (*.csv)")
+        if filename != "":
+            self.replay_widget = ReplayWidget(self)
+            self.controller = ReplayController(self.replay_widget, filename)
+            self.controller.register_message_listener(self.status_bar)
+            # TODO: bind replay control buttons to callback in the ReplayController
+            self.open_new_widget(self.replay_widget)
 
     def open_new_widget(self, widget: QWidget):
         self.central_widget.addWidget(widget)
