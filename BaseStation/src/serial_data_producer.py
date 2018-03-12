@@ -4,6 +4,7 @@ import struct
 import serial
 from threading import Thread
 
+from src.domain_error import DomainError
 from src.data_persister import DataPersister
 from src.data_producer import DataProducer
 from src.rocket_packet import RocketPacket
@@ -28,7 +29,10 @@ class SerialDataProducer(DataProducer):
         self.thread = Thread(target=self.run)
 
     def start(self):
-        self.port.port = self.detect_serial()[0]
+        ports = self.detect_serial_ports()
+        if len(ports) <= 0:
+            raise DomainError("Aucun récepteur connecté")
+        self.port.port = ports[0]
         self.port.open()
         self.is_running = True
         self.thread.start()
@@ -63,7 +67,7 @@ class SerialDataProducer(DataProducer):
         return self.unsaved_data
 
     @staticmethod
-    def detect_serial():
+    def detect_serial_ports():
         """ Lists serial port names
         :raises EnvironmentError
             On unsupported or unknown platforms

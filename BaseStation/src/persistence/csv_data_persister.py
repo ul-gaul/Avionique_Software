@@ -2,6 +2,7 @@ import csv
 from typing import List
 
 from src.data_persister import DataPersister
+from src.domain_error import DomainError
 from src.rocket_packet import RocketPacket
 
 
@@ -15,12 +16,15 @@ class CsvDataPersister(DataPersister):
         self.headers = RocketPacket.keys()
 
     def save(self, filename: str, rocket_packets: List[RocketPacket]):
-        with open(filename, "w", newline=self.newline) as csv_file:
-            writer = csv.DictWriter(csv_file, fieldnames=self.headers, delimiter=self.delimiter, quoting=self.quoting)
-            writer.writeheader()
-            for packet in rocket_packets:
-                writer.writerow(packet.__dict__)
-        print("Saved data in " + filename)  # TODO: write on the status bar of the GUI instead
+        try:
+            with open(filename, "w", newline=self.newline) as csv_file:
+                writer = csv.DictWriter(csv_file, fieldnames=self.headers, delimiter=self.delimiter, quoting=self.quoting)
+                writer.writeheader()
+                for packet in rocket_packets:
+                    writer.writerow(packet.__dict__)
+            print("Saved data in " + filename)
+        except PermissionError:
+            raise DomainError("Impossible d'ouvrir le fichier " + filename)
 
     def load(self, filename: str):
         data = []

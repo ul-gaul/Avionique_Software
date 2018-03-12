@@ -4,6 +4,8 @@ from PyQt5.QtWidgets import QMessageBox, QFileDialog
 
 from src.ui.real_time_widget import RealTimeWidget
 from src.controller import Controller
+from src.domain_error import DomainError
+from src.message_type import MessageType
 from src.serial_data_producer import SerialDataProducer
 from src.persistence.csv_data_persister import CsvDataPersister
 
@@ -14,6 +16,7 @@ class RealTimeController(Controller):
         super().__init__()
         self.data_widget = real_time_widget
         self.data_widget.set_target_altitude(self.target_altitude)
+        self.data_widget.set_button_callback(self.real_time_button_callback)
         csv_data_persister = CsvDataPersister()   # FIXME: this should not be instantiated here
         self.data_producer = SerialDataProducer(csv_data_persister, sampling_frequency=self.sampling_frequency)
         self.ui_update_functions.append(self.update_timer)
@@ -25,7 +28,11 @@ class RealTimeController(Controller):
         # FIXME: this brakes the command query separation principle
         self.is_running = not self.is_running
         if self.is_running:
-            self.start_thread()
+            try:
+                self.start_thread()
+            except DomainError as error:
+                self.is_running = not self.is_running
+                self.notify_all_message_listeners(error.message, MessageType.ERROR)
         else:
             self.stop_thread()
         return self.is_running
@@ -48,6 +55,8 @@ class RealTimeController(Controller):
                     event.ignore()
                 else:
                     self.data_producer.save(filename)
+                    message = "Données sauvegardées dans le fichier: " + filename
+                    self.notify_all_message_listeners(message, MessageType.INFO)
                     event.accept()
             elif should_save == QMessageBox.No:
                 event.accept()

@@ -87,3 +87,13 @@ QMessageBox QPushButton
     font-size: 15px;
     padding: 4px;
 }
+
+QStatusBar
+{
+    background: rgb(240, 240, 240);
+}
+
+QStatusBar QLabel
+{
+    color: rgb(220, 36, 3);
+}
