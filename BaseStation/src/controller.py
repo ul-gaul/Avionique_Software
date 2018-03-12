@@ -5,6 +5,7 @@ from PyQt5.QtGui import QCloseEvent
 
 from src.consumer import Consumer
 from src.message_listener import MessageListener
+from src.openrocketsimulation import OpenRocketSimulation
 
 
 # FIXME: this class should be abstract
@@ -20,6 +21,10 @@ class Controller:
         self.ui_update_functions = [self.update_plots, self.update_leds, self.update_thermometer]
         self.message_listeners = []
         self.thread = Thread(target=self.drawing_thread)
+
+    def add_open_rocket_simulation(self, filename):
+        simulation = OpenRocketSimulation(filename)
+        self.data_widget.show_simulation(simulation)
 
     def drawing_thread(self):
         last_time = time.time()
@@ -38,6 +43,7 @@ class Controller:
     def update_plots(self):
         # TODO: draw plots and update
         self.data_widget.draw_altitude(self.consumer["altitude_feet"])
+
         self.data_widget.draw_map(self.consumer["easting"], self.consumer["northing"])
         self.data_widget.draw_voltage(self.consumer["voltage"])
         self.data_widget.rotate_rocket_model(*self.consumer.get_rocket_rotation())

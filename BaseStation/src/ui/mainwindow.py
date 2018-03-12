@@ -36,17 +36,7 @@ class MainWindow(QMainWindow):
 
     def add_sim(self):
         filename, _ = QFileDialog.getOpenFileName(caption="Open File", filter="All Files (*);; CSV Files (*.csv)")
-        with open(filename) as file:
-            datatemp = file.read().splitlines()
-
-        time = []
-        altitude = []
-        for dat in datatemp:
-            data = dat.split(",")
-            time.append(float(data[0]))
-            altitude.append(float(data[1]))
-
-        self.central_widget.currentWidget().show_simulation(time, altitude)
+        self.controller.add_open_rocket_simulation(filename)
         self.status_bar.notify("Fichier de simulation " + filename + " chargé", MessageType.INFO)
 
     def open_real_time(self):
