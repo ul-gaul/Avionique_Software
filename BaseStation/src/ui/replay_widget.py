@@ -32,7 +32,6 @@ class ReplayWidget(DataWidget):
         self.play_pause_button.setText('Pause')
         self.play_pause_button.clicked.disconnect(self.play)
         self.play_pause_button.clicked.connect(self.pause)
-        # self.init_button(self.play_pause_button, "play_pause_button", "Pause", self.pause)
         try:
             self.callbacks["play"]()
         except KeyError:
