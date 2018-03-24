@@ -7,17 +7,10 @@ from src.data_persister import DataPersister
 
 
 class FileDataProducer(DataProducer):
-    """ Producteur à partir d'une source fichier
-    Attributs:
-        started_event (threading.Event):
-            set(): Drapeau `true` pour que la production soit en cours.
-            clear(): Drapeau `false` pour que la production soit en pause.
-            wait(): Pour bloquer une opération jusqu'à ce que le drapeau soit `true`.
-    """
-
     def __init__(self, data_persister: DataPersister, filename: str):
         super().__init__()
         self.started_event = threading.Event()
+        self.accel_factor = 1.0
         self.data = data_persister.load(filename)
 
         for packet in self.data:
@@ -29,6 +22,13 @@ class FileDataProducer(DataProducer):
         self.is_running = True
         self.thread.start()
 
+    def restart(self):
+        self.started_event.set()
+        self.started_event.wait()
+
+    def suspend(self):
+        self.started_event.clear()
+
     def run(self):
         index = 0
         while self.is_running:
@@ -36,7 +36,7 @@ class FileDataProducer(DataProducer):
             print(index)
             if (index + 1) < len(self.data):
                 wait = self.data[index + 1].time_stamp - self.data[index].time_stamp
-                time.sleep(wait)
+                time.sleep(wait / self.accel_factor)
                 self.rocket_packets.put(self.data[index])
                 index += 1
             elif index < len(self.data):

@@ -4,12 +4,40 @@
 		"selected_items":
 		[
 			[
-				"pla",
-				"play_button_callback\tfunction"
+				"set",
+				"set_callback\tfunction"
+			],
+			[
+				"dat",
+				"data_widget\tstatement"
+			],
+			[
+				"acc",
+				"accel_factor"
+			],
+			[
+				"sta",
+				"started_event\tstatement"
 			],
 			[
 				"da",
-				"data_widget\tstatement"
+				"data_producer\tstatement"
+			],
+			[
+				"d",
+				"data_producer\tstatement"
+			],
+			[
+				"st",
+				"started_event\tstatement"
+			],
+			[
+				"pla",
+				"play_pause_button\tstatement"
+			],
+			[
+				"pl",
+				"play_pause_button\tstatement"
 			],
 			[
 				"fas",
@@ -42,10 +70,6 @@
 			[
 				"av",
 				"available_geometry"
-			],
-			[
-				"set",
-				"setGeometry"
 			],
 			[
 				"active",
@@ -110,10 +134,6 @@
 			[
 				"card",
 				"card-content"
-			],
-			[
-				"d",
-				"div"
 			],
 			[
 				"pro",
@@ -494,26 +514,6 @@
 			[
 				"FOR",
 				"FROM"
-			],
-			[
-				"al",
-				"alignItems"
-			],
-			[
-				"lo",
-				"locations"
-			],
-			[
-				"defau",
-				"defaultValue"
-			],
-			[
-				"containe",
-				"containerStyle"
-			],
-			[
-				"paddi",
-				"paddingBottom"
 			]
 		]
 	},
@@ -541,7 +541,7 @@
 			"file": "BaseStation/src/ui/replay_widget.py",
 			"settings":
 			{
-				"buffer_size": 1497,
+				"buffer_size": 1925,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -558,7 +558,7 @@
 			"file": "BaseStation/src/consumer.py",
 			"settings":
 			{
-				"buffer_size": 3176,
+				"buffer_size": 3096,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -567,8 +567,16 @@
 			"file": "BaseStation/src/replay_controller.py",
 			"settings":
 			{
-				"buffer_size": 910,
+				"buffer_size": 1821,
 				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "BaseStation/src/serial_data_producer.py",
+			"settings":
+			{
+				"buffer_size": 3520,
 				"line_ending": "Windows"
 			}
 		},
@@ -576,15 +584,17 @@
 			"file": "BaseStation/src/controller.py",
 			"settings":
 			{
-				"buffer_size": 3125,
+				"buffer_size": 3126,
+				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "BaseStation/src/data_producer.py",
+			"file": "BaseStation/src/file_data_producer.py",
 			"settings":
 			{
-				"buffer_size": 794,
+				"buffer_size": 1666,
+				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
 		}
@@ -852,7 +862,7 @@
 	"groups":
 	[
 		{
-			"selected": 4,
+			"selected": 5,
 			"sheets":
 			[
 				{
@@ -890,10 +900,10 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 684.0,
+						"translation.y": 319.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 7,
+					"stack_index": 8,
 					"type": "text"
 				},
 				{
@@ -922,7 +932,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 6,
+					"stack_index": 7,
 					"type": "text"
 				},
 				{
@@ -931,15 +941,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1497,
+						"buffer_size": 1925,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								788,
-								788
+								1482,
+								1482
 							]
 						],
 						"settings":
@@ -953,6 +963,10 @@
 								{
 									"characters": ".",
 									"selector": "source.python - string - constant.numeric"
+								},
+								{
+									"characters": ".",
+									"selector": "source.python - string - constant.numeric"
 								}
 							],
 							"complete_parameters": false,
@@ -961,10 +975,10 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 288.0,
+						"translation.y": 601.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 5,
+					"stack_index": 3,
 					"type": "text"
 				},
 				{
@@ -991,10 +1005,10 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 3575.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 4,
+					"stack_index": 2,
 					"type": "text"
 				},
 				{
@@ -1003,15 +1017,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3176,
+						"buffer_size": 3096,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1509,
-								1509
+								1520,
+								1520
 							]
 						],
 						"settings":
@@ -1025,6 +1039,10 @@
 								{
 									"characters": ".",
 									"selector": "source.python - string - constant.numeric"
+								},
+								{
+									"characters": ".",
+									"selector": "source.python - string - constant.numeric"
 								}
 							],
 							"syntax": "Packages/Python/Python.sublime-syntax",
@@ -1032,10 +1050,10 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 350.0,
+						"translation.y": 300.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
@@ -1044,15 +1062,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 910,
+						"buffer_size": 1821,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								271,
-								271
+								693,
+								693
 							]
 						],
 						"settings":
@@ -1066,54 +1084,34 @@
 								{
 									"characters": ".",
 									"selector": "source.python - string - constant.numeric"
+								},
+								{
+									"characters": ".",
+									"selector": "source.python - string - constant.numeric"
+								},
+								{
+									"characters": ".",
+									"selector": "source.python - string - constant.numeric"
 								}
 							],
-							"syntax": "Packages/Python/Python.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 36.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 3,
-					"type": "text"
-				},
-				{
-					"buffer": 6,
-					"file": "BaseStation/src/controller.py",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 3125,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2847,
-								2847
-							]
-						],
-						"settings":
-						{
 							"syntax": "Packages/Python/Python.sublime-syntax",
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 894.0,
+						"translation.y": 34.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 0,
 					"type": "text"
 				},
 				{
-					"buffer": 7,
-					"file": "BaseStation/src/data_producer.py",
+					"buffer": 6,
+					"file": "BaseStation/src/serial_data_producer.py",
 					"semi_transient": true,
 					"settings":
 					{
-						"buffer_size": 794,
+						"buffer_size": 3520,
 						"regions":
 						{
 						},
@@ -1131,10 +1129,85 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 379.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 6,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "BaseStation/src/controller.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3126,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								858,
+								858
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 266.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "BaseStation/src/file_data_producer.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1666,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1389,
+								1389
+							]
+						],
+						"settings":
+						{
+							"auto_complete_triggers":
+							[
+								{
+									"characters": ".",
+									"selector": "source.python - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".",
+									"selector": "source.python - string - constant.numeric"
+								},
+								{
+									"characters": ".",
+									"selector": "source.python - string - constant.numeric"
+								}
+							],
+							"syntax": "Packages/Python/Python.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 336.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
 					"type": "text"
 				}
 			]
@@ -1179,7 +1252,7 @@
 	"project": "gaul_avionique.sublime-project",
 	"replace":
 	{
-		"height": 72.0
+		"height": 48.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -1188,6 +1261,26 @@
 		"last_filter": "",
 		"selected_items":
 		[
+			[
+				"repla",
+				"BaseStation\\src\\ui\\replay_widget.py"
+			],
+			[
+				"",
+				"BaseStation\\src\\file_data_producer.py"
+			],
+			[
+				"cons",
+				"BaseStation\\src\\consumer.py"
+			],
+			[
+				"file",
+				"BaseStation\\src\\file_data_producer.py"
+			],
+			[
+				"contr",
+				"BaseStation\\src\\controller.py"
+			],
 			[
 				"contro",
 				"BaseStation\\src\\controller.py"
@@ -1214,10 +1307,6 @@
 			],
 			[
 				"app",
-				"client\\src\\e-agri\\src\\App.vue"
-			],
-			[
-				"",
 				"client\\src\\e-agri\\src\\App.vue"
 			],
 			[
