@@ -7,6 +7,7 @@ from src.data_persister import DataPersister
 
 
 class FileDataProducer(DataProducer):
+
     def __init__(self, data_persister: DataPersister, filename: str):
         super().__init__()
         self.started_event = threading.Event()

@@ -6,8 +6,6 @@ from src.persistence.csv_data_persister import CsvDataPersister
 
 
 class ReplayController(Controller):
-    MAX_ACCEL = 16.0
-    MAX_DECEL = .0625
 
     def __init__(self, replay_widget: ReplayWidget, filename: str):
         super().__init__()
@@ -28,9 +26,3 @@ class ReplayController(Controller):
 
     def pause_button_callback(self):
         self.data_producer.suspend()
-
-    def fforward_button_callback(self):
-        self.data_producer.accel_factor *= 2.0 if self.data_producer.accel_factor < self.MAX_ACCEL else 1.0
-
-    def sforward_button_callback(self):
-        self.data_producer.accel_factor /= 2.0 if self.data_producer.accel_factor > self.MAX_DECEL else 1.0
