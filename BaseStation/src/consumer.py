@@ -1,4 +1,3 @@
-import time
 from src.rocket_packet import RocketPacket
 from src.data_producer import DataProducer
 from src.geo_coordinate_converter import GeoCoordinateConverter
