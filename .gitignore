@@ -3,3 +3,4 @@ BaseStation/.idea/
 
 *.pyc
 *__pycache__*
+*.sublime-*
