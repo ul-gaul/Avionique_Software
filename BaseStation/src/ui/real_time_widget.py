@@ -20,8 +20,7 @@ class RealTimeWidget(DataWidget):
         self.start_stop_button_callback = start_stop_button_callback
 
     def on_button_click(self):
-        controller_is_running = self.start_stop_button_callback()
-        self.update_button_text(controller_is_running)
+        self.start_stop_button_callback()
 
     def update_button_text(self, is_acquisition_running: bool):
         if is_acquisition_running:

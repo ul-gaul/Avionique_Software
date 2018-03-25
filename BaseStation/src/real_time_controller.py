@@ -25,7 +25,6 @@ class RealTimeController(Controller):
         self.data_widget.set_time(self.consumer["time_stamp"][-1] / float(self.sampling_frequency))
 
     def real_time_button_callback(self):
-        # FIXME: this brakes the command query separation principle
         self.is_running = not self.is_running
         if self.is_running:
             try:
@@ -35,7 +34,7 @@ class RealTimeController(Controller):
                 self.notify_all_message_listeners(error.message, MessageType.ERROR)
         else:
             self.stop_thread()
-        return self.is_running
+        self.data_widget.update_button_text(self.is_running)
 
     def on_close(self, event: QCloseEvent):
         # FIXME: clean this up then add unit tests (also this should probably go in a UI class)
