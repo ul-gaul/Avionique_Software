@@ -1,7 +1,6 @@
 from PyQt5.QtWidgets import QStatusBar, QLabel
 
 from src.message_listener import MessageListener, MessageType
-from src.ui.utils import read_stylesheet
 
 
 class StatusBar(QStatusBar, MessageListener):
