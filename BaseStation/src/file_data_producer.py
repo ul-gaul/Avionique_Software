@@ -30,6 +30,10 @@ class FileDataProducer(DataProducer):
     def suspend(self):
         self.started_event.clear()
 
+    def stop(self):
+        self.started_event.set()
+        super().stop()
+
     def run(self):
         index = 0
         while self.is_running:
