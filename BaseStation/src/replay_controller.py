@@ -12,7 +12,7 @@ class ReplayController(Controller):
         self.data_widget = replay_widget
         self.data_widget.set_callback("play", self.play_button_callback)
         self.data_widget.set_callback("pause", self.pause_button_callback)
-        self.data_widget.set_callback("fast_forward", self.fforward_button_callback)
+        self.data_widget.set_callback("fast_forward", self.fast_forward_button_callback)
         csv_data_persister = CsvDataPersister()     # FIXME: this should not be instantiated here
         self.data_producer = FileDataProducer(csv_data_persister, filename)
         self.consumer = Consumer(self.data_producer, self.sampling_frequency)
@@ -26,3 +26,6 @@ class ReplayController(Controller):
 
     def pause_button_callback(self):
         self.data_producer.suspend()
+
+    def fast_forward_button_callback(self):
+        pass
