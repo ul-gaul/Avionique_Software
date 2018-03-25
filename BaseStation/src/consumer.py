@@ -24,7 +24,6 @@ class Consumer:
         self.base_camp_easting = None
         self.base_camp_northing = None
         self.coordinate_converter = GeoCoordinateConverter(UTMZone.zone_13S)
-        # self.led_callback = None
 
     def create_keys_from_packet_format(self):
         for key in RocketPacket.keys():
@@ -38,7 +37,6 @@ class Consumer:
                     self.data[key].append(value)
                 self.data["altitude_feet"].append(packet.altitude * METERS2FEET)
                 self.manage_coordinates(packet)
-                # self.update_leds()
             self.has_new_data = True
 
     def __getitem__(self, key):
@@ -68,11 +66,3 @@ class Consumer:
 
     def get_average_temperature(self):
         return self.data["temperature_1"][-1]
-
-    # def update_leds(self):
-    #     if self.led_callback is not None:
-    #         #self.data["acquisition_board_state_1"][-1]
-    #         pass
-    #
-    # def _update_led(self, led_name, led_num):
-    #     if len(self.data[led_name])

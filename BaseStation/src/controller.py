@@ -69,7 +69,6 @@ class Controller:
 
     def start_thread(self):
         self.consumer = Consumer(self.data_producer, self.sampling_frequency)
-        # self.consumer.led_callback = self.data_widget.set_led_state
         self.data_producer.start()
         self.is_running = True
         self.thread.start()
