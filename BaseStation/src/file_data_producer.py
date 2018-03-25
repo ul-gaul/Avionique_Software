@@ -38,7 +38,6 @@ class FileDataProducer(DataProducer):
         index = 0
         while self.is_running:
             self.started_event.wait()
-            print(index)
             if (index + 1) < len(self.data):
                 wait = self.data[index + 1].time_stamp - self.data[index].time_stamp
                 time.sleep(wait / self.accel_factor)

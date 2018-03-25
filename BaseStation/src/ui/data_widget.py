@@ -20,10 +20,7 @@ class DataWidget(QtWidgets.QWidget):
         self.set_black_on_white_graph_colors()
         self.thermometer = None
         self.setup_ui()
-
         self.leds = [self.led_1, self.led_2, self.led_3, self.led_4, self.led_5, self.led_6]
-        for i in range(1, 7):
-            self.set_led_state(i, False)
 
         self.graphicsView.plotItem.setTitle("Altitude")
         self.graphicsView.plotItem.setLabel("bottom", "Temps", "Sec")

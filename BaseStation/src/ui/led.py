@@ -16,7 +16,7 @@ class Led(QtWidgets.QWidget):
         set_size_policy(self.light_bulb, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         self.light_bulb.setMinimumSize(QtCore.QSize(32, 32))
         self.light_bulb.setMaximumSize(QtCore.QSize(32, 32))
-        self.light_bulb.setStyleSheet("")
+        self.light_bulb.setStyleSheet(self.off_stylesheet)
         self.light_bulb.setText("")
         self.light_bulb.setObjectName("led_light_bulb")
         self.layout.addWidget(self.light_bulb)

@@ -47,15 +47,12 @@ class Controller:
                     time.sleep(1.0 / self.sampling_frequency - dt)
 
     def update_plots(self):
-        # TODO: draw plots and update
         self.data_widget.draw_altitude(self.consumer["altitude_feet"])
-
         self.data_widget.draw_map(self.consumer["easting"], self.consumer["northing"])
         self.data_widget.draw_voltage(self.consumer["voltage"])
         self.data_widget.rotate_rocket_model(*self.consumer.get_rocket_rotation())
 
     def update_leds(self):
-        # FIXME: optimize this by updating the leds only on status change
         self.data_widget.set_led_state(1, self.consumer["acquisition_board_state_1"][-1])
         self.data_widget.set_led_state(2, self.consumer["acquisition_board_state_2"][-1])
         self.data_widget.set_led_state(3, self.consumer["acquisition_board_state_3"][-1])
