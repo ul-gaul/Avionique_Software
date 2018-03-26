@@ -1,5 +1,6 @@
 from PyQt5 import QtWidgets
 import pyqtgraph as pqtg
+from src.ui.altitude_graph import AltitudeGraph
 from src.ui.gl_rocket import GlRocket
 from src.ui.header import Header
 from src.ui.thermometer import Thermometer
@@ -21,14 +22,6 @@ class DataWidget(QtWidgets.QWidget):
         self.thermometer = None
         self.setup_ui()
         self.leds = [self.led_1, self.led_2, self.led_3, self.led_4, self.led_5, self.led_6]
-
-        self.graphicsView.plotItem.setTitle("Altitude")
-        self.graphicsView.plotItem.setLabel("bottom", "Temps", "Sec")
-        self.graphicsView.plotItem.setLabel("left", "Altitude (ft)")
-        self.altitude_curve = self.graphicsView.plot([0], [0], pen=pqtg.mkPen(color='k', width=3))
-        self.simulation_curve = None
-        self.textItem = None
-        self.current_altitude_point = self.graphicsView.plotItem.scatterPlot([], [], pxMode=True, size=8, brush=pqtg.mkBrush(color='r'))
 
         self.graphicsView_2.plotItem.setTitle("Position relative au camp")
         self.graphicsView_2.plotItem.setLabel("bottom", "Est", "m")
@@ -80,11 +73,8 @@ class DataWidget(QtWidgets.QWidget):
         self.verticalLayout = QtWidgets.QVBoxLayout()
         self.verticalLayout.setObjectName("verticalLayout")
 
-        self.graphicsView = pqtg.PlotWidget(self)
-        set_minimum_expanding_size_policy(self.graphicsView)
-        self.graphicsView.setMinimumSize(QtCore.QSize(400, 150))
-        self.graphicsView.setObjectName("graphicsView")
-        self.verticalLayout.addWidget(self.graphicsView)
+        self.altitude_graph = AltitudeGraph(self)
+        self.verticalLayout.addWidget(self.altitude_graph)
 
         spacerItem2 = QtWidgets.QSpacerItem(20, 70, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
         self.verticalLayout.addItem(spacerItem2)
@@ -216,35 +206,19 @@ class DataWidget(QtWidgets.QWidget):
         self.leds[led_num - 1].set_state(is_on)
 
     def set_target_altitude(self, altitude):
-        self.graphicsView.plotItem.addLine(y=altitude, pen=pqtg.mkPen(color='b', width=3, style=QtCore.Qt.DashDotLine))
+        self.altitude_graph.set_target_altitude(altitude)
 
     def draw_voltage(self, values: list):
         self.voltage_curve.setData(values)
 
     def draw_altitude(self, values: list):
-        self.altitude_curve.setData(values)
-
-        nb_points = len(values)
-        current_altitude = int(values[-1])
-
-        self.current_altitude_point.setData([nb_points - 1], [current_altitude])
-
-        if self.textItem is not None:
-            self.graphicsView.removeItem(self.textItem)
-
-        if nb_points >= 2:
-            self.textItem = pqtg.TextItem(text=str(current_altitude), color='r', anchor=(1, 1))
-            self.textItem.setPos(nb_points - 1, current_altitude)
-            self.graphicsView.addItem(self.textItem)
+        self.altitude_graph.draw(values)
 
     def draw_map(self, eastings: list, northings: list):
         self.positions_on_map.setData(eastings, northings)
 
     def show_simulation(self, simulation):
-        if self.simulation_curve is None:
-            self.simulation_curve = self.graphicsView.plot(simulation.time, simulation.altitude, pen=pqtg.mkPen(color='b', width=3))
-        else:
-            self.simulation_curve.setData(simulation.time, simulation.altitude)
+        self.altitude_graph.show_simulation(simulation.time, simulation.altitude)
 
     def rotate_rocket_model(self, w, x, y, z):
         #tr = pqtg.Transform3D()
