@@ -7,7 +7,7 @@ from src.consumer import Consumer
 from src.domain_error import DomainError
 from src.message_listener import MessageListener
 from src.message_type import MessageType
-from src.openrocketsimulation import OpenRocketSimulation
+from src.openrocket_simulation import OpenRocketSimulation
 
 
 # FIXME: this class should be abstract

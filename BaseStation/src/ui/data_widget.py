@@ -1,5 +1,6 @@
 from PyQt5 import QtWidgets
 import pyqtgraph as pqtg
+from src.openrocket_simulation import OpenRocketSimulation
 from src.ui.altitude_graph import AltitudeGraph
 from src.ui.gl_rocket import GlRocket
 from src.ui.header import Header
@@ -217,7 +218,7 @@ class DataWidget(QtWidgets.QWidget):
     def draw_map(self, eastings: list, northings: list):
         self.positions_on_map.setData(eastings, northings)
 
-    def show_simulation(self, simulation):
+    def show_simulation(self, simulation: OpenRocketSimulation):
         self.altitude_graph.show_simulation(simulation.time, simulation.altitude)
 
     def rotate_rocket_model(self, w, x, y, z):
