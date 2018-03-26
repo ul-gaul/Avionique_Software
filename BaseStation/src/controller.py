@@ -20,6 +20,7 @@ class Controller:
         self.target_altitude = 10000
         self.sampling_frequency = 1
         self.fps = 0
+        # TODO: add self.update_3d_model to the ui_update_functions once the 3D rendering is optimized and stops lagging
         self.ui_update_functions = [self.update_plots, self.update_leds, self.update_thermometer]
         self.message_listeners = []
         self.thread = Thread(target=self.drawing_thread)
@@ -39,10 +40,10 @@ class Controller:
             if self.consumer.has_new_data:
                 self.call_ui_update_functions()
                 self.consumer.has_new_data = False
+                QApplication.processEvents()
                 now = time.time()
                 dt = now - last_time
                 last_time = now
-                QApplication.processEvents()
                 if dt < 1.0 / self.sampling_frequency:
                     time.sleep(1.0 / self.sampling_frequency - dt)
 
@@ -50,6 +51,8 @@ class Controller:
         self.data_widget.draw_altitude(self.consumer["altitude_feet"])
         self.data_widget.draw_map(self.consumer["easting"], self.consumer["northing"])
         self.data_widget.draw_voltage(self.consumer["voltage"])
+
+    def update_3d_model(self):
         self.data_widget.rotate_rocket_model(*self.consumer.get_rocket_rotation())
 
     def update_leds(self):
