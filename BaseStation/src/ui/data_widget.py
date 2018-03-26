@@ -1,4 +1,4 @@
-from PyQt5 import QtWidgets, QtCore
+from PyQt5 import QtWidgets
 import pyqtgraph as pqtg
 from src.ui.gl_rocket import GlRocket
 from src.ui.header import Header
@@ -27,6 +27,8 @@ class DataWidget(QtWidgets.QWidget):
         self.graphicsView.plotItem.setLabel("left", "Altitude (ft)")
         self.altitude_curve = self.graphicsView.plot([0], [0], pen=pqtg.mkPen(color='k', width=3))
         self.simulation_curve = None
+        self.textItem = None
+        self.current_altitude_point = self.graphicsView.plotItem.scatterPlot([], [], pxMode=True, size=8, brush=pqtg.mkBrush(color='r'))
 
         self.graphicsView_2.plotItem.setTitle("Position relative au camp")
         self.graphicsView_2.plotItem.setLabel("bottom", "Est", "m")
@@ -214,13 +216,26 @@ class DataWidget(QtWidgets.QWidget):
         self.leds[led_num - 1].set_state(is_on)
 
     def set_target_altitude(self, altitude):
-        self.graphicsView.plotItem.addLine(y=altitude, pen=pqtg.mkPen(color='r', width=3))
+        self.graphicsView.plotItem.addLine(y=altitude, pen=pqtg.mkPen(color='b', width=3, style=QtCore.Qt.DashDotLine))
 
     def draw_voltage(self, values: list):
         self.voltage_curve.setData(values)
 
     def draw_altitude(self, values: list):
         self.altitude_curve.setData(values)
+
+        nb_points = len(values)
+        current_altitude = int(values[-1])
+
+        self.current_altitude_point.setData([nb_points - 1], [current_altitude])
+
+        if self.textItem is not None:
+            self.graphicsView.removeItem(self.textItem)
+
+        if nb_points >= 2:
+            self.textItem = pqtg.TextItem(text=str(current_altitude), color='r', anchor=(1, 1))
+            self.textItem.setPos(nb_points - 1, current_altitude)
+            self.graphicsView.addItem(self.textItem)
 
     def draw_map(self, eastings: list, northings: list):
         self.positions_on_map.setData(eastings, northings)
