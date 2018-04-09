@@ -109,13 +109,6 @@ class DataWidget(QtWidgets.QWidget):
         self.glView.setObjectName("glView")
         self.verticalLayout_2.addWidget(self.glView)
         """
-        """
-        self.openGLWidget = QtWidgets.QOpenGLWidget(self)
-        set_minimum_expanding_size_policy(self.openGLWidget)
-        self.openGLWidget.setMinimumSize(QtCore.QSize(200, 400))
-        self.openGLWidget.setObjectName("openGLWidget")
-        self.verticalLayout_2.addWidget(self.openGLWidget)
-        """
         self.glRocket = GlRocket(self)
         self.verticalLayout_2.addWidget(self.glRocket)
 
@@ -222,9 +215,6 @@ class DataWidget(QtWidgets.QWidget):
         self.altitude_graph.show_simulation(simulation.time, simulation.altitude)
 
     def rotate_rocket_model(self, w, x, y, z):
-        #tr = pqtg.Transform3D()
-        #tr.rotate(w, x, y, z)
-        #self.cylinder_mesh_item.setTransform(tr)
         self.glRocket.rotate_rocket(w, x, y, z)
 
     def set_thermometer_value(self, temperature: float):

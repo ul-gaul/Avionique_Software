@@ -1,7 +1,7 @@
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from PyQt5 import QtCore
-from PyQt5.QtWidgets import QOpenGLWidget, QSizePolicy
+from PyQt5.QtWidgets import QOpenGLWidget
 
 from src.ui.utils import set_minimum_expanding_size_policy
 
@@ -12,7 +12,7 @@ class GlRocket(QOpenGLWidget):
         set_minimum_expanding_size_policy(self)
         self.setMinimumSize(QtCore.QSize(200, 400))
         self.setObjectName("GlRocket")
-        self.vertices = [(0.3, 0, 1), (0.3, 0, 0), (0.7, 0, 0.1), (0.7, 0, 0.5)]
+        self.fin_vertices = [(0.3, 0, 1), (0.3, 0, 0), (0.7, 0, 0.1), (0.7, 0, 0.5)]
         self._rocket_orientation = (0, 0, 0, 0)
 
     def draw_rocket(self):
@@ -40,13 +40,13 @@ class GlRocket(QOpenGLWidget):
     def draw_fin(self):
         glBegin(GL_QUADS)
         glTexCoord2f(0, 0)
-        glVertex3f(self.vertices[0][0], self.vertices[0][1], self.vertices[0][2])
+        glVertex3f(self.fin_vertices[0][0], self.fin_vertices[0][1], self.fin_vertices[0][2])
         glTexCoord2f(0, 1)
-        glVertex3f(self.vertices[1][0], self.vertices[1][1], self.vertices[1][2])
+        glVertex3f(self.fin_vertices[1][0], self.fin_vertices[1][1], self.fin_vertices[1][2])
         glTexCoord2f(1, 1)
-        glVertex3f(self.vertices[2][0], self.vertices[2][1], self.vertices[2][2])
+        glVertex3f(self.fin_vertices[2][0], self.fin_vertices[2][1], self.fin_vertices[2][2])
         glTexCoord2f(1, 0)
-        glVertex3f(self.vertices[3][0], self.vertices[3][1], self.vertices[3][2])
+        glVertex3f(self.fin_vertices[3][0], self.fin_vertices[3][1], self.fin_vertices[3][2])
         glEnd()
 
     @staticmethod
@@ -65,7 +65,8 @@ class GlRocket(QOpenGLWidget):
         glMatrixMode(GL_MODELVIEW)
         glPushMatrix()
         glLoadIdentity()
-        glRotatef(self._rocket_orientation[0], self._rocket_orientation[1], self._rocket_orientation[2], self._rocket_orientation[3])
+        glRotatef(self._rocket_orientation[0], self._rocket_orientation[1], self._rocket_orientation[2],
+                  self._rocket_orientation[3])
         self.draw_rocket()
         glPopMatrix()
         glFlush()
