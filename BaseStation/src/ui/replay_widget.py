@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QPushButton
+from PyQt5.QtWidgets import QPushButton, QLabel
 from src.ui.data_widget import DataWidget
 from src.ui.ExtendedQSlider import ExtendedQSlider
 
@@ -16,6 +16,8 @@ class ReplayWidget(DataWidget):
         self.init_button(self.play_pause_button, "play_pause_button", "Play", self.play)
         self.fast_forward_button = QPushButton(self.widget)
         self.init_button(self.fast_forward_button, "fast_forward_button", "FF", self.fast_forward)
+        self.speedLabel = QLabel()
+        self.main_layout.addWidget(self.speedLabel)
 
     def set_callback(self, name, func):
         self.callbacks.update({name: func})
@@ -53,3 +55,6 @@ class ReplayWidget(DataWidget):
             self.callbacks["fast_forward"]()
         except KeyError:
             pass
+
+    def update_replay_speed_text(self, speed):
+        self.speedLabel.setText('{}x'.format(speed))
