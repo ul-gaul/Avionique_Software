@@ -1,3 +1,4 @@
+import threading
 import unittest
 from unittest.mock import MagicMock
 
@@ -12,10 +13,11 @@ class FileDataProducerTest(unittest.TestCase):
     DATA = [RocketPacket(), RocketPacket()]
 
     def test_init_should_load_data_from_data_persister(self):
+        lock = threading.Lock()
         data_persister = DataPersister()
         data_persister.load = MagicMock(return_value=self.DATA)
 
-        file_data_producer = FileDataProducer(data_persister, self.SAVE_FILE_PATH)
+        file_data_producer = FileDataProducer(lock, data_persister, self.SAVE_FILE_PATH)
 
         data_persister.load.assert_called_with(self.SAVE_FILE_PATH)
-        self.assertEqual(file_data_producer.data, self.DATA)
+        self.assertEqual(file_data_producer.all_rocket_packets, self.DATA)

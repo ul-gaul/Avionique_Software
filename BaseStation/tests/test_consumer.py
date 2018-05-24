@@ -1,5 +1,7 @@
+import threading
 import unittest
 from unittest.mock import Mock
+
 from src.consumer import Consumer
 from src.data_producer import DataProducer
 from src.rocket_packet import RocketPacket
@@ -9,7 +11,7 @@ class ConsumerTest(unittest.TestCase):
 
     def setUp(self):
         self.sampling_frequency = 1
-        self.producer = DataProducer()
+        self.producer = DataProducer(threading.Lock())
         self.consumer = Consumer(self.producer, self.sampling_frequency)
 
     def test_constructor(self):
@@ -32,7 +34,7 @@ class ConsumerTest(unittest.TestCase):
         dummy_data_list1 = [i for i in range(number_of_properties)]
         dummy_data_list2 = [2 * i for i in range(number_of_properties)]
         rocket_packet_list = [RocketPacket(dummy_data_list1), RocketPacket(dummy_data_list2)]
-        self.producer.get_data = Mock(return_value=rocket_packet_list)
+        self.producer.get_available_rocket_packets = Mock(return_value=rocket_packet_list)
 
         self.consumer.update()
 
@@ -43,7 +45,7 @@ class ConsumerTest(unittest.TestCase):
                 self.assertEqual(self.consumer[key][i], value)
 
     def test_update_with_no_data(self):
-        self.producer.get_data = Mock(return_value=[])
+        self.producer.get_available_rocket_packets = Mock(return_value=[])
 
         self.consumer.update()
 
