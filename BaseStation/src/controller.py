@@ -12,14 +12,14 @@ from src.openrocket_simulation import OpenRocketSimulation
 
 # FIXME: this class should be abstract
 class Controller:
-    def __init__(self):
+    def __init__(self, frame_per_second: float = 1.0):
         self.data_widget = None
         self.is_running = False
         self.data_producer = None
         self.consumer = None
         self.target_altitude = 10000
         self.sampling_frequency = 1
-        self.fps = 0
+        self.refresh_delay = 1.0 / frame_per_second
         # TODO: add self.update_3d_model to the ui_update_functions once the 3D rendering is optimized and stops lagging
         self.ui_update_functions = [self.update_plots, self.update_leds, self.update_thermometer]
         self.message_listeners = []
@@ -37,15 +37,18 @@ class Controller:
         last_time = time.time()
         while self.is_running:
             self.consumer.update()
-            if self.consumer.has_new_data:
+
+            if self.consumer.has_data():
                 self.call_ui_update_functions()
-                self.consumer.has_new_data = False
-                QApplication.processEvents()
-                now = time.time()
-                dt = now - last_time
-                last_time = now
-                if dt < 1.0 / self.sampling_frequency:
-                    time.sleep(1.0 / self.sampling_frequency - dt)
+            QApplication.processEvents()
+
+            self.consumer.clear()
+
+            now = time.time()
+            dt = now - last_time
+            last_time = now
+            if dt < self.refresh_delay:
+                time.sleep(self.refresh_delay - dt)
 
     def update_plots(self):
         self.data_widget.draw_altitude(self.consumer["altitude_feet"])
