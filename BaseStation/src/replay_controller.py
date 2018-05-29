@@ -1,5 +1,4 @@
 import threading
-
 from src.consumer import Consumer
 from src.controller import Controller
 from src.file_data_producer import FileDataProducer
@@ -17,8 +16,8 @@ class ReplayController(Controller):
         self.data_widget.set_callback("fast_forward", self.fast_forward_button_callback)
         self.data_widget.set_callback("rewind", self.rewind_button_callback)
         csv_data_persister = CsvDataPersister()     # FIXME: this should not be instantiated here
-        self.replay_manipulation_mutex = threading.Lock()
-        self.data_producer = FileDataProducer(csv_data_persister, filename, self.replay_manipulation_mutex)
+        playback_state_mutex = threading.Lock()
+        self.data_producer = FileDataProducer(csv_data_persister, filename, playback_state_mutex)
         self.consumer = Consumer(self.data_producer, self.sampling_frequency)
         self.consumer.update()
         self.update_plots()
@@ -32,26 +31,11 @@ class ReplayController(Controller):
         self.data_producer.suspend()
 
     def fast_forward_button_callback(self):
-        self.replay_manipulation_mutex.acquire()
-        if self.data_producer.is_real_speed():
-            self.data_producer.set_mode_forward()
-        if self.data_producer.is_going_forward():
-            self.data_producer.accelerate()
-        else:
-            self.data_producer.decelerate()
-        self.replay_manipulation_mutex.release()
+        self.data_producer.fast_forward()
         self.update_replay_speed_indicator()
 
     def rewind_button_callback(self):
-        self.replay_manipulation_mutex.acquire()
-        # todo: need to make backward production work first
-        # if self.data_producer.is_real_speed():
-        #     self.data_producer.set_mode_backward()
-        if self.data_producer.is_going_backward():
-            self.data_producer.accelerate()
-        else:
-            self.data_producer.decelerate()
-        self.replay_manipulation_mutex.release()
+        self.data_producer.rewind()
         self.update_replay_speed_indicator()
 
     def update_replay_speed_indicator(self):

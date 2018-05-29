@@ -4,17 +4,18 @@ import queue
 
 from src.data_producer import DataProducer
 from src.data_persister import DataPersister
-from src.time_travel import TimeTravel
+from src.playback_state import PlaybackState
 
 
 class FileDataProducer(DataProducer):
 
-    def __init__(self, data_persister: DataPersister, filename: str, mutex: threading.Lock):
+    def __init__(self, data_persister: DataPersister, filename: str, mutex: threading.Lock,
+                 speed=1.0, mode=1):
         super().__init__()
         self.started_event = threading.Event()
-        self.time_travel = TimeTravel()
+        self.playback_state = PlaybackState(speed, mode)
         self.data = data_persister.load(filename)
-        self.time_travel_mutex = mutex
+        self.playback_state_mutex = mutex
 
         for packet in self.data:
             self.rocket_packets.put(packet)
@@ -40,10 +41,12 @@ class FileDataProducer(DataProducer):
         index = 0
         while self.is_running:
             self.started_event.wait()
-            self.time_travel_mutex.acquire()
             if (index + 1) < len(self.data):
                 wait = self.data[index + 1].time_stamp - self.data[index].time_stamp
-                time.sleep(wait / self.time_travel.get_speed())
+                self.playback_state_mutex.acquire()
+                wait /= self.playback_state.get_speed()
+                self.playback_state_mutex.release()
+                time.sleep(wait)
                 self.rocket_packets.put(self.data[index])
                 index += 1
             elif index < len(self.data):
@@ -51,28 +54,51 @@ class FileDataProducer(DataProducer):
                 index += 1
             else:
                 time.sleep(1)
-            self.time_travel_mutex.release()
 
-    def accelerate(self):
-        self.time_travel.speed_up()
+    def fast_forward(self):
+        self.playback_state_mutex.acquire()
+        if self.is_real_speed():
+            self._set_mode_forward()
+        if self.is_going_forward():
+            self._accelerate()
+        else:
+            self._decelerate()
+        self.playback_state_mutex.release()
 
-    def decelerate(self):
-        self.time_travel.speed_down()
+    def rewind(self):
+        self.playback_state_mutex.acquire()
+        # todo: need to make backward production work first
+        if self.is_real_speed():
+            self._set_mode_backward()
+        if self.is_going_backward():
+            self._accelerate()
+        else:
+            self._decelerate()
+        self.playback_state_mutex.release()
 
-    def set_mode_forward(self):
-        self.time_travel.set_mode_forward()
+    def _accelerate(self):
+        self.playback_state.speed_up()
 
-    def set_mode_backward(self):
-        self.time_travel.set_mode_backward()
+    def _decelerate(self):
+        self.playback_state.speed_down()
+
+    def _set_mode_forward(self):
+        self.playback_state.set_mode_forward()
+
+    def _set_mode_backward(self):
+        self.playback_state.set_mode_backward()
 
     def is_real_speed(self):
-        return self.time_travel.is_neutral()
+        return self.playback_state.is_neutral()
 
     def is_going_forward(self):
-        return self.time_travel.is_going_forward()
+        return self.playback_state.is_going_forward()
 
     def is_going_backward(self):
-        return self.time_travel.is_going_backward()
+        return self.playback_state.is_going_backward()
 
     def get_speed(self):
-        return self.time_travel.get_speed()
+        return self.playback_state.get_speed()
+
+    def get_mode(self):
+        return self.playback_state.get_mode()
