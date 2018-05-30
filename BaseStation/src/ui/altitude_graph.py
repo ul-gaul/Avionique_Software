@@ -32,7 +32,8 @@ class AltitudeGraph(PlotWidget):
 
             self.altitude_curve.setData(values)
             self.current_altitude_point.setData([nb_points - 1], [current_altitude])
-            self.update_current_altitude_text(nb_points, current_altitude)
+            # FIXME: this makes the app crash randomly when resizing the axis of the graph
+            # self.update_current_altitude_text(nb_points, current_altitude)
 
     def update_current_altitude_text(self, nb_points: int, current_altitude: int):
         if self.current_altitude_text is not None:

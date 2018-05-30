@@ -15,7 +15,7 @@ class FileDataProducer(DataProducer):
         self.available_rocket_packets.extend(self.all_rocket_packets)
 
     def start(self):
-        self.available_rocket_packets = []
+        self.clear_rocket_packets()
         self.thread = threading.Thread(target=self.run, args=())
         self.is_running = True
         self.thread.start()
@@ -38,10 +38,15 @@ class FileDataProducer(DataProducer):
             if (index + 1) < len(self.all_rocket_packets):
                 wait = self.all_rocket_packets[index + 1].time_stamp - self.all_rocket_packets[index].time_stamp
                 time.sleep(wait / self.accel_factor)
-                self.available_rocket_packets.append(self.all_rocket_packets[index])
+                self.add_rocket_packet(self.all_rocket_packets[index])
                 index += 1
             elif index < len(self.all_rocket_packets):
-                self.available_rocket_packets.append(self.all_rocket_packets[index])
+                self.add_rocket_packet(self.all_rocket_packets[index])
                 index += 1
             else:
                 time.sleep(1)
+
+    def clear_rocket_packets(self):
+        self.lock.acquire()
+        self.available_rocket_packets.clear()
+        self.lock.release()

@@ -1,6 +1,5 @@
 from threading import Thread
 import time
-from PyQt5.QtWidgets import QApplication
 from PyQt5.QtGui import QCloseEvent
 
 from src.consumer import Consumer
@@ -12,7 +11,7 @@ from src.openrocket_simulation import OpenRocketSimulation
 
 # FIXME: this class should be abstract
 class Controller:
-    def __init__(self, frame_per_second: float = 1.0):
+    def __init__(self, frame_per_second: float = 10.0):
         self.data_widget = None
         self.is_running = False
         self.data_producer = None
@@ -20,8 +19,7 @@ class Controller:
         self.target_altitude = 10000
         self.sampling_frequency = 1
         self.refresh_delay = 1.0 / frame_per_second
-        # TODO: add self.update_3d_model to the ui_update_functions once the 3D rendering is optimized and stops lagging
-        self.ui_update_functions = [self.update_plots, self.update_leds, self.update_thermometer]
+        self.ui_update_functions = [self.update_plots, self.update_leds, self.update_thermometer, self.update_3d_model]
         self.message_listeners = []
         self.thread = Thread(target=self.drawing_thread)
 
@@ -40,7 +38,6 @@ class Controller:
 
             if self.consumer.has_data():
                 self.call_ui_update_functions()
-            QApplication.processEvents()
 
             self.consumer.clear()
 
