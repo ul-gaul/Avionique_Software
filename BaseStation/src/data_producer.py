@@ -1,12 +1,15 @@
-import queue
 import abc
+import threading
+
+from src.rocket_packet import RocketPacket
 
 
 class DataProducer:
     __metaclass__ = abc.ABCMeta
 
-    def __init__(self):
-        self.rocket_packets = queue.Queue()
+    def __init__(self, lock: threading.Lock):
+        self.available_rocket_packets = []
+        self.lock = lock
         self.is_running = False
         self.thread = None
 
@@ -19,15 +22,17 @@ class DataProducer:
         self.is_running = False
         self.thread.join()
 
-    def get_data(self):
-        packet_list = []
-        while not self.rocket_packets.empty():
-            try:
-                packet_list.append(self.rocket_packets.get_nowait())
-                self.rocket_packets.task_done()
-            except queue.Empty:
-                pass
+    def get_available_rocket_packets(self):
+        self.lock.acquire()
+        packet_list = list(self.available_rocket_packets)
+        self.lock.release()
+
         return packet_list
+
+    def add_rocket_packet(self, rocket_packet: RocketPacket):
+        self.lock.acquire()
+        self.available_rocket_packets.append(rocket_packet)
+        self.lock.release()
 
     @abc.abstractmethod
     def run(self):

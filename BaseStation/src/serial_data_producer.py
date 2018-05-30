@@ -2,7 +2,7 @@ import glob
 import sys
 import struct
 import serial
-from threading import Thread
+import threading
 
 from src.domain_error import DomainError
 from src.data_persister import DataPersister
@@ -12,8 +12,9 @@ from src.rocket_packet import RocketPacket
 
 class SerialDataProducer(DataProducer):
 
-    def __init__(self, data_persister: DataPersister, baudrate=57600, start_character=b's', sampling_frequency=1):
-        super().__init__()
+    def __init__(self, lock: threading.Lock, data_persister: DataPersister, baudrate=57600, start_character=b's',
+                 sampling_frequency=1):
+        super().__init__(lock)
         self.data_persister = data_persister
         self.port = serial.Serial()
         self.port.baudrate = baudrate
@@ -24,9 +25,8 @@ class SerialDataProducer(DataProducer):
         self.num_bytes_to_read = RocketPacket.size_in_bytes + 1
         self.format = RocketPacket.format + "B"
 
-        self.flightData = []
         self.unsaved_data = False
-        self.thread = Thread(target=self.run)
+        self.thread = threading.Thread(target=self.run)
 
     def start(self):
         ports = self.detect_serial_ports()
@@ -48,8 +48,7 @@ class SerialDataProducer(DataProducer):
                     if self.validate_checksum(data_array):
                         rocket_packet = RocketPacket(data_list[:-1])
                         print(rocket_packet)
-                        self.rocket_packets.put(rocket_packet)
-                        self.flightData.append(rocket_packet)
+                        self.add_rocket_packet(rocket_packet)
                         self.unsaved_data = True
                 except struct.error:
                     """
@@ -60,7 +59,7 @@ class SerialDataProducer(DataProducer):
         self.port.close()
 
     def save(self, filename: str):
-        self.data_persister.save(filename, self.flightData)
+        self.data_persister.save(filename, self.available_rocket_packets)
         self.unsaved_data = False
 
     def has_unsaved_data(self):

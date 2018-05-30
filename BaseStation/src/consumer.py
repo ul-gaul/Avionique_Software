@@ -14,7 +14,6 @@ class Consumer:
         self.data_producer = data_producer
         self.sampling_frequency = sampling_frequency
         self.data = {}
-        self.has_new_data = False
         self.create_keys_from_packet_format()
         self.data["altitude_feet"] = []
         self.data["easting"] = []
@@ -30,14 +29,13 @@ class Consumer:
             self.data[key] = []
 
     def update(self):
-        rocket_packets = self.data_producer.get_data()
+        rocket_packets = self.data_producer.get_available_rocket_packets()
         if len(rocket_packets) > 0:
             for packet in rocket_packets:
                 for key, value in packet.items():
                     self.data[key].append(value)
                 self.data["altitude_feet"].append(packet.altitude * METERS2FEET)
                 self.manage_coordinates(packet)
-            self.has_new_data = True
 
     def __getitem__(self, key):
         return self.data[key]
@@ -66,3 +64,10 @@ class Consumer:
 
     def get_average_temperature(self):
         return self.data["temperature_1"][-1]
+
+    def clear(self):
+        for data_list in self.data.values():
+            data_list.clear()
+
+    def has_data(self):
+        return len(self.data["time_stamp"]) != 0
