@@ -5,6 +5,7 @@ class PlaybackState:
     class Mode(Enum):
         MOVE_FORWARD = 1
         MOVE_BACKWARD = 2
+
     min_speed_factor = 1.0
     max_speed_factor = 16.0
 
@@ -31,7 +32,7 @@ class PlaybackState:
         self.mode = self.Mode.MOVE_BACKWARD
 
     def is_neutral(self):
-        return self.speed_factor == 1.0
+        return self.speed_factor == self.min_speed_factor
 
     def is_going_forward(self):
         return self.mode == self.Mode.MOVE_FORWARD

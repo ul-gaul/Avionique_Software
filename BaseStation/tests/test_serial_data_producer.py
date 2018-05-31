@@ -1,3 +1,4 @@
+import threading
 import unittest
 from unittest.mock import MagicMock
 
@@ -9,19 +10,21 @@ class SerialDataProducerTest(unittest.TestCase):
 
     SAVE_FILE_PATH = "foo/bar.csv"
 
+    def setUp(self):
+        self.lock = threading.Lock()
+        self.data_persister = DataPersister()
+
     def test_save_should_call_DataPersister_with_flight_data(self):
-        data_persister = DataPersister()
-        data_persister.save = MagicMock()
-        serial_data_producer = SerialDataProducer(data_persister)
+        self.data_persister.save = MagicMock()
+        serial_data_producer = SerialDataProducer(self.lock, self.data_persister)
 
         serial_data_producer.save(self.SAVE_FILE_PATH)
 
-        data_persister.save.assert_called_with(self.SAVE_FILE_PATH, serial_data_producer.flightData)
+        self.data_persister.save.assert_called_with(self.SAVE_FILE_PATH, serial_data_producer.available_rocket_packets)
 
     def test_no_unsaved_data_after_save(self):
-        data_persister = DataPersister()
-        data_persister.save = MagicMock()
-        serial_data_producer = SerialDataProducer(data_persister)
+        self.data_persister.save = MagicMock()
+        serial_data_producer = SerialDataProducer(self.lock, self.data_persister)
         serial_data_producer.unsaved_data = True
 
         serial_data_producer.save(self.SAVE_FILE_PATH)

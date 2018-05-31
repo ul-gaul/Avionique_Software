@@ -1,4 +1,5 @@
 import threading
+
 from src.consumer import Consumer
 from src.controller import Controller
 from src.file_data_producer import FileDataProducer
@@ -16,8 +17,9 @@ class ReplayController(Controller):
         self.data_widget.set_callback("fast_forward", self.fast_forward_button_callback)
         self.data_widget.set_callback("rewind", self.rewind_button_callback)
         csv_data_persister = CsvDataPersister()     # FIXME: this should not be instantiated here
-        playback_state_mutex = threading.Lock()
-        self.data_producer = FileDataProducer(csv_data_persister, filename, playback_state_mutex)
+        data_lock = threading.Lock()
+        playback_lock = threading.Lock()
+        self.data_producer = FileDataProducer(csv_data_persister, filename, data_lock, playback_lock)
         self.consumer = Consumer(self.data_producer, self.sampling_frequency)
         self.consumer.update()
         self.update_plots()

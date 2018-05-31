@@ -1,6 +1,5 @@
 import threading
 import time
-import queue
 
 from src.data_producer import DataProducer
 from src.data_persister import DataPersister
@@ -9,19 +8,17 @@ from src.playback_state import PlaybackState
 
 class FileDataProducer(DataProducer):
 
-    def __init__(self, data_persister: DataPersister, filename: str, mutex: threading.Lock,
-                 speed=1.0, mode=1):
-        super().__init__()
+    def __init__(self, data_persister: DataPersister, filename: str, data_lock: threading.Lock,
+                 playback_lock: threading.Lock, speed=1.0, mode=PlaybackState.Mode.MOVE_FORWARD):
+        super().__init__(data_lock)
         self.started_event = threading.Event()
         self.playback_state = PlaybackState(speed, mode)
-        self.data = data_persister.load(filename)
-        self.playback_state_mutex = mutex
-
-        for packet in self.data:
-            self.rocket_packets.put(packet)
+        self.playback_lock = playback_lock
+        self.all_rocket_packets = data_persister.load(filename)
+        self.available_rocket_packets.extend(self.all_rocket_packets)
 
     def start(self):
-        self.rocket_packets = queue.Queue()
+        self.clear_rocket_packets()
         self.thread = threading.Thread(target=self.run, args=())
         self.is_running = True
         self.thread.start()
@@ -41,40 +38,39 @@ class FileDataProducer(DataProducer):
         index = 0
         while self.is_running:
             self.started_event.wait()
-            if (index + 1) < len(self.data):
-                wait = self.data[index + 1].time_stamp - self.data[index].time_stamp
-                self.playback_state_mutex.acquire()
+            if (index + 1) < len(self.all_rocket_packets):
+                wait = self.all_rocket_packets[index + 1].time_stamp - self.all_rocket_packets[index].time_stamp
+                self.playback_lock.acquire()
                 wait /= self.playback_state.get_speed()
-                self.playback_state_mutex.release()
+                self.playback_lock.release()
                 time.sleep(wait)
-                self.rocket_packets.put(self.data[index])
+                self.add_rocket_packet(self.all_rocket_packets[index])
                 index += 1
-            elif index < len(self.data):
-                self.rocket_packets.put(self.data[index])
+            elif index < len(self.all_rocket_packets):
+                self.add_rocket_packet(self.all_rocket_packets[index])
                 index += 1
             else:
                 time.sleep(1)
 
     def fast_forward(self):
-        self.playback_state_mutex.acquire()
+        self.playback_lock.acquire()
         if self.is_going_forward():
             self._accelerate()
         elif self.is_real_speed():
             self._set_mode_forward()
         else:
             self._decelerate()
-        self.playback_state_mutex.release()
+        self.playback_lock.release()
 
     def rewind(self):
-        self.playback_state_mutex.acquire()
-        # todo: need to make backward production work first
+        self.playback_lock.acquire()
         if self.is_going_backward():
             self._accelerate()
         elif self.is_real_speed():
             self._set_mode_backward()
         else:
             self._decelerate()
-        self.playback_state_mutex.release()
+        self.playback_lock.release()
 
     def _accelerate(self):
         self.playback_state.speed_up()
@@ -102,3 +98,8 @@ class FileDataProducer(DataProducer):
 
     def get_mode(self):
         return self.playback_state.get_mode()
+
+    def clear_rocket_packets(self):
+        self.lock.acquire()
+        self.available_rocket_packets.clear()
+        self.lock.release()
