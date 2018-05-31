@@ -15,8 +15,11 @@ class ReplayController(Controller):
         self.data_widget.set_callback("play", self.play_button_callback)
         self.data_widget.set_callback("pause", self.pause_button_callback)
         self.data_widget.set_callback("fast_forward", self.fast_forward_button_callback)
+        self.data_widget.set_callback("rewind", self.rewind_button_callback)
         csv_data_persister = CsvDataPersister()     # FIXME: this should not be instantiated here
-        self.data_producer = FileDataProducer(threading.Lock(), csv_data_persister, filename)
+        data_lock = threading.Lock()
+        playback_lock = threading.Lock()
+        self.data_producer = FileDataProducer(csv_data_persister, filename, data_lock, playback_lock)
         self.consumer = Consumer(self.data_producer, self.sampling_frequency)
         self.consumer.update()
         self.update_plots()
@@ -30,4 +33,12 @@ class ReplayController(Controller):
         self.data_producer.suspend()
 
     def fast_forward_button_callback(self):
-        pass
+        self.data_producer.fast_forward()
+        self.update_replay_speed_indicator()
+
+    def rewind_button_callback(self):
+        self.data_producer.rewind()
+        self.update_replay_speed_indicator()
+
+    def update_replay_speed_indicator(self):
+        self.data_widget.update_replay_speed_text(self.data_producer.get_speed())

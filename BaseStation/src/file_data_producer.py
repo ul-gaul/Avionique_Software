@@ -3,14 +3,17 @@ import time
 
 from src.data_producer import DataProducer
 from src.data_persister import DataPersister
+from src.playback_state import PlaybackState
 
 
 class FileDataProducer(DataProducer):
 
-    def __init__(self, lock: threading.Lock, data_persister: DataPersister, filename: str):
-        super().__init__(lock)
+    def __init__(self, data_persister: DataPersister, filename: str, data_lock: threading.Lock,
+                 playback_lock: threading.Lock, speed=1.0, mode=PlaybackState.Mode.MOVE_FORWARD):
+        super().__init__(data_lock)
         self.started_event = threading.Event()
-        self.accel_factor = 1.0
+        self.playback_state = PlaybackState(speed, mode)
+        self.playback_lock = playback_lock
         self.all_rocket_packets = data_persister.load(filename)
         self.available_rocket_packets.extend(self.all_rocket_packets)
 
@@ -37,7 +40,10 @@ class FileDataProducer(DataProducer):
             self.started_event.wait()
             if (index + 1) < len(self.all_rocket_packets):
                 wait = self.all_rocket_packets[index + 1].time_stamp - self.all_rocket_packets[index].time_stamp
-                time.sleep(wait / self.accel_factor)
+                self.playback_lock.acquire()
+                wait /= self.playback_state.get_speed()
+                self.playback_lock.release()
+                time.sleep(wait)
                 self.add_rocket_packet(self.all_rocket_packets[index])
                 index += 1
             elif index < len(self.all_rocket_packets):
@@ -45,6 +51,53 @@ class FileDataProducer(DataProducer):
                 index += 1
             else:
                 time.sleep(1)
+
+    def fast_forward(self):
+        self.playback_lock.acquire()
+        if self.is_going_forward():
+            self._accelerate()
+        elif self.is_real_speed():
+            self._set_mode_forward()
+        else:
+            self._decelerate()
+        self.playback_lock.release()
+
+    def rewind(self):
+        self.playback_lock.acquire()
+        if self.is_going_backward():
+            self._accelerate()
+        elif self.is_real_speed():
+            self._set_mode_backward()
+        else:
+            self._decelerate()
+        self.playback_lock.release()
+
+    def _accelerate(self):
+        self.playback_state.speed_up()
+
+    def _decelerate(self):
+        self.playback_state.speed_down()
+
+    def _set_mode_forward(self):
+        self.playback_state.set_mode_forward()
+
+    def _set_mode_backward(self):
+        self.playback_state.set_mode_backward()
+
+    def is_real_speed(self):
+        return self.playback_state.is_neutral()
+
+    def is_going_forward(self):
+        return self.playback_state.is_going_forward()
+
+    def is_going_backward(self):
+        return self.playback_state.is_going_backward()
+
+    def get_speed(self):
+        return self.playback_state.get_speed()
+
+    def get_mode(self):
+        return self.playback_state.get_mode()
 
     def clear_rocket_packets(self):
         self.lock.acquire()
