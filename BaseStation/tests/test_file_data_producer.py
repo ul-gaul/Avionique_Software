@@ -14,8 +14,7 @@ class FileDataProducerTest(unittest.TestCase):
     DATA = [RocketPacket(), RocketPacket()]
     MUTEX = threading.Lock()
 
-    def setUp(self, *args, **kwargs):
-        super().setUp(*args, **kwargs)
+    def setUp(self):
         self.data_persister = DataPersister()
         self.data_persister.load = MagicMock(return_value=self.DATA)
 
@@ -28,8 +27,7 @@ class FileDataProducerTest(unittest.TestCase):
     def test_accelerate_should_double_speed(self):
         initial_speed = 1.0
         final_speed = initial_speed * 2
-        file_data_producer = FileDataProducer(self.data_persister, self.SAVE_FILE_PATH,
-                                              self.MUTEX, initial_speed)
+        file_data_producer = FileDataProducer(self.data_persister, self.SAVE_FILE_PATH, self.MUTEX, initial_speed)
 
         file_data_producer._accelerate()
 
@@ -38,8 +36,8 @@ class FileDataProducerTest(unittest.TestCase):
     def test_decelerate_should_half_speed(self):
         initial_speed = 4.0
         final_speed = initial_speed / 2
-        file_data_producer = FileDataProducer(self.data_persister, self.SAVE_FILE_PATH,
-                                              self.MUTEX, initial_speed)
+        file_data_producer = FileDataProducer(self.data_persister, self.SAVE_FILE_PATH, self.MUTEX, initial_speed)
+
         file_data_producer._decelerate()
 
         self.assertEqual(file_data_producer.get_speed(), final_speed)
@@ -48,8 +46,9 @@ class FileDataProducerTest(unittest.TestCase):
         initial_speed = 1.0
         initial_mode = PlaybackState.Mode.MOVE_FORWARD
         final_speed = initial_speed * 2
-        file_data_producer = FileDataProducer(self.data_persister, self.SAVE_FILE_PATH,
-                                              self.MUTEX, initial_speed, initial_mode)
+        file_data_producer = FileDataProducer(self.data_persister, self.SAVE_FILE_PATH, self.MUTEX, initial_speed,
+                                              initial_mode)
+
         file_data_producer.fast_forward()
 
         self.assertEqual(file_data_producer.get_speed(), final_speed)
@@ -58,8 +57,9 @@ class FileDataProducerTest(unittest.TestCase):
         initial_speed = 4.0
         initial_mode = PlaybackState.Mode.MOVE_BACKWARD
         final_speed = initial_speed / 2
-        file_data_producer = FileDataProducer(self.data_persister, self.SAVE_FILE_PATH,
-                                              self.MUTEX, initial_speed, initial_mode)
+        file_data_producer = FileDataProducer(self.data_persister, self.SAVE_FILE_PATH, self.MUTEX, initial_speed,
+                                              initial_mode)
+
         file_data_producer.fast_forward()
 
         self.assertEqual(file_data_producer.get_speed(), final_speed)
@@ -68,8 +68,9 @@ class FileDataProducerTest(unittest.TestCase):
         initial_speed = 1.0
         initial_mode = PlaybackState.Mode.MOVE_BACKWARD
         final_mode = PlaybackState.Mode.MOVE_FORWARD
-        file_data_producer = FileDataProducer(self.data_persister, self.SAVE_FILE_PATH,
-                                              self.MUTEX, initial_speed, initial_mode)
+        file_data_producer = FileDataProducer(self.data_persister, self.SAVE_FILE_PATH, self.MUTEX, initial_speed,
+                                              initial_mode)
+
         file_data_producer.fast_forward()
 
         self.assertEqual(file_data_producer.get_mode(), final_mode)
@@ -78,8 +79,9 @@ class FileDataProducerTest(unittest.TestCase):
     def test_fast_forward_should_not_accelerate_beyond_max_speed(self):
         initial_speed = PlaybackState.max_speed_factor
         initial_mode = PlaybackState.Mode.MOVE_FORWARD
-        file_data_producer = FileDataProducer(self.data_persister, self.SAVE_FILE_PATH,
-                                              self.MUTEX, initial_speed, initial_mode)
+        file_data_producer = FileDataProducer(self.data_persister, self.SAVE_FILE_PATH, self.MUTEX, initial_speed,
+                                              initial_mode)
+
         file_data_producer.fast_forward()
 
         self.assertEqual(file_data_producer.get_mode(), PlaybackState.Mode.MOVE_FORWARD)
@@ -89,8 +91,9 @@ class FileDataProducerTest(unittest.TestCase):
         initial_speed = 1.0
         initial_mode = PlaybackState.Mode.MOVE_BACKWARD
         final_speed = initial_speed * 2
-        file_data_producer = FileDataProducer(self.data_persister, self.SAVE_FILE_PATH,
-                                              self.MUTEX, initial_speed, initial_mode)
+        file_data_producer = FileDataProducer(self.data_persister, self.SAVE_FILE_PATH, self.MUTEX, initial_speed,
+                                              initial_mode)
+
         file_data_producer.rewind()
 
         self.assertEqual(file_data_producer.get_speed(), final_speed)
@@ -99,8 +102,9 @@ class FileDataProducerTest(unittest.TestCase):
         initial_speed = 2.0
         initial_mode = PlaybackState.Mode.MOVE_FORWARD
         final_speed = initial_speed / 2
-        file_data_producer = FileDataProducer(self.data_persister, self.SAVE_FILE_PATH,
-                                              self.MUTEX, initial_speed, initial_mode)
+        file_data_producer = FileDataProducer(self.data_persister, self.SAVE_FILE_PATH, self.MUTEX, initial_speed,
+                                              initial_mode)
+
         file_data_producer.rewind()
 
         self.assertEqual(file_data_producer.get_speed(), final_speed)
@@ -110,8 +114,9 @@ class FileDataProducerTest(unittest.TestCase):
         initial_speed = 1.0
         initial_mode = PlaybackState.Mode.MOVE_FORWARD
         final_mode = PlaybackState.Mode.MOVE_BACKWARD
-        file_data_producer = FileDataProducer(self.data_persister, self.SAVE_FILE_PATH,
-                                              self.MUTEX, initial_speed, initial_mode)
+        file_data_producer = FileDataProducer(self.data_persister, self.SAVE_FILE_PATH, self.MUTEX, initial_speed,
+                                              initial_mode)
+
         file_data_producer.rewind()
 
         self.assertEqual(file_data_producer.get_mode(), final_mode)
@@ -120,8 +125,9 @@ class FileDataProducerTest(unittest.TestCase):
     def test_rewind_should_not_accelerate_beyond_max_speed(self):
         initial_speed = PlaybackState.max_speed_factor
         initial_mode = PlaybackState.Mode.MOVE_BACKWARD
-        file_data_producer = FileDataProducer(self.data_persister, self.SAVE_FILE_PATH,
-                                              self.MUTEX, initial_speed, initial_mode)
+        file_data_producer = FileDataProducer(self.data_persister, self.SAVE_FILE_PATH, self.MUTEX, initial_speed,
+                                              initial_mode)
+
         file_data_producer.rewind()
 
         self.assertEqual(file_data_producer.get_mode(), PlaybackState.Mode.MOVE_BACKWARD)
