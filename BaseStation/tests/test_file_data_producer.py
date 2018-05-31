@@ -85,6 +85,20 @@ class FileDataProducerTest(unittest.TestCase):
         file_data_producer.fast_forward()
 
         self.assertEqual(file_data_producer.get_mode(), final_mode)
+        self.assertEqual(file_data_producer.get_speed(), initial_speed)
+
+    def test_fast_forward_should_not_accelerate_beyond_max_speed(self):
+        data_persister = DataPersister()
+        data_persister.load = MagicMock(return_value=self.DATA)
+        initial_speed = PlaybackState.max_speed_factor
+        initial_mode = PlaybackState.Mode.MOVE_FORWARD
+
+        file_data_producer = FileDataProducer(data_persister, self.SAVE_FILE_PATH,
+                                              self.MUTEX, initial_speed, initial_mode)
+        file_data_producer.fast_forward()
+
+        self.assertEqual(file_data_producer.get_mode(), PlaybackState.Mode.MOVE_FORWARD)
+        self.assertEqual(file_data_producer.get_speed(), PlaybackState.max_speed_factor)
 
     def test_rewind_should_accelerate_backward(self):
         data_persister = DataPersister()
@@ -111,6 +125,7 @@ class FileDataProducerTest(unittest.TestCase):
         file_data_producer.rewind()
 
         self.assertEqual(file_data_producer.get_speed(), final_speed)
+        self.assertEqual(file_data_producer.get_mode(), PlaybackState.Mode.MOVE_FORWARD)
 
     def test_rewind_should_set_mode_backward_when_applicable(self):
         data_persister = DataPersister()
@@ -124,3 +139,17 @@ class FileDataProducerTest(unittest.TestCase):
         file_data_producer.rewind()
 
         self.assertEqual(file_data_producer.get_mode(), final_mode)
+        self.assertEqual(file_data_producer.get_speed(), initial_speed)
+
+    def test_rewind_should_not_accelerate_beyond_max_speed(self):
+        data_persister = DataPersister()
+        data_persister.load = MagicMock(return_value=self.DATA)
+        initial_speed = PlaybackState.max_speed_factor
+        initial_mode = PlaybackState.Mode.MOVE_BACKWARD
+
+        file_data_producer = FileDataProducer(data_persister, self.SAVE_FILE_PATH,
+                                              self.MUTEX, initial_speed, initial_mode)
+        file_data_producer.rewind()
+
+        self.assertEqual(file_data_producer.get_mode(), PlaybackState.Mode.MOVE_BACKWARD)
+        self.assertEqual(file_data_producer.get_speed(), PlaybackState.max_speed_factor)

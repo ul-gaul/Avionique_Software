@@ -57,10 +57,10 @@ class FileDataProducer(DataProducer):
 
     def fast_forward(self):
         self.playback_state_mutex.acquire()
-        if self.is_real_speed():
-            self._set_mode_forward()
         if self.is_going_forward():
             self._accelerate()
+        elif self.is_real_speed():
+            self._set_mode_forward()
         else:
             self._decelerate()
         self.playback_state_mutex.release()
@@ -68,10 +68,10 @@ class FileDataProducer(DataProducer):
     def rewind(self):
         self.playback_state_mutex.acquire()
         # todo: need to make backward production work first
-        if self.is_real_speed():
-            self._set_mode_backward()
         if self.is_going_backward():
             self._accelerate()
+        elif self.is_real_speed():
+            self._set_mode_backward()
         else:
             self._decelerate()
         self.playback_state_mutex.release()
