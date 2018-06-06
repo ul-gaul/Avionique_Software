@@ -38,19 +38,35 @@ class FileDataProducer(DataProducer):
         index = 0
         while self.is_running:
             self.started_event.wait()
+            self.update_replay()
+
             if (index + 1) < len(self.all_rocket_packets):
+                self.add_rocket_packet(self.all_rocket_packets[index])
                 wait = self.all_rocket_packets[index + 1].time_stamp - self.all_rocket_packets[index].time_stamp
                 self.playback_lock.acquire()
                 wait /= self.playback_state.get_speed()
                 self.playback_lock.release()
                 time.sleep(wait)
-                self.add_rocket_packet(self.all_rocket_packets[index])
                 index += 1
             elif index < len(self.all_rocket_packets):
                 self.add_rocket_packet(self.all_rocket_packets[index])
                 index += 1
             else:
                 time.sleep(1)
+
+    def update_replay(self):
+        if self.is_going_forward():
+            self.play_next_frame()
+        else:
+            self.play_previous_frame()
+
+    def play_next_frame(self):
+        # TODO
+        pass
+
+    def play_previous_frame(self):
+        # TODO
+        pass
 
     def fast_forward(self):
         self.playback_lock.acquire()

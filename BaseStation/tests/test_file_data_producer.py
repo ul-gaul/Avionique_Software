@@ -1,6 +1,7 @@
 import threading
+import time
 import unittest
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 from src.data_persister import DataPersister
 from src.file_data_producer import FileDataProducer
@@ -145,3 +146,19 @@ class FileDataProducerTest(unittest.TestCase):
         file_data_producer.clear_rocket_packets()
 
         self.assertEqual(file_data_producer.available_rocket_packets, [])
+
+    @patch('time.sleep')
+    def test_mock_sleep(self, patched_time_sleep):
+        # time.sleep = MagicMock()
+
+        time.sleep(10)
+
+        patched_time_sleep.assert_called_with(10)
+
+    def test_update_replay_should_push_data_and_sleep_when_going_forward_with_many_packets_left(self):
+        file_data_producer = FileDataProducer(self.data_persister, self.SAVE_FILE_PATH, self.DATA_LOCK,
+                                              self.PLAYBACK_LOCK)
+
+        file_data_producer.update_replay()
+
+
