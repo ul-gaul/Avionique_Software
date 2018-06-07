@@ -1,5 +1,4 @@
 import threading
-import time
 import unittest
 from unittest.mock import MagicMock, patch
 
@@ -12,21 +11,28 @@ from src.playback_state import PlaybackState
 class FileDataProducerTest(unittest.TestCase):
 
     SAVE_FILE_PATH = "foo/bar.csv"
-    DATA = [RocketPacket(), RocketPacket()]
+    TIME_STAMP_1 = 1
+    TIME_STAMP_2 = 5
+    SPEED = 2
     DATA_LOCK = threading.Lock()
     PLAYBACK_LOCK = threading.Lock()
 
     def setUp(self):
-        self.lock = threading.Lock()
+        rocket_packet_1 = RocketPacket()
+        rocket_packet_1.time_stamp = self.TIME_STAMP_1
+        rocket_packet_2 = RocketPacket()
+        rocket_packet_2.time_stamp = self.TIME_STAMP_2
+        self.data = [rocket_packet_1, rocket_packet_2]
+
         self.data_persister = DataPersister()
-        self.data_persister.load = MagicMock(return_value=self.DATA)
+        self.data_persister.load = MagicMock(return_value=self.data)
 
     def test_init_should_load_data_from_data_persister(self):
         file_data_producer = FileDataProducer(self.data_persister, self.SAVE_FILE_PATH, self.DATA_LOCK,
                                               self.PLAYBACK_LOCK)
 
         self.data_persister.load.assert_called_with(self.SAVE_FILE_PATH)
-        self.assertEqual(file_data_producer.all_rocket_packets, self.DATA)
+        self.assertEqual(file_data_producer.all_rocket_packets, self.data)
 
     def test_accelerate_should_double_speed(self):
         initial_speed = 1.0
@@ -148,17 +154,130 @@ class FileDataProducerTest(unittest.TestCase):
         self.assertEqual(file_data_producer.available_rocket_packets, [])
 
     @patch('time.sleep')
-    def test_mock_sleep(self, patched_time_sleep):
-        # time.sleep = MagicMock()
-
-        time.sleep(10)
-
-        patched_time_sleep.assert_called_with(10)
-
-    def test_update_replay_should_push_data_and_sleep_when_going_forward_with_many_packets_left(self):
+    def test_update_replay_should_push_data_when_fast_forwarding_during_replay(self, _):
         file_data_producer = FileDataProducer(self.data_persister, self.SAVE_FILE_PATH, self.DATA_LOCK,
                                               self.PLAYBACK_LOCK)
+        file_data_producer.index = initial_index = len(self.data) - 2
+        initial_number_of_available_packets = len(file_data_producer.available_rocket_packets)
 
         file_data_producer.update_replay()
 
+        self.assertEqual(len(file_data_producer.available_rocket_packets), initial_number_of_available_packets + 1)
+        self.assertEqual(file_data_producer.index, initial_index + 1)
 
+    @patch('time.sleep')
+    def test_update_replay_should_sleep_when_fast_forwarding_during_replay(self, patched_time_sleep):
+        file_data_producer = FileDataProducer(self.data_persister, self.SAVE_FILE_PATH, self.DATA_LOCK,
+                                              self.PLAYBACK_LOCK)
+        file_data_producer.index = len(self.data) - 2
+
+        file_data_producer.update_replay()
+
+        patched_time_sleep.assert_called_with(self.TIME_STAMP_2 - self.TIME_STAMP_1)
+
+    @patch('time.sleep')
+    def test_update_replay_should_sleep_less_when_fast_forwarding_during_replay(self, patched_time_sleep):
+        file_data_producer = FileDataProducer(self.data_persister, self.SAVE_FILE_PATH, self.DATA_LOCK,
+                                              self.PLAYBACK_LOCK, speed=self.SPEED)
+        file_data_producer.index = len(self.data) - 2
+
+        file_data_producer.update_replay()
+
+        sleep_time = (self.TIME_STAMP_2 - self.TIME_STAMP_1) / self.SPEED
+        patched_time_sleep.assert_called_with(sleep_time)
+
+    def test_update_replay_should_push_data_when_fast_forwarding_on_last_packet(self):
+        file_data_producer = FileDataProducer(self.data_persister, self.SAVE_FILE_PATH, self.DATA_LOCK,
+                                              self.PLAYBACK_LOCK)
+        file_data_producer.index = initial_index = len(self.data) - 1
+        initial_number_of_available_packets = len(file_data_producer.available_rocket_packets)
+
+        file_data_producer.update_replay()
+
+        self.assertEqual(len(file_data_producer.available_rocket_packets), initial_number_of_available_packets + 1)
+        self.assertEqual(file_data_producer.index, initial_index + 1)
+
+    @patch('time.sleep')
+    def test_update_replay_should_not_sleep_when_fast_forwarding_on_last_packet(self, patched_time_sleep):
+        file_data_producer = FileDataProducer(self.data_persister, self.SAVE_FILE_PATH, self.DATA_LOCK,
+                                              self.PLAYBACK_LOCK)
+        file_data_producer.index = len(self.data) - 1
+
+        file_data_producer.update_replay()
+
+        patched_time_sleep.assert_not_called()
+
+    @patch('time.sleep')
+    def test_update_replay_should_sleep_when_fast_forwarding_at_end_of_replay(self, patched_time_sleep):
+        file_data_producer = FileDataProducer(self.data_persister, self.SAVE_FILE_PATH, self.DATA_LOCK,
+                                              self.PLAYBACK_LOCK)
+        file_data_producer.index = len(self.data)
+
+        file_data_producer.update_replay()
+
+        patched_time_sleep.assert_called_with(file_data_producer.END_OF_PLAYBACK_SLEEP_DELAY)
+
+    @patch('time.sleep')
+    def test_update_replay_should_sleep_when_rewinding_at_beginning_of_replay(self, patched_time_sleep):
+        file_data_producer = FileDataProducer(self.data_persister, self.SAVE_FILE_PATH, self.DATA_LOCK,
+                                              self.PLAYBACK_LOCK, mode=PlaybackState.Mode.MOVE_BACKWARD)
+        file_data_producer.index = 0
+
+        file_data_producer.update_replay()
+
+        patched_time_sleep.assert_called_with(file_data_producer.END_OF_PLAYBACK_SLEEP_DELAY)
+
+    def test_update_replay_should_pop_data_when_rewinding_on_first_packet(self):
+        file_data_producer = FileDataProducer(self.data_persister, self.SAVE_FILE_PATH, self.DATA_LOCK,
+                                              self.PLAYBACK_LOCK, mode=PlaybackState.Mode.MOVE_BACKWARD)
+        file_data_producer.index = 1
+        initial_number_of_available_packets = len(file_data_producer.available_rocket_packets)
+
+        file_data_producer.update_replay()
+
+        self.assertEqual(len(file_data_producer.available_rocket_packets), initial_number_of_available_packets - 1)
+        self.assertEqual(file_data_producer.index, 0)
+
+    @patch('time.sleep')
+    def test_update_replay_should_not_sleep_when_rewinding_on_first_packet(self, patched_time_sleep):
+        file_data_producer = FileDataProducer(self.data_persister, self.SAVE_FILE_PATH, self.DATA_LOCK,
+                                              self.PLAYBACK_LOCK, mode=PlaybackState.Mode.MOVE_BACKWARD)
+        file_data_producer.index = 1
+
+        file_data_producer.update_replay()
+
+        patched_time_sleep.assert_not_called()
+
+    @patch('time.sleep')
+    def test_update_replay_should_pop_data_when_rewinding_during_replay(self, _):
+        file_data_producer = FileDataProducer(self.data_persister, self.SAVE_FILE_PATH, self.DATA_LOCK,
+                                              self.PLAYBACK_LOCK, mode=PlaybackState.Mode.MOVE_BACKWARD)
+        file_data_producer.index = initial_index = 2
+        initial_number_of_available_packets = len(file_data_producer.available_rocket_packets)
+
+        file_data_producer.update_replay()
+
+        self.assertEqual(len(file_data_producer.available_rocket_packets), initial_number_of_available_packets - 1)
+        self.assertEqual(file_data_producer.index, initial_index - 1)
+
+    @patch('time.sleep')
+    def test_update_replay_should_sleep_when_rewinding_during_replay(self, patched_time_sleep):
+        file_data_producer = FileDataProducer(self.data_persister, self.SAVE_FILE_PATH, self.DATA_LOCK,
+                                              self.PLAYBACK_LOCK, mode=PlaybackState.Mode.MOVE_BACKWARD)
+        file_data_producer.index = 2
+
+        file_data_producer.update_replay()
+
+        patched_time_sleep.assert_called_with(self.TIME_STAMP_2 - self.TIME_STAMP_1)
+
+    @patch('time.sleep')
+    def test_update_replay_should_sleep_less_when_rewinding_faster_during_replay(self, patched_time_sleep):
+        file_data_producer = FileDataProducer(self.data_persister, self.SAVE_FILE_PATH, self.DATA_LOCK,
+                                              self.PLAYBACK_LOCK, speed=self.SPEED,
+                                              mode=PlaybackState.Mode.MOVE_BACKWARD)
+        file_data_producer.index = 2
+
+        file_data_producer.update_replay()
+
+        sleep_time = (self.TIME_STAMP_2 - self.TIME_STAMP_1) / self.SPEED
+        patched_time_sleep.assert_called_with(sleep_time)
