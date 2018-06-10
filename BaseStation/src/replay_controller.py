@@ -3,6 +3,7 @@ import threading
 from src.consumer import Consumer
 from src.controller import Controller
 from src.file_data_producer import FileDataProducer
+from src.playback_state import PlaybackState
 from src.ui.replay_widget import ReplayWidget
 from src.persistence.csv_data_persister import CsvDataPersister
 
@@ -19,7 +20,8 @@ class ReplayController(Controller):
         csv_data_persister = CsvDataPersister()     # FIXME: this should not be instantiated here
         data_lock = threading.Lock()
         playback_lock = threading.Lock()
-        self.data_producer = FileDataProducer(csv_data_persister, filename, data_lock, playback_lock)
+        playback_state = PlaybackState(1, PlaybackState.Mode.FORWARD)
+        self.data_producer = FileDataProducer(csv_data_persister, filename, data_lock, playback_lock, playback_state)
         self.consumer = Consumer(self.data_producer, self.sampling_frequency)
         self.consumer.update()
         self.update_plots()

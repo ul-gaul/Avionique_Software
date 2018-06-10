@@ -11,11 +11,11 @@ class FileDataProducer(DataProducer):
     END_OF_PLAYBACK_SLEEP_DELAY = 1
 
     def __init__(self, data_persister: DataPersister, filename: str, data_lock: threading.Lock,
-                 playback_lock: threading.Lock, speed=1.0, mode=PlaybackState.Mode.MOVE_FORWARD):
+                 playback_lock: threading.Lock, playback_state: PlaybackState):
         super().__init__(data_lock)
         self.index = 0
         self.started_event = threading.Event()
-        self.playback_state = PlaybackState(speed, mode)
+        self.playback_state = playback_state
         self.playback_lock = playback_lock
         self.all_rocket_packets = data_persister.load(filename)
         self.available_rocket_packets.extend(self.all_rocket_packets)
@@ -44,7 +44,7 @@ class FileDataProducer(DataProducer):
             self.update_replay()
 
     def update_replay(self):
-        if self.is_going_forward():
+        if self.playback_state.is_going_forward():
             self._play_next_frame()
         else:
             self._play_previous_frame()
@@ -94,44 +94,13 @@ class FileDataProducer(DataProducer):
 
     def fast_forward(self):
         self.playback_lock.acquire()
-        if self.is_going_forward():
-            self._accelerate()
-        elif self.is_real_speed():
-            self._set_mode_forward()
-        else:
-            self._decelerate()
+        self.playback_state.fast_forward()
         self.playback_lock.release()
 
     def rewind(self):
         self.playback_lock.acquire()
-        if self.is_going_backward():
-            self._accelerate()
-        elif self.is_real_speed():
-            self._set_mode_backward()
-        else:
-            self._decelerate()
+        self.playback_state.rewind()
         self.playback_lock.release()
-
-    def _accelerate(self):
-        self.playback_state.speed_up()
-
-    def _decelerate(self):
-        self.playback_state.speed_down()
-
-    def _set_mode_forward(self):
-        self.playback_state.set_mode_forward()
-
-    def _set_mode_backward(self):
-        self.playback_state.set_mode_backward()
-
-    def is_real_speed(self):
-        return self.playback_state.is_neutral()
-
-    def is_going_forward(self):
-        return self.playback_state.is_going_forward()
-
-    def is_going_backward(self):
-        return self.playback_state.is_going_backward()
 
     def get_speed(self):
         return self.playback_state.get_speed()
