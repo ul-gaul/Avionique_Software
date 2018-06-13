@@ -32,14 +32,9 @@ void loop()
   rp.rocketData.accelY = accel(timestamp);
   rp.rocketData.accelZ = 0;
   rp.rocketData.altitude = altitude(timestamp);
-  rp.rocketData.latitude1 = latitude(timestamp);
-  rp.rocketData.longitude1 = longitude(timestamp);
-  rp.rocketData.latitude2 = latitude(timestamp);
-  rp.rocketData.longitude2 = longitude(timestamp);
-  rp.rocketData.temperature1 = temperature1(timestamp);
-  rp.rocketData.timeHour = 0;
-  rp.rocketData.timeMinute = 0;
-  rp.rocketData.timeSecond = 0;
+  rp.rocketData.latitude = latitude(timestamp);
+  rp.rocketData.longitude = longitude(timestamp);
+  rp.rocketData.temperature = temperature1(timestamp);
   rp.rocketData.quaterniona = quaternionA(timestamp);
   rp.rocketData.quaternionb = quaternionB(timestamp);
   rp.rocketData.quaternionc = quaternionC(timestamp);
@@ -52,11 +47,6 @@ void loop()
   rp.rocketData.etatBoardPayload1 = etatBoard(timestamp);
   rp.rocketData.voltage = 3.3;
   rp.rocketData.courant = 0.001;
-  rp.rocketData.angSpeedXPayload = payloadX(timestamp);
-  rp.rocketData.angSpeedYPayload = payloadY(timestamp);
-  rp.rocketData.angSpeedZPayload = payloadZ(timestamp);
-  rp.rocketData.camera = 128;
-  rp.rocketData.deploiement = 255;
 
   //Calcul du checksum
   byte dataBuffer[sizeof(RocketData)];

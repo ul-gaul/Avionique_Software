@@ -41,7 +41,7 @@ class Consumer:
         return self.data[key]
 
     def manage_coordinates(self, packet):
-        easting, northing = self.coordinate_converter.from_long_lat_to_utm(packet.longitude_1, packet.latitude_1)
+        easting, northing = self.coordinate_converter.from_long_lat_to_utm(packet.longitude, packet.latitude)
 
         num_packets_received = len(self.data["time_stamp"])
 
@@ -63,7 +63,7 @@ class Consumer:
                self.data["quaternion_z"][-1]
 
     def get_average_temperature(self):
-        return self.data["temperature_1"][-1]
+        return self.data["temperature"][-1]
 
     def clear(self):
         for data_list in self.data.values():
