@@ -3,8 +3,6 @@ import os
 
 
 class RocketPacket:
-    format = "<fffffffffffffffBBBBBBff"
-    size_in_bytes = 74
 
     def __init__(self, data_list=None):
         self.time_stamp = 0
@@ -48,9 +46,9 @@ class RocketPacket:
         self.current = 0
 
         if data_list is not None:
-            self.fill(data_list)
+            self._fill(data_list)
 
-    def fill(self, data_list):
+    def _fill(self, data_list):
         self.time_stamp = data_list[0]
         self.angular_speed_x = data_list[1]
         self.angular_speed_y = data_list[2]
@@ -74,6 +72,7 @@ class RocketPacket:
         self.payload_board_state_1 = data_list[20]
         self.voltage = data_list[21]
         self.current = data_list[22]
+        # TODO: add support for magnetometer
 
     @staticmethod
     def keys():
