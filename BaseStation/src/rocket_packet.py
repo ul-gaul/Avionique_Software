@@ -3,8 +3,6 @@ import os
 
 
 class RocketPacket:
-    format = "<ffffffffffffffffffffBBBBBBfffffBB"
-    size_in_bytes = 108
 
     def __init__(self, data_list=None):
         self.time_stamp = 0
@@ -23,17 +21,11 @@ class RocketPacket:
         self.altitude = 0
 
         # Coordonnees GPS en degres
-        self.latitude_1 = 0
-        self.longitude_1 = 0
-        self.latitude_2 = 0
-        self.longitude_2 = 0
+        self.latitude = 0
+        self.longitude = 0
 
         # Temperature en degres Celsius
-        self.temperature_1 = 0
-
-        self.time_hour = 0
-        self.time_minute = 0  # average between temperature_1 and temperature_2
-        self.time_second = 0
+        self.temperature = 0
 
         # Orientation sous forme de quaternion
         self.quaternion_w = 0
@@ -53,19 +45,10 @@ class RocketPacket:
         self.voltage = 0
         self.current = 0
 
-        # donnees payload
-        self.angSpeed_payload_x = 0
-        self.angSpeed_payload_y = 0
-        self.angSpeed_payload_z = 0
-
-        # donnees de controler
-        self.camera = 0
-        self.deployment = 0
-
         if data_list is not None:
-            self.fill(data_list)
+            self._fill(data_list)
 
-    def fill(self, data_list):
+    def _fill(self, data_list):
         self.time_stamp = data_list[0]
         self.angular_speed_x = data_list[1]
         self.angular_speed_y = data_list[2]
@@ -74,41 +57,30 @@ class RocketPacket:
         self.acceleration_y = data_list[5]
         self.acceleration_z = data_list[6]
         self.altitude = data_list[7]
-        self.latitude_1 = data_list[8]
-        self.longitude_1 = data_list[9]
-        self.latitude_2 = data_list[10]
-        self.longitude_2 = data_list[11]
-        self.temperature_1 = data_list[12]
-        self.time_hour = data_list[13]
-        self.time_minute = data_list[14]
-        self.time_second = data_list[15]
-        self.quaternion_w = data_list[16]
-        self.quaternion_x = data_list[17]
-        self.quaternion_y = data_list[18]
-        self.quaternion_z = data_list[19]
-        self.acquisition_board_state_1 = data_list[20]
-        self.acquisition_board_state_2 = data_list[21]
-        self.acquisition_board_state_3 = data_list[22]
-        self.power_supply_state_1 = data_list[23]
-        self.power_supply_state_2 = data_list[24]
-        self.payload_board_state_1 = data_list[25]
-        self.voltage = data_list[26]
-        self.current = data_list[27]
-        self.angSpeed_payload_x = data_list[28]
-        self.angSpeed_payload_y = data_list[29]
-        self.angSpeed_payload_z = data_list[30]
-        self.camera = data_list[31]
-        self.deployment = data_list[32]
+        self.latitude = data_list[8]
+        self.longitude = data_list[9]
+        self.temperature = data_list[10]
+        self.quaternion_w = data_list[11]
+        self.quaternion_x = data_list[12]
+        self.quaternion_y = data_list[13]
+        self.quaternion_z = data_list[14]
+        self.acquisition_board_state_1 = data_list[15]
+        self.acquisition_board_state_2 = data_list[16]
+        self.acquisition_board_state_3 = data_list[17]
+        self.power_supply_state_1 = data_list[18]
+        self.power_supply_state_2 = data_list[19]
+        self.payload_board_state_1 = data_list[20]
+        self.voltage = data_list[21]
+        self.current = data_list[22]
+        # TODO: add support for magnetometer
 
     @staticmethod
     def keys():
         return ["time_stamp", "angular_speed_x", "angular_speed_y", "angular_speed_z", "acceleration_x",
-                "acceleration_y", "acceleration_z", "altitude", "latitude_1", "longitude_1", "latitude_2",
-                "longitude_2", "temperature_1", "time_hour", "time_minute", "time_second", "quaternion_w",
+                "acceleration_y", "acceleration_z", "altitude", "latitude", "longitude", "temperature", "quaternion_w",
                 "quaternion_x", "quaternion_y", "quaternion_z", "acquisition_board_state_1",
                 "acquisition_board_state_2", "acquisition_board_state_3", "power_supply_state_1",
-                "power_supply_state_2", "payload_board_state_1", "voltage", "current", "angSpeed_payload_x",
-                "angSpeed_payload_y", "angSpeed_payload_z", "camera", "deployment"]
+                "power_supply_state_2", "payload_board_state_1", "voltage", "current"]
 
     def items(self):
         return self.__dict__.items()
@@ -140,16 +112,10 @@ class RocketPacket:
 
         print("Altitude                  : {}\n".format(self.altitude))
 
-        print("Latitude 1                : {}".format(self.latitude_1))
-        print("Longitude 1               : {}".format(self.longitude_1))
-        print("Latitude 2                : {}".format(self.latitude_2))
-        print("Longitude 2               : {}\n".format(self.longitude_2))
+        print("Latitude                  : {}".format(self.latitude))
+        print("Longitude                 : {}".format(self.longitude))
 
-        print("Temperature               : {}\n".format(self.temperature_1))
-
-        print("Hour                      : {}".format(self.time_hour))
-        print("Minute                    : {}".format(self.time_minute))
-        print("Second                    : {}\n".format(self.time_second))
+        print("Temperature               : {}\n".format(self.temperature))
 
         print("Quaternion W              : {}".format(self.quaternion_w))
         print("Quaternion X              : {}".format(self.quaternion_x))
@@ -165,10 +131,3 @@ class RocketPacket:
 
         print("Voltage                   : {}".format(self.voltage))
         print("Courant                   : {}\n".format(self.current))
-
-        print("Payload Ang Speed X       : {}".format(self.angSpeed_payload_x))
-        print("Payload Ang Speed Y       : {}".format(self.angSpeed_payload_y))
-        print("Payload Ang Speed Z       : {}\n".format(self.angSpeed_payload_z))
-
-        print("Camera                    : {}".format(self.camera))
-        print("Deploiment                : {}\n".format(self.deployment))

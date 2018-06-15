@@ -7,23 +7,23 @@ import threading
 from src.domain_error import DomainError
 from src.data_persister import DataPersister
 from src.data_producer import DataProducer
-from src.rocket_packet import RocketPacket
+from src.rocket_packet_parser import RocketPacketParser
 
 
 class SerialDataProducer(DataProducer):
 
-    def __init__(self, lock: threading.Lock, data_persister: DataPersister, baudrate=57600, start_character=b's',
-                 sampling_frequency=1):
+    def __init__(self, lock: threading.Lock, data_persister: DataPersister, rocket_packet_parser: RocketPacketParser,
+                 baudrate=9600, start_character=b's', sampling_frequency=1):
         super().__init__(lock)
         self.data_persister = data_persister
+        self.rocket_packet_parser = rocket_packet_parser
         self.port = serial.Serial()
         self.port.baudrate = baudrate
         self.port.timeout = sampling_frequency
         self.start_character = start_character
 
         # RocketPacket data + 1 byte for checksum
-        self.num_bytes_to_read = RocketPacket.size_in_bytes + 1
-        self.format = RocketPacket.format + "B"
+        self.num_bytes_to_read = self.rocket_packet_parser.get_number_of_bytes() + 1
 
         self.unsaved_data = False
         self.thread = threading.Thread(target=self.run)
@@ -41,21 +41,20 @@ class SerialDataProducer(DataProducer):
         while self.is_running:
             c = self.port.read(1)
             if c == self.start_character:
-                data_array = self.port.read(self.num_bytes_to_read)
-                try:
-                    data_list = struct.unpack(self.format, data_array)
+                data_bytes = self.port.read(self.num_bytes_to_read)
 
-                    if self.validate_checksum(data_array):
-                        rocket_packet = RocketPacket(data_list[:-1])
+                if self.validate_checksum(data_bytes):
+                    try:
+                        rocket_packet = self.rocket_packet_parser.parse(data_bytes[:-1])
                         print(rocket_packet)
                         self.add_rocket_packet(rocket_packet)
                         self.unsaved_data = True
-                except struct.error:
-                    """
-                    This error can occur if we don't read enough bytes on the serial port or if the packet format is
-                    incorrect.
-                    """
-                    print("Invalid packet")
+                    except struct.error:
+                        """
+                        This error can occur if we don't read enough bytes on the serial port or if the packet format is
+                        incorrect.
+                        """
+                        print("Invalid packet")
         self.port.close()
 
     def save(self, filename: str):
@@ -96,7 +95,7 @@ class SerialDataProducer(DataProducer):
 
     # FIXME: extract to a Checksum class, implementing a ValidationStrategy interface
     @staticmethod
-    def validate_checksum(data_array):
+    def validate_checksum(data_array: bytes):
         checksum = sum(data_array) % 256
         if checksum == 255:
             return True

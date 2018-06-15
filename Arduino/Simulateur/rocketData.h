@@ -9,31 +9,24 @@ typedef struct
     float timeStamp;
 
     //Angular Speed in Radian per Second
-	float angSpeedX;
-	float angSpeedY;
-	float angSpeedZ;
+    float angSpeedX;
+    float angSpeedY;
+    float angSpeedZ;
 
-	//Acceleration in g
-	float accelX;
-	float accelY;
-	float accelZ;
+    //Acceleration in g
+    float accelX;
+    float accelY;
+    float accelZ;
 
-	//Altitude in meter (avec un bmp180)
-	float altitude;
+    //Altitude in meter (avec un bmp180)
+    float altitude;
 
-	//GPS Coordinates in degrees (2e set est possible qu'il ne soit pas là)
-	float latitude1;
-	float longitude1;
-	float latitude2; 
-	float longitude2;
+    //GPS Coordinates in degrees (2e set est possible qu'il ne soit pas là)
+    float latitude;
+    float longitude;
 
     //Temperature in Celsius degrees
-    float temperature1;
-
-    //nouveau depuis 2016/2017:
-    float timeHour;
-    float timeMinute;
-    float timeSecond; //date du module RTC
+    float temperature;
 
     //position avec le bno055
     float quaterniona;
@@ -52,18 +45,6 @@ typedef struct
     //données alim
     float voltage; //pas utilisé pour l'instant
     float courant; //pas utilisé pour l'instant
-
-    //données payload
-    float angSpeedXPayload;
-    float angSpeedYPayload;
-    float angSpeedZPayload;
-
-    //données contrôle (qui ne seront probablement pas utilisées mais on sait jamais)
-    uint8_t camera; //pas utilisé pour l'instant
-    uint8_t deploiement; //pas utilisé pour l'instant 
-
-
-
 } RocketData;
 
 typedef struct
