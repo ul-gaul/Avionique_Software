@@ -20,7 +20,7 @@ class RealTimeController(Controller):
         self.data_widget.set_target_altitude(self.target_altitude)
         self.data_widget.set_button_callback(self.real_time_button_callback)
         csv_data_persister = CsvDataPersister()   # FIXME: this should not be instantiated here
-        rocket_packet_parser = RocketPacketParserFactory.create(2017)
+        rocket_packet_parser = RocketPacketParserFactory.create(2018)
         self.data_producer = SerialDataProducer(threading.Lock(), csv_data_persister, rocket_packet_parser,
                                                 sampling_frequency=self.sampling_frequency)
         self.ui_update_functions.append(self.update_timer)

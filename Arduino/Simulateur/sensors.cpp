@@ -136,18 +136,69 @@ uint8_t etatBoard(int timestamp)
     return 255;
   }
 }
-  float payloadX(int timestamp)
-  {
-    return 5.0;
-  }
+
+float payloadX(int timestamp)
+{
+  return 5.0;
+}
   
-  float payloadY(int timestamp)
+float payloadY(int timestamp)
+{
+  return 1023.0;
+}
+
+float payloadZ(int timestamp)
+{
+  return 600.0;
+}
+
+float magnetX(int timestamp)
+{
+  float t = (float)timestamp / FREQUENCY - T_TAKEOFF;
+  if(timestamp < T_ENGINE * FREQUENCY)
   {
-    return 1023.0;
+    return 90;
   }
-  
-  float payloadZ(int timestamp)
+  else if (timestamp < T_APOGEE * FREQUENCY)
   {
-    return 600.0;
+    return 87;
   }
+  else if (timestamp < T_PARACHUTE * FREQUENCY)
+  {
+    return -90;
+  }
+  else if (timestamp < T_LANDING * FREQUENCY)
+  {
+    return 90;
+  }
+  else
+  {
+    return 0;
+  }
+}
+
+float magnetZ(int timestamp)
+{
+  float t = (float)timestamp / FREQUENCY - T_TAKEOFF;
+  if(timestamp < T_TAKEOFF * FREQUENCY)
+  {
+    return 0;
+  }
+  else if(timestamp < T_ENGINE * FREQUENCY)
+  {
+    return sin(timestamp*M_PI/10);
+  }
+  else if (timestamp < T_APOGEE * FREQUENCY)
+  {
+    return 2*sin(timestamp*M_PI/10);;
+  }
+  else if (timestamp < T_PARACHUTE * FREQUENCY)
+  {
+    return 5*sin(timestamp*M_PI/10);;
+  }
+  else
+  {
+    return 0;
+  }
+}
 

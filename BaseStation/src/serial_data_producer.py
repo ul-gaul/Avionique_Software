@@ -13,7 +13,7 @@ from src.rocket_packet_parser import RocketPacketParser
 class SerialDataProducer(DataProducer):
 
     def __init__(self, lock: threading.Lock, data_persister: DataPersister, rocket_packet_parser: RocketPacketParser,
-                 baudrate=57600, start_character=b's', sampling_frequency=1):
+                 baudrate=9600, start_character=b's', sampling_frequency=1):
         super().__init__(lock)
         self.data_persister = data_persister
         self.rocket_packet_parser = rocket_packet_parser
