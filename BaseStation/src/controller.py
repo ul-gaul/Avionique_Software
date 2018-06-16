@@ -19,7 +19,7 @@ class Controller:
         self.target_altitude = 10000
         self.sampling_frequency = 1
         self.refresh_delay = 1.0 / frame_per_second
-        self.ui_update_functions = [self.update_plots, self.update_leds, self.update_thermometer, self.update_3d_model]
+        self.ui_update_functions = [self.update_plots, self.update_leds, self.update_thermometer]
         self.message_listeners = []
         self.thread = Thread(target=self.drawing_thread)
 

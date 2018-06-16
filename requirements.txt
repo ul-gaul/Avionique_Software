@@ -1,5 +1,5 @@
 pySerial
-pyQt5
+pyQt5==5.6
 pyopenGL
 pyproj
 pyqtgraph

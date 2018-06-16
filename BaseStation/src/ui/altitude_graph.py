@@ -1,5 +1,6 @@
-from PyQt5 import QtWidgets, QtCore
+from PyQt5 import QtWidgets, QtCore, QtGui
 from pyqtgraph import PlotWidget, mkPen, mkBrush, TextItem
+import pyqtgraph as pg
 
 from src.ui.utils import set_minimum_expanding_size_policy
 
@@ -25,12 +26,14 @@ class AltitudeGraph(PlotWidget):
         self.simulation_curve = None
 
     def draw(self, values: list):
+        print('attemting to draw altitude graph.')
         nb_points = len(values)
 
         if nb_points > 0:
             current_altitude = int(values[-1])
-
+            print('really drawing altitude graph.')
             self.altitude_curve.setData(values)
+            QtGui.QApplication.processEvents()
             self.current_altitude_point.setData([nb_points - 1], [current_altitude])
             # FIXME: this makes the app crash randomly when resizing the axis of the graph
             # self.update_current_altitude_text(nb_points, current_altitude)
