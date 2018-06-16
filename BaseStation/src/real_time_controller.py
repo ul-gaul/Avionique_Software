@@ -3,6 +3,7 @@ from datetime import datetime
 from PyQt5.QtGui import QCloseEvent
 from PyQt5.QtWidgets import QMessageBox, QFileDialog
 
+from src.config import ConfigLoader
 from src.rocket_packet_parser_factory import RocketPacketParserFactory
 from src.ui.real_time_widget import RealTimeWidget
 from src.controller import Controller
@@ -19,11 +20,13 @@ class RealTimeController(Controller):
         self.data_widget = real_time_widget
         self.data_widget.set_target_altitude(self.target_altitude)
         self.data_widget.set_button_callback(self.real_time_button_callback)
+        self.ui_update_functions.append(self.update_timer)
+
         csv_data_persister = CsvDataPersister()   # FIXME: this should not be instantiated here
-        rocket_packet_parser = RocketPacketParserFactory.create(2018)
+        config = ConfigLoader.load()
+        rocket_packet_parser = RocketPacketParserFactory.create(config.rocket_packet_version)
         self.data_producer = SerialDataProducer(threading.Lock(), csv_data_persister, rocket_packet_parser,
                                                 sampling_frequency=self.sampling_frequency)
-        self.ui_update_functions.append(self.update_timer)
 
     def update_timer(self):
         self.data_widget.set_time(self.consumer["time_stamp"][-1] / float(self.sampling_frequency))

@@ -1,5 +1,6 @@
 .idea/
 BaseStation/.idea/
+BaseStation/config.ini
 
 *.pyc
 *__pycache__*
