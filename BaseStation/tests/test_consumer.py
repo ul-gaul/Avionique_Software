@@ -74,3 +74,6 @@ class ConsumerTest(unittest.TestCase):
         consumer_has_data = self.consumer.has_data()
 
         self.assertFalse(consumer_has_data)
+
+    def test_fail(self):
+        self.fail("Testing CircleCI")
