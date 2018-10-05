@@ -38,7 +38,7 @@ jobs:
           name: run tests
           command: |
             . venv/bin/activate
-	    cd BaseStation
+            cd BaseStation
             python tests/main_test.py
 
       - store_artifacts:
