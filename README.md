@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/ul-gaul/Avionique_Software.svg?style=svg)](https://circleci.com/gh/ul-gaul/Avionique_Software)
+
 # GaulAvionique
 Groupe Aérospatial Université Laval, Team Software
 
