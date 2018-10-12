@@ -75,6 +75,3 @@ class ConsumerTest(unittest.TestCase):
 
         self.assertFalse(consumer_has_data)
 
-    def test_fail(self):
-        self.fail()
-
