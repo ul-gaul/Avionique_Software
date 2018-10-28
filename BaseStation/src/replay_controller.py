@@ -11,8 +11,7 @@ from src.persistence.csv_data_persister import CsvDataPersister
 class ReplayController(Controller):
 
     def __init__(self, replay_widget: ReplayWidget, filename: str):
-        super().__init__()
-        self.data_widget = replay_widget
+        super().__init__(replay_widget)
         self.data_widget.set_callback("play", self.play_button_callback)
         self.data_widget.set_callback("pause", self.pause_button_callback)
         self.data_widget.set_callback("fast_forward", self.fast_forward_button_callback)

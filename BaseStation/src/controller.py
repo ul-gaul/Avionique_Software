@@ -1,5 +1,5 @@
-from threading import Thread
 import time
+from threading import Thread
 from PyQt5.QtGui import QCloseEvent
 
 from src.consumer import Consumer
@@ -7,12 +7,13 @@ from src.domain_error import DomainError
 from src.message_listener import MessageListener
 from src.message_type import MessageType
 from src.openrocket_simulation import OpenRocketSimulation
+from src.ui.data_widget import DataWidget
 
 
 # FIXME: this class should be abstract
 class Controller:
-    def __init__(self, frame_per_second: float = 10.0):
-        self.data_widget = None
+    def __init__(self, data_widget: DataWidget, frame_per_second: float = 10.0):
+        self.data_widget = data_widget
         self.is_running = False
         self.data_producer = None
         self.consumer = None

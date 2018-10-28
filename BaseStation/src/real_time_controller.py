@@ -16,8 +16,7 @@ from src.persistence.csv_data_persister import CsvDataPersister
 class RealTimeController(Controller):
 
     def __init__(self, real_time_widget: RealTimeWidget):
-        super().__init__()
-        self.data_widget = real_time_widget
+        super().__init__(real_time_widget)
         self.data_widget.set_target_altitude(self.target_altitude)
         self.data_widget.set_button_callback(self.real_time_button_callback)
         self.ui_update_functions.append(self.update_timer)

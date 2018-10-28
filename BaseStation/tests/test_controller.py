@@ -4,6 +4,7 @@ from unittest.mock import Mock
 from src.controller import Controller
 from src.message_listener import MessageListener
 from src.message_type import MessageType
+from src.ui.data_widget import DataWidget
 
 
 class ControllerTest(unittest.TestCase):
@@ -12,7 +13,8 @@ class ControllerTest(unittest.TestCase):
     MESSAGE_TYPE = MessageType.INFO
 
     def setUp(self):
-        self.controller = Controller()
+        self.data_widget = DataWidget(None)
+        self.controller = Controller(self.data_widget)
         self.message_listener1 = MessageListener()
         self.message_listener1.notify = Mock()
         self.message_listener2 = MessageListener()
