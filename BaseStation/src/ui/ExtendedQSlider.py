@@ -7,7 +7,7 @@ class ExtendedQSlider(QSlider):
     def __init__(self, parent, object_name: str):
         super().__init__(parent)
         self.setEnabled(True)
-        self.setMaximum(100)
+        self.setRange(0, 100)
         self.setPageStep(1)
         self.setSliderPosition(0)
         self.setTracking(True)
@@ -21,12 +21,13 @@ class ExtendedQSlider(QSlider):
             if self.orientation() == Qt.Vertical:
                 new_value = self.minimum() + (value_range * (self.height() - q_mouse_event.y())) / self.height()
             else:
-                new_value = self.minimum() + (value_range * q_mouse_event.x()) / self.width()
+                new_value = q_mouse_event.x() / self.width() * 100
 
             if self.invertedAppearance():
                 self.setValue(self.maximum() - new_value)
             else:
-                self.setValue(new_value)
+                self.setValue(round(new_value))
+
             q_mouse_event.accept()
 
         super().mousePressEvent(q_mouse_event)
