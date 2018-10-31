@@ -21,6 +21,7 @@ class ReplayController(Controller):
         playback_lock = threading.Lock()
         playback_state = PlaybackState(1, PlaybackState.Mode.FORWARD)
         self.data_producer = FileDataProducer(csv_data_persister, filename, data_lock, playback_lock, playback_state)
+        self.data_widget.set_control_bar_max_value(self.data_producer.get_packet_count())   # TODO: unit test this interaction
         self.consumer = Consumer(self.data_producer, self.sampling_frequency)
         self.consumer.update()
         self.update_plots()

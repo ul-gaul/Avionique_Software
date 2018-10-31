@@ -23,14 +23,14 @@ QLabel
     border: 1px solid red;
 }
 
-#horizontalSlider::groove:horizontal
+#control_bar::groove:horizontal
 {
     border: 1px solid #999999;
     height: 14px;
     border-radius: 9px;
 }
 
-#horizontalSlider::handle:horizontal
+#control_bar::handle:horizontal
 {
     width: 10px;
     height: 16px;
@@ -42,7 +42,7 @@ QLabel
     background: rgb(236, 0, 0);
 }
 
-#horizontalSlider::add-page:qlineargradient
+#control_bar::add-page:qlineargradient
 {
     background: lightgrey;
     border-top-right-radius: 7px;
@@ -51,7 +51,7 @@ QLabel
     border-bottom-left-radius: 0px;
 }
 
-#horizontalSlider::sub-page:qlineargradient
+#control_bar::sub-page:qlineargradient
 {
     background: rgb(236, 0, 0);
     border-top-right-radius: 0px;

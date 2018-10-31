@@ -20,6 +20,9 @@ class FileDataProducer(DataProducer):
         self.all_rocket_packets = data_persister.load(filename)
         self.available_rocket_packets.extend(self.all_rocket_packets)
 
+    def get_packet_count(self) -> int:
+        return len(self.all_rocket_packets)
+
     def start(self):
         self.clear_rocket_packets()
         self.thread = threading.Thread(target=self.run, args=())
@@ -61,7 +64,7 @@ class FileDataProducer(DataProducer):
             self.index += 1
 
     def _is_at_end_of_replay(self):
-        return self.index == len(self.all_rocket_packets)
+        return self.index == self.get_packet_count()
 
     def _sleep_between_packets(self, index_1: int, index_2: int):
         sleep_time = self.all_rocket_packets[index_2].time_stamp - self.all_rocket_packets[index_1].time_stamp
@@ -73,7 +76,7 @@ class FileDataProducer(DataProducer):
         time.sleep(sleep_time)
 
     def _is_on_last_packet(self):
-        return self.index == len(self.all_rocket_packets) - 1
+        return self.index == self.get_packet_count() - 1
 
     def _play_previous_frame(self):
         if self.is_at_beginning_of_replay():

@@ -367,7 +367,7 @@
     </layout>
    </item>
    <item>
-    <widget class="QSlider" name="horizontalSlider">
+    <widget class="QSlider" name="control_bar">
      <property name="enabled">
       <bool>true</bool>
      </property>

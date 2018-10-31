@@ -2,12 +2,12 @@ from PyQt5.QtWidgets import QSlider
 from PyQt5.QtCore import Qt
 
 
-class ExtendedQSlider(QSlider):
+class ControlBar(QSlider):
 
     def __init__(self, parent, object_name: str):
         super().__init__(parent)
         self.setEnabled(True)
-        self.setMaximum(100)
+        self.setMaximum(0)
         self.setPageStep(1)
         self.setSliderPosition(0)
         self.setTracking(True)

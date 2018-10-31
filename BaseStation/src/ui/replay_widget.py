@@ -1,14 +1,14 @@
 from PyQt5.QtWidgets import QPushButton, QLabel
 from src.ui.data_widget import DataWidget
-from src.ui.ExtendedQSlider import ExtendedQSlider
+from src.ui.control_bar import ControlBar
 
 
 class ReplayWidget(DataWidget):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.horizontalSlider = ExtendedQSlider(self, "horizontalSlider")
-        self.main_layout.addWidget(self.horizontalSlider)
+        self.control_bar = ControlBar(self, "control_bar")
+        self.main_layout.addWidget(self.control_bar)
         self.callbacks = {}
         self.rewind_button = QPushButton(self.widget)
         self.init_button(self.rewind_button, "rewind_button", "RW", self.rewind)
@@ -58,3 +58,6 @@ class ReplayWidget(DataWidget):
 
     def update_replay_speed_text(self, speed):
         self.speedLabel.setText('{}x'.format(speed))
+
+    def set_control_bar_max_value(self, max_value: int):
+        self.control_bar.setMaximum(max_value)
