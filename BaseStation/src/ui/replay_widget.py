@@ -23,14 +23,12 @@ class ReplayWidget(DataWidget):
         self.callbacks.update({name: func})
 
     def rewind(self):
-        print("rewind")
         try:
             self.callbacks["rewind"]()
         except KeyError:
             pass
 
     def play(self):
-        print("play")
         self.play_pause_button.setText('Pause')
         self.play_pause_button.clicked.disconnect(self.play)
         self.play_pause_button.clicked.connect(self.pause)
@@ -40,7 +38,6 @@ class ReplayWidget(DataWidget):
             pass
 
     def pause(self):
-        print("pause")
         self.play_pause_button.setText('Play')
         self.play_pause_button.clicked.disconnect(self.pause)
         self.play_pause_button.clicked.connect(self.play)
@@ -50,7 +47,6 @@ class ReplayWidget(DataWidget):
             pass
 
     def fast_forward(self):
-        print("fast forward")
         try:
             self.callbacks["fast_forward"]()
         except KeyError:
@@ -61,3 +57,6 @@ class ReplayWidget(DataWidget):
 
     def set_control_bar_max_value(self, max_value: int):
         self.control_bar.setMaximum(max_value)
+
+    def set_control_bar_current_value(self, value: int):
+        self.control_bar.setValue(value)

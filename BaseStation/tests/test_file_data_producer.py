@@ -34,8 +34,8 @@ class FileDataProducerTest(unittest.TestCase):
         self.file_data_producer = FileDataProducer(self.data_persister, self.SAVE_FILE_PATH, self.DATA_LOCK,
                                                    self.PLAYBACK_LOCK, self.playback_state)
 
-    def test_get_packet_count_should_return_total_number_of_packets(self):
-        num_packets = self.file_data_producer.get_packet_count()
+    def test_get_total_packet_count_should_return_total_number_of_packets(self):
+        num_packets = self.file_data_producer.get_total_packet_count()
 
         self.assertEqual(num_packets, len(self.data))
 

@@ -20,7 +20,6 @@ class Controller:
         self.target_altitude = 10000
         self.sampling_frequency = 1
         self.refresh_delay = 1.0 / frame_per_second
-        self.ui_update_functions = [self.update_plots, self.update_leds, self.update_thermometer, self.update_3d_model]
         self.message_listeners = []
         self.thread = Thread(target=self.drawing_thread)
 
@@ -38,7 +37,7 @@ class Controller:
             self.consumer.update()
 
             if self.consumer.has_data():
-                self.call_ui_update_functions()
+                self.update_ui()
 
             self.consumer.clear()
 
@@ -47,6 +46,12 @@ class Controller:
             last_time = now
             if dt < self.refresh_delay:
                 time.sleep(self.refresh_delay - dt)
+
+    def update_ui(self):
+        self.update_plots()
+        self.update_leds()
+        self.update_thermometer()
+        self.update_3d_model()
 
     def update_plots(self):
         self.data_widget.draw_altitude(self.consumer["altitude_feet"])
@@ -66,10 +71,6 @@ class Controller:
 
     def update_thermometer(self):
         self.data_widget.set_thermometer_value(self.consumer.get_average_temperature())
-
-    def call_ui_update_functions(self):
-        for function in self.ui_update_functions:
-            function()
 
     def start_thread(self):
         self.consumer = Consumer(self.data_producer, self.sampling_frequency)

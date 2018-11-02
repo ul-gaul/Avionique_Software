@@ -12,19 +12,30 @@ class ReplayController(Controller):
 
     def __init__(self, replay_widget: ReplayWidget, filename: str):
         super().__init__(replay_widget)
-        self.data_widget.set_callback("play", self.play_button_callback)
-        self.data_widget.set_callback("pause", self.pause_button_callback)
-        self.data_widget.set_callback("fast_forward", self.fast_forward_button_callback)
-        self.data_widget.set_callback("rewind", self.rewind_button_callback)
+
         csv_data_persister = CsvDataPersister()     # FIXME: this should not be instantiated here
         data_lock = threading.Lock()
         playback_lock = threading.Lock()
         playback_state = PlaybackState(1, PlaybackState.Mode.FORWARD)
         self.data_producer = FileDataProducer(csv_data_persister, filename, data_lock, playback_lock, playback_state)
-        self.data_widget.set_control_bar_max_value(self.data_producer.get_packet_count())   # TODO: unit test this interaction
+
         self.consumer = Consumer(self.data_producer, self.sampling_frequency)
         self.consumer.update()
-        self.update_plots()
+
+        self.data_widget.set_callback("play", self.play_button_callback)
+        self.data_widget.set_callback("pause", self.pause_button_callback)
+        self.data_widget.set_callback("fast_forward", self.fast_forward_button_callback)
+        self.data_widget.set_callback("rewind", self.rewind_button_callback)
+        self.data_widget.set_control_bar_max_value(self.data_producer.get_total_packet_count() - 1)   # TODO: unit test this interaction
+
+        self.update_ui()
+
+    def update_ui(self):
+        super().update_ui()
+        self.update_control_bar()
+
+    def update_control_bar(self):
+        self.data_widget.set_control_bar_current_value(self.data_producer.get_current_packet_index())
 
     def play_button_callback(self):
         self.data_producer.restart()
