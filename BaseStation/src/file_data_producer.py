@@ -18,17 +18,19 @@ class FileDataProducer(DataProducer):
         self.playback_lock = playback_lock
         self.all_rocket_packets = data_persister.load(filename)
         self.available_rocket_packets.extend(self.all_rocket_packets)
-        self.index = self.get_total_packet_count()
+        self.index = self.get_total_packet_count() - 1
 
     def get_total_packet_count(self) -> int:
         return len(self.all_rocket_packets)
 
     def get_current_packet_index(self) -> int:
-        return len(self.available_rocket_packets) - 1
+        return self.index
 
     def start(self):
-        self.clear_rocket_packets()
-        self.index = 0
+        if self.playback_state.is_going_forward():
+            self.clear_rocket_packets()
+            self.index = -1
+
         self.thread = threading.Thread(target=self.run, args=())
         self.is_running = True
         self.thread.start()

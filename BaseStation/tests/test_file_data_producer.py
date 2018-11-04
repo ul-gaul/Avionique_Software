@@ -30,6 +30,7 @@ class FileDataProducerTest(unittest.TestCase):
         self.playback_state = PlaybackState()
         self.playback_state.fast_forward = MagicMock()
         self.playback_state.rewind = MagicMock()
+        self.playback_state.is_going_forward = MagicMock()
 
         self.file_data_producer = FileDataProducer(self.data_persister, self.SAVE_FILE_PATH, self.DATA_LOCK,
                                                    self.PLAYBACK_LOCK, self.playback_state)
@@ -41,7 +42,31 @@ class FileDataProducerTest(unittest.TestCase):
 
     def test_init_should_load_data_from_data_persister(self):
         self.data_persister.load.assert_called_with(self.SAVE_FILE_PATH)
+
         self.assertEqual(self.file_data_producer.all_rocket_packets, self.data)
+
+    def test_get_current_packet_index_should_return_last_packet_index_after_init(self):
+        current_index = self.file_data_producer.get_current_packet_index()
+
+        self.assertEqual(current_index, len(self.data) - 1)
+
+    @patch('threading.Thread')
+    def test_start_should_clear_all_available_packets_if_playback_mode_forward(self, _):
+        self.playback_state.is_going_forward.return_value = True
+
+        self.file_data_producer.start()
+
+        self.assertListEqual(self.file_data_producer.get_available_rocket_packets(), [])
+        self.assertEqual(self.file_data_producer.get_current_packet_index(), -1)
+
+    @patch('threading.Thread')
+    def test_start_should_not_clear_available_packets_if_playback_mode_backward(self, _):
+        self.playback_state.is_going_forward.return_value = False
+
+        self.file_data_producer.start()
+
+        self.assertListEqual(self.file_data_producer.get_available_rocket_packets(), self.data)
+        self.assertEqual(self.file_data_producer.get_current_packet_index(), len(self.data) - 1)
 
     def test_fast_forward_should_call_playback_state(self):
         self.file_data_producer.fast_forward()
