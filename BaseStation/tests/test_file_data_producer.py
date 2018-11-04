@@ -14,7 +14,7 @@ class FileDataProducerTest(unittest.TestCase):
     TIME_STAMP_2 = 5
     NORMAL_SPEED = 1
     FAST_SPEED = 2
-    DATA_LOCK = threading.Lock()
+    DATA_LOCK = threading.RLock()
     PLAYBACK_LOCK = threading.Lock()
 
     def setUp(self):
@@ -86,7 +86,7 @@ class FileDataProducerTest(unittest.TestCase):
     @patch('time.sleep')
     def test_update_replay_should_push_data_when_fast_forwarding_during_replay(self, _):
         self.playback_state.is_going_forward.return_value = True
-        self.file_data_producer.index = initial_index = len(self.data) - 2
+        self.file_data_producer.index = initial_index = len(self.data) - 3
         initial_number_of_available_packets = len(self.file_data_producer.available_rocket_packets)
 
         self.file_data_producer.update_replay()
@@ -97,7 +97,7 @@ class FileDataProducerTest(unittest.TestCase):
     @patch('time.sleep')
     def test_update_replay_should_sleep_when_fast_forwarding_during_replay(self, patched_time_sleep):
         self.playback_state.is_going_forward.return_value = True
-        self.file_data_producer.index = len(self.data) - 2
+        self.file_data_producer.index = len(self.data) - 3
 
         self.file_data_producer.update_replay()
 
@@ -107,16 +107,16 @@ class FileDataProducerTest(unittest.TestCase):
     def test_update_replay_should_sleep_less_when_fast_forwarding_faster_during_replay(self, patched_time_sleep):
         self.playback_state.is_going_forward.return_value = True
         self.playback_state.get_speed = MagicMock(return_value=self.FAST_SPEED)
-        self.file_data_producer.index = len(self.data) - 2
+        self.file_data_producer.index = len(self.data) - 3
 
         self.file_data_producer.update_replay()
 
         sleep_time = (self.TIME_STAMP_2 - self.TIME_STAMP_1) / self.FAST_SPEED
         patched_time_sleep.assert_called_with(sleep_time)
 
-    def test_update_replay_should_push_data_when_fast_forwarding_on_last_packet(self):
+    def test_update_replay_should_push_data_when_fast_forwarding_before_last_packet(self):
         self.playback_state.is_going_forward.return_value = True
-        self.file_data_producer.index = initial_index = len(self.data) - 1
+        self.file_data_producer.index = initial_index = len(self.data) - 2
         initial_number_of_available_packets = len(self.file_data_producer.available_rocket_packets)
 
         self.file_data_producer.update_replay()
@@ -125,9 +125,9 @@ class FileDataProducerTest(unittest.TestCase):
         self.assertEqual(self.file_data_producer.index, initial_index + 1)
 
     @patch('time.sleep')
-    def test_update_replay_should_not_sleep_when_fast_forwarding_on_last_packet(self, patched_time_sleep):
+    def test_update_replay_should_not_sleep_when_fast_forwarding_before_last_packet(self, patched_time_sleep):
         self.playback_state.is_going_forward.return_value = True
-        self.file_data_producer.index = len(self.data) - 1
+        self.file_data_producer.index = len(self.data) - 2
 
         self.file_data_producer.update_replay()
 
@@ -136,7 +136,7 @@ class FileDataProducerTest(unittest.TestCase):
     @patch('time.sleep')
     def test_update_replay_should_sleep_when_fast_forwarding_at_end_of_replay(self, patched_time_sleep):
         self.playback_state.is_going_forward.return_value = True
-        self.file_data_producer.index = len(self.data)
+        self.file_data_producer.index = len(self.data) - 1
 
         self.file_data_producer.update_replay()
 
@@ -151,7 +151,7 @@ class FileDataProducerTest(unittest.TestCase):
 
         patched_time_sleep.assert_called_with(self.file_data_producer.END_OF_PLAYBACK_SLEEP_DELAY)
 
-    def test_update_replay_should_pop_data_when_rewinding_on_first_packet(self):
+    def test_update_replay_should_pop_data_when_rewinding_on_second_packet(self):
         self.playback_state.is_going_forward.return_value = False
         self.file_data_producer.index = 1
         initial_number_of_available_packets = len(self.file_data_producer.available_rocket_packets)
@@ -162,7 +162,7 @@ class FileDataProducerTest(unittest.TestCase):
         self.assertEqual(self.file_data_producer.index, 0)
 
     @patch('time.sleep')
-    def test_update_replay_should_not_sleep_when_rewinding_on_first_packet(self, patched_time_sleep):
+    def test_update_replay_should_not_sleep_when_rewinding_on_second_packet(self, patched_time_sleep):
         self.playback_state.is_going_forward.return_value = False
         self.file_data_producer.index = 1
 
@@ -200,3 +200,29 @@ class FileDataProducerTest(unittest.TestCase):
 
         sleep_time = (self.TIME_STAMP_2 - self.TIME_STAMP_1) / self.FAST_SPEED
         patched_time_sleep.assert_called_with(sleep_time)
+
+    def test_set_current_packet_index_should_push_data_when_new_index_is_bigger(self):
+        self.file_data_producer.clear_rocket_packets()
+        new_index = len(self.data) - 1
+
+        self.file_data_producer.set_current_packet_index(new_index)
+
+        self.assertEqual(self.file_data_producer.get_current_packet_index(), new_index)
+        self.assertListEqual(self.file_data_producer.get_available_rocket_packets(), self.data)
+
+    def test_set_current_packet_index_should_pop_data_when_new_index_is_smaller(self):
+        new_index = 0
+
+        self.file_data_producer.set_current_packet_index(new_index)
+
+        self.assertEqual(self.file_data_producer.get_current_packet_index(), new_index)
+        self.assertListEqual(self.file_data_producer.get_available_rocket_packets(), self.data[0:new_index + 1])
+
+    def test_set_current_packet_index_should_do_nothing_when_new_index_is_equal(self):
+        new_index = self.file_data_producer.get_current_packet_index()
+        initial_data = self.file_data_producer.get_available_rocket_packets()
+
+        self.file_data_producer.set_current_packet_index(new_index)
+
+        self.assertEqual(self.file_data_producer.get_current_packet_index(), new_index)
+        self.assertListEqual(self.file_data_producer.get_available_rocket_packets(), initial_data)

@@ -1,24 +1,15 @@
-import threading
-
 from src.consumer import Consumer
 from src.controller import Controller
 from src.file_data_producer import FileDataProducer
-from src.playback_state import PlaybackState
 from src.ui.replay_widget import ReplayWidget
-from src.persistence.csv_data_persister import CsvDataPersister
 
 
 class ReplayController(Controller):
 
-    def __init__(self, replay_widget: ReplayWidget, filename: str):
+    def __init__(self, replay_widget: ReplayWidget, file_data_producer: FileDataProducer):
         super().__init__(replay_widget)
 
-        csv_data_persister = CsvDataPersister()     # FIXME: this should not be instantiated here
-        data_lock = threading.Lock()
-        playback_lock = threading.Lock()
-        playback_state = PlaybackState(1, PlaybackState.Mode.FORWARD)
-        self.data_producer = FileDataProducer(csv_data_persister, filename, data_lock, playback_lock, playback_state)
-
+        self.data_producer = file_data_producer
         self.consumer = Consumer(self.data_producer, self.sampling_frequency)
         self.consumer.update()
 
@@ -55,3 +46,6 @@ class ReplayController(Controller):
 
     def update_replay_speed_indicator(self):
         self.data_widget.update_replay_speed_text(self.data_producer.get_speed())
+
+    def control_bar_callback(self, frame_index: int):
+        self.data_producer.set_current_packet_index(frame_index)    # TODO: unit test this interaction

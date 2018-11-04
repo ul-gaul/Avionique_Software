@@ -10,7 +10,7 @@ class FileDataProducer(DataProducer):
 
     END_OF_PLAYBACK_SLEEP_DELAY = 1
 
-    def __init__(self, data_persister: DataPersister, filename: str, data_lock: threading.Lock,
+    def __init__(self, data_persister: DataPersister, filename: str, data_lock: threading.RLock,
                  playback_lock: threading.Lock, playback_state: PlaybackState):
         super().__init__(data_lock)
         self.started_event = threading.Event()
@@ -26,10 +26,21 @@ class FileDataProducer(DataProducer):
     def get_current_packet_index(self) -> int:
         return self.index
 
+    def set_current_packet_index(self, new_index: int):
+        self.lock.acquire()
+
+        if new_index > self.index:
+            self.available_rocket_packets.extend(self.all_rocket_packets[self.index+1:new_index+1])
+            self.index = new_index
+        elif new_index < self.index:
+            self.available_rocket_packets = self.available_rocket_packets[0:new_index+1]
+            self.index = new_index
+
+        self.lock.release()
+
     def start(self):
         if self.playback_state.is_going_forward():
             self.clear_rocket_packets()
-            self.index = -1
 
         self.thread = threading.Thread(target=self.run, args=())
         self.is_running = True
@@ -60,16 +71,17 @@ class FileDataProducer(DataProducer):
     def _play_next_frame(self):
         if self._is_at_end_of_replay():
             time.sleep(self.END_OF_PLAYBACK_SLEEP_DELAY)
-        elif self._is_on_last_packet():
-            self.add_rocket_packet(self.all_rocket_packets[self.index])
-            self.index += 1
+        elif self._is_before_last_packet():
+            self.add_next_rocket_packet()
         else:
-            self.add_rocket_packet(self.all_rocket_packets[self.index])
+            self.add_next_rocket_packet()
             self._sleep_between_packets(self.index, self.index + 1)
-            self.index += 1
 
     def _is_at_end_of_replay(self):
-        return self.index == self.get_total_packet_count()
+        return self.index == self.get_total_packet_count() - 1
+
+    def _is_before_last_packet(self):
+        return self.index == self.get_total_packet_count() - 2
 
     def _sleep_between_packets(self, index_1: int, index_2: int):
         sleep_time = self.all_rocket_packets[index_2].time_stamp - self.all_rocket_packets[index_1].time_stamp
@@ -80,24 +92,19 @@ class FileDataProducer(DataProducer):
 
         time.sleep(sleep_time)
 
-    def _is_on_last_packet(self):
-        return self.index == self.get_total_packet_count() - 1
-
     def _play_previous_frame(self):
-        if self.is_at_beginning_of_replay():
+        if self._is_at_beginning_of_replay():
             time.sleep(self.END_OF_PLAYBACK_SLEEP_DELAY)
-        elif self.is_on_first_packet():
+        elif self._is_on_second_packet():
             self.pop_rocket_packet()
-            self.index -= 1
         else:
             self.pop_rocket_packet()
-            self.index -= 1
             self._sleep_between_packets(self.index - 1, self.index)
 
-    def is_at_beginning_of_replay(self):
+    def _is_at_beginning_of_replay(self):
         return self.index == 0
 
-    def is_on_first_packet(self):
+    def _is_on_second_packet(self):
         return self.index == 1
 
     def fast_forward(self):
@@ -116,12 +123,20 @@ class FileDataProducer(DataProducer):
     def get_mode(self):
         return self.playback_state.get_mode()
 
+    def add_next_rocket_packet(self):
+        self.lock.acquire()
+        self.index += 1
+        self.add_rocket_packet(self.all_rocket_packets[self.index])
+        self.lock.release()
+
     def pop_rocket_packet(self):
         self.lock.acquire()
         self.available_rocket_packets.pop()
+        self.index -= 1
         self.lock.release()
 
     def clear_rocket_packets(self):
         self.lock.acquire()
         self.available_rocket_packets.clear()
+        self.index = -1
         self.lock.release()
