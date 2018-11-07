@@ -11,15 +11,17 @@ class ReplayController(Controller):
 
         self.data_producer = file_data_producer
         self.consumer = Consumer(self.data_producer, self.sampling_frequency)
-        self.consumer.update()
 
         self.data_widget.set_callback("play", self.play_button_callback)
         self.data_widget.set_callback("pause", self.pause_button_callback)
         self.data_widget.set_callback("fast_forward", self.fast_forward_button_callback)
         self.data_widget.set_callback("rewind", self.rewind_button_callback)
-        self.data_widget.set_control_bar_max_value(self.data_producer.get_total_packet_count() - 1)   # TODO: unit test this interaction
+        self.data_widget.set_control_bar_max_value(self.data_producer.get_total_packet_count() - 1)
 
-        self.update_ui()
+        self.consumer.update()
+
+        if self.consumer.has_data():
+            self.update_ui()
 
     def update_ui(self):
         super().update_ui()
@@ -48,4 +50,4 @@ class ReplayController(Controller):
         self.data_widget.update_replay_speed_text(self.data_producer.get_speed())
 
     def control_bar_callback(self, frame_index: int):
-        self.data_producer.set_current_packet_index(frame_index)    # TODO: unit test this interaction
+        self.data_producer.set_current_packet_index(frame_index)
