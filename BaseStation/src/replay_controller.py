@@ -17,6 +17,7 @@ class ReplayController(Controller):
         self.data_widget.set_callback("fast_forward", self.fast_forward_button_callback)
         self.data_widget.set_callback("rewind", self.rewind_button_callback)
         self.data_widget.set_control_bar_max_value(self.data_producer.get_total_packet_count() - 1)
+        self.data_widget.control_bar.set_callback(self.control_bar_callback)
 
         self.consumer.update()
 
