@@ -29,5 +29,7 @@ uint8_t etatBoard(int timestamp);
 float payloadX(int timestamp);
 float payloadY(int timestamp);
 float payloadZ(int timestamp);
+float magnetX(int timestamp);
+float magnetZ(int timestamp);
 
 #endif
