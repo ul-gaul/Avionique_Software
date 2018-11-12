@@ -18,7 +18,8 @@ class CsvDataPersister(DataPersister):
     def save(self, filename: str, rocket_packets: List[RocketPacket]):
         try:
             with open(filename, "w", newline=self.newline) as csv_file:
-                writer = csv.DictWriter(csv_file, fieldnames=self.headers, delimiter=self.delimiter, quoting=self.quoting)
+                writer = csv.DictWriter(csv_file, fieldnames=self.headers, delimiter=self.delimiter,
+                                        quoting=self.quoting)
                 writer.writeheader()
                 for packet in rocket_packets:
                     writer.writerow(packet.__dict__)

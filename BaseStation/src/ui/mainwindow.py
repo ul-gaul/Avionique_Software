@@ -1,13 +1,17 @@
+import threading
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QMainWindow, QStackedWidget, QFileDialog, QWidget, QMenuBar, QMenu, QAction
 from PyQt5.QtGui import QIcon, QCloseEvent
 
+from src.file_data_producer import FileDataProducer
+from src.playback_state import PlaybackState
+from src.real_time_controller import RealTimeController
+from src.replay_controller import ReplayController
+from src.persistence.csv_data_persister import CsvDataPersister
 from src.ui.homewidget import HomeWidget
 from src.ui.real_time_widget import RealTimeWidget
 from src.ui.replay_widget import ReplayWidget
 from src.ui.status_bar import StatusBar
-from src.real_time_controller import RealTimeController
-from src.replay_controller import ReplayController
 
 
 class MainWindow(QMainWindow):
@@ -50,9 +54,15 @@ class MainWindow(QMainWindow):
                                                   filter="All Files (*);; CSV Files (*.csv)")
         if filename != "":
             self.replay_widget = ReplayWidget(self)
-            self.controller = ReplayController(self.replay_widget, filename)
+
+            csv_data_persister = CsvDataPersister()
+            data_lock = threading.RLock()
+            playback_lock = threading.Lock()
+            playback_state = PlaybackState(1, PlaybackState.Mode.FORWARD)
+            data_producer = FileDataProducer(csv_data_persister, filename, data_lock, playback_lock, playback_state)
+
+            self.controller = ReplayController(self.replay_widget, data_producer)
             self.controller.register_message_listener(self.status_bar)
-            # TODO: bind replay control buttons to callback in the ReplayController
             self.open_new_widget(self.replay_widget)
 
     def open_new_widget(self, widget: QWidget):
