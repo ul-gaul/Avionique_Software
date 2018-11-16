@@ -32,26 +32,25 @@ class AltitudeGraph(PlotWidget):
         self.addItem(self.apogee_text)
 
     def paintEvent(self, ev):
-        if self.current_altitude > 0:
-            self.apogee_text.setText("{}m".format(self.apogee))
-            self.current_altitude_text.setText("{}m".format(self.current_altitude))
+        self.apogee_text.setText("{}ft".format(self.apogee))
+        self.current_altitude_text.setText("{}ft".format(self.current_altitude))
 
         super(AltitudeGraph, self).paintEvent(ev)
 
     def draw(self, values: list): # Faire attention quand on reverse, il faut changer l apogee
         nb_points = len(values)
 
-        if self.apogee is None:
-            self.apogee = max(values)
-            altitude_index = values.index(self.apogee)
-            self.apogee_point.setData([altitude_index], [self.apogee])
-            self.apogee_text.setPos(altitude_index, self.apogee)
-        elif nb_points == 1:
-            self.apogee = values[0]
-            self.apogee_point.setData([], [])
-            self.apogee_text.setPos(0, self.apogee)
-
         if nb_points > 0:
+            if self.apogee is None:
+                self.apogee = max(values)
+                altitude_index = values.index(self.apogee)
+                self.apogee_point.setData([altitude_index], [self.apogee])
+                self.apogee_text.setPos(altitude_index, self.apogee)
+            elif nb_points == 1:
+                self.apogee = values[0]
+                self.apogee_point.setData([], [])
+                self.apogee_text.setPos(0, self.apogee)
+
             self.current_altitude = int(values[-1])
 
             self.altitude_curve.setData(values)
