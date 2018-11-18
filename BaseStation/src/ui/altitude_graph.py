@@ -1,5 +1,5 @@
 from PyQt5 import QtWidgets, QtCore
-from pyqtgraph import PlotWidget, mkPen, mkBrush, TextItem, LabelItem
+from pyqtgraph import PlotWidget, mkPen, mkBrush, TextItem
 
 from src.ui.utils import set_minimum_expanding_size_policy
 
@@ -37,6 +37,21 @@ class AltitudeGraph(PlotWidget):
 
         super(AltitudeGraph, self).paintEvent(ev)
 
+    def setApogee(self, values: list):
+        min_altitude = 0
+        index = 0
+        print(len(values))
+        for i in range(len(values) - 1):
+            if min_altitude < values[i]:
+                min_altitude = values[i]
+                index = i
+
+        self.apogee = min_altitude
+        self.apogee_point.setData([index], [self.apogee])
+        self.apogee_text.setPos(index, self.apogee)
+
+
+
     def draw(self, values: list): # Faire attention quand on reverse, il faut changer l apogee
         nb_points = len(values)
 
@@ -56,6 +71,8 @@ class AltitudeGraph(PlotWidget):
             self.altitude_curve.setData(values)
             self.current_altitude_point.setData([nb_points - 1], [self.current_altitude])
             self.current_altitude_text.setPos(nb_points - 1, self.current_altitude)
+
+            # self.setApogee(values) #Beaucoup plus lent.
 
             if self.current_altitude > self.apogee:
                 self.apogee = self.current_altitude
