@@ -93,14 +93,14 @@ class AltitudeGraph(PlotWidget):
                 self.apogee_point.setData([nb_points - 1], [self.current_altitude])
                 self.apogee_text.setPos(nb_points - 1, self.current_altitude)
 
-            print(self.values.index(self.apogee_dict[-1]), nb_points)
-            rg_index = None
-            for i in range(len(values)):
-                if values[i] == self.apogee_dict[-1]:
-                    rg_index = i
-                    break
-            if rg_index > nb_points:
-                self.apogee_dict.pop()
+            # print(self.values.index(self.apogee_dict[-1]), nb_points)
+            # rg_index = None
+            # for i in range(len(values)):
+            #     if values[i] == self.apogee_dict[-1]:
+            #         rg_index = i
+            #         break
+            # if rg_index > nb_points:
+            #     self.apogee_dict.pop()
 
             # Il faut donc recuperer l index de la derniere apogee dans values.
             # if len(self.apogee_dict) > 1 and self.values.index(self.apogee_dict[-1]) > nb_points:
