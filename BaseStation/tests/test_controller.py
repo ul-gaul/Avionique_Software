@@ -1,5 +1,5 @@
 import unittest
-from unittest.mock import Mock
+from unittest.mock import Mock, patch
 
 from src.controller import Controller
 from src.message_listener import MessageListener
@@ -12,11 +12,17 @@ class ControllerTest(unittest.TestCase):
     MESSAGE_TYPE = MessageType.INFO
 
     def setUp(self):
-        self.controller = Controller()
+        self.data_widget_patcher = patch('src.ui.data_widget.DataWidget', autospec=True)
+        data_widget_class = self.data_widget_patcher.start()
+        self.addCleanup(self.data_widget_patcher.stop)
+        self.data_widget = data_widget_class(None)
+
         self.message_listener1 = MessageListener()
         self.message_listener1.notify = Mock()
         self.message_listener2 = MessageListener()
         self.message_listener2.notify = Mock()
+
+        self.controller = Controller(self.data_widget)
 
     def test_register_message_listener_should_add_listener_in_list(self):
         self.controller.register_message_listener(self.message_listener1)

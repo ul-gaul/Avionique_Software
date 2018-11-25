@@ -7,7 +7,7 @@ from src.rocket_packet import RocketPacket
 class DataProducer:
     __metaclass__ = abc.ABCMeta
 
-    def __init__(self, lock: threading.Lock):
+    def __init__(self, lock: threading.RLock):
         self.available_rocket_packets = []
         self.lock = lock
         self.is_running = False

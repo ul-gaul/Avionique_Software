@@ -1,14 +1,14 @@
 from PyQt5.QtWidgets import QPushButton, QLabel
 from src.ui.data_widget import DataWidget
-from src.ui.ExtendedQSlider import ExtendedQSlider
+from src.ui.control_bar import ControlBar
 
 
 class ReplayWidget(DataWidget):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.horizontalSlider = ExtendedQSlider(self, "horizontalSlider")
-        self.main_layout.addWidget(self.horizontalSlider)
+        self.control_bar = ControlBar(self, "control_bar")
+        self.main_layout.addWidget(self.control_bar)
         self.callbacks = {}
         self.rewind_button = QPushButton(self.widget)
         self.init_button(self.rewind_button, "rewind_button", "RW", self.rewind)
@@ -23,14 +23,12 @@ class ReplayWidget(DataWidget):
         self.callbacks.update({name: func})
 
     def rewind(self):
-        print("rewind")
         try:
             self.callbacks["rewind"]()
         except KeyError:
             pass
 
     def play(self):
-        print("play")
         self.play_pause_button.setText('Pause')
         self.play_pause_button.clicked.disconnect(self.play)
         self.play_pause_button.clicked.connect(self.pause)
@@ -40,7 +38,6 @@ class ReplayWidget(DataWidget):
             pass
 
     def pause(self):
-        print("pause")
         self.play_pause_button.setText('Play')
         self.play_pause_button.clicked.disconnect(self.pause)
         self.play_pause_button.clicked.connect(self.play)
@@ -50,7 +47,6 @@ class ReplayWidget(DataWidget):
             pass
 
     def fast_forward(self):
-        print("fast forward")
         try:
             self.callbacks["fast_forward"]()
         except KeyError:
@@ -58,3 +54,9 @@ class ReplayWidget(DataWidget):
 
     def update_replay_speed_text(self, speed):
         self.speedLabel.setText('{}x'.format(speed))
+
+    def set_control_bar_max_value(self, max_value: int):
+        self.control_bar.setMaximum(max_value)
+
+    def set_control_bar_current_value(self, value: int):
+        self.control_bar.setValue(value)
