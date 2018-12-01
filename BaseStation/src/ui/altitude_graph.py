@@ -4,6 +4,39 @@ from pyqtgraph import PlotWidget, mkPen, mkBrush, TextItem
 from src.ui.utils import set_minimum_expanding_size_policy
 
 
+class ApogeeCalculator:
+
+    def __init__(self):
+        self.points = None
+        self.potential_apogee = {}
+
+    def init(self, entire_values: list):
+        self.potential_apogee.clear()
+        self.points = entire_values
+
+    def update(self, values: list):
+        self.points = values
+
+    def set_potential_apogee(self):
+        for i in range(len(self.points) - 1):
+            if self.apogee < self.points[i]:
+                self.potential_apogee[i] = self.points[i]
+
+    def get_apogee(self, current_point):
+        new_apogee = 0
+
+        if self.points[current_point] in self.potential_apogee:
+            new_apogee = self.points[current_point]
+        else:
+            for key, value in self.potential_apogee.items():
+                if new_apogee < value:
+                    new_apogee = value
+                    if key == current_point:
+                        break
+
+        return new_apogee
+
+
 class AltitudeGraph(PlotWidget):
 
     def __init__(self, parent: QtWidgets.QWidget):
@@ -39,41 +72,13 @@ class AltitudeGraph(PlotWidget):
 
         super(AltitudeGraph, self).paintEvent(ev)
 
-    def set_apogee(self, values: list, current_point: int):
-        new_apogee = 0
-        index = 0
-
-        if values[current_point] in self.potential_apogee:
-            new_apogee = values[current_point]
-            index = current_point
-        else:
-            for key, value in self.potential_apogee.items():
-                if new_apogee < value:
-                    new_apogee = value
-                    index = key
-                    if index == current_point:
-                        break
-
-        self.apogee = new_apogee
-        self.apogee_point.setData([index], [self.apogee])
-        self.apogee_text.setPos(index, self.apogee)
-
     def draw(self, values: list):
         nb_points = len(values)
 
         if nb_points > 0:
             if self.apogee is None:
-                self.apogee = -1
-                apogee_index = 0
-
-                for i in range(len(values) - 1):
-                    if self.apogee < values[i]:
-                        apogee_index = i
-                        self.apogee = values[i]
-                        self.potential_apogee[i] = self.apogee
-
-                self.apogee_point.setData([apogee_index], [self.apogee])
-                self.apogee_text.setPos(apogee_index, self.apogee)
+                #init ApogeeCalculator
+                pass
             elif nb_points == 1:
                 self.apogee = 0
 
