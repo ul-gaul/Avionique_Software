@@ -7,19 +7,27 @@ from src.ui.utils import set_minimum_expanding_size_policy
 class ApogeeCalculator:
 
     def __init__(self):
-        self.points = None
+        self.points = []
         self.potential_apogee = {}
 
     def init(self, entire_values: list):
+        if len(entire_values) == 0:
+            raise ValueError("impossible de cree une apogee avec 0 donnees dans la liste")
+
         self.potential_apogee.clear()
         self.points = entire_values
+
+        self.set_potential_apogee()
+        return True
 
     def update(self, values: list):
         self.points = values
 
     def set_potential_apogee(self):
+        apogee = -1
         for i in range(len(self.points) - 1):
-            if self.apogee < self.points[i]:
+            if apogee < self.points[i]:
+                apogee = self.points[i]
                 self.potential_apogee[i] = self.points[i]
 
     def get_apogee(self, current_point):
