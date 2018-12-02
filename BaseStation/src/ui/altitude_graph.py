@@ -67,7 +67,7 @@ class AltitudeGraph(PlotWidget):
 
         self.simulation_curve = None
 
-        self.apogee = None
+        self.apogee = -1
         self.apogee_text = TextItem("", anchor=(0.5, 1), color='b')
         self.apogee_point = self.plotItem.scatterPlot([], [], pxMode=True, size=8, brush=mkBrush(color='b'))
         self.addItem(self.apogee_text)
@@ -96,7 +96,7 @@ class AltitudeGraph(PlotWidget):
             self.current_altitude_point.setData([nb_points - 1], [self.current_altitude])
             self.current_altitude_text.setPos(nb_points - 1, self.current_altitude)
 
-            self.set_apogee(values, nb_points-1)
+            #self.set_apogee(values, nb_points-1)
 
     def set_target_altitude(self, altitude):
         self.plotItem.addLine(y=altitude, pen=mkPen(color=(15, 236, 20), width=3, style=QtCore.Qt.DashDotLine))
