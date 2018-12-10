@@ -1,5 +1,7 @@
 from PyQt5 import QtWidgets
+from PyQt5 import QtCore
 import pyqtgraph as pqtg
+
 from src.openrocket_simulation import OpenRocketSimulation
 from src.ui.altitude_graph import AltitudeGraph
 from src.ui.gl_rocket import GlRocket
@@ -7,7 +9,6 @@ from src.ui.header import Header
 from src.ui.thermometer import Thermometer
 from src.ui.led import Led
 from src.ui.utils import *
-from src.ui.mainwindow import *
 from OpenGL.GL import *
 from OpenGL.GLU import *
 import pyqtgraph.opengl as gl
