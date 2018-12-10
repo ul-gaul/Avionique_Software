@@ -2,6 +2,7 @@ from src.rocket_packet import RocketPacket
 from src.data_producer import DataProducer
 from src.geo_coordinate_converter import GeoCoordinateConverter
 from src.utm_zone import UTMZone
+from  src.apogee_calculator import ApogeeCalculator
 
 
 METERS2FEET = 3.28084
@@ -20,9 +21,11 @@ class Consumer:
         self.data["northing"] = []
         self.data["initial_easting"] = []
         self.data["initial_northing"] = []
+        self.data["apogee"] = []
         self.base_camp_easting = None
         self.base_camp_northing = None
         self.coordinate_converter = GeoCoordinateConverter(UTMZone.zone_13S)
+        self.apogee_calculator = ApogeeCalculator()
 
     def create_keys_from_packet_format(self):
         for key in RocketPacket.keys():
@@ -36,9 +39,16 @@ class Consumer:
                     self.data[key].append(value)
                 self.data["altitude_feet"].append(packet.altitude * METERS2FEET)
                 self.manage_coordinates(packet)
+            self.manage_apogee(self.data["altitude_feet"])
 
     def __getitem__(self, key):
         return self.data[key]
+
+    def manage_apogee(self, values: list):
+        self.apogee_calculator.update(values)
+        if self.apogee_calculator.apogee is not None:
+            self.data["apogee"].append(self.apogee_calculator.apogee)
+            self.data["apogee"].append(self.apogee_calculator.apogee_index)
 
     def manage_coordinates(self, packet):
         easting, northing = self.coordinate_converter.from_long_lat_to_utm(packet.longitude, packet.latitude)

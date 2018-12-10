@@ -49,6 +49,7 @@ class Controller:
 
     def update_plots(self):
         self.data_widget.draw_altitude(self.consumer["altitude_feet"])
+        self.data_widget.draw_apogee(self.consumer["apogee"])
         self.data_widget.draw_map(self.consumer["easting"], self.consumer["northing"])
         self.data_widget.draw_voltage(self.consumer["voltage"])
 
@@ -66,7 +67,7 @@ class Controller:
     def update_thermometer(self):
         self.data_widget.set_thermometer_value(self.consumer.get_average_temperature())
 
-    def call_ui_update_functions(self):
+    def call_ui_update_functions(self): #Ajout la function update apogee
         for function in self.ui_update_functions:
             function()
 
