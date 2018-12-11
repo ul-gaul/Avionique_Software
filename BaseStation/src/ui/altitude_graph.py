@@ -27,6 +27,7 @@ class AltitudeGraph(PlotWidget):
         self.simulation_curve = None
 
         self.apogee = 0
+        self.apogee_index = 0
         self.draw_plot = True
         self.apogee_text = TextItem("", anchor=(0.5, 1), color='b')
         self.apogee_point = self.plotItem.scatterPlot([], [], pxMode=True, size=9, brush=mkBrush(color='b'))
@@ -59,25 +60,26 @@ class AltitudeGraph(PlotWidget):
         else:
             self.simulation_curve.setData(time, altitude)
 
-    def draw_apogee(self, values: list):
-        if len(values) is not 0:
+    def draw_apogee(self, values: list): # TODO: Bien afficher l apogee
+        if len(values) == 2:
             self.apogee = values[0]
-            altitude = values[1]
+            self.apogee_index = values[1]
 
-            if not self.draw_plot:
-                self.apogee_text.setColor(color='b')
-                self.apogee_point = self.plotItem.scatterPlot([], [], pxMode=True, size=9, brush=mkBrush(color='b'))
-                self.addItem(self.apogee_point)
+            # if not self.draw_plot:
+            #     self.apogee_text.setColor(color='b')
+            #     self.apogee_point = self.plotItem.scatterPlot([], [], pxMode=True, size=9, brush=mkBrush(color='b'))
+            #     self.addItem(self.apogee_point)
+            #
+            #     self.draw_plot = True
 
-                self.draw_plot = True
-
-            self.apogee_point.setData([altitude], [self.apogee])
-            self.apogee_text.setPos(altitude, self.apogee)
+            self.apogee_text.setColor(color='b')
+            self.apogee_point.setData([self.apogee_index], [self.apogee])
+            self.apogee_text.setPos(self.apogee_index, self.apogee)
         else:
-            if self.draw_plot:
-                self.apogee_text.setColor(color=(0, 0, 0, 0))
-                self.removeItem(self.apogee_point)
+            # self.apogee_text.setColor(color=(0, 0, 0, 0))
+            self.apogee_text.setColor(color='r')
+            self.apogee_text.setPos(10, self.apogee)
+            # self.removeItem(self.apogee_point)
 
-                self.draw_plot = False
 
 

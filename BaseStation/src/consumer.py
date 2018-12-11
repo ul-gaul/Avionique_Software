@@ -46,7 +46,7 @@ class Consumer:
 
     def manage_apogee(self, values: list):
         self.apogee_calculator.update(values)
-        if self.apogee_calculator.apogee is not None:
+        if self.apogee_calculator.has_apogee():
             self.data["apogee"].append(self.apogee_calculator.apogee)
             self.data["apogee"].append(self.apogee_calculator.apogee_index)
 
