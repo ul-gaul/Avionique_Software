@@ -51,5 +51,3 @@ class TestApogee(unittest.TestCase):
             self.apogee_calculator.update(points)
 
         self.assertEqual(self.apogee_calculator.apogee, 10000)
-
-

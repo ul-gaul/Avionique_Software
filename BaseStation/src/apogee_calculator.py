@@ -18,7 +18,7 @@ class ApogeeCalculator:
 
         if self.apogee_index < length or self.last_altitude_index == 0 or (self.last_altitude_index - values[-1]) <= 0 or self.apogee == 0:
             for i in range(self.last_altitude_index, length-1):
-                if values[i] >= self.apogee:
+                if values[i] > 0 and values[i] >= self.apogee:
                     if (values[i] - values[i + 1]) >= 0:
                         self.apogee = values[i]
                         self.apogee_index = i
