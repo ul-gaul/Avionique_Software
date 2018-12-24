@@ -1,3 +1,4 @@
+import os
 import threading
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QMainWindow, QStackedWidget, QFileDialog, QWidget, QMenuBar, QMenu, QAction
@@ -12,6 +13,7 @@ from src.ui.homewidget import HomeWidget
 from src.ui.real_time_widget import RealTimeWidget
 from src.ui.replay_widget import ReplayWidget
 from src.ui.status_bar import StatusBar
+from src.ui.configdialog import ConfigDialog
 
 
 class MainWindow(QMainWindow):
@@ -101,10 +103,17 @@ class MainWindow(QMainWindow):
         self.open_csv_file_action.setObjectName("open_csv_file_action")
         self.open_csv_file_action.setText("Ouvrir un fichier CSV")
 
+        edit_preferences = QAction(self)
+        edit_preferences.setObjectName("edit_preferences")
+        edit_preferences.setText("Préférences")
+        edit_preferences.triggered.connect(self.open_preferences)
+
         self.files_menu.addAction(self.new_acquisition_action)
         self.files_menu.addAction(self.open_csv_file_action)
         self.files_menu.addAction(opensim_act)
+        self.files_menu.addAction(edit_preferences)
         self.files_menu.addAction(exit_act)
+
         self.menu_bar.addAction(self.files_menu.menuAction())
 
     def set_stylesheet(self, stylesheet_path):
@@ -117,3 +126,10 @@ class MainWindow(QMainWindow):
             self.controller.on_close(event)
         else:
             event.accept()
+
+    def open_preferences(self):
+        ConfigDialog(self).open(
+            os.path.join(
+            os.path.dirname(os.path.dirname(
+            os.path.dirname(os.path.abspath(__file__)))), 'config.ini')
+        )
