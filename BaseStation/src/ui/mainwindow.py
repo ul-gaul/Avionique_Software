@@ -7,6 +7,7 @@ from src.ui.menu_bar import MenuBar
 from src.ui.real_time_widget import RealTimeWidget
 from src.ui.replay_widget import ReplayWidget
 from src.ui.status_bar import StatusBar
+from src.ui.configdialog import ConfigDialog
 
 
 class MainWindow(QMainWindow):
@@ -73,3 +74,10 @@ class MainWindow(QMainWindow):
             self.controller.on_close(event)
         else:
             event.accept()
+
+    def open_preferences(self):
+        ConfigDialog(self).open(
+            os.path.join(
+            os.path.dirname(os.path.dirname(
+            os.path.dirname(os.path.abspath(__file__)))), 'config.ini')
+        )
