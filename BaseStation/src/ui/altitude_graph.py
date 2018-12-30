@@ -17,7 +17,7 @@ class AltitudeGraph(PlotWidget):
         self.plotItem.setLabel("bottom", "Temps", "Sec")
         self.plotItem.setLabel("left", "Altitude (ft)")
 
-        self.altitude_curve = self.plot([0], [0], pen=mkPen(color='k', width=3))
+        self.altitude_curve = self.plot([1], [1], pen=mkPen(color='k', width=3))
 
         self.current_altitude = 0
         self.current_altitude_text = TextItem("", color='k')
@@ -38,7 +38,7 @@ class AltitudeGraph(PlotWidget):
 
         super(AltitudeGraph, self).paintEvent(ev)
 
-    def draw(self, values: list):
+    def draw_altitude_curve(self, values: list):
         nb_points = len(values)
 
         if nb_points > 0:
@@ -59,8 +59,8 @@ class AltitudeGraph(PlotWidget):
 
     def draw_apogee(self, values: list):
         if len(values) == 2:
-            self.apogee = values[0]
-            apogee_index = values[1]
+            self.apogee = values[1]
+            apogee_index = values[0]
 
             if self.draw_apogee_plot:
                 self.apogee_text.setColor(color='b')

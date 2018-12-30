@@ -46,9 +46,10 @@ class Consumer:
 
     def manage_apogee(self, values: list):
         self.apogee_calculator.update(values)
-        if self.apogee_calculator.has_apogee():
-            self.data["apogee"].append(self.apogee_calculator.apogee)
-            self.data["apogee"].append(self.apogee_calculator.apogee_index)
+        rep = self.apogee_calculator.get_apogee()
+        if rep is not None:
+            self.data["apogee"].append(rep[0])
+            self.data["apogee"].append(rep[1])
 
     def manage_coordinates(self, packet):
         easting, northing = self.coordinate_converter.from_long_lat_to_utm(packet.longitude, packet.latitude)
