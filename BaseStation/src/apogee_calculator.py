@@ -28,7 +28,7 @@ class ApogeeCalculator:
         self.last_altitude = values[length-2]
         self.last_altitude_index = length-1
 
-    def check_change_apogee(self, length : int):
+    def check_change_apogee(self, length: int):
         return self.apogee_index < length or self.last_altitude_index == 0 or self.apogee == 0
 
     def set_value_none(self):

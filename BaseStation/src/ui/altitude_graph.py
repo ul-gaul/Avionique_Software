@@ -17,12 +17,12 @@ class AltitudeGraph(PlotWidget):
         self.plotItem.setLabel("bottom", "Temps", "Sec")
         self.plotItem.setLabel("left", "Altitude (ft)")
 
-        self.altitude_curve = self.plot([1], [1], pen=mkPen(color='k', width=3))
+        self.altitude_curve = self.plot([0], [0], pen=mkPen(color='k', width=3))
 
         self.current_altitude = 0
         self.current_altitude_text = TextItem("", color='k')
         self.current_altitude_point = self.plotItem.scatterPlot([], [], pxMode=True, size=8, brush=mkBrush(color='r'))
-        self.addItem(self.current_altitude_text)
+        self.addItem(self.current_altitude_text, ignoreBounds=True)
 
         self.simulation_curve = None
 
@@ -30,7 +30,7 @@ class AltitudeGraph(PlotWidget):
         self.draw_apogee_plot = False
         self.apogee_text = TextItem("", anchor=(0.5, 1), color='b')
         self.apogee_point = self.plotItem.scatterPlot([], [], pxMode=True, size=9, brush=mkBrush(color='b'))
-        self.addItem(self.apogee_text)
+        self.addItem(self.apogee_text, ignoreBounds=True)
 
     def paintEvent(self, ev):
         self.apogee_text.setText("{}ft".format(int(self.apogee)))
