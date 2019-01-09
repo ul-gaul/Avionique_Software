@@ -36,7 +36,6 @@ class RealTimeController(Controller):
         self.data_widget.update_button_text(self.is_running)
 
     def on_close(self, event: QCloseEvent):
-        # FIXME: clean this up then add unit tests (also this should probably go in a UI class)
         if self.is_running:
             self.stop_thread()
 
