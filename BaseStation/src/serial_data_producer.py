@@ -13,28 +13,31 @@ from src.rocket_packet_parser import RocketPacketParser
 class SerialDataProducer(DataProducer):
 
     def __init__(self, lock: threading.Lock, data_persister: DataPersister, rocket_packet_parser: RocketPacketParser,
-                 baudrate=9600, start_character=b's', sampling_frequency=1):
+                 baudrate=9600, start_character=b's', sampling_frequency=1.0):
         super().__init__(lock)
         self.data_persister = data_persister
         self.rocket_packet_parser = rocket_packet_parser
+        self.unsaved_data = False
+
         self.port = serial.Serial()
         self.port.baudrate = baudrate
-        self.port.timeout = sampling_frequency
+        self.port.timeout = 1 / sampling_frequency
         self.start_character = start_character
 
         # RocketPacket data + 1 byte for checksum
         self.num_bytes_to_read = self.rocket_packet_parser.get_number_of_bytes() + 1
 
-        self.unsaved_data = False
-        self.thread = threading.Thread(target=self.run)
-
     def start(self):
+        self.available_rocket_packets.clear()
+
         ports = self.detect_serial_ports()
         if len(ports) <= 0:
             raise DomainError("Aucun récepteur connecté")
         self.port.port = ports[0]
         self.port.open()
+
         self.is_running = True
+        self.thread = threading.Thread(target=self.run)
         self.thread.start()
 
     def run(self):

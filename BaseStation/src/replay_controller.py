@@ -7,9 +7,8 @@ from src.ui.replay_widget import ReplayWidget
 class ReplayController(Controller):
 
     def __init__(self, replay_widget: ReplayWidget, file_data_producer: FileDataProducer):
-        super().__init__(replay_widget)
+        super().__init__(replay_widget, file_data_producer)
 
-        self.data_producer = file_data_producer
         self.consumer = Consumer(self.data_producer, self.sampling_frequency)
 
         self.data_widget.set_callback("play", self.play_button_callback)

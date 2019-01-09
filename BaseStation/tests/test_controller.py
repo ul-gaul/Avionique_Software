@@ -1,7 +1,9 @@
+import threading
 import unittest
 from unittest.mock import Mock, patch
 
 from src.controller import Controller
+from src.data_producer import DataProducer
 from src.message_listener import MessageListener
 from src.message_type import MessageType
 
@@ -22,7 +24,8 @@ class ControllerTest(unittest.TestCase):
         self.message_listener2 = MessageListener()
         self.message_listener2.notify = Mock()
 
-        self.controller = Controller(self.data_widget)
+        data_producer = DataProducer(threading.Lock())  # TODO: make this a mock
+        self.controller = Controller(self.data_widget, data_producer)
 
     def test_register_message_listener_should_add_listener_in_list(self):
         self.controller.register_message_listener(self.message_listener1)

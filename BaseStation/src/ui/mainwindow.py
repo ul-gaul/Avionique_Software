@@ -3,11 +3,14 @@ from PyQt5 import QtCore
 from PyQt5.QtWidgets import QMainWindow, QStackedWidget, QFileDialog, QWidget, QMenuBar, QMenu, QAction
 from PyQt5.QtGui import QIcon, QCloseEvent
 
+from src.config import ConfigLoader
 from src.file_data_producer import FileDataProducer
 from src.playback_state import PlaybackState
 from src.real_time_controller import RealTimeController
 from src.replay_controller import ReplayController
 from src.persistence.csv_data_persister import CsvDataPersister
+from src.rocket_packet_parser_factory import RocketPacketParserFactory
+from src.serial_data_producer import SerialDataProducer
 from src.ui.homewidget import HomeWidget
 from src.ui.real_time_widget import RealTimeWidget
 from src.ui.replay_widget import ReplayWidget
@@ -15,7 +18,6 @@ from src.ui.status_bar import StatusBar
 
 
 class MainWindow(QMainWindow):
-
     def __init__(self, parent=None):
         super().__init__(parent)
         self.controller = None
@@ -45,7 +47,15 @@ class MainWindow(QMainWindow):
 
     def open_real_time(self):
         self.real_time_widget = RealTimeWidget(self)
-        self.controller = RealTimeController(self.real_time_widget)
+
+        # TODO: put this in a factory
+        csv_data_persister = CsvDataPersister()
+        config = ConfigLoader.load()
+        rocket_packet_parser = RocketPacketParserFactory.create(config.rocket_packet_version)
+        data_producer = SerialDataProducer(threading.Lock(), csv_data_persister, rocket_packet_parser,
+                                           sampling_frequency=1)  # FIXME: standardize the use of the sampling frequency
+
+        self.controller = RealTimeController(self.real_time_widget, data_producer)
         self.controller.register_message_listener(self.status_bar)
         self.open_new_widget(self.real_time_widget)
 
@@ -55,6 +65,7 @@ class MainWindow(QMainWindow):
         if filename != "":
             self.replay_widget = ReplayWidget(self)
 
+            # TODO: put this in a factory
             csv_data_persister = CsvDataPersister()
             data_lock = threading.RLock()
             playback_lock = threading.Lock()

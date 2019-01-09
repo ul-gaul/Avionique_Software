@@ -10,7 +10,7 @@ CAMP_POSITION_MEASUREMENT_DELAY = 10  # in seconds
 
 class Consumer:
 
-    def __init__(self, data_producer: DataProducer, sampling_frequency):
+    def __init__(self, data_producer: DataProducer, sampling_frequency: float):
         self.data_producer = data_producer
         self.sampling_frequency = sampling_frequency
         self.data = {}
