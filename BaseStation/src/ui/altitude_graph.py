@@ -20,15 +20,15 @@ class AltitudeGraph(PlotWidget):
         self.altitude_curve = self.plot([0], [0], pen=mkPen(color='k', width=3))
 
         self.current_altitude = 0
-        self.current_altitude_text = TextItem("", color='k')
+        self.current_altitude_text = TextItem("", anchor=(1, 1), color=(0, 0, 0, 0))
         self.current_altitude_point = self.plotItem.scatterPlot([], [], pxMode=True, size=8, brush=mkBrush(color='r'))
         self.addItem(self.current_altitude_text, ignoreBounds=True)
 
         self.simulation_curve = None
 
         self.apogee = 0
-        self.draw_apogee_plot = False
-        self.apogee_text = TextItem("", anchor=(0.5, 1), color='b')
+        self.draw_apogee_plot = True
+        self.apogee_text = TextItem("", anchor=(1, 1), color=(0, 0, 0, 0))
         self.apogee_point = self.plotItem.scatterPlot([], [], pxMode=True, size=9, brush=mkBrush(color='b'))
         self.addItem(self.apogee_text, ignoreBounds=True)
 
@@ -57,13 +57,14 @@ class AltitudeGraph(PlotWidget):
         else:
             self.simulation_curve.setData(time, altitude)
 
-    def draw_apogee(self, values: list):
+    def draw_apogee(self, values: tuple):
         if len(values) == 2:
             self.apogee = values[1]
             apogee_index = values[0]
 
             if self.draw_apogee_plot:
                 self.apogee_text.setColor(color='b')
+                self.current_altitude_text.setColor(color='k')
                 self.draw_apogee_plot = False
 
             self.apogee_point.setData([apogee_index], [self.apogee])

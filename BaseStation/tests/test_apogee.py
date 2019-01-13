@@ -7,36 +7,30 @@ class TestApogee(unittest.TestCase):
     def setUp(self):
         self.apogee_calculator = ApogeeCalculator()
 
-    def test_update(self):
+    def test_update_one_apogee(self):
         points = [0, 100, 194, 256, 500, 804, 300]
         self.apogee_calculator.update(points)
 
+        self.assertEqual(self.apogee_calculator.get_apogee()[1], 804)
+
+    def test_update_distinguish_real_apogee(self):
         points = [0, 100, 194, 256, 500, 804, 300, 1000, 600, 9]
         self.apogee_calculator.update(points)
 
+        self.assertEqual(self.apogee_calculator.get_apogee()[1], 1000)
+
+    def test_update_no_apogee(self):
         points = [0, 100, 194]
         self.apogee_calculator.update(points)
 
         self.assertIsNone(self.apogee_calculator.get_apogee())
 
-    def test_has_apogee_fail(self):
-        points = [0, 100, 200, 20]
-        self.apogee_calculator.update(points)
-
+    def test_has_apogee_fail_with_one_point(self):
         points = [2]
         self.apogee_calculator.update(points)
         self.assertIsNone(self.apogee_calculator.get_apogee())
 
     def test_apogee_success(self):
-        points = [0, 100, 200, 20]
-        self.apogee_calculator.update(points)
-
-        points = [2]
-        self.apogee_calculator.update(points)
-
-        points = [0, 100, 200, 20, 1000, 2000, 100000, 5]
-        self.apogee_calculator.update(points)
-
         points = [0, 100, 200, 20, 1000, 2000, 100000, 5]
         self.apogee_calculator.update(points)
         self.assertIsNotNone(self.apogee_calculator.get_apogee())
