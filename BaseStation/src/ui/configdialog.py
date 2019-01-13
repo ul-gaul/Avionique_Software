@@ -36,9 +36,7 @@ class ConfigDialog:
         for section_name in self.controller.get_sections():
             header = QLabel(section_name.upper() if not section_name == OTHER_SECTION else "")
             form = QFormLayout()
-            for setting in self.controller.get_settings(section_name):
-                name = setting["name"]
-                value = setting["value"]
+            for name, value in self.controller.get_settings(section_name):
                 self.inputs[name] = {"section": section_name, "input": QLineEdit(value)}
                 form.addRow(QLabel(" ".join(name.split("_")).capitalize()),
                             self.inputs[name]["input"])
@@ -65,6 +63,3 @@ class ConfigDialog:
 
     def cancel(self):
         self.close()
-
-    def get_setting(self, name):
-        return self.controller.get_setting_value(name)
