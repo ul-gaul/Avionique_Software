@@ -1,0 +1,99 @@
+QMainWindow
+{
+	background: white;
+}
+
+QFrame
+{
+    border: 1px solid red;
+}
+
+QStackedWidget
+{
+    border: 0px;
+}
+
+QLabel
+{
+    border: 0px;
+}
+
+#widget
+{
+    border: 1px solid red;
+}
+
+#control_bar::groove:horizontal
+{
+    border: 1px solid #999999;
+    height: 14px;
+    border-radius: 9px;
+}
+
+#control_bar::handle:horizontal
+{
+    width: 10px;
+    height: 16px;
+    border-top-right-radius: 7px;
+    border-bottom-right-radius: 7px;
+    border-top-left-radius: 7px;
+    border-bottom-left-radius: 7px;
+    border: 2px solid white;
+    background: rgb(236, 0, 0);
+}
+
+#control_bar::add-page:qlineargradient
+{
+    background: lightgrey;
+    border-top-right-radius: 7px;
+    border-bottom-right-radius: 7px;
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+}
+
+#control_bar::sub-page:qlineargradient
+{
+    background: rgb(236, 0, 0);
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+    border-top-left-radius: 7px;
+    border-bottom-left-radius: 7px;
+}
+
+#thermometer_verticalSlider::handle:vertical
+{
+    width: 10px;
+    height: 8px;
+    border: 2px solid white;
+    background: solid black;
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
+}
+
+QPushButton
+{
+	background-color: rgb(236,0,0);
+	border: 1px solid black;
+	border-radius: 8px;
+	color: white;
+}
+
+QMessageBox QPushButton
+{
+    background-color: lightgrey;
+    border: 1px solid black;
+    border-radius: 0px;
+    color: black;
+    font-size: 15px;
+    padding: 4px;
+}
+
+QStatusBar
+{
+    background: rgb(240, 240, 240);
+}
+
+QStatusBar QLabel
+{
+    color: rgb(220, 36, 3);
+}

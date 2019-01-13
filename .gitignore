@@ -1,5 +1,6 @@
 .idea/
-BaseStationCode/.idea/
+BaseStation/.idea/
 
 *.pyc
 *__pycache__*
+*.sublime-*

@@ -1,136 +1,89 @@
-#include "math.h"
-#define numData 17
+#include "rocketData.h"
+#include "rocketData18.h"
+#include "sensors.h"
+
+#define START_BYTE 's'
+#define ROCKET_PACKET_VERSION 2018
+#define BAUDRATE 9600
 
 int timestamp = 0;
 
-struct rocketPacket
-{
-  float array[numData];
-};
-
-byte computeCheckSum(byte array[numData*sizeof(float)])
+byte computeCheckSum(void* data, size_t numBytes)
 {
   byte sum = 0;
-  for(int i = 0; i < numData*sizeof(float); i++)
+  for(int i = 0; i < numBytes; i++)
   {
-    sum += array[i];
+    sum += ((byte*)data)[i];
   }
-  return sum;
+  return ~sum;
 }
 
-float accel(int timestamp)
+void writeToSerial(void* data, size_t numBytes)
 {
-  if(timestamp < 150)
-  {
-    return (-4.0/9.0);
-  }
-  else
-  {
-    return 0.0;
-  }
-}
-
-float altitude(int timestamp)
-{
-  if(timestamp < 150)
-  {
-    return -(4.0/9.0)*(timestamp-150)*(timestamp-150) + 10000;
-  }
-  else if (timestamp >= 150 && timestamp < 3275)
-  {
-    return 10000-16.0*timestamp/5;
-  }
-  else
-  {
-    return 0.0;
-  }
-}
-
-float latitude(int timestamp)
-{
-  if(timestamp < 150)
-  {
-    return 0.0;
-  }
-  else if(timestamp >= 150 && timestamp < 3275)
-  {
-    return 1.0*(timestamp-150);
-  }
-  else
-  {
-    return 3125.0;
-  }
-}
-
-float longitude(int timestamp)
-{
-  if(timestamp < 150)
-  {
-    return 0.0;
-  }
-  else if(timestamp >= 150 && timestamp < 3275)
-  {
-    return -0.5*(timestamp-150);
-  }
-  else
-  {
-    return -1562.5;
-  }
-}
-
-float temperature1(int timestamp)
-{
-  return 3*cos(timestamp*M_PI/25) + 100;
-}
-
-float temperature2(int timestamp)
-{
-  return 2*sin(timestamp*M_PI/25) + 102;
+  Serial.write(START_BYTE);
+  Serial.write((byte*)data, numBytes);
 }
 
 void setup()
 {
   // put your setup code here, to run once:
-  Serial.begin(9600);
+  Serial.begin(BAUDRATE);
 }
 
 void loop()
 {
-  rocketPacket rp;
-  rp.array[0] = timestamp;
-  rp.array[1] = 0;
-  rp.array[2] = 0;
-  rp.array[3] = 0;
-  rp.array[4] = accel(timestamp);
-  rp.array[5] = 0;
-  rp.array[6] = 0;
-  rp.array[7] = 0;
-  rp.array[8] = 0;
-  rp.array[9] = 0;
-  rp.array[10] = altitude(timestamp);
-  rp.array[11] = latitude(timestamp);
-  rp.array[12] = longitude(timestamp);
-  rp.array[13] = latitude(timestamp);
-  rp.array[14] = longitude(timestamp);
-  rp.array[15] = temperature1(timestamp);
-  rp.array[16] = temperature2(timestamp);
-  
-  byte packet[sizeof(rp)+1];
-  memcpy(packet, &rp, sizeof(rp));
-  byte checkSum = computeCheckSum(packet);
-  packet[sizeof(packet)-1] = ~checkSum;
-
-  //Envoi du packet sur le port serie
-  Serial.write(packet, sizeof(packet));
-  Serial.write("\n");
-  /*
-  for(int i = 0; i < 17; i++)
+  if (ROCKET_PACKET_VERSION == 2017)
   {
-    Serial.print(rp.array[i]);
-    Serial.print(" ");
+    RocketPacket rp;
+    rp.rocketData.timeStamp = timestamp;
+    rp.rocketData.angSpeedX = 0;
+    rp.rocketData.angSpeedY = 0;
+    rp.rocketData.angSpeedZ = 0;
+    rp.rocketData.accelX = 0;
+    rp.rocketData.accelY = accel(timestamp);
+    rp.rocketData.accelZ = 0;
+    rp.rocketData.altitude = altitude(timestamp);
+    rp.rocketData.latitude = latitude(timestamp);
+    rp.rocketData.longitude = longitude(timestamp);
+    rp.rocketData.temperature = temperature1(timestamp);
+    rp.rocketData.quaterniona = quaternionA(timestamp);
+    rp.rocketData.quaternionb = quaternionB(timestamp);
+    rp.rocketData.quaternionc = quaternionC(timestamp);
+    rp.rocketData.quaterniond = quaternionD(timestamp);
+    rp.rocketData.etatBoardAcquisition1 = etatBoard(timestamp);
+    rp.rocketData.etatBoardAcquisition2 = etatBoard(timestamp);
+    rp.rocketData.etatBoardAcquisition3 = etatBoard(timestamp);
+    rp.rocketData.etatBoardAlim1 = etatBoard(timestamp);
+    rp.rocketData.etatBoardAlim2 = 0;
+    rp.rocketData.etatBoardPayload1 = etatBoard(timestamp);
+    rp.rocketData.voltage = 3.3;
+    rp.rocketData.courant = 0.001;
+    rp.checksum = computeCheckSum(&(rp.rocketData), sizeof(RocketData));
+
+    writeToSerial(&rp, sizeof(RocketPacket));
   }
-  Serial.print("\n");
-  */
+  else if (ROCKET_PACKET_VERSION == 2018)
+  {
+    RocketPacket18 rp;
+    rp.rocketData.timestamp = timestamp;
+    rp.rocketData.latitude = latitude(timestamp);
+    rp.rocketData.longitude = longitude(timestamp);
+    rp.rocketData.altitude = altitude(timestamp);
+    rp.rocketData.temperature = temperature1(timestamp);
+    rp.rocketData.x_accel = 0;
+    rp.rocketData.y_accel = 0;
+    rp.rocketData.z_accel = accel(timestamp);
+    rp.rocketData.x_magnet = magnetX(timestamp);
+    rp.rocketData.y_magnet = 0;
+    rp.rocketData.z_magnet = magnetZ(timestamp);
+    rp.rocketData.x_gyro = 0;
+    rp.rocketData.y_gyro = 0;
+    rp.rocketData.z_gyro = 2;
+    rp.checksum = computeCheckSum(&(rp.rocketData), sizeof(RocketData18));
+
+    writeToSerial(&rp, sizeof(RocketPacket18));
+  }
+  
   timestamp++;
-  delay(200);
+  delay(1000 * (1.0 / FREQUENCY));
 }
