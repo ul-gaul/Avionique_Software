@@ -1,7 +1,6 @@
 import os
 import threading
-from PyQt5 import QtCore
-from PyQt5.QtWidgets import QMainWindow, QStackedWidget, QFileDialog, QWidget, QMenuBar, QMenu, QAction
+from PyQt5.QtWidgets import QMainWindow, QStackedWidget, QFileDialog, QWidget
 from PyQt5.QtGui import QIcon, QCloseEvent
 
 from src.file_data_producer import FileDataProducer
@@ -10,6 +9,7 @@ from src.real_time_controller import RealTimeController
 from src.replay_controller import ReplayController
 from src.persistence.csv_data_persister import CsvDataPersister
 from src.ui.homewidget import HomeWidget
+from src.ui.menu_bar import MenuBar
 from src.ui.real_time_widget import RealTimeWidget
 from src.ui.replay_widget import ReplayWidget
 from src.ui.status_bar import StatusBar
@@ -31,15 +31,12 @@ class MainWindow(QMainWindow):
         self.real_time_widget = None
         self.replay_widget = None
         self.menu_bar = None
-        self.files_menu = None
-        self.new_acquisition_action = None
-        self.open_csv_file_action = None
         self.central_widget.addWidget(self.home_widget)
         self.setWindowIcon(QIcon("src/resources/logo.jpg"))
         self.setWindowTitle("GAUL BaseStation")
         self.set_stylesheet("src/resources/mainwindow.css")
 
-    def add_sim(self):
+    def add_simulation(self):
         filename, _ = QFileDialog.getOpenFileName(caption="Open File", directory="./src/resources/",
                                                   filter="All Files (*);; CSV Files (*.csv)")
         if filename != "":
@@ -75,46 +72,11 @@ class MainWindow(QMainWindow):
         self.showMaximized()
 
     def setup_menu_bar(self):
-        self.menu_bar = QMenuBar(self)
-        self.statusBar()
-
-        self.menu_bar.setGeometry(QtCore.QRect(0, 0, 1229, 26))
-        self.menu_bar.setObjectName("menu_bar")
-        self.files_menu = QMenu(self.menu_bar)
-        self.files_menu.setObjectName("files_menu")
-        self.files_menu.setTitle("Fichiers")
+        self.menu_bar = MenuBar(self)
+        self.menu_bar.set_open_simulation_callback(self.add_simulation)
+        self.menu_bar.set_on_exit_callback(self.close)
+        self.menu_bar.set_open_preferences_callback(self.open_preferences)
         self.setMenuBar(self.menu_bar)
-
-        exit_act = QAction('&Quitter', self)
-        exit_act.setShortcut('Ctrl+Q')
-        exit_act.setStatusTip("Quitte l'application")
-        exit_act.triggered.connect(self.close)
-
-        opensim_act = QAction('&Ajouter une simulation', self)
-        opensim_act.setShortcut('Ctrl+A')
-        opensim_act.setStatusTip("Ajoute les données d'une simulation OpenRocket aux graphiques")
-        opensim_act.triggered.connect(self.add_sim)
-
-        self.new_acquisition_action = QAction(self)
-        self.new_acquisition_action.setObjectName("new_acquisition_action")
-        self.new_acquisition_action.setText("Nouvelle acquisition")
-
-        self.open_csv_file_action = QAction(self)
-        self.open_csv_file_action.setObjectName("open_csv_file_action")
-        self.open_csv_file_action.setText("Ouvrir un fichier CSV")
-
-        edit_preferences = QAction(self)
-        edit_preferences.setObjectName("edit_preferences")
-        edit_preferences.setText("Préférences")
-        edit_preferences.triggered.connect(self.open_preferences)
-
-        self.files_menu.addAction(self.new_acquisition_action)
-        self.files_menu.addAction(self.open_csv_file_action)
-        self.files_menu.addAction(opensim_act)
-        self.files_menu.addAction(edit_preferences)
-        self.files_menu.addAction(exit_act)
-
-        self.menu_bar.addAction(self.files_menu.menuAction())
 
     def set_stylesheet(self, stylesheet_path):
         file = open(stylesheet_path, 'r')
