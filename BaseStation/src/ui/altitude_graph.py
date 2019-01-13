@@ -57,7 +57,7 @@ class AltitudeGraph(PlotWidget):
         else:
             self.simulation_curve.setData(time, altitude)
 
-    def draw_apogee(self, values: tuple):
+    def draw_apogee(self, values: list):
         if len(values) == 2:
             self.apogee = values[1]
             apogee_index = values[0]
