@@ -40,6 +40,7 @@ class MenuBar(QMenuBar):
         files_menu.addAction(self.new_acquisition_action)
         files_menu.addAction(self.open_csv_file_action)
         files_menu.addAction(self.open_simulation_action)
+        files_menu.addAction(self.edit_preferences)
         files_menu.addSeparator()
         files_menu.addAction(self.exit_action)
 
@@ -51,5 +52,5 @@ class MenuBar(QMenuBar):
     def set_on_exit_callback(self, callback: Callable):
         self.exit_action.triggered.connect(callback)
 
-    def set_open_preferences_callback(self, callback: Callable):
+    def set_edit_preferences_callback(self, callback: Callable):
         self.edit_preferences.triggered.connect(callback)

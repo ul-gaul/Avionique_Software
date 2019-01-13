@@ -76,7 +76,7 @@ class MainWindow(QMainWindow):
         self.menu_bar = MenuBar(self)
         self.menu_bar.set_open_simulation_callback(self.add_simulation)
         self.menu_bar.set_on_exit_callback(self.close)
-        self.menu_bar.set_open_preferences_callback(self.open_preferences)
+        self.menu_bar.set_edit_preferences_callback(self.open_preferences)
         self.setMenuBar(self.menu_bar)
 
     def set_stylesheet(self, stylesheet_path):
