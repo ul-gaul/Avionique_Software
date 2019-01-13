@@ -2,6 +2,7 @@ from datetime import datetime
 from PyQt5.QtGui import QCloseEvent
 from PyQt5.QtWidgets import QMessageBox
 
+from src.config import Config
 from src.ui.real_time_widget import RealTimeWidget
 from src.controller import Controller
 from src.domain_error import DomainError
@@ -10,8 +11,8 @@ from src.serial_data_producer import SerialDataProducer
 
 
 class RealTimeController(Controller):
-    def __init__(self, real_time_widget: RealTimeWidget, serial_data_producer: SerialDataProducer):
-        super().__init__(real_time_widget, serial_data_producer)
+    def __init__(self, real_time_widget: RealTimeWidget, serial_data_producer: SerialDataProducer, config: Config):
+        super().__init__(real_time_widget, serial_data_producer, config)
 
         self.data_widget.set_target_altitude(self.target_altitude)
         self.data_widget.set_button_callback(self.real_time_button_callback)

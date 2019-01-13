@@ -1,3 +1,4 @@
+from src.config import Config
 from src.consumer import Consumer
 from src.controller import Controller
 from src.file_data_producer import FileDataProducer
@@ -6,8 +7,8 @@ from src.ui.replay_widget import ReplayWidget
 
 class ReplayController(Controller):
 
-    def __init__(self, replay_widget: ReplayWidget, file_data_producer: FileDataProducer):
-        super().__init__(replay_widget, file_data_producer)
+    def __init__(self, replay_widget: ReplayWidget, file_data_producer: FileDataProducer, config: Config):
+        super().__init__(replay_widget, file_data_producer, config)
 
         self.consumer = Consumer(self.data_producer, self.sampling_frequency)
 

@@ -48,11 +48,11 @@ class MainWindow(QMainWindow):
         # TODO: put this in a factory
         csv_data_persister = CsvDataPersister()
         config = ConfigLoader.load()
-        rocket_packet_parser = RocketPacketParserFactory.create(config.rocket_packet_version)
+        rocket_packet_parser = RocketPacketParserFactory.create(config.rocket_packet_config.version)
         data_producer = SerialDataProducer(threading.Lock(), csv_data_persister, rocket_packet_parser,
-                                           sampling_frequency=1)  # FIXME: standardize the use of the sampling frequency
+                                           sampling_frequency=config.rocket_packet_config.sampling_frequency)
 
-        self.controller = RealTimeController(self.real_time_widget, data_producer)
+        self.controller = RealTimeController(self.real_time_widget, data_producer, config)
         self.controller.register_message_listener(self.status_bar)
         self.open_new_widget(self.real_time_widget)
 
@@ -69,7 +69,8 @@ class MainWindow(QMainWindow):
             playback_state = PlaybackState(1, PlaybackState.Mode.FORWARD)
             data_producer = FileDataProducer(csv_data_persister, filename, data_lock, playback_lock, playback_state)
 
-            self.controller = ReplayController(self.replay_widget, data_producer)
+            config = ConfigLoader.load()
+            self.controller = ReplayController(self.replay_widget, data_producer, config)
             self.controller.register_message_listener(self.status_bar)
             self.open_new_widget(self.replay_widget)
 
