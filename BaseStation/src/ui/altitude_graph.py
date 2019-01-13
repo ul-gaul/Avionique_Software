@@ -48,6 +48,8 @@ class AltitudeGraph(PlotWidget):
             self.current_altitude_point.setData([nb_points - 1], [self.current_altitude])
             self.current_altitude_text.setPos(nb_points - 1, self.current_altitude)
 
+            self.current_altitude_text.setColor(color='k')
+
     def set_target_altitude(self, altitude):
         self.plotItem.addLine(y=altitude, pen=mkPen(color=(15, 236, 20), width=3, style=QtCore.Qt.DashDotLine))
 
@@ -64,7 +66,6 @@ class AltitudeGraph(PlotWidget):
 
             if self.draw_apogee_plot:
                 self.apogee_text.setColor(color='b')
-                self.current_altitude_text.setColor(color='k')
                 self.draw_apogee_plot = False
 
             self.apogee_point.setData([apogee_index], [self.apogee])
