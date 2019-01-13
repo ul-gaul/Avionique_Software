@@ -20,32 +20,35 @@ class AltitudeGraph(PlotWidget):
 
         self.altitude_curve = self.plot([0], [0], pen=mkPen(color='k', width=3))
 
-        self.current_altitude_text = None
+        self.current_altitude = 0
+        self.current_altitude_text = TextItem("", anchor=(1, 1), color=(0, 0, 0, 0))
         self.current_altitude_point = self.plotItem.scatterPlot([], [], pxMode=True, size=8, brush=mkBrush(color='r'))
+        self.addItem(self.current_altitude_text, ignoreBounds=True)
 
         self.simulation_curve = None
+        self.apogee = 0
+        self.draw_apogee_plot = True
+        self.apogee_text = TextItem("", anchor=(1, 1), color=(0, 0, 0, 0))
+        self.apogee_point = self.plotItem.scatterPlot([], [], pxMode=True, size=9, brush=mkBrush(color='b'))
+        self.addItem(self.apogee_text, ignoreBounds=True)
 
-    def draw(self, values: list):
-        print('attemting to draw altitude graph.')
+    def paintEvent(self, ev):
+        self.apogee_text.setText("{}ft".format(int(self.apogee)))
+        self.current_altitude_text.setText("{}ft".format(self.current_altitude))
+
+        super(AltitudeGraph, self).paintEvent(ev)
+
+    def draw_altitude_curve(self, values: list):
         nb_points = len(values)
 
         if nb_points > 0:
-            current_altitude = int(values[-1])
-            print('really drawing altitude graph.')
+            self.current_altitude = int(values[-1])
+
             self.altitude_curve.setData(values)
-            QtGui.QApplication.processEvents()
-            self.current_altitude_point.setData([nb_points - 1], [current_altitude])
-            # FIXME: this makes the app crash randomly when resizing the axis of the graph
-            # self.update_current_altitude_text(nb_points, current_altitude)
+            self.current_altitude_point.setData([nb_points - 1], [self.current_altitude])
+            self.current_altitude_text.setPos(nb_points - 1, self.current_altitude)
 
-    def update_current_altitude_text(self, nb_points: int, current_altitude: int):
-        if self.current_altitude_text is not None:
-            self.removeItem(self.current_altitude_text)
-
-        if nb_points >= 2:
-            self.current_altitude_text = TextItem(text=str(current_altitude), color='r', anchor=(1, 1))
-            self.current_altitude_text.setPos(nb_points - 1, current_altitude)
-            self.addItem(self.current_altitude_text)
+            self.current_altitude_text.setColor(color='k')
 
     def set_target_altitude(self, altitude):
         self.plotItem.addLine(y=altitude, pen=mkPen(color=(15, 236, 20), width=3, style=QtCore.Qt.DashDotLine))
@@ -55,3 +58,21 @@ class AltitudeGraph(PlotWidget):
             self.simulation_curve = self.plot(time, altitude, pen=mkPen(color='b', width=3))
         else:
             self.simulation_curve.setData(time, altitude)
+
+    def draw_apogee(self, values: list):
+        if len(values) == 2:
+            self.apogee = values[1]
+            apogee_index = values[0]
+
+            if self.draw_apogee_plot:
+                self.apogee_text.setColor(color='b')
+                self.draw_apogee_plot = False
+
+            self.apogee_point.setData([apogee_index], [self.apogee])
+            self.apogee_text.setPos(apogee_index, self.apogee)
+        else:
+            if not self.draw_apogee_plot:
+                self.apogee_text.setColor(color=(0, 0, 0, 0))
+                self.apogee_point.clear()
+
+                self.draw_apogee_plot = True
