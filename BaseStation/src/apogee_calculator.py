@@ -3,7 +3,6 @@ class ApogeeCalculator:
         self.apogee = 0
         self.apogee_index = 0
 
-        self.last_altitude = 0
         self.last_altitude_index = 0
 
     def update(self, values: list):
@@ -25,7 +24,6 @@ class ApogeeCalculator:
         else:
             self.set_value_none()
 
-        self.last_altitude = values[length-2]
         self.last_altitude_index = length-1
 
     def check_change_apogee(self, length: int):
@@ -39,7 +37,6 @@ class ApogeeCalculator:
         self.apogee = 0
         self.apogee_index = 0
 
-        self.last_altitude = 0
         self.last_altitude_index = None
 
     def get_apogee(self):
