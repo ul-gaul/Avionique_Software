@@ -55,6 +55,7 @@ class ConfigController:
 
     @staticmethod
     def _infer_type(value_str):
+        """Deviner le type de la valeur selon une certaine heuristique"""
         pass
 
     def add_section(self, section_name):
