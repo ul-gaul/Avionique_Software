@@ -34,6 +34,7 @@ class MainWindow(QMainWindow):
         self.files_menu = None
         self.new_acquisition_action = None
         self.open_csv_file_action = None
+        self.config_dialog = None
         self.central_widget.addWidget(self.home_widget)
         self.setWindowIcon(QIcon("src/resources/logo.jpg"))
         self.setWindowTitle("GAUL BaseStation")
@@ -128,8 +129,8 @@ class MainWindow(QMainWindow):
             event.accept()
 
     def open_preferences(self):
-        ConfigDialog(self).open(
-            os.path.join(
-            os.path.dirname(os.path.dirname(
-            os.path.dirname(os.path.abspath(__file__)))), 'config.ini')
-        )
+        config_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        config_path = os.path.join(config_dir, 'config.ini')
+        if self.config_dialog is None:
+            self.config_dialog = ConfigDialog(self)
+        self.config_dialog.open(config_path)

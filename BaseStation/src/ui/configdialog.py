@@ -25,7 +25,14 @@ class ConfigDialog:
         self.buttons.addWidget(buttonCancel)
         self.inputs = {}
 
+    def _clear_ui(self):
+        while self.conteneur.count():
+            child = self.conteneur.takeAt(0)
+            if child.widget():
+                child.widget().setParent(None)
+
     def make_ui(self):
+        self._clear_ui()
         for section_name in self.controller.get_sections():
             header = QLabel(section_name.upper() if not section_name == OTHER_SECTION else "")
             form = QFormLayout()
@@ -58,3 +65,6 @@ class ConfigDialog:
 
     def cancel(self):
         self.close()
+
+    def get_setting(self, name):
+        return self.controller.get_setting_value(name)
