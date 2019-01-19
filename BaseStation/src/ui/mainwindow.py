@@ -1,15 +1,7 @@
-import threading
-from PyQt5.QtWidgets import QMainWindow, QStackedWidget, QFileDialog, QWidget
 from PyQt5.QtGui import QIcon, QCloseEvent
+from PyQt5.QtWidgets import QMainWindow, QStackedWidget, QFileDialog, QWidget
 
-from src.config import ConfigLoader
-from src.file_data_producer import FileDataProducer
-from src.playback_state import PlaybackState
-from src.real_time_controller import RealTimeController
-from src.replay_controller import ReplayController
-from src.persistence.csv_data_persister import CsvDataPersister
-from src.rocket_packet_parser_factory import RocketPacketParserFactory
-from src.serial_data_producer import SerialDataProducer
+from src.controller_factory import ControllerFactory
 from src.ui.homewidget import HomeWidget
 from src.ui.menu_bar import MenuBar
 from src.ui.real_time_widget import RealTimeWidget
@@ -20,6 +12,7 @@ from src.ui.status_bar import StatusBar
 class MainWindow(QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
+        self.controller_factory = ControllerFactory()
         self.controller = None
         self.central_widget = QStackedWidget()
         self.setCentralWidget(self.central_widget)
@@ -44,15 +37,7 @@ class MainWindow(QMainWindow):
 
     def open_real_time(self):
         self.real_time_widget = RealTimeWidget(self)
-
-        # TODO: put this in a factory
-        csv_data_persister = CsvDataPersister()
-        config = ConfigLoader.load()
-        rocket_packet_parser = RocketPacketParserFactory.create(config.rocket_packet_config.version)
-        data_producer = SerialDataProducer(threading.Lock(), csv_data_persister, rocket_packet_parser,
-                                           sampling_frequency=config.rocket_packet_config.sampling_frequency)
-
-        self.controller = RealTimeController(self.real_time_widget, data_producer, config)
+        self.controller = self.controller_factory.create_real_time_controller(self.real_time_widget)
         self.controller.register_message_listener(self.status_bar)
         self.open_new_widget(self.real_time_widget)
 
@@ -61,16 +46,7 @@ class MainWindow(QMainWindow):
                                                   filter="All Files (*);; CSV Files (*.csv)")
         if filename != "":
             self.replay_widget = ReplayWidget(self)
-
-            # TODO: put this in a factory
-            csv_data_persister = CsvDataPersister()
-            data_lock = threading.RLock()
-            playback_lock = threading.Lock()
-            playback_state = PlaybackState(1, PlaybackState.Mode.FORWARD)
-            data_producer = FileDataProducer(csv_data_persister, filename, data_lock, playback_lock, playback_state)
-
-            config = ConfigLoader.load()
-            self.controller = ReplayController(self.replay_widget, data_producer, config)
+            self.controller = self.controller_factory.create_replay_controller(self.replay_widget, filename)
             self.controller.register_message_listener(self.status_bar)
             self.open_new_widget(self.replay_widget)
 
