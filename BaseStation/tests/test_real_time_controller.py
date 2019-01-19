@@ -9,6 +9,7 @@ from src.message_type import MessageType
 from src.real_time_controller import RealTimeController
 from src.serial_data_producer import SerialDataProducer
 from src.ui.real_time_widget import RealTimeWidget
+from tests.builders.config_builder import ConfigBuilder
 
 
 class RealTimeControllerTest(unittest.TestCase):
@@ -25,7 +26,9 @@ class RealTimeControllerTest(unittest.TestCase):
         self.serial_data_producer = Mock(spec=SerialDataProducer)
         self.event = Mock(spec=QCloseEvent)
 
-        self.real_time_controller = RealTimeController(self.real_time_widget, self.serial_data_producer)
+        config = ConfigBuilder().build()
+
+        self.real_time_controller = RealTimeController(self.real_time_widget, self.serial_data_producer, config)
         self.real_time_controller.is_running = False
 
     def test_save_data_should_call_serial_data_producer(self):

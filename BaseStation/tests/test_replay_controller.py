@@ -4,6 +4,7 @@ from unittest.mock import patch, Mock
 from src.file_data_producer import FileDataProducer
 from src.replay_controller import ReplayController
 from src.ui.replay_widget import ReplayWidget
+from tests.builders.config_builder import ConfigBuilder
 
 
 class ReplayControllerTest(unittest.TestCase):
@@ -19,7 +20,9 @@ class ReplayControllerTest(unittest.TestCase):
         self.file_data_producer = Mock(spec=FileDataProducer)
         self.file_data_producer.get_total_packet_count.return_value = self.PACKET_COUNT
 
-        self.replay_controller = ReplayController(self.replay_widget, self.file_data_producer)
+        config = ConfigBuilder().build()
+
+        self.replay_controller = ReplayController(self.replay_widget, self.file_data_producer, config)
 
     def test_init_should_set_control_bar_max_value(self):
         self.replay_widget.set_control_bar_max_value.assert_called_with(self.PACKET_COUNT - 1)
