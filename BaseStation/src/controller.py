@@ -2,7 +2,9 @@ import time
 from threading import Thread
 from PyQt5.QtGui import QCloseEvent
 
+from src.config import Config
 from src.consumer import Consumer
+from src.data_producer import DataProducer
 from src.domain_error import DomainError
 from src.message_listener import MessageListener
 from src.message_type import MessageType
@@ -12,14 +14,14 @@ from src.ui.data_widget import DataWidget
 
 # FIXME: this class should be abstract
 class Controller:
-    def __init__(self, data_widget: DataWidget, frame_per_second: float = 10.0):
+    def __init__(self, data_widget: DataWidget, data_producer: DataProducer, config: Config):
         self.data_widget = data_widget
         self.is_running = False
-        self.data_producer = None
+        self.data_producer = data_producer
         self.consumer = None
-        self.target_altitude = 10000
-        self.sampling_frequency = 1
-        self.refresh_delay = 1.0 / frame_per_second
+        self.target_altitude = config.target_altitude
+        self.sampling_frequency = config.rocket_packet_config.sampling_frequency
+        self.refresh_delay = 1.0 / config.gui_fps
         self.message_listeners = []
         self.thread = Thread(target=self.drawing_thread)
 
