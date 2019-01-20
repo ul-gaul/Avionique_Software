@@ -3,6 +3,7 @@ from src.data_producer import DataProducer
 from src.geo_coordinate_converter import GeoCoordinateConverter
 from src.utm_zone import UTMZone
 from src.apogee_calculator import ApogeeCalculator
+from src.angular_position_calculator import AngularCalculator
 
 
 METERS2FEET = 3.28084
@@ -26,6 +27,7 @@ class Consumer:
         self.base_camp_northing = None
         self.coordinate_converter = GeoCoordinateConverter(UTMZone.zone_13S)
         self.apogee_calculator = ApogeeCalculator()
+        self.angular_calculator = AngularCalculator()
 
     def create_keys_from_packet_format(self):
         for key in RocketPacket.keys():
@@ -40,6 +42,8 @@ class Consumer:
                 self.data["altitude_feet"].append(packet.altitude * METERS2FEET)
                 self.manage_coordinates(packet)
             self.manage_apogee(self.data["altitude_feet"])
+
+            self.angular_calculator.compute_angular_position(self.get_rocket_last_quaternion())
 
     def __getitem__(self, key):
         return self.data[key]
@@ -72,6 +76,9 @@ class Consumer:
     def get_rocket_rotation(self):
         return self.data["quaternion_w"][-1], self.data["quaternion_x"][-1], self.data["quaternion_y"][-1], \
                self.data["quaternion_z"][-1]
+
+    def get_rocket_last_quaternion(self):
+        return self.data["quaternion_w"][-1], self.data["quaternion_x"][-1], self.data["quaternion_y"][-1], self.data["quaternion_z"][-1]
 
     def get_average_temperature(self):
         return self.data["temperature"][-1]
