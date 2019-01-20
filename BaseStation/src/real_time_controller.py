@@ -46,7 +46,7 @@ class RealTimeController(Controller):
             if should_save == QMessageBox.Yes:
                 filename = self.get_save_file_name()
 
-                if filename == "":
+                if not filename:
                     event.ignore()
                 else:
                     self.save_data(filename)

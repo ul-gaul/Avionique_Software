@@ -32,7 +32,7 @@ class MainWindow(QMainWindow):
     def add_simulation(self):
         filename, _ = QFileDialog.getOpenFileName(caption="Open File", directory="./src/resources/",
                                                   filter="All Files (*);; CSV Files (*.csv)")
-        if filename != "":
+        if filename:
             self.controller.add_open_rocket_simulation(filename)
 
     def open_real_time(self):
@@ -44,7 +44,7 @@ class MainWindow(QMainWindow):
     def open_replay(self):
         filename, _ = QFileDialog.getOpenFileName(caption="Open File", directory="./src/resources/",
                                                   filter="All Files (*);; CSV Files (*.csv)")
-        if filename != "":
+        if filename:
             self.replay_widget = ReplayWidget(self)
             self.controller = self.controller_factory.create_replay_controller(self.replay_widget, filename)
             self.controller.register_message_listener(self.status_bar)
