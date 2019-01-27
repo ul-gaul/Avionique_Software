@@ -1,7 +1,10 @@
 import unittest
-from unittest.mock import patch
+from unittest.mock import patch, Mock
 
+from src.file_data_producer import FileDataProducer
 from src.replay_controller import ReplayController
+from src.ui.replay_widget import ReplayWidget
+from tests.builders.config_builder import ConfigBuilder
 
 
 class ReplayControllerTest(unittest.TestCase):
@@ -9,21 +12,17 @@ class ReplayControllerTest(unittest.TestCase):
     PACKET_COUNT = 0
 
     def setUp(self):
-        self.replay_widget_patcher = patch('src.ui.replay_widget.ReplayWidget')
-        self.file_data_producer_patcher = patch('src.file_data_producer.FileDataProducer')
-        self.consumer_patcher = patch('src.consumer.Consumer')
-
-        replay_widget_class = self.replay_widget_patcher.start()
-        file_data_producer_class = self.file_data_producer_patcher.start()
+        self.consumer_patcher = patch('src.replay_controller.Consumer', autospec=True)
         self.consumer_patcher.start()
+        self.addCleanup(self.consumer_patcher.stop)
 
-        self.addCleanup(self.clean_up)
-
-        self.replay_widget = replay_widget_class()
-        self.file_data_producer = file_data_producer_class()
+        self.replay_widget = Mock(spec=ReplayWidget)
+        self.file_data_producer = Mock(spec=FileDataProducer)
         self.file_data_producer.get_total_packet_count.return_value = self.PACKET_COUNT
 
-        self.replay_controller = ReplayController(self.replay_widget, self.file_data_producer)
+        config = ConfigBuilder().build()
+
+        self.replay_controller = ReplayController(self.replay_widget, self.file_data_producer, config)
 
     def test_init_should_set_control_bar_max_value(self):
         self.replay_widget.set_control_bar_max_value.assert_called_with(self.PACKET_COUNT - 1)
@@ -34,12 +33,3 @@ class ReplayControllerTest(unittest.TestCase):
         self.replay_controller.control_bar_callback(frame_index)
 
         self.file_data_producer.set_current_packet_index.assert_called_with(frame_index)
-
-    def clean_up(self):
-        """
-        This is used instead of the tearDown method because if an exception is raised in setUp, tearDown is not called,
-        but we still need to undo the patching.
-        """
-        self.replay_widget_patcher.stop()
-        self.file_data_producer_patcher.stop()
-        self.consumer_patcher.stop()

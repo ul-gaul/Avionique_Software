@@ -1,5 +1,6 @@
-from PyQt5 import QtWidgets, QtCore
+from PyQt5 import QtWidgets, QtCore, QtGui
 from pyqtgraph import PlotWidget, mkPen, mkBrush, TextItem
+import pyqtgraph as pg
 
 from src.ui.utils import set_minimum_expanding_size_policy
 
@@ -46,7 +47,6 @@ class AltitudeGraph(PlotWidget):
             self.altitude_curve.setData(values)
             self.current_altitude_point.setData([nb_points - 1], [self.current_altitude])
             self.current_altitude_text.setPos(nb_points - 1, self.current_altitude)
-
             self.current_altitude_text.setColor(color='k')
 
     def set_target_altitude(self, altitude):

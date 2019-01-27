@@ -60,3 +60,6 @@ class ReplayWidget(DataWidget):
 
     def set_control_bar_current_value(self, value: int):
         self.control_bar.setValue(value)
+
+    def set_control_bar_callback(self, callback):
+        self.control_bar.set_callback(callback)

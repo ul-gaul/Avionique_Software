@@ -1,11 +1,12 @@
+from PyQt5.QtWidgets import QLCDNumber, QPushButton, QMessageBox, QFileDialog
+
 from src.ui.data_widget import DataWidget
 from src.ui.utils import set_minimum_expanding_size_policy
-from PyQt5.QtWidgets import QLCDNumber, QPushButton
 
 
 class RealTimeWidget(DataWidget):
 
-    def __init__(self, parent):
+    def __init__(self, parent=None):
         super().__init__(parent)
         self.start_stop_button_callback = lambda: False
         self.start_stop_button = QPushButton(self.widget)
@@ -30,3 +31,16 @@ class RealTimeWidget(DataWidget):
 
     def set_time(self, time):
         self.lcdNumber.display(time)
+
+    def show_save_message_box(self) -> QMessageBox.StandardButton:
+        message_box = QMessageBox()
+        return message_box.question(self, "BaseStation",
+                                    "Vous avez des données non sauvegardées.\nVoulez-vous les sauvegarder?",
+                                    QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel, QMessageBox.Yes)
+
+    @staticmethod
+    def get_save_file_name(default_path: str) -> str:
+        filename, _ = QFileDialog.getSaveFileName(caption="Save File", directory=default_path,
+                                                  filter="All Files (*);; CSV Files (*.csv)",
+                                                  options=QFileDialog.Options())
+        return filename
