@@ -1,6 +1,7 @@
 import unittest
 from unittest.mock import Mock
 
+from src.consumer import Consumer
 from src.controller import Controller
 from src.data_producer import DataProducer
 from src.message_listener import MessageListener
@@ -17,6 +18,7 @@ class ControllerTest(unittest.TestCase):
     def setUp(self):
         self.data_widget = Mock(spec=DataWidget)
         self.data_producer = Mock(spec=DataProducer)
+        self.consumer = Mock(spec=Consumer)
 
         self.message_listener1 = MessageListener()
         self.message_listener1.notify = Mock()
@@ -25,7 +27,7 @@ class ControllerTest(unittest.TestCase):
 
         config = ConfigBuilder().build()
 
-        self.controller = Controller(self.data_widget, self.data_producer, config)
+        self.controller = Controller(self.data_widget, self.data_producer, self.consumer, config)
 
     def test_register_message_listener_should_add_listener_in_list(self):
         self.controller.register_message_listener(self.message_listener1)

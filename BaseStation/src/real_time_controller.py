@@ -3,6 +3,7 @@ from PyQt5.QtGui import QCloseEvent
 from PyQt5.QtWidgets import QMessageBox
 
 from src.config import Config
+from src.consumer import Consumer
 from src.ui.real_time_widget import RealTimeWidget
 from src.controller import Controller
 from src.domain_error import DomainError
@@ -11,8 +12,9 @@ from src.serial_data_producer import SerialDataProducer
 
 
 class RealTimeController(Controller):
-    def __init__(self, real_time_widget: RealTimeWidget, serial_data_producer: SerialDataProducer, config: Config):
-        super().__init__(real_time_widget, serial_data_producer, config)
+    def __init__(self, real_time_widget: RealTimeWidget, serial_data_producer: SerialDataProducer, consumer: Consumer,
+                 config: Config):
+        super().__init__(real_time_widget, serial_data_producer, consumer, config)
 
         self.data_widget.set_target_altitude(self.target_altitude)
         self.data_widget.set_button_callback(self.real_time_button_callback)
@@ -25,15 +27,14 @@ class RealTimeController(Controller):
         self.data_widget.set_time(self.consumer["time_stamp"][-1] / float(self.sampling_frequency))
 
     def real_time_button_callback(self):
-        self.is_running = not self.is_running
-        if self.is_running:
+        if not self.is_running:
             try:
                 self.start_thread()
             except DomainError as error:
-                self.is_running = not self.is_running
                 self.notify_all_message_listeners(error.message, MessageType.ERROR)
         else:
             self.stop_thread()
+
         self.data_widget.update_button_text(self.is_running)
 
     def on_close(self, event: QCloseEvent):

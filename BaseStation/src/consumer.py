@@ -2,7 +2,7 @@ from src.rocket_packet import RocketPacket
 from src.data_producer import DataProducer
 from src.geo_coordinate_converter import GeoCoordinateConverter
 from src.utm_zone import UTMZone
-from  src.apogee_calculator import ApogeeCalculator
+from src.apogee_calculator import ApogeeCalculator
 
 
 METERS2FEET = 3.28084

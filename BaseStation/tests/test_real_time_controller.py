@@ -1,9 +1,10 @@
 import unittest
-from unittest.mock import patch, Mock
+from unittest.mock import patch, Mock, MagicMock
 
 from PyQt5.QtGui import QCloseEvent
 from PyQt5.QtWidgets import QMessageBox
 
+from src.consumer import Consumer
 from src.message_listener import MessageListener
 from src.message_type import MessageType
 from src.real_time_controller import RealTimeController
@@ -18,18 +19,50 @@ class RealTimeControllerTest(unittest.TestCase):
     EMPTY_SAVE_FILE_NAME = ""
 
     def setUp(self):
-        self.thread_patcher = patch("src.controller.Thread")
-        self.thread_patcher.start()
-        self.addCleanup(self.thread_patcher.stop)
-
         self.real_time_widget = Mock(spec=RealTimeWidget)
         self.serial_data_producer = Mock(spec=SerialDataProducer)
+        self.consumer = MagicMock(spec=Consumer)
         self.event = Mock(spec=QCloseEvent)
 
         config = ConfigBuilder().build()
 
-        self.real_time_controller = RealTimeController(self.real_time_widget, self.serial_data_producer, config)
+        self.real_time_controller = RealTimeController(self.real_time_widget, self.serial_data_producer, self.consumer,
+                                                       config)
         self.real_time_controller.is_running = False
+
+    @patch("src.controller.Thread")
+    def test_real_time_button_callback_should_stop_thread_when_is_running(self, thread_mock):
+        self.real_time_controller.is_running = True
+        self.real_time_controller.thread = thread_mock
+
+        self.real_time_controller.real_time_button_callback()
+
+        thread_mock.join.assert_called_with()
+        self.serial_data_producer.stop.assert_called_with()
+
+    @patch("src.controller.Thread")
+    def test_real_time_button_callback_should_update_button_text_when_is_running(self, thread_mock):
+        self.real_time_controller.is_running = True
+        self.real_time_controller.thread = thread_mock
+
+        self.real_time_controller.real_time_button_callback()
+
+        self.real_time_widget.update_button_text.assert_called_with(False)
+
+    @patch("src.controller.Thread")
+    def test_real_time_button_callback_should_start_thread_when_is_not_running(self, thread_mock):
+        self.real_time_controller.real_time_button_callback()
+
+        self.serial_data_producer.start.assert_called_with()
+        # print(thread_mock)
+        print(thread_mock.return_value)
+        thread_mock.start.assert_called_with()
+
+    # @patch("src.controller.Thread")
+    # def test_real_time_button_callback_should_update_button_text_when_is_not_running(self, _):
+    #     self.real_time_controller.real_time_button_callback()
+    #
+    #     self.real_time_widget.update_button_text.assert_called_with(True)
 
     def test_save_data_should_call_serial_data_producer(self):
         self.real_time_controller.save_data(self.VALID_SAVE_FILE_NAME)
@@ -48,13 +81,15 @@ class RealTimeControllerTest(unittest.TestCase):
         self.assertTrue(self.VALID_SAVE_FILE_NAME in filename_argument)
         self.assertEqual(message_type_argument, MessageType.INFO)
 
-    def test_on_close_should_stop_thread_if_is_running(self):
+    @patch("src.controller.Thread")
+    def test_on_close_should_stop_thread_if_is_running(self, thread_mock):
         self.real_time_controller.is_running = True
+        self.real_time_controller.thread = thread_mock
         self.serial_data_producer.has_unsaved_data.return_value = False
 
         self.real_time_controller.on_close(self.event)
 
-        self.real_time_controller.thread.join.assert_called_with()
+        thread_mock.join.assert_called_with()
         self.serial_data_producer.stop.assert_called_with()
 
     def test_on_close_should_not_close_when_user_chooses_no_save_file(self):
