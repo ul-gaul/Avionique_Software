@@ -91,8 +91,8 @@ class MainWindow(QMainWindow):
             event.accept()
 
     def open_preferences(self):
-        config_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-        config_path = os.path.join(config_dir, 'config.ini')
+        config_path = os.path.join(os.getcwd(), "config.ini")
         if self.config_dialog is None:
             self.config_dialog = ConfigDialog(self)
+        self.config_dialog.set_stylesheet("src/resources/configdialog.css")
         self.config_dialog.open(config_path)

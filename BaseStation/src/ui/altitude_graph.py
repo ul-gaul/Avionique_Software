@@ -1,6 +1,5 @@
-from PyQt5 import QtWidgets, QtCore, QtGui
+from PyQt5 import QtWidgets, QtCore
 from pyqtgraph import PlotWidget, mkPen, mkBrush, TextItem
-import pyqtgraph as pg
 
 from src.ui.utils import set_minimum_expanding_size_policy
 

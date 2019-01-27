@@ -1,0 +1,19 @@
+QLabel[SectionHeader="true"] {
+    padding: 4px;
+    background-color: rgb(236, 0, 0);
+    color: white;
+    font-size: 16px;
+    font-weight: 400;
+}
+
+QPushButton#btnOk {
+    background-color: #7cb342;
+    color: white;
+    padding: 8px;
+}
+
+QPushButton#btnCancel {
+    background-color: white;
+    color: black;
+    padding: 8px;
+}
