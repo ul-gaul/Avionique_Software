@@ -43,7 +43,7 @@ class Consumer:
                 self.manage_coordinates(packet)
             self.manage_apogee(self.data["altitude_feet"])
 
-            self.angular_calculator.compute_angular_position(self.get_rocket_last_quaternion())
+            self.angular_calculator.compute_angular_position(self.get_rocket_last_angular_velocity())
 
     def __getitem__(self, key):
         return self.data[key]
@@ -79,6 +79,9 @@ class Consumer:
 
     def get_rocket_last_quaternion(self):
         return self.data["quaternion_w"][-1], self.data["quaternion_x"][-1], self.data["quaternion_y"][-1], self.data["quaternion_z"][-1]
+
+    def get_rocket_last_angular_velocity(self):
+        return self.data["angular_speed_x"][-1], self.data["angular_speed_y"][-1], self.data["angular_speed_z"][-1]
 
     def get_average_temperature(self):
         return self.data["temperature"][-1]
