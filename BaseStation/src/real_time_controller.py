@@ -29,6 +29,23 @@ class RealTimeController(Controller):
     def real_time_button_callback(self):
         if not self.is_running:
             try:
+                if self.data_producer.has_unsaved_data():
+                    should_save = self.data_widget.show_save_message_box()
+
+                    if should_save == QMessageBox.Yes:
+                        filename = self.get_save_file_name()
+
+                        if filename:
+                            self.save_data(filename)
+                        else:
+                            pass    # TODO: return
+                    elif should_save == QMessageBox.No:
+                        pass    # TODO: pass
+                    else:
+                        pass    # TODO: return
+
+
+
                 self.start_thread()
             except DomainError as error:
                 self.notify_all_message_listeners(error.message, MessageType.ERROR)
@@ -47,11 +64,11 @@ class RealTimeController(Controller):
             if should_save == QMessageBox.Yes:
                 filename = self.get_save_file_name()
 
-                if not filename:
-                    event.ignore()
-                else:
+                if filename:
                     self.save_data(filename)
                     event.accept()
+                else:
+                    event.ignore()
             elif should_save == QMessageBox.No:
                 event.accept()
             else:
