@@ -82,7 +82,6 @@ class Controller:
         self.data_producer.start()
         self.is_running = True
         self.thread = Thread(target=self.drawing_thread)
-        print(self.thread)
         self.thread.start()
 
     def stop_thread(self):
