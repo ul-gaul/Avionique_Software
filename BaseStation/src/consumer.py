@@ -43,7 +43,7 @@ class Consumer:
                 self.manage_coordinates(packet)
             self.manage_apogee(self.data["altitude_feet"])
 
-            self.angular_calculator.compute_angular_position(self.get_rocket_last_angular_velocity())
+            self.angular_calculator.compute_angular_velocity(self.get_rocket_last_angular_velocity())
 
     def __getitem__(self, key):
         return self.data[key]
@@ -74,8 +74,7 @@ class Consumer:
             self.data["northing"].append(northing - self.base_camp_northing)
 
     def get_rocket_rotation(self):
-        return self.data["quaternion_w"][-1], self.data["quaternion_x"][-1], self.data["quaternion_y"][-1], \
-               self.data["quaternion_z"][-1]
+        return self.angular_calculator.get_quaternions()
 
     def get_rocket_last_quaternion(self):
         return self.data["quaternion_w"][-1], self.data["quaternion_x"][-1], self.data["quaternion_y"][-1], self.data["quaternion_z"][-1]
