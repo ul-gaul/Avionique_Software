@@ -67,7 +67,7 @@ class RealTimeControllerTest(unittest.TestCase):
         self.real_time_widget.update_button_text.assert_called_with(True)
 
     @patch("src.controller.Thread")
-    def test_real_time_button_callback_should_save_if_unsaved_data_and_user_wants_to_save_when_is_not_running(self, _):
+    def test_real_time_button_callback_should_save_if_unsaved_data_and_user_saves_when_is_not_running(self, _):
         self.serial_data_producer.has_unsaved_data.return_value = True
         self.real_time_widget.show_save_message_box.return_value = QMessageBox.Yes
         self.real_time_widget.get_save_file_name.return_value = self.VALID_SAVE_FILE_NAME
@@ -75,6 +75,63 @@ class RealTimeControllerTest(unittest.TestCase):
         self.real_time_controller.real_time_button_callback()
 
         self.serial_data_producer.save.assert_called_with(self.VALID_SAVE_FILE_NAME)
+
+    @patch("src.controller.Thread")
+    def test_real_time_button_callback_should_not_save_when_unsaved_data_and_user_doesnt_save(self, _):
+        self.serial_data_producer.has_unsaved_data.return_value = True
+        self.real_time_widget.show_save_message_box.return_value = QMessageBox.No
+
+        self.real_time_controller.real_time_button_callback()
+
+        self.serial_data_producer.save.assert_not_called()
+
+    @patch("src.controller.Thread")
+    def test_real_time_button_callback_should_reset_consumer_when_unsaved_data(self, _):
+        self.serial_data_producer.has_unsaved_data.return_value = True
+        self.real_time_widget.show_save_message_box.return_value = QMessageBox.No
+
+        self.real_time_controller.real_time_button_callback()
+
+        self.consumer.reset.assert_called_with()
+
+    @patch("src.controller.Thread")
+    def test_real_time_button_callback_should_reset_ui_when_unsaved_data(self, _):
+        self.serial_data_producer.has_unsaved_data.return_value = True
+        self.real_time_widget.show_save_message_box.return_value = QMessageBox.No
+
+        self.real_time_controller.real_time_button_callback()
+
+        self.real_time_widget.reset.assert_called_with()
+
+    @patch("src.controller.Thread")
+    def test_real_time_button_callback_should_do_nothing_if_user_chooses_no_filename_when_saving(self, thread):
+        thread_mock = thread.return_value
+        self.serial_data_producer.has_unsaved_data.return_value = True
+        self.real_time_widget.show_save_message_box.return_value = QMessageBox.Yes
+        self.real_time_widget.get_save_file_name.return_value = self.EMPTY_SAVE_FILE_NAME
+
+        self.real_time_controller.real_time_button_callback()
+
+        self.consumer.reset.assert_not_called()
+        self.real_time_widget.reset.assert_not_called()
+        self.serial_data_producer.start.assert_not_called()
+        self.serial_data_producer.save.assert_not_called()
+        thread_mock.start.assert_not_called()
+
+    @patch("src.controller.Thread")
+    def test_real_time_button_callback_should_do_nothing_when_unsaved_data_and_user_cancels(self, thread):
+        thread_mock = thread.return_value
+        self.serial_data_producer.has_unsaved_data.return_value = True
+        self.real_time_widget.show_save_message_box.return_value = QMessageBox.Cancel
+        self.real_time_widget.get_save_file_name.return_value = self.EMPTY_SAVE_FILE_NAME
+
+        self.real_time_controller.real_time_button_callback()
+
+        self.consumer.reset.assert_not_called()
+        self.real_time_widget.reset.assert_not_called()
+        self.serial_data_producer.start.assert_not_called()
+        self.serial_data_producer.save.assert_not_called()
+        thread_mock.start.assert_not_called()
 
     def test_save_data_should_call_serial_data_producer(self):
         self.real_time_controller.save_data(self.VALID_SAVE_FILE_NAME)

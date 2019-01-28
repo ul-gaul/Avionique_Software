@@ -38,16 +38,16 @@ class RealTimeController(Controller):
                         if filename:
                             self.save_data(filename)
                         else:
-                            pass    # TODO: return
-                    elif should_save == QMessageBox.No:
-                        pass    # TODO: pass
-                    else:
-                        pass    # TODO: return
+                            return
+                    elif should_save == QMessageBox.Cancel:
+                        return
 
-
+                    self.consumer.reset()
+                    self.data_widget.reset()
 
                 self.start_thread()
-            except DomainError as error:
+            except DomainError as error:    # TODO: test this
+                self.is_running = False
                 self.notify_all_message_listeners(error.message, MessageType.ERROR)
         else:
             self.stop_thread()

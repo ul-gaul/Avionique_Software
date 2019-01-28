@@ -72,7 +72,19 @@ class AltitudeGraph(PlotWidget):
             self.apogee_text.setPos(apogee_index, self.apogee)
         else:
             if not self.draw_apogee_plot:
-                self.apogee_text.setColor(color=(0, 0, 0, 0))
-                self.apogee_point.clear()
+                self.reset_apogee()
 
-                self.draw_apogee_plot = True
+    def reset(self):
+        self.altitude_curve.clear()
+        self.current_altitude = 0
+        self.current_altitude_point.clear()
+        self.current_altitude_text.setPos(0, self.current_altitude)
+        self.current_altitude_text.setColor(color=(0, 0, 0, 0))
+
+        self.reset_apogee()
+
+    def reset_apogee(self):
+        self.apogee = 0
+        self.apogee_point.clear()
+        self.apogee_text.setColor(color=(0, 0, 0, 0))
+        self.draw_apogee_plot = True
