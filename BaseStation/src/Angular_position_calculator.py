@@ -22,22 +22,56 @@ class AngularCalculator:
         pass
 
     def compute_angular_velocity(self, ang_velocity: tuple):
-        r = sqrt(pow(ang_velocity[0], 2) + pow(ang_velocity[1], 2) + pow(ang_velocity[2], 2))
-        teta = degrees(arccos(ang_velocity[2] / r))
-        phi = degrees(arctan(ang_velocity[1] / ang_velocity[0]))
+        r = sqrt(pow(ang_velocity[0], 2) + pow(ang_velocity[1], 2) + pow(ang_velocity[2], 2))  # x
+        teta = arccos(ang_velocity[2] / r)  # y
+        phi = arctan(ang_velocity[1] / ang_velocity[0])  # z
 
         self.angle = r, teta, phi
-        self.euler_to_quaternion(teta, phi, r)
+        self.euler_to_quaternion(phi, teta, r)  # Z Y X
 
     def euler_to_quaternion(self, roll, pitch, yaw):
-        qx = sin(roll * 0.5) * cos(pitch * 0.5) * cos(yaw * 0.5) - cos(roll * 0.5) * sin(pitch * 0.5) * sin(yaw * 0.5)
-        qy = cos(roll * 0.5) * sin(pitch * 0.5) * cos(yaw * 0.5) + sin(roll * 0.5) * cos(pitch * 0.5) * sin(yaw * 0.5)
-        qz = cos(roll * 0.5) * cos(pitch * 0.5) * sin(yaw * 0.5) - sin(roll * 0.5) * sin(pitch * 0.5) * cos(yaw * 0.5)
-        qw = cos(roll * 0.5) * cos(pitch * 0.5) * cos(yaw * 0.5) + sin(roll * 0.5) * sin(pitch * 0.5) * sin(yaw * 0.5)
+        # roll = radians(roll)
+        # pitch = radians(roll)
+        # yaw = radians(roll)
+        #
+        # qx = sin(roll * 0.5) * cos(pitch * 0.5) * cos(yaw * 0.5) - cos(roll * 0.5) * sin(pitch * 0.5) * sin(yaw * 0.5)
+        # qy = cos(roll * 0.5) * sin(pitch * 0.5) * cos(yaw * 0.5) + sin(roll * 0.5) * cos(pitch * 0.5) * sin(yaw * 0.5)
+        # qz = cos(roll * 0.5) * cos(pitch * 0.5) * sin(yaw * 0.5) - sin(roll * 0.5) * sin(pitch * 0.5) * cos(yaw * 0.5)
+        # qw = cos(roll * 0.5) * cos(pitch * 0.5) * cos(yaw * 0.5) + sin(roll * 0.5) * sin(pitch * 0.5) * sin(yaw * 0.5)
+
+        # cy = cos(yaw * 0.5)
+        # sy = sin(yaw * 0.5)
+        # cp = cos(pitch * 0.5)
+        # sp = sin(pitch * 0.5)
+        # cr = cos(roll * 0.5)
+        # sr = sin(roll * 0.5)
+
+        c1 = cos(yaw * 0.5)
+        s1 = sin(yaw * 0.5)
+        c2 = cos(pitch * 0.5)
+        s2 = sin(pitch * 0.5)
+        c3 = cos(roll * 0.5)
+        s3 = sin(roll * 0.5)
+
+        c1c2 = c1 * c2
+        s1s2 = s1 * s2
+
+        qw = c1c2 * c3 - s1s2 * s3
+        qx = c1c2 * s3 + s1s2 * c3
+        qy = s1 * c2 * c3 + c1 * s2 * s3
+        qz = c1 * s2 * c3 - s1 * c2 * s3
+
+        # qw = cy * cp * cr + sy * sp * sr
+        # qx = cy * cp * sr - sy * sp * cr
+        # qy = sy * cp * sr + cy * sp * cr
+        # qz = sy * cp * cr - cy * sp * sr
 
         self.quaternions = qx, qy, qz, qw
 
-    def get_angles(self):
+    def get_angles_degrees(self):
+        return degrees(self.angle[0]), degrees(self.angle[1]), degrees(self.angle[2])
+
+    def get_angles_radians(self):
         return self.angle
 
     def get_quaternions(self):
