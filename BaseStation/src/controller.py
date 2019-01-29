@@ -54,7 +54,7 @@ class Controller:
 
     def update_ui(self):
         self.update_plots()
-        # self.update_leds()
+        self.update_leds()
         self.update_thermometer()
         self.update_3d_model()
 
