@@ -46,7 +46,7 @@ class RealTimeController(Controller):
                     self.data_widget.reset()
 
                 self.start_thread()
-            except DomainError as error:    # TODO: test this
+            except DomainError as error:
                 self.is_running = False
                 self.notify_all_message_listeners(error.message, MessageType.ERROR)
         else:

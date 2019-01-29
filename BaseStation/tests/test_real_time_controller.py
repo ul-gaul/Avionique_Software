@@ -5,6 +5,7 @@ from PyQt5.QtGui import QCloseEvent
 from PyQt5.QtWidgets import QMessageBox
 
 from src.consumer import Consumer
+from src.domain_error import DomainError
 from src.message_listener import MessageListener
 from src.message_type import MessageType
 from src.real_time_controller import RealTimeController
@@ -133,14 +134,24 @@ class RealTimeControllerTest(unittest.TestCase):
         self.serial_data_producer.save.assert_not_called()
         thread_mock.start.assert_not_called()
 
+    @patch("src.controller.Thread")
+    def test_real_time_button_callback_should_notify_message_listeners_when_data_producer_throws_exception(self, _):
+        error_message = "message"
+        self.serial_data_producer.start.side_effect = DomainError(error_message)
+        message_listener = Mock(spec=MessageListener)
+        self.real_time_controller.register_message_listener(message_listener)
+
+        self.real_time_controller.real_time_button_callback()
+
+        message_listener.notify.assert_called_with(error_message, MessageType.ERROR)
+
     def test_save_data_should_call_serial_data_producer(self):
         self.real_time_controller.save_data(self.VALID_SAVE_FILE_NAME)
 
         self.serial_data_producer.save.assert_called_with(self.VALID_SAVE_FILE_NAME)
 
     def test_save_data_should_notify_message_listeners(self):
-        listener = MessageListener()
-        listener.notify = Mock()
+        listener = Mock(spec=MessageListener)
         self.real_time_controller.register_message_listener(listener)
 
         self.real_time_controller.save_data(self.VALID_SAVE_FILE_NAME)
