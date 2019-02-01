@@ -32,6 +32,10 @@ class RealTimeWidget(DataWidget):
     def set_time(self, time):
         self.lcdNumber.display(time)
 
+    def reset(self):
+        super().reset()
+        self.set_time(0)
+
     def show_save_message_box(self) -> QMessageBox.StandardButton:
         message_box = QMessageBox()
         return message_box.question(self, "BaseStation",

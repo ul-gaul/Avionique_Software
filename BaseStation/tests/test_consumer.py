@@ -2,6 +2,7 @@ import threading
 import unittest
 from unittest.mock import Mock
 
+from src.apogee_calculator import ApogeeCalculator
 from src.consumer import Consumer
 from src.data_producer import DataProducer
 from src.rocket_packet import RocketPacket
@@ -9,10 +10,16 @@ from src.rocket_packet import RocketPacket
 
 class ConsumerTest(unittest.TestCase):
 
+    BASE_CAMP_EASTING = 32.0
+    BASE_CAMP_NORTHING = 168.0
+    APOGEE = (100, 10000)
+
     def setUp(self):
         self.sampling_frequency = 1
         self.producer = DataProducer(threading.Lock())
-        self.consumer = Consumer(self.producer, self.sampling_frequency)
+        self.apogee_calculator = Mock(spec=ApogeeCalculator)
+        self.apogee_calculator.get_apogee.return_value = self.APOGEE
+        self.consumer = Consumer(self.producer, self.sampling_frequency, self.apogee_calculator)
 
     def test_constructor_should_create_dictionary_with_rocket_packet_keys(self):
         self.assertTrue(set(RocketPacket().keys()).issubset(set(self.consumer.data.keys())))
@@ -47,7 +54,7 @@ class ConsumerTest(unittest.TestCase):
 
         self.assertEqual(len(self.consumer["time_stamp"]), 0)
 
-    def test_clear_should_remove_all_data(self):
+    def test_clear_should_empty_data_lists(self):
         self.producer.get_available_rocket_packets = Mock(return_value=[RocketPacket()])
         self.consumer.update()
 
@@ -74,3 +81,25 @@ class ConsumerTest(unittest.TestCase):
         consumer_has_data = self.consumer.has_data()
 
         self.assertFalse(consumer_has_data)
+
+    def test_reset_should_empty_data_lists(self):
+        self.producer.get_available_rocket_packets = Mock(return_value=[RocketPacket()])
+        self.consumer.update()
+
+        self.consumer.reset()
+
+        self.assert_consumer_contains_no_data()
+
+    def test_reset_should_remove_base_camp_coordinates(self):
+        self.consumer.base_camp_easting = self.BASE_CAMP_EASTING
+        self.consumer.base_camp_northing = self.BASE_CAMP_NORTHING
+
+        self.consumer.reset()
+
+        self.assertIsNone(self.consumer.base_camp_easting)
+        self.assertIsNone(self.consumer.base_camp_northing)
+
+    def test_reset_should_reset_apogee_calculator(self):
+        self.consumer.reset()
+
+        self.apogee_calculator.reset.assert_called_with()

@@ -1,6 +1,8 @@
 import threading
 
+from src.apogee_calculator import ApogeeCalculator
 from src.config import ConfigLoader
+from src.consumer import Consumer
 from src.file_data_producer import FileDataProducer
 from src.persistence.csv_data_persister import CsvDataPersister
 from src.playback_state import PlaybackState
@@ -25,7 +27,9 @@ class ControllerFactory:
         data_producer = SerialDataProducer(lock, self.csv_data_persister, rocket_packet_parser,
                                            sampling_frequency=config.rocket_packet_config.sampling_frequency)
 
-        return RealTimeController(real_time_widget, data_producer, config)
+        consumer = Consumer(data_producer, config.rocket_packet_config.sampling_frequency, ApogeeCalculator())
+
+        return RealTimeController(real_time_widget, data_producer, consumer, config)
 
     def create_replay_controller(self, replay_widget: ReplayWidget, filename: str):
         config = ConfigLoader.load()
@@ -35,4 +39,6 @@ class ControllerFactory:
         playback_state = PlaybackState(1, PlaybackState.Mode.FORWARD)
         data_producer = FileDataProducer(self.csv_data_persister, filename, data_lock, playback_lock, playback_state)
 
-        return ReplayController(replay_widget, data_producer, config)
+        consumer = Consumer(data_producer, config.rocket_packet_config.sampling_frequency, ApogeeCalculator())
+
+        return ReplayController(replay_widget, data_producer, consumer, config)

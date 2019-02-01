@@ -14,16 +14,16 @@ from src.ui.data_widget import DataWidget
 
 # FIXME: this class should be abstract
 class Controller:
-    def __init__(self, data_widget: DataWidget, data_producer: DataProducer, config: Config):
+    def __init__(self, data_widget: DataWidget, data_producer: DataProducer, consumer: Consumer, config: Config):
         self.data_widget = data_widget
         self.is_running = False
         self.data_producer = data_producer
-        self.consumer = None
         self.target_altitude = config.target_altitude
         self.sampling_frequency = config.rocket_packet_config.sampling_frequency
+        self.consumer = consumer
         self.refresh_delay = 1.0 / config.gui_fps
         self.message_listeners = []
-        self.thread = Thread(target=self.drawing_thread)
+        self.thread = None
 
     def add_open_rocket_simulation(self, filename):
         try:
@@ -36,18 +36,21 @@ class Controller:
     def drawing_thread(self):
         last_time = time.time()
         while self.is_running:
-            self.consumer.update()
-
-            if self.consumer.has_data():
-                self.update_ui()
-
-            self.consumer.clear()
+            self.update()
 
             now = time.time()
             dt = now - last_time
             last_time = now
             if dt < self.refresh_delay:
                 time.sleep(self.refresh_delay - dt)
+
+    def update(self):
+        self.consumer.update()
+
+        if self.consumer.has_data():
+            self.update_ui()
+
+        self.consumer.clear()
 
     def update_ui(self):
         self.update_plots()
@@ -76,9 +79,9 @@ class Controller:
         self.data_widget.set_thermometer_value(self.consumer.get_average_temperature())
 
     def start_thread(self):
-        self.consumer = Consumer(self.data_producer, self.sampling_frequency)
         self.data_producer.start()
         self.is_running = True
+        self.thread = Thread(target=self.drawing_thread)
         self.thread.start()
 
     def stop_thread(self):
