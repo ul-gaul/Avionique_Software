@@ -18,7 +18,7 @@ import numpy as np
 # FIXME: make this class abstract
 class DataWidget(QtWidgets.QWidget):
 
-    def __init__(self, parent):
+    def __init__(self, parent=None):
         super().__init__(parent)
         self.set_black_on_white_graph_colors()
         self.thermometer = None
@@ -223,3 +223,15 @@ class DataWidget(QtWidgets.QWidget):
 
     def set_thermometer_value(self, temperature: float):
         self.thermometer.set_temperature(temperature)
+
+    def reset(self):
+        self.altitude_graph.reset()
+        self.positions_on_map.clear()
+        self.rotate_rocket_model(0, 0, 0, 0)
+        self.reset_leds()
+        self.set_thermometer_value(0)
+        self.voltage_curve.clear()
+
+    def reset_leds(self):
+        for led in self.leds:
+            led.set_state(False)

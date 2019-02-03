@@ -1,3 +1,4 @@
+from src.config import Config
 from src.consumer import Consumer
 from src.controller import Controller
 from src.file_data_producer import FileDataProducer
@@ -6,23 +7,18 @@ from src.ui.replay_widget import ReplayWidget
 
 class ReplayController(Controller):
 
-    def __init__(self, replay_widget: ReplayWidget, file_data_producer: FileDataProducer):
-        super().__init__(replay_widget)
-
-        self.data_producer = file_data_producer
-        self.consumer = Consumer(self.data_producer, self.sampling_frequency)
+    def __init__(self, replay_widget: ReplayWidget, file_data_producer: FileDataProducer, consumer: Consumer,
+                 config: Config):
+        super().__init__(replay_widget, file_data_producer, consumer, config)
 
         self.data_widget.set_callback("play", self.play_button_callback)
         self.data_widget.set_callback("pause", self.pause_button_callback)
         self.data_widget.set_callback("fast_forward", self.fast_forward_button_callback)
         self.data_widget.set_callback("rewind", self.rewind_button_callback)
         self.data_widget.set_control_bar_max_value(self.data_producer.get_total_packet_count() - 1)
-        self.data_widget.control_bar.set_callback(self.control_bar_callback)
+        self.data_widget.set_control_bar_callback(self.control_bar_callback)
 
-        self.consumer.update()
-
-        if self.consumer.has_data():
-            self.update_ui()
+        self.update()
 
     def update_ui(self):
         super().update_ui()

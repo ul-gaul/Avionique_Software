@@ -37,7 +37,7 @@ class ApogeeCalculator:
         self.apogee = 0
         self.apogee_index = 0
 
-        self.last_altitude_index = None
+        self.last_altitude_index = 0
 
     def get_apogee(self):
         if self.apogee_index is not 0:
