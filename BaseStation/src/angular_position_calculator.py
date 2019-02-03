@@ -19,16 +19,30 @@ class AngularCalculator:
             psi = arctan(ang_velocity[1] / ang_velocity[0])  # z
 
         self.angles = radians(r), theta, psi
-        self.euler_to_quaternion(self.angles[2], self.angles[1], self.angles[0])
+        self.euler_radians_to_quaternion(self.angles[2], self.angles[1], self.angles[0])
 
-    # Z Y X | angles seulement en radians.
-    def euler_to_quaternion(self, yaw, pitch, roll):
+    def euler_radians_to_quaternion(self, yaw, pitch, roll):  # Z Y X
         cy = cos(yaw * 0.5)
         sy = sin(yaw * 0.5)
         cp = cos(pitch * 0.5)
         sp = sin(pitch * 0.5)
         cr = cos(roll * 0.5)
         sr = sin(roll * 0.5)
+
+        qw = cy * cp * cr + sy * sp * sr
+        qx = cy * cp * sr - sy * sp * cr
+        qy = sy * cp * sr + cy * sp * cr
+        qz = sy * cp * cr - cy * sp * sr
+
+        self.quaternions = qx, qy, qz, qw
+
+    def euler_degrees_to_quaternion(self, yaw, pitch, roll):  # Z Y X
+        cy = cos(radians(yaw) * 0.5)
+        sy = sin(radians(yaw) * 0.5)
+        cp = cos(radians(pitch) * 0.5)
+        sp = sin(radians(pitch) * 0.5)
+        cr = cos(radians(roll) * 0.5)
+        sr = sin(radians(roll) * 0.5)
 
         qw = cy * cp * cr + sy * sp * sr
         qx = cy * cp * sr - sy * sp * cr

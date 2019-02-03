@@ -16,14 +16,21 @@ class MyTestCase(unittest.TestCase):
 
         self.assertEqual(rounded_angle, (93.54, 74.5, 33.69))
 
-    def test_euler_to_quaternion(self):
-        self.angular_calculator.euler_to_quaternion(0, 0, 3.14/2)
+    def test_euler_radians_to_quaternion(self):
+        self.angular_calculator.euler_radians_to_quaternion(0, 0, 3.14/2)
         computed_quaternion = self.angular_calculator.get_quaternions()
         rounded_quaternion = round(computed_quaternion[0], 3), round(computed_quaternion[1], 3), round(computed_quaternion[2], 3), round(computed_quaternion[3], 3)
 
         self.assertEqual(rounded_quaternion, (0.707, 0.0, 0.0, 0.707))
 
-    def test_full_class_euler_to_quaternion(self):
+    def test_euler_degrees_to_quaternion(self):
+        self.angular_calculator.euler_degrees_to_quaternion(0, 0, 90)
+        computed_quaternion = self.angular_calculator.get_quaternions()
+        rounded_quaternion = round(computed_quaternion[0], 3), round(computed_quaternion[1], 3), round(computed_quaternion[2], 3), round(computed_quaternion[3], 3)
+
+        self.assertEqual(rounded_quaternion, (0.707, 0.0, 0.0, 0.707))
+
+    def test_full_class_euler_radians_to_quaternion(self):
         angular_velocity = (75, 50, 25)
         self.angular_calculator.compute_angular_velocity(angular_velocity)
 
