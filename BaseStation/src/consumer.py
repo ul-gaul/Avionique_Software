@@ -12,7 +12,7 @@ CAMP_POSITION_MEASUREMENT_DELAY = 10  # in seconds
 
 class Consumer:
 
-    def __init__(self, data_producer: DataProducer, sampling_frequency: float, apogee_calculator: ApogeeCalculator):
+    def __init__(self, data_producer: DataProducer, sampling_frequency: float, apogee_calculator: ApogeeCalculator, angular_calculator: AngularCalculator):
         self.data_producer = data_producer
         self.sampling_frequency = sampling_frequency
         self.data = {}
@@ -27,6 +27,7 @@ class Consumer:
         self.base_camp_northing = None
         self.coordinate_converter = GeoCoordinateConverter(UTMZone.zone_13S)
         self.apogee_calculator = apogee_calculator
+        self.angular_calculator = angular_calculator
 
     def create_keys_from_packet_format(self):
         for key in RocketPacket.keys():
