@@ -37,12 +37,16 @@ class AngularCalculator:
         self.quaternions = qx, qy, qz, qw
 
     def euler_degrees_to_quaternion(self, yaw, pitch, roll):  # Z Y X
-        cy = cos(radians(yaw) * 0.5)
-        sy = sin(radians(yaw) * 0.5)
-        cp = cos(radians(pitch) * 0.5)
-        sp = sin(radians(pitch) * 0.5)
-        cr = cos(radians(roll) * 0.5)
-        sr = sin(radians(roll) * 0.5)
+        yaw = radians(yaw)
+        pitch = radians(pitch)
+        roll = radians(roll)
+
+        cy = cos(yaw * 0.5)
+        sy = sin(yaw * 0.5)
+        cp = cos(pitch * 0.5)
+        sp = sin(pitch * 0.5)
+        cr = cos(roll * 0.5)
+        sr = sin(roll * 0.5)
 
         qw = cy * cp * cr + sy * sp * sr
         qx = cy * cp * sr - sy * sp * cr
