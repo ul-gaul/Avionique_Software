@@ -8,16 +8,18 @@ import serial
 from src.data_persister import DataPersister
 from src.data_producer import DataProducer
 from src.domain_error import DomainError
+from src.realtime.checksum_validator import ChecksumValidator
 from src.realtime.rocket_packet_parser import RocketPacketParser
 
 
 class SerialDataProducer(DataProducer):
 
     def __init__(self, lock: threading.Lock, data_persister: DataPersister, rocket_packet_parser: RocketPacketParser,
-                 baudrate=9600, start_character=b's', sampling_frequency=1.0):
+                 checksum_validator: ChecksumValidator, baudrate=9600, start_character=b's', sampling_frequency=1.0):
         super().__init__(lock)
         self.data_persister = data_persister
         self.rocket_packet_parser = rocket_packet_parser
+        self.checksum_validator = checksum_validator
         self.unsaved_data = False
 
         self.port = serial.Serial()
@@ -47,7 +49,7 @@ class SerialDataProducer(DataProducer):
             if c == self.start_character:
                 data_bytes = self.port.read(self.num_bytes_to_read)
 
-                if self.validate_checksum(data_bytes):
+                if self.checksum_validator.validate(data_bytes):
                     try:
                         rocket_packet = self.rocket_packet_parser.parse(data_bytes[:-1])
                         print(rocket_packet)
@@ -96,13 +98,3 @@ class SerialDataProducer(DataProducer):
             except (OSError, serial.SerialException):
                 pass
         return result
-
-    # FIXME: extract to a Checksum class, implementing a ValidationStrategy interface
-    @staticmethod
-    def validate_checksum(data_array: bytes):
-        checksum = sum(data_array) % 256
-        if checksum == 255:
-            return True
-        else:
-            print("Invalid Checksum : expected = 255, calculated = {}".format(checksum))
-            return False

@@ -5,6 +5,7 @@ from src.data_processing.apogee_calculator import ApogeeCalculator
 from src.data_processing.consumer import Consumer
 from src.persistence.csv_data_persister import CsvDataPersister
 from src.real_time_controller import RealTimeController
+from src.realtime.checksum_validator import ChecksumValidator
 from src.realtime.rocket_packet_parser_factory import RocketPacketParserFactory
 from src.realtime.serial_data_producer import SerialDataProducer
 from src.replay.file_data_producer import FileDataProducer
@@ -24,7 +25,8 @@ class ControllerFactory:
 
         rocket_packet_parser = RocketPacketParserFactory.create(config.rocket_packet_config.version)
         lock = threading.Lock()
-        data_producer = SerialDataProducer(lock, self.csv_data_persister, rocket_packet_parser,
+        checksum_validator = ChecksumValidator()
+        data_producer = SerialDataProducer(lock, self.csv_data_persister, rocket_packet_parser, checksum_validator,
                                            sampling_frequency=config.rocket_packet_config.sampling_frequency)
 
         consumer = Consumer(data_producer, config.rocket_packet_config.sampling_frequency, ApogeeCalculator())
