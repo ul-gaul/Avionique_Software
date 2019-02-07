@@ -1,8 +1,8 @@
 import unittest
 from unittest.mock import Mock, MagicMock
 
-from src.consumer import Consumer
-from src.file_data_producer import FileDataProducer
+from src.data_processing.consumer import Consumer
+from src.replay.file_data_producer import FileDataProducer
 from src.replay_controller import ReplayController
 from src.ui.replay_widget import ReplayWidget
 from tests.builders.config_builder import ConfigBuilder

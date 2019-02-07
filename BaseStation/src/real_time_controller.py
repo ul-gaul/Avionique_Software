@@ -1,14 +1,15 @@
 from datetime import datetime
+
 from PyQt5.QtGui import QCloseEvent
 from PyQt5.QtWidgets import QMessageBox
 
 from src.config import Config
-from src.consumer import Consumer
-from src.ui.real_time_widget import RealTimeWidget
 from src.controller import Controller
+from src.data_processing.consumer import Consumer
 from src.domain_error import DomainError
 from src.message_type import MessageType
-from src.serial_data_producer import SerialDataProducer
+from src.realtime.serial_data_producer import SerialDataProducer
+from src.ui.real_time_widget import RealTimeWidget
 
 
 class RealTimeController(Controller):

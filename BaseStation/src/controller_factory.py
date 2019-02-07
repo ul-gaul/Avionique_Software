@@ -1,15 +1,15 @@
 import threading
 
-from src.apogee_calculator import ApogeeCalculator
 from src.config import ConfigLoader
-from src.consumer import Consumer
-from src.file_data_producer import FileDataProducer
+from src.data_processing.apogee_calculator import ApogeeCalculator
+from src.data_processing.consumer import Consumer
 from src.persistence.csv_data_persister import CsvDataPersister
-from src.playback_state import PlaybackState
 from src.real_time_controller import RealTimeController
+from src.realtime.rocket_packet_parser_factory import RocketPacketParserFactory
+from src.realtime.serial_data_producer import SerialDataProducer
+from src.replay.file_data_producer import FileDataProducer
+from src.replay.playback_state import PlaybackState
 from src.replay_controller import ReplayController
-from src.rocket_packet_parser_factory import RocketPacketParserFactory
-from src.serial_data_producer import SerialDataProducer
 from src.ui.real_time_widget import RealTimeWidget
 from src.ui.replay_widget import ReplayWidget
 

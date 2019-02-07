@@ -1,8 +1,8 @@
 import unittest
 from unittest.mock import Mock, MagicMock, call
 
-from src.consumer import Consumer
 from src.controller import Controller
+from src.data_processing.consumer import Consumer
 from src.data_producer import DataProducer
 from src.message_listener import MessageListener
 from src.message_type import MessageType

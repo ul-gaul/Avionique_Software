@@ -1,13 +1,14 @@
 import glob
-import sys
 import struct
-import serial
+import sys
 import threading
 
-from src.domain_error import DomainError
+import serial
+
 from src.data_persister import DataPersister
 from src.data_producer import DataProducer
-from src.rocket_packet_parser import RocketPacketParser
+from src.domain_error import DomainError
+from src.realtime.rocket_packet_parser import RocketPacketParser
 
 
 class SerialDataProducer(DataProducer):

@@ -1,9 +1,10 @@
 import time
 from threading import Thread
+
 from PyQt5.QtGui import QCloseEvent
 
 from src.config import Config
-from src.consumer import Consumer
+from src.data_processing.consumer import Consumer
 from src.data_producer import DataProducer
 from src.domain_error import DomainError
 from src.message_listener import MessageListener

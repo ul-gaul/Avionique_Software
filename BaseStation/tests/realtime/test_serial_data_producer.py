@@ -2,9 +2,9 @@ import threading
 import unittest
 from unittest.mock import MagicMock
 
-from src.rocket_packet_parser_2017 import RocketPacketParser2017
-from src.serial_data_producer import SerialDataProducer
 from src.data_persister import DataPersister
+from src.realtime.rocket_packet_parser_2017 import RocketPacketParser2017
+from src.realtime.serial_data_producer import SerialDataProducer
 
 
 class SerialDataProducerTest(unittest.TestCase):
