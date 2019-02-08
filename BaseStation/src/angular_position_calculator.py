@@ -36,6 +36,8 @@ class AngularCalculator:
 
         self.quaternions = qx, qy, qz, qw
 
+        return self.quaternions
+
     def euler_degrees_to_quaternion(self, yaw, pitch, roll):  # Z Y X
         yaw = radians(yaw)
         pitch = radians(pitch)
@@ -54,6 +56,8 @@ class AngularCalculator:
         qz = sy * cp * cr - cy * sp * sr
 
         self.quaternions = qx, qy, qz, qw
+
+        return self.quaternions
 
     def get_angles_degrees(self):
         return degrees(self.angles[0]), degrees(self.angles[1]), degrees(self.angles[2])
