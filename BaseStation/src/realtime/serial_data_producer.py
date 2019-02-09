@@ -7,9 +7,12 @@ import serial
 
 from src.data_persister import DataPersister
 from src.data_producer import DataProducer
-from src.domain_error import DomainError
 from src.realtime.checksum_validator import ChecksumValidator
 from src.realtime.rocket_packet_parser import RocketPacketParser
+
+
+class NoConnectedDeviceException(Exception):
+    """Raised when data acquisition is started with no device connected"""
 
 
 class SerialDataProducer(DataProducer):
@@ -35,7 +38,7 @@ class SerialDataProducer(DataProducer):
 
         ports = self.detect_serial_ports()
         if len(ports) <= 0:
-            raise DomainError("Aucun récepteur connecté")
+            raise NoConnectedDeviceException("Aucun récepteur connecté")
         self.port.port = ports[0]
         self.port.open()
 

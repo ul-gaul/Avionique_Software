@@ -5,11 +5,10 @@ from PyQt5.QtGui import QCloseEvent
 from PyQt5.QtWidgets import QMessageBox
 
 from src.data_processing.consumer import Consumer
-from src.domain_error import DomainError
 from src.message_listener import MessageListener
 from src.message_type import MessageType
 from src.real_time_controller import RealTimeController
-from src.realtime.serial_data_producer import SerialDataProducer
+from src.realtime.serial_data_producer import SerialDataProducer, NoConnectedDeviceException
 from src.ui.real_time_widget import RealTimeWidget
 from tests.builders.config_builder import ConfigBuilder
 
@@ -137,7 +136,7 @@ class RealTimeControllerTest(unittest.TestCase):
     @patch("src.controller.Thread")
     def test_real_time_button_callback_should_notify_message_listeners_when_data_producer_throws_exception(self, _):
         error_message = "message"
-        self.serial_data_producer.start.side_effect = DomainError(error_message)
+        self.serial_data_producer.start.side_effect = NoConnectedDeviceException(error_message)
         message_listener = Mock(spec=MessageListener)
         self.real_time_controller.register_message_listener(message_listener)
 

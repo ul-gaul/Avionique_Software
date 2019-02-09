@@ -8,7 +8,7 @@ from src.controller import Controller
 from src.data_processing.consumer import Consumer
 from src.domain_error import DomainError
 from src.message_type import MessageType
-from src.realtime.serial_data_producer import SerialDataProducer
+from src.realtime.serial_data_producer import SerialDataProducer, NoConnectedDeviceException
 from src.ui.real_time_widget import RealTimeWidget
 
 
@@ -47,9 +47,9 @@ class RealTimeController(Controller):
                     self.data_widget.reset()
 
                 self.start_thread()
-            except DomainError as error:
+            except (DomainError, NoConnectedDeviceException) as error:
                 self.is_running = False
-                self.notify_all_message_listeners(error.message, MessageType.ERROR)
+                self.notify_all_message_listeners(str(error), MessageType.ERROR)
         else:
             self.stop_thread()
 
