@@ -1,11 +1,15 @@
 import unittest
-from unittest.mock import Mock, MagicMock, call
+from unittest.mock import Mock, MagicMock, call, patch
 
 from src.controller import Controller
 from src.data_processing.consumer import Consumer
 from src.data_producer import DataProducer
+from src.message_listener import MessageListener
+from src.message_type import MessageType
+from src.openrocket_simulation import InvalidOpenRocketSimulationFileException
 from src.ui.data_widget import DataWidget
 from tests.builders.config_builder import ConfigBuilder
+from tests.matchers import AnyStringWith
 
 
 class ControllerTest(unittest.TestCase):
@@ -23,6 +27,7 @@ class ControllerTest(unittest.TestCase):
     PAYLOAD_BOARD_STATE_1 = True
     TEMPERATURE = 100
     QUATERNION = (1, 2, 3, 4)
+    OPEN_ROCKET_SIMULATION_FILENAME = "simulation.csv"
 
     def setUp(self):
         self.data_widget = Mock(spec=DataWidget)
@@ -85,6 +90,35 @@ class ControllerTest(unittest.TestCase):
         self.controller.update()
 
         self.consumer.clear.assert_called_with()
+
+    @patch("src.controller.OpenRocketSimulation")
+    def test_add_open_rocket_simulation_should_show_simulation_in_ui(self, simulation):
+        simulation_mock = simulation.return_value
+
+        self.controller.add_open_rocket_simulation(self.OPEN_ROCKET_SIMULATION_FILENAME)
+
+        self.data_widget.show_simulation.assert_called_with(simulation_mock)
+
+    @patch("src.controller.OpenRocketSimulation")
+    def test_add_open_rocket_simulation_should_notify_message_listeners_when_simulation_loaded(self, _):
+        message_listener = Mock(spec=MessageListener)
+        self.controller.register_message_listener(message_listener)
+
+        self.controller.add_open_rocket_simulation(self.OPEN_ROCKET_SIMULATION_FILENAME)
+
+        message_listener.notify.assert_called_with(AnyStringWith(self.OPEN_ROCKET_SIMULATION_FILENAME),
+                                                   MessageType.INFO)
+
+    @patch("src.controller.OpenRocketSimulation")
+    def test_add_open_rocket_simulation_should_notify_message_listeners_when_simulation_loading_fails(self, simulation):
+        error_message = "error message"
+        simulation.side_effect = InvalidOpenRocketSimulationFileException(error_message)
+        message_listener = Mock(spec=MessageListener)
+        self.controller.register_message_listener(message_listener)
+
+        self.controller.add_open_rocket_simulation(self.OPEN_ROCKET_SIMULATION_FILENAME)
+
+        message_listener.notify.assert_called_with(AnyStringWith(error_message), MessageType.ERROR)
 
     def setup_consumer_data(self):
         data = {"altitude_feet": self.ALTITUDE, "apogee": self.APOGEE, "easting": self.EASTING,

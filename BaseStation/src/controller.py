@@ -25,7 +25,7 @@ class Controller(MessageSender):
         self.refresh_delay = 1.0 / config.gui_fps
         self.thread = None
 
-    def add_open_rocket_simulation(self, filename):  # TODO: unit test this
+    def add_open_rocket_simulation(self, filename):
         try:
             simulation = OpenRocketSimulation(filename)
             self.data_widget.show_simulation(simulation)
