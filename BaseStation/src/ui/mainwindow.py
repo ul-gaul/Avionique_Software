@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import QMainWindow, QStackedWidget, QFileDialog, QWidget
 from src.controller_factory import ControllerFactory
 from src.message_type import MessageType
 from src.realtime.rocket_packet_parser_factory import RocketPacketVersionException
+from src.ui.console_message_listener import ConsoleMessageListener
 from src.ui.homewidget import HomeWidget
 from src.ui.menu_bar import MenuBar
 from src.ui.real_time_widget import RealTimeWidget
@@ -30,6 +31,7 @@ class MainWindow(QMainWindow):
         self.setWindowIcon(QIcon("src/resources/logo.jpg"))
         self.setWindowTitle("GAUL BaseStation")
         self.set_stylesheet("src/resources/mainwindow.css")
+        self.console = ConsoleMessageListener()
 
     def add_simulation(self):
         filename, _ = QFileDialog.getOpenFileName(caption="Open File", directory="./src/resources/",
@@ -40,7 +42,7 @@ class MainWindow(QMainWindow):
     def open_real_time(self):
         try:
             self.real_time_widget = RealTimeWidget(self)
-            self.controller = self.controller_factory.create_real_time_controller(self.real_time_widget)
+            self.controller = self.controller_factory.create_real_time_controller(self.real_time_widget, self.console)
             self.controller.register_message_listener(self.status_bar)
             self.open_new_widget(self.real_time_widget)
         except RocketPacketVersionException as error:

@@ -11,6 +11,7 @@ from src.realtime.serial_data_producer import SerialDataProducer
 from src.replay.file_data_producer import FileDataProducer
 from src.replay.playback_state import PlaybackState
 from src.replay_controller import ReplayController
+from src.ui.console_message_listener import ConsoleMessageListener
 from src.ui.real_time_widget import RealTimeWidget
 from src.ui.replay_widget import ReplayWidget
 
@@ -20,12 +21,14 @@ class ControllerFactory:
     def __init__(self):
         self.csv_data_persister = CsvDataPersister()
 
-    def create_real_time_controller(self, real_time_widget: RealTimeWidget):
+    def create_real_time_controller(self, real_time_widget: RealTimeWidget, console: ConsoleMessageListener):
         config = ConfigLoader.load()
+
+        checksum_validator = ChecksumValidator()
+        checksum_validator.register_message_listener(console)   # FIXME: maybe this should be done elsewhere...
 
         rocket_packet_parser = RocketPacketParserFactory.create(config.rocket_packet_config.version)
         lock = threading.Lock()
-        checksum_validator = ChecksumValidator()
         data_producer = SerialDataProducer(lock, self.csv_data_persister, rocket_packet_parser, checksum_validator,
                                            sampling_frequency=config.rocket_packet_config.sampling_frequency)
 
