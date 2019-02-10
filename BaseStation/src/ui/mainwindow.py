@@ -1,3 +1,5 @@
+import os
+
 from PyQt5.QtGui import QIcon, QCloseEvent
 from PyQt5.QtWidgets import QMainWindow, QStackedWidget, QFileDialog, QWidget
 
@@ -7,6 +9,7 @@ from src.ui.menu_bar import MenuBar
 from src.ui.real_time_widget import RealTimeWidget
 from src.ui.replay_widget import ReplayWidget
 from src.ui.status_bar import StatusBar
+from src.ui.configdialog import ConfigDialog
 
 
 class MainWindow(QMainWindow):
@@ -24,6 +27,7 @@ class MainWindow(QMainWindow):
         self.real_time_widget = None
         self.replay_widget = None
         self.menu_bar = None
+        self.config_dialog = None
         self.central_widget.addWidget(self.home_widget)
         self.setWindowIcon(QIcon("src/resources/logo.jpg"))
         self.setWindowTitle("GAUL BaseStation")
@@ -61,6 +65,7 @@ class MainWindow(QMainWindow):
         self.menu_bar = MenuBar(self)
         self.menu_bar.set_open_simulation_callback(self.add_simulation)
         self.menu_bar.set_on_exit_callback(self.close)
+        self.menu_bar.set_edit_preferences_callback(self.open_preferences)
         self.setMenuBar(self.menu_bar)
 
     def set_stylesheet(self, stylesheet_path):
@@ -73,3 +78,9 @@ class MainWindow(QMainWindow):
             self.controller.on_close(event)
         else:
             event.accept()
+
+    def open_preferences(self):
+        config_path = os.path.join(os.getcwd(), "config.ini")
+        if self.config_dialog is None:
+            self.config_dialog = ConfigDialog(self)
+        self.config_dialog.open(config_path)
