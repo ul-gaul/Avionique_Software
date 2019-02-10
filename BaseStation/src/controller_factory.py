@@ -22,8 +22,11 @@ class ControllerFactory:
 
         rocket_packet_parser = RocketPacketParserFactory.create(config.rocket_packet_config.version)
         lock = threading.Lock()
-        data_producer = SerialDataProducer(lock, self.csv_data_persister, rocket_packet_parser,
-                                           sampling_frequency=config.rocket_packet_config.sampling_frequency)
+        data_producer = SerialDataProducer(
+            lock, self.csv_data_persister, rocket_packet_parser,
+            sampling_frequency=config.rocket_packet_config.sampling_frequency,
+            start_character=config.serial_port_config.start_character,
+            baudrate=config.serial_port_config.baudrate)
 
         return RealTimeController(real_time_widget, data_producer, config)
 

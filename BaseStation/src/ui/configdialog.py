@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import (
     QFormLayout, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QDialog,
-    QPushButton, QMessageBox)
+    QPushButton, QMessageBox, QListWidget, QListWidgetItem)
 
 from src.ui.config_controller import ConfigController
 
@@ -36,9 +36,15 @@ class ConfigDialog:
         for section_name in self.controller.get_sections():
             header = QLabel(section_name.upper() if not section_name == OTHER_SECTION else "")
             form = QFormLayout()
-            for name, value in self.controller.get_settings(section_name):
-                self.inputs[name] = {"section": section_name, "input": QLineEdit(value)}
-                form.addRow(QLabel(" ".join(name.split("_")).capitalize()),
+            for name, (value, input_type) in self.controller.get_settings(section_name):
+                if input_type.endswith('list'):
+                    input_el = QListWidget()
+                    input_el.addItems(value)
+                else:
+                    input_el = QLineEdit(value)
+                self.inputs[name] = {"section": section_name, "input": input_el}
+                label = " ".join(name.split("_"))
+                form.addRow(QLabel(label[0].capitalize() + "".join(label[1:])),
                             self.inputs[name]["input"])
             if header.text():
                 self.conteneur.addWidget(header)
