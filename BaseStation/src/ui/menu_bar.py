@@ -29,6 +29,10 @@ class MenuBar(QMenuBar):
         self.open_simulation_action.setShortcut('Ctrl+A')
         self.open_simulation_action.setStatusTip("Ajoute les données d'une simulation OpenRocket aux graphiques")
 
+        self.edit_preferences = QAction(self)
+        self.edit_preferences.setObjectName("edit_preferences")
+        self.edit_preferences.setText("Préférences")
+
         self.exit_action = QAction('&Quitter', files_menu)
         self.exit_action.setShortcut('Ctrl+Q')
         self.exit_action.setStatusTip("Quitte l'application")
@@ -36,6 +40,7 @@ class MenuBar(QMenuBar):
         files_menu.addAction(self.new_acquisition_action)
         files_menu.addAction(self.open_csv_file_action)
         files_menu.addAction(self.open_simulation_action)
+        files_menu.addAction(self.edit_preferences)
         files_menu.addSeparator()
         files_menu.addAction(self.exit_action)
 
@@ -46,3 +51,6 @@ class MenuBar(QMenuBar):
 
     def set_on_exit_callback(self, callback: Callable):
         self.exit_action.triggered.connect(callback)
+
+    def set_edit_preferences_callback(self, callback: Callable):
+        self.edit_preferences.triggered.connect(callback)

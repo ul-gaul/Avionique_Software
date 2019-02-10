@@ -25,7 +25,6 @@ class AltitudeGraph(PlotWidget):
         self.addItem(self.current_altitude_text, ignoreBounds=True)
 
         self.simulation_curve = None
-
         self.apogee = 0
         self.draw_apogee_plot = True
         self.apogee_text = TextItem("", anchor=(1, 1), color=(0, 0, 0, 0))
@@ -47,7 +46,6 @@ class AltitudeGraph(PlotWidget):
             self.altitude_curve.setData(values)
             self.current_altitude_point.setData([nb_points - 1], [self.current_altitude])
             self.current_altitude_text.setPos(nb_points - 1, self.current_altitude)
-
             self.current_altitude_text.setColor(color='k')
 
     def set_target_altitude(self, altitude):

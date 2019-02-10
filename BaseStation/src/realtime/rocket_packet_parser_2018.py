@@ -1,7 +1,7 @@
 import struct
 
+from src.realtime.rocket_packet_parser import RocketPacketParser
 from src.rocket_packet import RocketPacket
-from src.rocket_packet_parser import RocketPacketParser
 
 
 class RocketPacketParser2018(RocketPacketParser):

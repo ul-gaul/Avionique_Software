@@ -1,19 +1,19 @@
 import unittest
-from unittest.mock import Mock, MagicMock, call
+from unittest.mock import Mock, MagicMock, call, patch
 
-from src.consumer import Consumer
 from src.controller import Controller
+from src.data_processing.consumer import Consumer
 from src.data_producer import DataProducer
 from src.message_listener import MessageListener
 from src.message_type import MessageType
+from src.openrocket_simulation import InvalidOpenRocketSimulationFileException
 from src.ui.data_widget import DataWidget
 from tests.builders.config_builder import ConfigBuilder
+from tests.matchers import AnyStringWith
 
 
 class ControllerTest(unittest.TestCase):
 
-    MESSAGE = "A MESSAGE"
-    MESSAGE_TYPE = MessageType.INFO
     ALTITUDE = 9000
     APOGEE = 10000
     EASTING = 32
@@ -27,36 +27,16 @@ class ControllerTest(unittest.TestCase):
     PAYLOAD_BOARD_STATE_1 = True
     TEMPERATURE = 100
     QUATERNION = (1, 2, 3, 4)
+    OPEN_ROCKET_SIMULATION_FILENAME = "simulation.csv"
 
     def setUp(self):
         self.data_widget = Mock(spec=DataWidget)
         self.data_producer = Mock(spec=DataProducer)
         self.consumer = MagicMock(spec=Consumer)
 
-        self.message_listener1 = MessageListener()
-        self.message_listener1.notify = Mock()
-        self.message_listener2 = MessageListener()
-        self.message_listener2.notify = Mock()
-
         config = ConfigBuilder().build()
 
         self.controller = Controller(self.data_widget, self.data_producer, self.consumer, config)
-
-    def test_register_message_listener_should_add_listener_in_list(self):
-        self.controller.register_message_listener(self.message_listener1)
-        self.controller.register_message_listener(self.message_listener2)
-
-        num_listeners = len(self.controller.message_listeners)
-        self.assertEqual(num_listeners, 2)
-
-    def test_notify_all_message_listeners_should_call_notify_on_each_listeners(self):
-        self.controller.register_message_listener(self.message_listener1)
-        self.controller.register_message_listener(self.message_listener2)
-
-        self.controller.notify_all_message_listeners(self.MESSAGE, self.MESSAGE_TYPE)
-
-        self.message_listener1.notify.assert_called_with(self.MESSAGE, self.MESSAGE_TYPE)
-        self.message_listener2.notify.assert_called_with(self.MESSAGE, self.MESSAGE_TYPE)
 
     def test_update_should_update_consumer(self):
         self.controller.update()
@@ -110,6 +90,35 @@ class ControllerTest(unittest.TestCase):
         self.controller.update()
 
         self.consumer.clear.assert_called_with()
+
+    @patch("src.controller.OpenRocketSimulation")
+    def test_add_open_rocket_simulation_should_show_simulation_in_ui(self, simulation):
+        simulation_mock = simulation.return_value
+
+        self.controller.add_open_rocket_simulation(self.OPEN_ROCKET_SIMULATION_FILENAME)
+
+        self.data_widget.show_simulation.assert_called_with(simulation_mock)
+
+    @patch("src.controller.OpenRocketSimulation")
+    def test_add_open_rocket_simulation_should_notify_message_listeners_when_simulation_loaded(self, _):
+        message_listener = Mock(spec=MessageListener)
+        self.controller.register_message_listener(message_listener)
+
+        self.controller.add_open_rocket_simulation(self.OPEN_ROCKET_SIMULATION_FILENAME)
+
+        message_listener.notify.assert_called_with(AnyStringWith(self.OPEN_ROCKET_SIMULATION_FILENAME),
+                                                   MessageType.INFO)
+
+    @patch("src.controller.OpenRocketSimulation")
+    def test_add_open_rocket_simulation_should_notify_message_listeners_when_simulation_loading_fails(self, simulation):
+        error_message = "error message"
+        simulation.side_effect = InvalidOpenRocketSimulationFileException(error_message)
+        message_listener = Mock(spec=MessageListener)
+        self.controller.register_message_listener(message_listener)
+
+        self.controller.add_open_rocket_simulation(self.OPEN_ROCKET_SIMULATION_FILENAME)
+
+        message_listener.notify.assert_called_with(AnyStringWith(error_message), MessageType.ERROR)
 
     def setup_consumer_data(self):
         data = {"altitude_feet": self.ALTITUDE, "apogee": self.APOGEE, "easting": self.EASTING,

@@ -1,9 +1,8 @@
 import unittest
 
-from src.domain_error import DomainError
-from src.rocket_packet_parser_2017 import RocketPacketParser2017
-from src.rocket_packet_parser_2018 import RocketPacketParser2018
-from src.rocket_packet_parser_factory import RocketPacketParserFactory
+from src.realtime.rocket_packet_parser_2017 import RocketPacketParser2017
+from src.realtime.rocket_packet_parser_2018 import RocketPacketParser2018
+from src.realtime.rocket_packet_parser_factory import RocketPacketParserFactory, RocketPacketVersionException
 
 
 class RocketPacketParserFactoryTest(unittest.TestCase):
@@ -21,5 +20,6 @@ class RocketPacketParserFactoryTest(unittest.TestCase):
 
         self.assertTrue(isinstance(parser, RocketPacketParser2018))
 
-    def test_create_should_raise_domain_error_given_invalid_version(self):
-        self.assertRaises(DomainError, RocketPacketParserFactory.create, self.invalid_rocket_packet_version)
+    def test_create_should_raise_exception_given_invalid_version(self):
+        self.assertRaises(RocketPacketVersionException, RocketPacketParserFactory.create,
+                          self.invalid_rocket_packet_version)

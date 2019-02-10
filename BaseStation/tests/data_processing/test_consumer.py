@@ -2,9 +2,9 @@ import threading
 import unittest
 from unittest.mock import Mock
 
-from src.apogee_calculator import ApogeeCalculator
-from src.angular_position_calculator import AngularCalculator
-from src.consumer import Consumer
+from src.data_processing.angular_position_calculator import AngularCalculator
+from src.data_processing.apogee_calculator import ApogeeCalculator
+from src.data_processing.consumer import Consumer
 from src.data_producer import DataProducer
 from src.rocket_packet import RocketPacket
 

@@ -1,7 +1,7 @@
 from src.config import Config
-from src.consumer import Consumer
 from src.controller import Controller
-from src.file_data_producer import FileDataProducer
+from src.data_processing.consumer import Consumer
+from src.replay.file_data_producer import FileDataProducer
 from src.ui.replay_widget import ReplayWidget
 
 

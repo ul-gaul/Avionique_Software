@@ -1,5 +1,5 @@
 import unittest
-from src.angular_position_calculator import AngularCalculator
+from src.data_processing.angular_position_calculator import AngularCalculator
 
 
 class MyTestCase(unittest.TestCase):

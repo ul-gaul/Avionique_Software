@@ -3,9 +3,9 @@ import unittest
 from unittest.mock import MagicMock, patch
 
 from src.data_persister import DataPersister
-from src.file_data_producer import FileDataProducer
+from src.replay.file_data_producer import FileDataProducer
+from src.replay.playback_state import PlaybackState
 from src.rocket_packet import RocketPacket
-from src.playback_state import PlaybackState
 
 
 class FileDataProducerTest(unittest.TestCase):

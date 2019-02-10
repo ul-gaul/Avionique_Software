@@ -1,9 +1,9 @@
 import threading
 import time
 
-from src.data_producer import DataProducer
 from src.data_persister import DataPersister
-from src.playback_state import PlaybackState
+from src.data_producer import DataProducer
+from src.replay.playback_state import PlaybackState
 
 
 class FileDataProducer(DataProducer):
