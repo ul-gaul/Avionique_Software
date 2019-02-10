@@ -1,5 +1,6 @@
 import unittest
-from src.apogee_calculator import ApogeeCalculator
+
+from src.data_processing.apogee_calculator import ApogeeCalculator
 
 
 class TestApogee(unittest.TestCase):

@@ -1,9 +1,9 @@
-from src.rocket_packet import RocketPacket
-from src.data_producer import DataProducer
-from src.geo_coordinate_converter import GeoCoordinateConverter
-from src.utm_zone import UTMZone
-from src.apogee_calculator import ApogeeCalculator
+from src.data_processing.apogee_calculator import ApogeeCalculator
+from src.data_processing.utm_zone import UTMZone
 
+from src.data_processing.geo_coordinate_converter import GeoCoordinateConverter
+from src.data_producer import DataProducer
+from src.rocket_packet import RocketPacket
 
 METERS2FEET = 3.28084
 CAMP_POSITION_MEASUREMENT_DELAY = 10  # in seconds

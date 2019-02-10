@@ -1,6 +1,6 @@
 import unittest
 
-from src.playback_state import PlaybackState
+from src.replay.playback_state import PlaybackState
 
 
 class PlaybackStateTest(unittest.TestCase):
