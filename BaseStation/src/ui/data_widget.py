@@ -11,8 +11,6 @@ from src.ui.led import Led
 from src.ui.utils import *
 from OpenGL.GL import *
 from OpenGL.GLU import *
-import pyqtgraph.opengl as gl
-import numpy as np
 
 
 # FIXME: make this class abstract
