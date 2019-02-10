@@ -29,7 +29,7 @@ class MainWindow(QMainWindow):
         self.home_widget = HomeWidget(self)
         self.real_time_widget = None
         self.replay_widget = None
-        self.menu_bar = None
+        self.menu_bar = self.create_menu_bar()
         self.config_dialog = None
         self.central_widget.addWidget(self.home_widget)
         self.setWindowIcon(QIcon("src/resources/logo.jpg"))
@@ -37,11 +37,32 @@ class MainWindow(QMainWindow):
         self.set_stylesheet("src/resources/mainwindow.css")
         self.console = ConsoleMessageListener()
 
+    def create_menu_bar(self):
+        menu_bar = MenuBar(self)
+
+        menu_bar.set_save_as_callback(self.save_as)
+        menu_bar.set_open_simulation_callback(self.add_simulation)
+        menu_bar.set_edit_preferences_callback(self.open_preferences)
+        menu_bar.set_on_exit_callback(self.close)
+
+        self.setMenuBar(menu_bar)
+
+        return menu_bar
+
+    def save_as(self):
+        pass
+
     def add_simulation(self):
         filename, _ = QFileDialog.getOpenFileName(caption="Open File", directory="./src/resources/",
                                                   filter="All Files (*);; CSV Files (*.csv)")
         if filename:
             self.controller.add_open_rocket_simulation(filename)
+
+    def open_preferences(self):
+        config_path = os.path.join(os.getcwd(), "config.ini")
+        if self.config_dialog is None:
+            self.config_dialog = ConfigDialog(self)
+        self.config_dialog.open(config_path)
 
     def open_real_time(self):
         try:
@@ -49,6 +70,7 @@ class MainWindow(QMainWindow):
             self.controller = self.controller_factory.create_real_time_controller(self.real_time_widget, self.console)
             self.controller.register_message_listener(self.status_bar)
             self.open_new_widget(self.real_time_widget)
+            self.menu_bar.set_real_time_mode()
         except RocketPacketVersionException as error:
             self.real_time_widget = None
             self.status_bar.notify(str(error), MessageType.ERROR)
@@ -61,21 +83,14 @@ class MainWindow(QMainWindow):
             self.controller = self.controller_factory.create_replay_controller(self.replay_widget, filename)
             self.controller.register_message_listener(self.status_bar)
             self.open_new_widget(self.replay_widget)
+            self.menu_bar.set_replay_mode()
 
     def open_new_widget(self, widget: QWidget):
         self.central_widget.addWidget(widget)
         self.central_widget.setCurrentWidget(widget)
-        self.setup_menu_bar()
         self.set_stylesheet("src/resources/data_widget.css")
         self.showMaximized()
         self.status_bar.clear()
-
-    def setup_menu_bar(self):
-        self.menu_bar = MenuBar(self)
-        self.menu_bar.set_open_simulation_callback(self.add_simulation)
-        self.menu_bar.set_on_exit_callback(self.close)
-        self.menu_bar.set_edit_preferences_callback(self.open_preferences)
-        self.setMenuBar(self.menu_bar)
 
     def set_stylesheet(self, stylesheet_path):
         file = open(stylesheet_path, 'r')
@@ -87,9 +102,3 @@ class MainWindow(QMainWindow):
             self.controller.on_close(event)
         else:
             event.accept()
-
-    def open_preferences(self):
-        config_path = os.path.join(os.getcwd(), "config.ini")
-        if self.config_dialog is None:
-            self.config_dialog = ConfigDialog(self)
-        self.config_dialog.open(config_path)
