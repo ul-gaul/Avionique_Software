@@ -11,8 +11,6 @@ from src.ui.led import Led
 from src.ui.utils import *
 from OpenGL.GL import *
 from OpenGL.GLU import *
-import pyqtgraph.opengl as gl
-import numpy as np
 
 
 # FIXME: make this class abstract
@@ -223,3 +221,15 @@ class DataWidget(QtWidgets.QWidget):
 
     def set_thermometer_value(self, temperature: float):
         self.thermometer.set_temperature(temperature)
+
+    def reset(self):
+        self.altitude_graph.reset()
+        self.positions_on_map.clear()
+        self.rotate_rocket_model(0, 0, 0, 0)
+        self.reset_leds()
+        self.set_thermometer_value(0)
+        self.voltage_curve.clear()
+
+    def reset_leds(self):
+        for led in self.leds:
+            led.set_state(False)

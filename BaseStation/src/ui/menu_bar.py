@@ -29,6 +29,10 @@ class MenuBar(QMenuBar):
         self.open_simulation_action.setShortcut('Ctrl+A')
         self.open_simulation_action.setStatusTip("Ajoute les données d'une simulation OpenRocket aux graphiques")
 
+        self.edit_preferences = QAction(self)
+        self.edit_preferences.setObjectName("edit_preferences")
+        self.edit_preferences.setText("Préférences")
+
         self.exit_action = QAction('&Quitter', files_menu)
         self.exit_action.setShortcut('Ctrl+Q')
         self.exit_action.setStatusTip("Quitte l'application")

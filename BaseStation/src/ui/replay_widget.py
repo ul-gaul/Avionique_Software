@@ -63,3 +63,9 @@ class ReplayWidget(DataWidget):
 
     def set_control_bar_callback(self, callback):
         self.control_bar.set_callback(callback)
+
+    def reset(self):
+        super().reset()
+        self.set_control_bar_max_value(1)
+        self.set_control_bar_current_value(0)
+        self.update_replay_speed_text(1)

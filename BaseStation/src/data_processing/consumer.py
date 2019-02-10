@@ -1,9 +1,9 @@
-from src.rocket_packet import RocketPacket
-from src.data_producer import DataProducer
-from src.geo_coordinate_converter import GeoCoordinateConverter
-from src.utm_zone import UTMZone
-from  src.apogee_calculator import ApogeeCalculator
+from src.data_processing.apogee_calculator import ApogeeCalculator
+from src.data_processing.utm_zone import UTMZone
 
+from src.data_processing.geo_coordinate_converter import GeoCoordinateConverter
+from src.data_producer import DataProducer
+from src.rocket_packet import RocketPacket
 
 METERS2FEET = 3.28084
 CAMP_POSITION_MEASUREMENT_DELAY = 10  # in seconds
@@ -11,7 +11,7 @@ CAMP_POSITION_MEASUREMENT_DELAY = 10  # in seconds
 
 class Consumer:
 
-    def __init__(self, data_producer: DataProducer, sampling_frequency: float):
+    def __init__(self, data_producer: DataProducer, sampling_frequency: float, apogee_calculator: ApogeeCalculator):
         self.data_producer = data_producer
         self.sampling_frequency = sampling_frequency
         self.data = {}
@@ -25,7 +25,7 @@ class Consumer:
         self.base_camp_easting = None
         self.base_camp_northing = None
         self.coordinate_converter = GeoCoordinateConverter(UTMZone.zone_13S)
-        self.apogee_calculator = ApogeeCalculator()
+        self.apogee_calculator = apogee_calculator
 
     def create_keys_from_packet_format(self):
         for key in RocketPacket.keys():
@@ -82,3 +82,11 @@ class Consumer:
 
     def has_data(self):
         return len(self.data["time_stamp"]) != 0
+
+    def reset(self):
+        self.clear()
+
+        self.base_camp_easting = None
+        self.base_camp_northing = None
+
+        self.apogee_calculator.reset()
