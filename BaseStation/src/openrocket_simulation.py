@@ -1,4 +1,5 @@
-from src.domain_error import DomainError
+class InvalidOpenRocketSimulationFileException(Exception):
+    """Raised when the format of the selected CSV file doesn't match the expected OpenRocket simulation file format"""
 
 
 class OpenRocketSimulation:
@@ -15,4 +16,5 @@ class OpenRocketSimulation:
                 self.time.append(float(data[0]))
                 self.altitude.append(float(data[1]))
         except ValueError:
-            raise DomainError("Le fichier de simulation " + filename + " n'a pas pu être chargé")
+            raise InvalidOpenRocketSimulationFileException("Le fichier de simulation " + filename +
+                                                           " n'a pas pu être chargé")
