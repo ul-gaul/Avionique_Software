@@ -1,3 +1,4 @@
+import os
 from PyQt5.QtWidgets import (
     QFormLayout, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QDialog,
     QPushButton, QMessageBox)
@@ -15,9 +16,10 @@ class ConfigDialog:
         self.window.setWindowTitle("Configuration")
         self.conteneur = QVBoxLayout()
         self.window.setLayout(self.conteneur)
+        self.set_stylesheet(os.path.join(os.getcwd(), "src/resources/configdialog.css"))
 
     def set_stylesheet(self, stylesheet_path):
-        file = open(stylesheet_path, 'r')
+        file = open(stylesheet_path, "r")
         self.stylesheet = file.read()
 
     def _set_stylesheet(self):
@@ -41,8 +43,8 @@ class ConfigDialog:
         self.buttons.addStretch()
         buttonOk = QPushButton("OK")
         buttonCancel = QPushButton("Annuler")
-        buttonOk.setObjectName('btnOk')
-        buttonCancel.setObjectName('btnCancel')
+        buttonOk.setObjectName("btnOk")
+        buttonCancel.setObjectName("btnCancel")
         buttonOk.clicked.connect(self.save)
         buttonCancel.clicked.connect(self.cancel)
         self.buttons.addWidget(buttonOk)
@@ -60,7 +62,7 @@ class ConfigDialog:
                 form.addRow(QLabel(" ".join(name.split("_")).capitalize()),
                             self.inputs[name]["input"])
             if header is not None:
-                header.setProperty('SectionHeader', True)
+                header.setProperty("SectionHeader", True)
                 self.conteneur.addWidget(header)
             self.conteneur.addLayout(form)
             self.conteneur.addSpacing(12)

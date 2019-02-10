@@ -83,5 +83,4 @@ class MainWindow(QMainWindow):
         config_path = os.path.join(os.getcwd(), "config.ini")
         if self.config_dialog is None:
             self.config_dialog = ConfigDialog(self)
-        self.config_dialog.set_stylesheet("src/resources/configdialog.css")
         self.config_dialog.open(config_path)
