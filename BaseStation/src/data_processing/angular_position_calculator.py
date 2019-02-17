@@ -1,69 +1,50 @@
-from numpy import arccos, arctan, sqrt, radians, degrees, cos, sin
+from numpy import arccos, arctan, sqrt, radians, degrees
+
+# ang_velocity sont des rads.
+# Faire l inegral de la vitesse [ang_velocity].
+# Transformer la position en quaternion.
+# 1 class qui fait l integral.
+# 1 class qui fait la conversion en quaternion. DONE
+# Pas de position initiales ! [On la determine de base (0, 0, 0)].
+# Cree une class quaternion pour eviter les confusions de W X Y Z => Cree des methodes static de conversion.
+
+# Revoir les tests unitaires car toute les methodes, et verifcations ont ete change. DONE
+
+# Demander a Maxime si l integrale on doit la calculer depuis le debut.
+# Cela eviterais des bug sur le rewind.
+# Plus de precision sur l inegration numerique.
 
 
 class AngularCalculator:
 
     def __init__(self):
-        self.angles = (0, 0, 0)
-        self.quaternions = (0, 0, 0, 0)
+        self.x = 0.0
+        self.y = 0.0
+        self.z = 0.0
 
-    def compute_angular_velocity(self, ang_velocity: tuple):
-        theta = 0
-        psi = 0
+        self.sample_frequency = 1.0
 
-        r = sqrt(pow(ang_velocity[0], 2) + pow(ang_velocity[1], 2) + pow(ang_velocity[2], 2))  # x
+    def __str__(self):
+        return "x({}), y({}), z({})".format(self.x, self.y, self.z)
 
-        if r != 0:
-            theta = arccos(ang_velocity[2] / r)  # y
-        if ang_velocity[0] != 0:
-            psi = arctan(ang_velocity[1] / ang_velocity[0])  # z
+    def set_sampling_frequency(self, freq: float):
+        self.sample_frequency = freq
 
-        self.angles = radians(r), theta, psi
-        self.euler_radians_to_quaternion(self.angles[2], self.angles[1], self.angles[0])
+    def integrate_all(self, ang_vel_x: list, ang_vel_y: list, ang_vel_z: list):
+        self.x = 0.0
+        self.y = 0.0
+        self.z = 0.0
 
-    def euler_radians_to_quaternion(self, yaw, pitch, roll):  # Z Y X
-        cy = cos(yaw * 0.5)
-        sy = sin(yaw * 0.5)
-        cp = cos(pitch * 0.5)
-        sp = sin(pitch * 0.5)
-        cr = cos(roll * 0.5)
-        sr = sin(roll * 0.5)
+        total_len = len(ang_vel_x)
+        if total_len == 0:
+            return
 
-        qw = cy * cp * cr + sy * sp * sr
-        qx = cy * cp * sr - sy * sp * cr
-        qy = sy * cp * sr + cy * sp * cr
-        qz = sy * cp * cr - cy * sp * sr
+        for i in range(total_len):
+            if i < total_len-1:
+                self.x += self.trap_integrate(i+1, ang_vel_x[i+1], i, ang_vel_x[i])
+                self.y += self.trap_integrate(i+1, ang_vel_y[i+1], i, ang_vel_y[i])
+                self.z += self.trap_integrate(i+1, ang_vel_z[i+1], i, ang_vel_z[i])
 
-        self.quaternions = qx, qy, qz, qw
-
-        return self.quaternions
-
-    def euler_degrees_to_quaternion(self, yaw, pitch, roll):  # Z Y X
-        yaw = radians(yaw)
-        pitch = radians(pitch)
-        roll = radians(roll)
-
-        cy = cos(yaw * 0.5)
-        sy = sin(yaw * 0.5)
-        cp = cos(pitch * 0.5)
-        sp = sin(pitch * 0.5)
-        cr = cos(roll * 0.5)
-        sr = sin(roll * 0.5)
-
-        qw = cy * cp * cr + sy * sp * sr
-        qx = cy * cp * sr - sy * sp * cr
-        qy = sy * cp * sr + cy * sp * cr
-        qz = sy * cp * cr - cy * sp * sr
-
-        self.quaternions = qx, qy, qz, qw
-
-        return self.quaternions
-
-    def get_angles_degrees(self):
-        return degrees(self.angles[0]), degrees(self.angles[1]), degrees(self.angles[2])
-
-    def get_angles_radians(self):
-        return self.angles
-
-    def get_quaternions(self):
-        return self.quaternions
+    @staticmethod
+    def trap_integrate(next_x: float, next_y: float, actual_x: float, actual_y: float):
+        return (next_x - actual_x) * ((next_y + actual_y) * 0.5)

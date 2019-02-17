@@ -7,20 +7,13 @@ class MyTestCase(unittest.TestCase):
     def setUp(self):
         self.angular_calculator = AngularCalculator()
 
-    def test_angular_velocity_to_angles(self):
-        angular_velocity = (75, 50, 25)
-        self.angular_calculator.compute_angular_velocity(angular_velocity)
+    def test_intregrate(self):
+        point_x = [0.0, 0.2, 0.4, 0.8, 1.0]
+        point_y = [0.5, 0.8, 0.9, 1.0, 1.0]
+        total = 0.0
 
-        computed_angle = self.angular_calculator.get_angles_degrees()
-        rounded_angle = round(computed_angle[0], 2), round(computed_angle[1], 2), round(computed_angle[2], 2)
+        for i in range(len(point_x)):
+            if i < len(point_x)-1:
+                total += AngularCalculator.trap_integrate(point_x[i+1], point_y[i+1], point_x[i], point_y[i])
 
-        self.assertEqual(rounded_angle, (93.54, 74.5, 33.69))
-
-    def test_full_class_radians_to_quaternion(self):
-        angular_velocity = (75, 50, 25)
-        self.angular_calculator.compute_angular_velocity(angular_velocity)
-
-        computed_quaternion = self.angular_calculator.get_quaternions()
-        rounded_quaternion = round(computed_quaternion[0], 3), round(computed_quaternion[1], 3), round(computed_quaternion[2], 3), round(computed_quaternion[3], 3)
-
-        self.assertEqual((0.435, 0.565, -0.264, 0.65), rounded_quaternion)
+        self.assertEqual(0.88, total)

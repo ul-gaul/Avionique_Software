@@ -36,14 +36,24 @@ class Consumer:
     def update(self):
         rocket_packets = self.data_producer.get_available_rocket_packets()
         if len(rocket_packets) > 0:
+            angular_x = []
+            angular_y = []
+            angular_z = []
+
             for packet in rocket_packets:
                 for key, value in packet.items():
                     self.data[key].append(value)
                 self.data["altitude_feet"].append(packet.altitude * METERS2FEET)
                 self.manage_coordinates(packet)
-            self.manage_apogee(self.data["altitude_feet"])
 
-            self.angular_calculator.compute_angular_velocity(self.get_rocket_last_angular_velocity())
+                last_ang_vel = self.get_rocket_last_angular_velocity()
+                angular_x.append(last_ang_vel[0])
+                angular_y.append(last_ang_vel[1])
+                angular_z.append(last_ang_vel[2])
+
+            self.manage_apogee(self.data["altitude_feet"])
+            self.angular_calculator.integrate_all(angular_x, angular_y, angular_z)
+            print(self.angular_calculator)
 
     def __getitem__(self, key):
         return self.data[key]
@@ -74,7 +84,8 @@ class Consumer:
             self.data["northing"].append(northing - self.base_camp_northing)
 
     def get_rocket_rotation(self):
-        return self.angular_calculator.get_quaternions()
+        # return self.angular_calculator.get_quaternions()
+        return self.get_rocket_last_quaternion()
 
     def get_rocket_last_quaternion(self):
         return self.data["quaternion_w"][-1], self.data["quaternion_x"][-1], self.data["quaternion_y"][-1], self.data["quaternion_z"][-1]
