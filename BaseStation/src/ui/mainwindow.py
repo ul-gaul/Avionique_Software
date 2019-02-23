@@ -19,19 +19,21 @@ class MainWindow(QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.controller_factory = ControllerFactory()
-        self.controller = None
+        self.active_controller = None
+        self.real_time_controller = None
+        self.replay_controller = None
+
         self.central_widget = QStackedWidget()
         self.setCentralWidget(self.central_widget)
-
-        self.status_bar = StatusBar(self)
-        self.setStatusBar(self.status_bar)
-
         self.home_widget = HomeWidget(self)
         self.real_time_widget = None
         self.replay_widget = None
+        self.central_widget.addWidget(self.home_widget)
+
+        self.status_bar = StatusBar(self)
+        self.setStatusBar(self.status_bar)
         self.menu_bar = self.create_menu_bar()
         self.config_dialog = None
-        self.central_widget.addWidget(self.home_widget)
         self.setWindowIcon(QIcon("src/resources/logo.jpg"))
         self.setWindowTitle("GAUL BaseStation")
         self.set_stylesheet("src/resources/mainwindow.css")
@@ -40,7 +42,9 @@ class MainWindow(QMainWindow):
     def create_menu_bar(self):
         menu_bar = MenuBar(self)
 
+        menu_bar.set_new_acquisition_callback(self.new_acquisition)
         menu_bar.set_save_as_callback(self.save_as)
+        menu_bar.set_load_flight_data_callback(self.load_flight_data)
         menu_bar.set_open_simulation_callback(self.add_simulation)
         menu_bar.set_edit_preferences_callback(self.open_preferences)
         menu_bar.set_on_exit_callback(self.close)
@@ -49,14 +53,20 @@ class MainWindow(QMainWindow):
 
         return menu_bar
 
-    def save_as(self):
+    def new_acquisition(self):  # TODO
+        pass
+
+    def save_as(self):  # TODO
+        pass
+
+    def load_flight_data(self):  # TODO
         pass
 
     def add_simulation(self):
         filename, _ = QFileDialog.getOpenFileName(caption="Open File", directory="./src/resources/",
                                                   filter="All Files (*);; CSV Files (*.csv)")
         if filename:
-            self.controller.add_open_rocket_simulation(filename)
+            self.active_controller.add_open_rocket_simulation(filename)
 
     def open_preferences(self):
         config_path = os.path.join(os.getcwd(), "config.ini")
@@ -67,8 +77,8 @@ class MainWindow(QMainWindow):
     def open_real_time(self):
         try:
             self.real_time_widget = RealTimeWidget(self)
-            self.controller = self.controller_factory.create_real_time_controller(self.real_time_widget, self.console)
-            self.controller.register_message_listener(self.status_bar)
+            self.active_controller = self.controller_factory.create_real_time_controller(self.real_time_widget, self.console)
+            self.active_controller.register_message_listener(self.status_bar)
             self.open_new_widget(self.real_time_widget)
             self.menu_bar.set_real_time_mode()
         except RocketPacketVersionException as error:
@@ -80,8 +90,8 @@ class MainWindow(QMainWindow):
                                                   filter="All Files (*);; CSV Files (*.csv)")
         if filename:
             self.replay_widget = ReplayWidget(self)
-            self.controller = self.controller_factory.create_replay_controller(self.replay_widget, filename)
-            self.controller.register_message_listener(self.status_bar)
+            self.active_controller = self.controller_factory.create_replay_controller(self.replay_widget, filename)
+            self.active_controller.register_message_listener(self.status_bar)
             self.open_new_widget(self.replay_widget)
             self.menu_bar.set_replay_mode()
 
@@ -98,7 +108,7 @@ class MainWindow(QMainWindow):
         self.setStyleSheet(stylesheet)
 
     def closeEvent(self, event: QCloseEvent):
-        if self.controller is not None:
-            self.controller.on_close(event)
+        if self.active_controller is not None:
+            self.active_controller.on_close(event)
         else:
             event.accept()
