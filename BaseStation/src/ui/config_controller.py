@@ -23,19 +23,37 @@ class ConfigController:
     def get_parsed_sections(self):
         return self.config.sections()
 
+    def get_sections(self):
+        return set(list(self.get_parsed_sections() + self.get_dynamic_sections()))
+
     def get_settings(self, section_name=None):
         settings = []
         if section_name in self.get_parsed_sections():
             settings += [
-                (name, (value, 'edit')) for (name, value) in self.config[section_name].items()]
+                (name, (value, 'edit', None)) for (name, value) in self.config[section_name].items()
+                if name not in self.get_dynamic_sections()]
         if section_name in self.get_dynamic_sections():
+            parsed_end = len(settings)
+            parsed_names = [name for (name, _) in settings[:parsed_end]]
             settings += self.get_dynamic_settings(section_name)
+            if len(settings) > parsed_end:
+                for (name, _) in settings[parsed_end:]:
+                    try:
+                        doublon_pos = parsed_names.index(name)
+                    except ValueError:
+                        continue
+                    else:
+                        settings.remove(settings[doublon_pos])
+            print(settings)
+        return settings
 
     def get_dynamic_sections(self):
         return ['serial_port']
 
-    def get_dynamic_settings(self):
-        return {'serial_port': ('ports_COM', (self._get_serial_port_options(), 'list'))}
+    def get_dynamic_settings(self, section_name):
+        settings = {'serial_port': [
+            ('port_com', (self._get_serial_port_options(), 'list', 'Port COM'))]}
+        return settings.get(section_name)
 
     def _get_serial_port_options(self):
         return self.detect_serial_ports()
