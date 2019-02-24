@@ -106,3 +106,4 @@ class ConsumerTest(unittest.TestCase):
         self.consumer.reset()
 
         self.apogee_calculator.reset.assert_called_with()
+        self.angular_calculator.reset.assert_called_with()

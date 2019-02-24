@@ -3,35 +3,31 @@ from numpy import radians, cos, sin
 
 class Quaternion:
 
-    def __init__(self):
-        self.w = 0
-        self.x = 0
-        self.y = 0
-        self.z = 0
-
-    def set(self, w, x, y, z):
-        self.w = w
-        self.x = x
-        self.y = y
-        self.z = z
+    def __init__(self, _w=0, _x=0, _y=0, _z=0):
+        self.w = _w
+        self.x = _x
+        self.y = _y
+        self.z = _z
 
     def __str__(self):
         return "w({}), x({}), y({}), z({})".format(self.w, self.x, self.y, self.z)
 
-    # def __eq__(self, other):
-    #     if other is None:
-    #         return False
-    #
-    #     return self.w == other.w and self.x == other.x and self.y == other.y and self.z == other.z
+    def __eq__(self, other):
+        if other is None or not isinstance(other, Quaternion):
+            return False
+
+        print(self.w, other.w, self.x, other.x, self.y, other.y, self.z, other.z)
+
+        return self.w == other.w and self.x == other.x and self.y == other.y and self.z == other.z
 
     def __ne__(self, other):
-        if other is None:
+        if other is None or not isinstance(other, Quaternion):
             return True
 
         return self.w != other.w or self.x != other.x or self.y != other.y or self.z != other.z
 
     def __cmp__(self, other):
-        if other is None:
+        if other is None or not isinstance(other, Quaternion):
             return False
 
         return self.w == other.w and self.x == other.x and self.y == other.y and self.z == other.z
@@ -50,8 +46,7 @@ class Quaternion:
         qy = sy * cp * sr + cy * sp * cr
         qz = sy * cp * cr - cy * sp * sr
 
-        result = Quaternion()
-        result.set(qw, qx, qy, qz)
+        result = Quaternion(qw, qx, qy, qz)
 
         return result
 

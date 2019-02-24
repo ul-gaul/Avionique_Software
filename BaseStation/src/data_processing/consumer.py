@@ -101,3 +101,4 @@ class Consumer:
         self.base_camp_northing = None
 
         self.apogee_calculator.reset()
+        self.angular_calculator.reset()

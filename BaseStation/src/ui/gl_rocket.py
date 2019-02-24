@@ -58,7 +58,7 @@ class GlRocket(QOpenGLWidget):
         gluQuadricNormals(con, GLU_SMOOTH)
         gluCylinder(con, 0.3, 0, 1.5, 50, 5)
 
-    def rotate_rocket(self, rot: Quaternion):
+    def set_rocket_rotation(self, rot: Quaternion):
         self._rocket_orientation = (rot.w, rot.x, rot.y, rot.z)
         self.update()
 

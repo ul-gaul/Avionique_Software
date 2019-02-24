@@ -218,7 +218,7 @@ class DataWidget(QtWidgets.QWidget):
     def show_simulation(self, simulation: OpenRocketSimulation):
         self.altitude_graph.show_simulation(simulation.time, simulation.altitude)
 
-    def rotate_rocket_model(self, rot: Quaternion):
+    def set_rocket_rotation_model(self, rot: Quaternion):
         self.glRocket.rotate_rocket(rot)
 
     def set_thermometer_value(self, temperature: float):
@@ -227,7 +227,7 @@ class DataWidget(QtWidgets.QWidget):
     def reset(self):
         self.altitude_graph.reset()
         self.positions_on_map.clear()
-        self.rotate_rocket_model(0, 0, 0, 0)
+        self.rotate_rocket_model(Quaternion())
         self.reset_leds()
         self.set_thermometer_value(0)
         self.voltage_curve.clear()
