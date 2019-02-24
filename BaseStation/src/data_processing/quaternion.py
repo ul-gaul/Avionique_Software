@@ -16,8 +16,6 @@ class Quaternion:
         if other is None or not isinstance(other, Quaternion):
             return False
 
-        print(self.w, other.w, self.x, other.x, self.y, other.y, self.z, other.z)
-
         return self.w == other.w and self.x == other.x and self.y == other.y and self.z == other.z
 
     def __ne__(self, other):
