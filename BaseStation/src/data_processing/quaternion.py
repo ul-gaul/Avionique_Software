@@ -18,11 +18,11 @@ class Quaternion:
     def __str__(self):
         return "w({}), x({}), y({}), z({})".format(self.w, self.x, self.y, self.z)
 
-    def __eq__(self, other):
-        if other is None:
-            return False
-
-        return self.w == other.w and self.x == other.x and self.y == other.y and self.z == other.z
+    # def __eq__(self, other):
+    #     if other is None:
+    #         return False
+    #
+    #     return self.w == other.w and self.x == other.x and self.y == other.y and self.z == other.z
 
     def __ne__(self, other):
         if other is None:

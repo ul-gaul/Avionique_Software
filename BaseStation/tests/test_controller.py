@@ -11,6 +11,7 @@ from src.ui.data_widget import DataWidget
 from tests.builders.config_builder import ConfigBuilder
 from tests.matchers import AnyStringWith
 
+from src.data_processing.quaternion import Quaternion
 
 class ControllerTest(unittest.TestCase):
 
@@ -26,13 +27,14 @@ class ControllerTest(unittest.TestCase):
     POWER_SUPPLY_STATE_2 = False
     PAYLOAD_BOARD_STATE_1 = True
     TEMPERATURE = 100
-    QUATERNION = (1, 2, 3, 4)
+    QUATERNION = Quaternion()
     OPEN_ROCKET_SIMULATION_FILENAME = "simulation.csv"
 
     def setUp(self):
         self.data_widget = Mock(spec=DataWidget)
         self.data_producer = Mock(spec=DataProducer)
         self.consumer = MagicMock(spec=Consumer)
+        self.QUATERNION.set(1, 2, 3, 4)
 
         config = ConfigBuilder().build()
 
@@ -76,8 +78,7 @@ class ControllerTest(unittest.TestCase):
 
         self.controller.update()
 
-        self.data_widget.rotate_rocket_model.assert_called_with(self.QUATERNION[0], self.QUATERNION[1],
-                                                                self.QUATERNION[2], self.QUATERNION[3])
+        self.data_widget.rotate_rocket_model.assert_called_with(self.QUATERNION)
 
     def test_update_should_not_update_ui_when_consumer_has_no_data(self):
         self.consumer.has_data.return_value = False
