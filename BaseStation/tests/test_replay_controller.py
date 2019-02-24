@@ -1,5 +1,5 @@
 import unittest
-from unittest.mock import Mock, MagicMock
+from unittest.mock import Mock, MagicMock, patch
 
 from src.data_processing.consumer import Consumer
 from src.replay.file_data_producer import FileDataProducer
@@ -31,3 +31,44 @@ class ReplayControllerTest(unittest.TestCase):
         self.replay_controller.control_bar_callback(frame_index)
 
         self.file_data_producer.set_current_packet_index.assert_called_with(frame_index)
+
+    @patch("src.controller.Thread")
+    def test_deactivate_should_stop_thread_when_is_running(self, thread_mock):
+        self.replay_controller.is_running = True
+        self.replay_controller.thread = thread_mock
+
+        self.replay_controller.deactivate()
+
+        thread_mock.join.assert_called_with()
+        self.file_data_producer.stop.assert_called_with()
+
+    @patch("src.controller.Thread")
+    def test_deactivate_should_not_stop_thread_when_is_not_running(self, thread_mock):
+        self.replay_controller.is_running = False
+        self.replay_controller.thread = thread_mock
+
+        self.replay_controller.deactivate()
+
+        thread_mock.join.assert_not_called()
+        self.file_data_producer.stop.assert_not_called()
+
+    def test_deactivate_should_reset_consumer(self):
+        self.replay_controller.is_running = False
+
+        self.replay_controller.deactivate()
+
+        self.consumer.reset.assert_called_with()
+
+    def test_deactivate_should_reset_producer(self):
+        self.replay_controller.is_running = False
+
+        self.replay_controller.deactivate()
+
+        self.file_data_producer.reset.assert_called_with()
+
+    def test_deactivate_should_reset_ui(self):
+        self.replay_controller.is_running = False
+
+        self.replay_controller.deactivate()
+
+        self.replay_widget.reset.assert_called_with()

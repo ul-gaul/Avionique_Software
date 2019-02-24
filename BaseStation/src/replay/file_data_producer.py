@@ -140,3 +140,7 @@ class FileDataProducer(DataProducer):
         self.available_rocket_packets.clear()
         self.index = -1
         self.lock.release()
+
+    def reset(self):
+        # TODO
+        pass

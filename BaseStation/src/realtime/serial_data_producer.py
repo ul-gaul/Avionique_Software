@@ -101,3 +101,7 @@ class SerialDataProducer(DataProducer):
             except (OSError, serial.SerialException):
                 pass
         return result
+
+    def reset(self):
+        # TODO
+        pass

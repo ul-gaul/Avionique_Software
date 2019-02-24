@@ -38,3 +38,7 @@ class DataProducer:
     def run(self):
         """Acquisition thread function"""
         pass
+
+    @abc.abstractmethod
+    def reset(self):
+        pass
