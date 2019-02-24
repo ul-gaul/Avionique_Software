@@ -5,6 +5,8 @@ from PyQt5.QtWidgets import QOpenGLWidget
 
 from src.ui.utils import set_minimum_expanding_size_policy
 
+from src.data_processing.quaternion import Quaternion
+
 
 class GlRocket(QOpenGLWidget):
     def __init__(self, parent):
@@ -56,8 +58,8 @@ class GlRocket(QOpenGLWidget):
         gluQuadricNormals(con, GLU_SMOOTH)
         gluCylinder(con, 0.3, 0, 1.5, 50, 5)
 
-    def rotate_rocket(self, w, x, y, z):
-        self._rocket_orientation = (w, x, y, z)
+    def rotate_rocket(self, rot: Quaternion):
+        self._rocket_orientation = (rot.w, rot.x, rot.y, rot.z)
         self.update()
 
     def paintGL(self):

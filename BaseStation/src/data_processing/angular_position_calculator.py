@@ -1,20 +1,3 @@
-from numpy import arccos, arctan, sqrt, radians, degrees
-
-# ang_velocity sont des rads.
-# Faire l inegral de la vitesse [ang_velocity].
-# Transformer la position en quaternion.
-# 1 class qui fait l integral.
-# 1 class qui fait la conversion en quaternion. DONE
-# Pas de position initiales ! [On la determine de base (0, 0, 0)].
-# Cree une class quaternion pour eviter les confusions de W X Y Z => Cree des methodes static de conversion.
-
-# Revoir les tests unitaires car toute les methodes, et verifcations ont ete change. DONE
-
-# Demander a Maxime si l integrale on doit la calculer depuis le debut.
-# Cela eviterais des bug sur le rewind.
-# Plus de precision sur l inegration numerique.
-
-
 class AngularCalculator:
 
     def __init__(self):
@@ -41,9 +24,12 @@ class AngularCalculator:
 
         for i in range(total_len):
             if i < total_len-1:
-                self.x += self.trap_integrate(i+1, ang_vel_x[i+1], i, ang_vel_x[i])
-                self.y += self.trap_integrate(i+1, ang_vel_y[i+1], i, ang_vel_y[i])
-                self.z += self.trap_integrate(i+1, ang_vel_z[i+1], i, ang_vel_z[i])
+                next_x = i + self.sample_frequency
+                self.x += self.trap_integrate(next_x, ang_vel_x[i+1], i, ang_vel_x[i])
+                self.y += self.trap_integrate(next_x, ang_vel_y[i+1], i, ang_vel_y[i])
+                self.z += self.trap_integrate(next_x, ang_vel_z[i+1], i, ang_vel_z[i])
+
+        return self.x, self.y, self.z
 
     @staticmethod
     def trap_integrate(next_x: float, next_y: float, actual_x: float, actual_y: float):

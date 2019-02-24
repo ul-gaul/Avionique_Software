@@ -4,10 +4,7 @@ from src.data_processing.angular_position_calculator import AngularCalculator
 
 class MyTestCase(unittest.TestCase):
 
-    def setUp(self):
-        self.angular_calculator = AngularCalculator()
-
-    def test_intregrate(self):
+    def test_integrate(self):
         point_x = [0.0, 0.2, 0.4, 0.8, 1.0]
         point_y = [0.5, 0.8, 0.9, 1.0, 1.0]
         total = 0.0

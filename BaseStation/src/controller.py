@@ -65,7 +65,8 @@ class Controller(MessageSender):
         self.data_widget.draw_voltage(self.consumer["voltage"])
 
     def update_3d_model(self):
-        self.data_widget.rotate_rocket_model(*self.consumer.get_rocket_rotation())
+        self.data_widget.rotate_rocket_model(self.consumer.get_rocket_rotation())
+        #self.data_widget.rotate_rocket_model(*self.consumer.get_rocket_rotation())
 
     def update_leds(self):
         self.data_widget.set_led_state(1, self.consumer["acquisition_board_state_1"][-1])
