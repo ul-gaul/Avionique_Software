@@ -76,7 +76,7 @@ class Consumer:
             self.data["northing"].append(northing - self.base_camp_northing)
 
     def get_rocket_rotation(self):
-        return Quaternion.euler_radians_to_quaternion(self.angular_calculator.z, self.angular_calculator.y, self.angular_calculator.x)
+        return Quaternion.euler_radians_to_quaternion(self.angular_calculator.yaw, self.angular_calculator.pitch, self.angular_calculator.roll)
 
     def get_rocket_last_quaternion(self):
         return self.data["quaternion_w"][-1], self.data["quaternion_x"][-1], self.data["quaternion_y"][-1], self.data["quaternion_z"][-1]
