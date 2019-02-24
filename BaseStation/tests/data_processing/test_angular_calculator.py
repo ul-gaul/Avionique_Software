@@ -2,15 +2,26 @@ import unittest
 from src.data_processing.angular_position_calculator import AngularCalculator
 
 
-class MyTestCase(unittest.TestCase):
+class AngularCalculatorTest(unittest.TestCase):
 
-    def test_integrate(self):
-        point_x = [0.0, 0.2, 0.4, 0.8, 1.0]
-        point_y = [0.5, 0.8, 0.9, 1.0, 1.0]
-        total = 0.0
+    def setUp(self):
+        self.angularCalculator = AngularCalculator(1)
 
-        for i in range(len(point_x)):
-            if i < len(point_x)-1:
-                total += AngularCalculator.trap_integrate(point_x[i+1], point_y[i+1], point_x[i], point_y[i])
+    def test_integrate_with_frequency_1(self):
+        point_x = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        point_y = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        point_z = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
-        self.assertEqual(0.88, total)
+        total = self.angularCalculator.integrate_all(point_x, point_y, point_z)
+
+        self.assertEqual(50.0, total[0])
+
+    def test_integrate_with_frequency_2(self):
+        self.angularCalculator.sample_frequency = 2
+        point_x = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        point_y = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        point_z = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+        total = self.angularCalculator.integrate_all(point_x, point_y, point_z)
+
+        self.assertEqual(25.0, total[0])

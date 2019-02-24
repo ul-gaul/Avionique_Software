@@ -3,11 +3,11 @@ from numpy import radians, cos, sin
 
 class Quaternion:
 
-    def __init__(self, _w=0, _x=0, _y=0, _z=0):
-        self.w = _w
-        self.x = _x
-        self.y = _y
-        self.z = _z
+    def __init__(self, w=0, x=0, y=0, z=0):
+        self.w = w
+        self.x = x
+        self.y = y
+        self.z = z
 
     def __str__(self):
         return "w({}), x({}), y({}), z({})".format(self.w, self.x, self.y, self.z)

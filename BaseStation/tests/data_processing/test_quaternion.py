@@ -2,7 +2,7 @@ import unittest
 from src.data_processing.quaternion import Quaternion
 
 
-class MyTestCase(unittest.TestCase):
+class QuaternionTest(unittest.TestCase):
 
     def setUp(self):
         self.quaternion = Quaternion()
