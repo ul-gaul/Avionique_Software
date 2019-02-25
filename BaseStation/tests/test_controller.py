@@ -11,6 +11,7 @@ from src.ui.data_widget import DataWidget
 from tests.builders.config_builder import ConfigBuilder
 from tests.matchers import AnyStringWith
 
+from src.data_processing.quaternion import Quaternion
 
 class ControllerTest(unittest.TestCase):
 
@@ -26,7 +27,7 @@ class ControllerTest(unittest.TestCase):
     POWER_SUPPLY_STATE_2 = False
     PAYLOAD_BOARD_STATE_1 = True
     TEMPERATURE = 100
-    QUATERNION = (1, 2, 3, 4)
+    QUATERNION = Quaternion(1, 2, 3, 4)
     OPEN_ROCKET_SIMULATION_FILENAME = "simulation.csv"
 
     def setUp(self):
@@ -76,8 +77,7 @@ class ControllerTest(unittest.TestCase):
 
         self.controller.update()
 
-        self.data_widget.rotate_rocket_model.assert_called_with(self.QUATERNION[0], self.QUATERNION[1],
-                                                                self.QUATERNION[2], self.QUATERNION[3])
+        self.data_widget.set_rocket_model_rotation.assert_called_with(self.QUATERNION)
 
     def test_update_should_not_update_ui_when_consumer_has_no_data(self):
         self.consumer.has_data.return_value = False
@@ -142,4 +142,4 @@ class ControllerTest(unittest.TestCase):
         self.data_widget.draw_voltage.assert_not_called()
         self.data_widget.set_led_state.assert_not_called()
         self.data_widget.set_thermometer_value.assert_not_called()
-        self.data_widget.rotate_rocket_model.assert_not_called()
+        self.data_widget.set_rocket_model_rotation.assert_not_called()

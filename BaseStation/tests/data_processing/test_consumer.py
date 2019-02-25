@@ -2,6 +2,7 @@ import threading
 import unittest
 from unittest.mock import Mock
 
+from src.data_processing.angular_position_calculator import AngularCalculator
 from src.data_processing.apogee_calculator import ApogeeCalculator
 from src.data_processing.consumer import Consumer
 from src.data_producer import DataProducer
@@ -19,7 +20,9 @@ class ConsumerTest(unittest.TestCase):
         self.producer = DataProducer(threading.Lock())
         self.apogee_calculator = Mock(spec=ApogeeCalculator)
         self.apogee_calculator.get_apogee.return_value = self.APOGEE
-        self.consumer = Consumer(self.producer, self.sampling_frequency, self.apogee_calculator)
+
+        self.angular_calculator = Mock(spec=AngularCalculator)
+        self.consumer = Consumer(self.producer, self.sampling_frequency, self.apogee_calculator, self.angular_calculator)
 
     def test_constructor_should_create_dictionary_with_rocket_packet_keys(self):
         self.assertTrue(set(RocketPacket().keys()).issubset(set(self.consumer.data.keys())))
@@ -103,3 +106,4 @@ class ConsumerTest(unittest.TestCase):
         self.consumer.reset()
 
         self.apogee_calculator.reset.assert_called_with()
+        self.angular_calculator.reset.assert_called_with()

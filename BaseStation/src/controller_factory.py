@@ -1,5 +1,6 @@
 import threading
 
+from src.data_processing.angular_position_calculator import AngularCalculator
 from src.config import ConfigLoader
 from src.data_processing.apogee_calculator import ApogeeCalculator
 from src.data_processing.consumer import Consumer
@@ -32,7 +33,7 @@ class ControllerFactory:
         data_producer = SerialDataProducer(lock, self.csv_data_persister, rocket_packet_parser, checksum_validator,
                                            sampling_frequency=config.rocket_packet_config.sampling_frequency)
 
-        consumer = Consumer(data_producer, config.rocket_packet_config.sampling_frequency, ApogeeCalculator())
+        consumer = Consumer(data_producer, config.rocket_packet_config.sampling_frequency, ApogeeCalculator(), AngularCalculator(config.rocket_packet_config.sampling_frequency))
 
         return RealTimeController(real_time_widget, data_producer, consumer, config)
 
@@ -44,6 +45,6 @@ class ControllerFactory:
         playback_state = PlaybackState(1, PlaybackState.Mode.FORWARD)
         data_producer = FileDataProducer(self.csv_data_persister, filename, data_lock, playback_lock, playback_state)
 
-        consumer = Consumer(data_producer, config.rocket_packet_config.sampling_frequency, ApogeeCalculator())
+        consumer = Consumer(data_producer, config.rocket_packet_config.sampling_frequency, ApogeeCalculator(), AngularCalculator(config.rocket_packet_config.sampling_frequency))
 
         return ReplayController(replay_widget, data_producer, consumer, config)
