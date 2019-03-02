@@ -25,7 +25,7 @@ class MainWindow(QMainWindow):
 
         self.central_widget = QStackedWidget()
         self.setCentralWidget(self.central_widget)
-        self.home_widget = HomeWidget(self)
+        self.home_widget = HomeWidget(self.open_real_time, self.open_replay, self)
         self.real_time_widget = None
         self.replay_widget = None
         self.central_widget.addWidget(self.home_widget)
