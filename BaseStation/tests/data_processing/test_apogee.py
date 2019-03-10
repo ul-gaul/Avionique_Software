@@ -3,7 +3,7 @@ import unittest
 from src.data_processing.apogee_calculator import ApogeeCalculator
 
 
-class TestApogee(unittest.TestCase):
+class ApogeeTest(unittest.TestCase):
 
     def setUp(self):
         self.apogee_calculator = ApogeeCalculator()

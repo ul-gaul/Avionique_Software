@@ -18,10 +18,13 @@ from src.ui.configdialog import ConfigDialog
 class MainWindow(QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
+
         self.controller_factory = ControllerFactory()
         self.controller = None
         self.central_widget = QStackedWidget()
         self.setCentralWidget(self.central_widget)
+
+        self.console = ConsoleMessageListener(self)
 
         self.status_bar = StatusBar(self)
         self.setStatusBar(self.status_bar)
@@ -35,7 +38,11 @@ class MainWindow(QMainWindow):
         self.setWindowIcon(QIcon("src/resources/logo.jpg"))
         self.setWindowTitle("GAUL BaseStation")
         self.set_stylesheet("src/resources/mainwindow.css")
-        self.console = ConsoleMessageListener()
+
+        self.console.notify(MessageType.INFO, "Attempted divide by zero.")
+        self.console.notify(MessageType.DEBUG, "Unable to locate config.init")
+        self.console.notify(MessageType.WARNING, "Unable to initiate the replay mode")
+        self.console.notify(MessageType.ERROR, "Logfile cannot be read-only")
 
     def add_simulation(self):
         filename, _ = QFileDialog.getOpenFileName(caption="Open File", directory="./src/resources/",
