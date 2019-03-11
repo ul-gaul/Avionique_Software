@@ -24,8 +24,6 @@ class MainWindow(QMainWindow):
         self.central_widget = QStackedWidget()
         self.setCentralWidget(self.central_widget)
 
-        self.console = ConsoleMessageListener(self)
-
         self.status_bar = StatusBar(self)
         self.setStatusBar(self.status_bar)
 
@@ -39,7 +37,8 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("GAUL BaseStation")
         self.set_stylesheet("src/resources/mainwindow.css")
 
-        self.console.notify(MessageType.INFO, "Attempted divide by zero.")
+        self.console = ConsoleMessageListener(self)
+        self.console.notify(MessageType.INFO, "Attempted to divide by zero.")
         self.console.notify(MessageType.DEBUG, "Unable to locate config.init")
         self.console.notify(MessageType.WARNING, "Unable to initiate the replay mode")
         self.console.notify(MessageType.ERROR, "Logfile cannot be read-only")
