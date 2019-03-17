@@ -1,7 +1,4 @@
-from datetime import datetime
-
 from PyQt5.QtGui import QCloseEvent
-from PyQt5.QtWidgets import QMessageBox
 
 from src.config import Config
 from src.controller import Controller
@@ -9,13 +6,15 @@ from src.data_processing.consumer import Consumer
 from src.domain_error import DomainError
 from src.message_type import MessageType
 from src.realtime.serial_data_producer import SerialDataProducer, NoConnectedDeviceException
+from src.save import SaveManager, SaveStatus
 from src.ui.real_time_widget import RealTimeWidget
 
 
 class RealTimeController(Controller):
     def __init__(self, real_time_widget: RealTimeWidget, serial_data_producer: SerialDataProducer, consumer: Consumer,
-                 config: Config):
+                 save_manager: SaveManager, config: Config):
         super().__init__(real_time_widget, serial_data_producer, consumer, config)
+        self.save_manager = save_manager
 
         self.data_widget.set_target_altitude(self.target_altitude)
         self.data_widget.set_button_callback(self.real_time_button_callback)
@@ -31,20 +30,14 @@ class RealTimeController(Controller):
         if not self.is_running:
             try:
                 if self.data_producer.has_unsaved_data():
-                    should_save = self.data_widget.show_save_message_box()
+                    save_status = self.save_manager.save()
 
-                    if should_save == QMessageBox.Yes:
-                        filename = self.get_save_file_name()
-
-                        if filename:
-                            self.save_data(filename)
-                        else:
-                            return
-                    elif should_save == QMessageBox.Cancel:
+                    if save_status == SaveStatus.CANCELLED:
                         return
 
-                    self.consumer.reset()
-                    self.data_widget.reset()
+                self.data_producer.clear()
+                self.consumer.reset()
+                self.data_widget.reset()
 
                 self.start_thread()
             except (DomainError, NoConnectedDeviceException) as error:
@@ -56,32 +49,33 @@ class RealTimeController(Controller):
         self.data_widget.update_button_text(self.is_running)
 
     def on_close(self, event: QCloseEvent):
+        if self.data_producer.has_unsaved_data():
+            save_status = self.save_manager.save()
+
+            if save_status == SaveStatus.CANCELLED:
+                event.ignore()
+                return
+
         if self.is_running:
             self.stop_thread()
 
+        event.accept()
+
+    def activate(self, _):  # TODO
+        pass
+
+    def deactivate(self) -> bool:
         if self.data_producer.has_unsaved_data():
-            should_save = self.data_widget.show_save_message_box()
+            save_status = self.save_manager.save()
 
-            if should_save == QMessageBox.Yes:
-                filename = self.get_save_file_name()
+            if save_status == SaveStatus.CANCELLED:
+                return False
 
-                if filename:
-                    self.save_data(filename)
-                    event.accept()
-                else:
-                    event.ignore()
-            elif should_save == QMessageBox.No:
-                event.accept()
-            else:
-                event.ignore()
-        else:
-            event.accept()
+        if self.is_running:
+            self.stop_thread()
 
-    def get_save_file_name(self) -> str:
-        default_path = "./src/resources/" + datetime.now().strftime("%Y-%m-%d_%Hh%Mm") + ".csv"
-        return self.data_widget.get_save_file_name(default_path)
+        self.data_producer.clear()
+        self.consumer.reset()
+        self.data_widget.reset()
 
-    def save_data(self, filename: str):
-        self.data_producer.save(filename)
-        message = "Données sauvegardées dans le fichier: " + filename
-        self.notify_all_message_listeners(message, MessageType.INFO)
+        return True

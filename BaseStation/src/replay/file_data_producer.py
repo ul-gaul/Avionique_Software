@@ -10,13 +10,18 @@ class FileDataProducer(DataProducer):
 
     END_OF_PLAYBACK_SLEEP_DELAY = 1
 
-    def __init__(self, data_persister: DataPersister, filename: str, data_lock: threading.RLock,
-                 playback_lock: threading.Lock, playback_state: PlaybackState):
+    def __init__(self, data_persister: DataPersister, data_lock: threading.RLock, playback_lock: threading.Lock,
+                 playback_state: PlaybackState):
         super().__init__(data_lock)
+        self.data_persister = data_persister
         self.started_event = threading.Event()
         self.playback_state = playback_state
         self.playback_lock = playback_lock
-        self.all_rocket_packets = data_persister.load(filename)
+        self.all_rocket_packets = []
+        self.index = -1
+
+    def load(self, filename: str):
+        self.all_rocket_packets = self.data_persister.load(filename)
         self.available_rocket_packets.extend(self.all_rocket_packets)
         self.index = self.get_total_packet_count() - 1
 
@@ -140,7 +145,3 @@ class FileDataProducer(DataProducer):
         self.available_rocket_packets.clear()
         self.index = -1
         self.lock.release()
-
-    def reset(self):
-        # TODO
-        pass

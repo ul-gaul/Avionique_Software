@@ -49,10 +49,14 @@ class ReplayController(Controller):
     def control_bar_callback(self, frame_index: int):
         self.data_producer.set_current_packet_index(frame_index)
 
-    def deactivate(self):
+    def activate(self, filename):  # TODO
+        pass
+
+    def deactivate(self) -> bool:
         if self.is_running:
             self.stop_thread()
 
         self.consumer.reset()
-        self.data_producer.reset()
         self.data_widget.reset()
+
+        return True

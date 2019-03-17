@@ -59,16 +59,16 @@ class ReplayControllerTest(unittest.TestCase):
 
         self.consumer.reset.assert_called_with()
 
-    def test_deactivate_should_reset_producer(self):
-        self.replay_controller.is_running = False
-
-        self.replay_controller.deactivate()
-
-        self.file_data_producer.reset.assert_called_with()
-
     def test_deactivate_should_reset_ui(self):
         self.replay_controller.is_running = False
 
         self.replay_controller.deactivate()
 
         self.replay_widget.reset.assert_called_with()
+
+    def test_deactivate_should_return_true(self):
+        self.replay_controller.is_running = False
+
+        deactivated = self.replay_controller.deactivate()
+
+        self.assertTrue(deactivated)

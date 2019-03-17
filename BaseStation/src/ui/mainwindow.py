@@ -1,7 +1,7 @@
 import os
 
 from PyQt5.QtGui import QIcon, QCloseEvent
-from PyQt5.QtWidgets import QMainWindow, QStackedWidget, QFileDialog, QWidget
+from PyQt5.QtWidgets import QDesktopWidget, QMainWindow, QStackedWidget, QFileDialog, QWidget
 
 from src.controller_factory import ControllerFactory
 from src.message_type import MessageType
@@ -18,26 +18,29 @@ from src.ui.configdialog import ConfigDialog
 class MainWindow(QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
+        self.central_widget = QStackedWidget()
+        self.setCentralWidget(self.central_widget)
+        self.home_widget = HomeWidget(self.new_acquisition, self.load_flight_data, self)
+        self.real_time_widget = RealTimeWidget(self)
+        self.replay_widget = ReplayWidget(self)
+        self.central_widget.addWidget(self.home_widget)
+        self.central_widget.addWidget(self.real_time_widget)
+        self.central_widget.addWidget(self.replay_widget)
+
         self.controller_factory = ControllerFactory()
         self.active_controller = None
         self.real_time_controller = None
         self.replay_controller = None
 
-        self.central_widget = QStackedWidget()
-        self.setCentralWidget(self.central_widget)
-        self.home_widget = HomeWidget(self.open_real_time, self.open_replay, self)
-        self.real_time_widget = None
-        self.replay_widget = None
-        self.central_widget.addWidget(self.home_widget)
-
         self.status_bar = StatusBar(self)
         self.setStatusBar(self.status_bar)
         self.menu_bar = self.create_menu_bar()
         self.config_dialog = None
+        self.console = ConsoleMessageListener()
+
         self.setWindowIcon(QIcon("src/resources/logo.jpg"))
         self.setWindowTitle("GAUL BaseStation")
         self.set_stylesheet("src/resources/mainwindow.css")
-        self.console = ConsoleMessageListener()
 
     def create_menu_bar(self):
         menu_bar = MenuBar(self)
@@ -53,14 +56,32 @@ class MainWindow(QMainWindow):
 
         return menu_bar
 
-    def new_acquisition(self):  # TODO
-        pass
+    def new_acquisition(self):
+        deactivated = True
+        if self.active_controller is not None:
+            deactivated = self.active_controller.deactivate()
+
+        if deactivated:
+            try:
+                self.open_real_time()
+                self.active_controller.activate("")
+            except RocketPacketVersionException as error:
+                self.status_bar.notify(str(error), MessageType.ERROR)
 
     def save_as(self):  # TODO
         pass
 
-    def load_flight_data(self):  # TODO
-        pass
+    def load_flight_data(self):
+        filename, _ = QFileDialog.getOpenFileName(caption="Open File", directory="./src/resources/",
+                                                  filter="All Files (*);; CSV Files (*.csv)")
+        if filename:
+            deactivated = True
+            if self.active_controller is not None:
+                deactivated = self.active_controller.deactivate()
+
+            if deactivated:
+                self.open_replay()
+                self.active_controller.activate(filename)
 
     def add_simulation(self):
         filename, _ = QFileDialog.getOpenFileName(caption="Open File", directory="./src/resources/",
@@ -75,28 +96,25 @@ class MainWindow(QMainWindow):
         self.config_dialog.open(config_path)
 
     def open_real_time(self):
-        try:
-            self.real_time_widget = RealTimeWidget(self)
-            self.active_controller = self.controller_factory.create_real_time_controller(self.real_time_widget, self.console)
-            self.active_controller.register_message_listener(self.status_bar)
-            self.open_new_widget(self.real_time_widget)
-            self.menu_bar.set_real_time_mode()
-        except RocketPacketVersionException as error:
-            self.real_time_widget = None
-            self.status_bar.notify(str(error), MessageType.ERROR)
+        if self.real_time_controller is None:
+            self.real_time_controller = self.controller_factory.create_real_time_controller(self.real_time_widget,
+                                                                                            self.console)
+            self.real_time_controller.register_message_listener(self.status_bar)
+
+        self.active_controller = self.real_time_controller
+        self.open_widget(self.real_time_widget)
+        self.menu_bar.set_real_time_mode()
 
     def open_replay(self):
-        filename, _ = QFileDialog.getOpenFileName(caption="Open File", directory="./src/resources/",
-                                                  filter="All Files (*);; CSV Files (*.csv)")
-        if filename:
-            self.replay_widget = ReplayWidget(self)
-            self.active_controller = self.controller_factory.create_replay_controller(self.replay_widget, filename)
-            self.active_controller.register_message_listener(self.status_bar)
-            self.open_new_widget(self.replay_widget)
-            self.menu_bar.set_replay_mode()
+        if self.replay_controller is None:
+            self.replay_controller = self.controller_factory.create_replay_controller(self.replay_widget)
+            self.replay_controller.register_message_listener(self.status_bar)
 
-    def open_new_widget(self, widget: QWidget):
-        self.central_widget.addWidget(widget)
+        self.active_controller = self.replay_controller
+        self.open_widget(self.replay_widget)
+        self.menu_bar.set_replay_mode()
+
+    def open_widget(self, widget: QWidget):
         self.central_widget.setCurrentWidget(widget)
         self.set_stylesheet("src/resources/data_widget.css")
         self.showMaximized()
@@ -112,3 +130,9 @@ class MainWindow(QMainWindow):
             self.active_controller.on_close(event)
         else:
             event.accept()
+
+    def center(self):
+        window_geometry = self.frameGeometry()
+        screen_center_point = QDesktopWidget().screenGeometry(self).center()
+        window_geometry.moveCenter(screen_center_point)
+        self.move(window_geometry.topLeft())
