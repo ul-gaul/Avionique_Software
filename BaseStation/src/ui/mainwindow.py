@@ -43,6 +43,9 @@ class MainWindow(QMainWindow):
         self.console.notify(MessageType.WARNING, "Unable to initiate the replay mode")
         self.console.notify(MessageType.ERROR, "Logfile cannot be read-only")
 
+    def resizeEvent(self, *args, **kwargs):
+        self.console.adjust_console(self.width(), 345)
+
     def add_simulation(self):
         filename, _ = QFileDialog.getOpenFileName(caption="Open File", directory="./src/resources/",
                                                   filter="All Files (*);; CSV Files (*.csv)")
