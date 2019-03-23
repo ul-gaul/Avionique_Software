@@ -98,7 +98,7 @@ class Controller(MessageSender):
         event.accept()
 
     @abc.abstractmethod
-    def activate(self, filename) -> None:
+    def activate(self, filename: str) -> None:
         """
         Prepare the controller before its thread can be started. This method should be used for process-specific setup.
         This is needed because controllers are not destroyed between processes, only activated/deactivated.

@@ -15,10 +15,7 @@ class ReplayController(Controller):
         self.data_widget.set_callback("pause", self.pause_button_callback)
         self.data_widget.set_callback("fast_forward", self.fast_forward_button_callback)
         self.data_widget.set_callback("rewind", self.rewind_button_callback)
-        self.data_widget.set_control_bar_max_value(self.data_producer.get_total_packet_count() - 1)
         self.data_widget.set_control_bar_callback(self.control_bar_callback)
-
-        self.update()
 
     def update_ui(self):
         super().update_ui()
@@ -49,8 +46,13 @@ class ReplayController(Controller):
     def control_bar_callback(self, frame_index: int):
         self.data_producer.set_current_packet_index(frame_index)
 
-    def activate(self, filename):  # TODO
-        pass
+    def activate(self, filename: str):
+        self.data_producer.load(filename)
+        self.data_producer.reset_playback_state()
+
+        self.data_widget.set_control_bar_max_value(self.data_producer.get_total_packet_count() - 1)
+
+        self.update()
 
     def deactivate(self) -> bool:
         if self.is_running:

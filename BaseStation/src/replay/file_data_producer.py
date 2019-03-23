@@ -21,9 +21,14 @@ class FileDataProducer(DataProducer):
         self.index = -1
 
     def load(self, filename: str):
+        self.lock.acquire()
         self.all_rocket_packets = self.data_persister.load(filename)
-        self.available_rocket_packets.extend(self.all_rocket_packets)
+        self.available_rocket_packets = self.all_rocket_packets
         self.index = self.get_total_packet_count() - 1
+        self.lock.release()
+
+    def reset_playback_state(self):
+        self.playback_state.reset()
 
     def get_total_packet_count(self) -> int:
         return len(self.all_rocket_packets)

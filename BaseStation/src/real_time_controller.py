@@ -61,8 +61,8 @@ class RealTimeController(Controller):
 
         event.accept()
 
-    def activate(self, _):  # TODO
-        pass
+    def activate(self, _):
+        self.data_widget.update_button_text(self.is_running)
 
     def deactivate(self) -> bool:
         if self.data_producer.has_unsaved_data():

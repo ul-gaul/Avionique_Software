@@ -183,6 +183,11 @@ class RealTimeControllerTest(unittest.TestCase):
 
         self.event.accept.assert_called_with()
 
+    def test_activate_should_update_button_text(self):
+        self.real_time_controller.activate("")
+
+        self.real_time_widget.update_button_text.assert_called_with(False)
+
     @patch("src.controller.Thread")
     def test_deactivate_should_stop_thread_when_is_running(self, thread):
         thread_mock = thread.return_value
