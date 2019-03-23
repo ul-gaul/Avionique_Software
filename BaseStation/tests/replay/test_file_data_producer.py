@@ -262,3 +262,17 @@ class FileDataProducerTest(unittest.TestCase):
 
         self.assertEqual(self.file_data_producer.get_current_packet_index(), new_index)
         self.assertListEqual(self.file_data_producer.get_available_rocket_packets(), initial_data)
+
+    def test_is_suspended_should_return_true_when_event_is_cleared(self):
+        self.file_data_producer.suspend()
+
+        suspended = self.file_data_producer.is_suspended()
+
+        self.assertTrue(suspended)
+
+    def test_is_suspended_should_return_false_when_event_is_set(self):
+        self.file_data_producer.restart()
+
+        suspended = self.file_data_producer.is_suspended()
+
+        self.assertFalse(suspended)

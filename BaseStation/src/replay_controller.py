@@ -32,6 +32,12 @@ class ReplayController(Controller):
     def pause_button_callback(self):
         self.data_producer.suspend()
 
+    def play_pause_button_callback(self): # TODO
+        if self.data_producer.is_suspended():
+            pass
+        else:
+            pass
+
     def fast_forward_button_callback(self):
         self.data_producer.fast_forward()
         self.update_replay_speed_indicator()

@@ -23,7 +23,7 @@ class FileDataProducer(DataProducer):
     def load(self, filename: str):
         self.lock.acquire()
         self.all_rocket_packets = self.data_persister.load(filename)
-        self.available_rocket_packets = self.all_rocket_packets
+        self.available_rocket_packets = list(self.all_rocket_packets)
         self.index = self.get_total_packet_count() - 1
         self.lock.release()
 
@@ -62,6 +62,9 @@ class FileDataProducer(DataProducer):
 
     def suspend(self):
         self.started_event.clear()
+
+    def is_suspended(self) -> bool:
+        return not self.started_event.is_set()
 
     def stop(self):
         self.started_event.set()
