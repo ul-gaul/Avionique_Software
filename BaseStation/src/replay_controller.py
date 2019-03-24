@@ -59,6 +59,7 @@ class ReplayController(Controller):
 
         self.data_widget.set_control_bar_max_value(self.data_producer.get_total_packet_count() - 1)
 
+        self.data_widget.set_play_button_text()
         self.update()
 
     def deactivate(self) -> bool:

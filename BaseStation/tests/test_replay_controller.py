@@ -103,6 +103,11 @@ class ReplayControllerTest(unittest.TestCase):
 
         self.consumer.update.assert_called_with()
 
+    def test_activate_should_set_play_button_text(self):
+        self.replay_controller.activate(self.A_FILENAME)
+
+        self.replay_widget.set_play_button_text.assert_called_with()
+
     def test_activate_should_update_ui(self):
         self.consumer.__getitem__.return_value = self.ALTITUDE_DATA
 
