@@ -31,6 +31,58 @@ class ReplayControllerTest(unittest.TestCase):
 
         self.file_data_producer.set_current_packet_index.assert_called_with(frame_index)
 
+    @patch("src.controller.Thread")
+    def test_play_pause_button_callback_should_restart_data_producer_when_is_paused(self, _):
+        self.file_data_producer.is_suspended.return_value = True
+
+        self.replay_controller.play_pause_button_callback()
+
+        self.file_data_producer.restart.assert_called_with()
+
+    @patch("src.controller.Thread")
+    def test_play_pause_button_callback_should_start_thread_when_is_paused_and_not_running(self, thread):
+        thread_mock = thread.return_value
+        self.file_data_producer.is_suspended.return_value = True
+        self.replay_controller.is_running = False
+
+        self.replay_controller.play_pause_button_callback()
+
+        self.file_data_producer.start.assert_called_with()
+        thread_mock.start.assert_called_with()
+
+    @patch("src.controller.Thread")
+    def test_play_pause_button_callback_should_not_start_thread_when_is_paused_and_running(self, thread):
+        thread_mock = thread.return_value
+        self.file_data_producer.is_suspended.return_value = True
+        self.replay_controller.is_running = True
+
+        self.replay_controller.play_pause_button_callback()
+
+        self.file_data_producer.start.assert_not_called()
+        thread_mock.start.assert_not_called()
+
+    @patch("src.controller.Thread")
+    def test_play_pause_button_callback_should_set_pause_button_text_when_is_paused(self, _):
+        self.file_data_producer.is_suspended.return_value = True
+
+        self.replay_controller.play_pause_button_callback()
+
+        self.replay_widget.set_pause_button_text.assert_called_with()
+
+    def test_play_pause_button_callback_should_suspend_data_producer_when_is_playing(self):
+        self.file_data_producer.is_suspended.return_value = False
+
+        self.replay_controller.play_pause_button_callback()
+
+        self.file_data_producer.suspend.assert_called_with()
+
+    def test_play_pause_button_callback_should_set_play_button_text_when_is_playing(self):
+        self.file_data_producer.is_suspended.return_value = False
+
+        self.replay_controller.play_pause_button_callback()
+
+        self.replay_widget.set_play_button_text.assert_called_with()
+
     def test_activate_should_load_data(self):
         self.replay_controller.activate(self.A_FILENAME)
 

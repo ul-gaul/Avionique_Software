@@ -11,8 +11,7 @@ class ReplayController(Controller):
                  config: Config):
         super().__init__(replay_widget, file_data_producer, consumer, config)
 
-        self.data_widget.set_callback("play", self.play_button_callback)
-        self.data_widget.set_callback("pause", self.pause_button_callback)
+        self.data_widget.set_callback("play_pause", self.play_pause_button_callback)
         self.data_widget.set_callback("fast_forward", self.fast_forward_button_callback)
         self.data_widget.set_callback("rewind", self.rewind_button_callback)
         self.data_widget.set_control_bar_callback(self.control_bar_callback)
@@ -24,19 +23,21 @@ class ReplayController(Controller):
     def update_control_bar(self):
         self.data_widget.set_control_bar_current_value(self.data_producer.get_current_packet_index())
 
-    def play_button_callback(self):
+    def play_pause_button_callback(self):
+        if self.data_producer.is_suspended():
+            self._play()
+        else:
+            self._pause()
+
+    def _play(self):
         self.data_producer.restart()
         if not self.is_running:
             self.start_thread()
+        self.data_widget.set_pause_button_text()
 
-    def pause_button_callback(self):
+    def _pause(self):
         self.data_producer.suspend()
-
-    def play_pause_button_callback(self): # TODO
-        if self.data_producer.is_suspended():
-            pass
-        else:
-            pass
+        self.data_widget.set_play_button_text()
 
     def fast_forward_button_callback(self):
         self.data_producer.fast_forward()
