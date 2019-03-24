@@ -1,15 +1,11 @@
 from src.message_listener import MessageListener
 from src.message_type import MessageType
-from src.ui.utils import read_stylesheet
+from src.ui.utils import *
 
-from PyQt5 import QtCore
-from PyQt5.QtWidgets import QWidget, QLabel, QTextEdit, QVBoxLayout, QPushButton, QShortcut, QScrollArea, QGroupBox, QGridLayout, QDockWidget
-from PyQt5.QtGui import QPixmap, QPainter, QColor, QKeySequence
+from typing import Callable
+from PyQt5 import QtCore, QtWidgets, QtGui
 
-# Tout mettre dans une array => Les bouttons
-# Lambda fonctions.
-
-class MessageConsoleContainer(QWidget):
+class MessageConsoleContainer(QtWidgets.QWidget):
 
     def __init__(self, m_type: MessageType, message: str, parent):
         super().__init__(parent)
@@ -18,18 +14,18 @@ class MessageConsoleContainer(QWidget):
         self.message_type = m_type
         self.message = message
 
-        self.groupBox = QGroupBox(m_type.name)
+        self.groupBox = QtWidgets.QGroupBox(m_type.name)
 
-        self.img_lb = QLabel(self)
+        self.img_lb = QtWidgets.QLabel(self)
 
-        text_lb = QTextEdit(self)
+        text_lb = QtWidgets.QTextEdit(self)
         text_lb.setPlainText(self.message)
         text_lb.setReadOnly(True)
         text_lb.setFixedHeight(50)
 
         self.determine_img()
 
-        vbox = QVBoxLayout()
+        vbox = QtGui.QVBoxLayout()
         vbox.addWidget(self.img_lb)
         vbox.addWidget(text_lb)
         vbox.addStretch(1)
@@ -38,13 +34,13 @@ class MessageConsoleContainer(QWidget):
 
     def determine_img(self):
         if self.message_type == MessageType.INFO:
-            self.img_lb.setPixmap(QPixmap('src/resources/console_info.png'))
+            self.img_lb.setPixmap(QtGui.QPixmap('src/resources/console_info.png'))
         elif self.message_type == MessageType.DEBUG:
-            self.img_lb.setPixmap(QPixmap('src/resources/console_debug.png'))
+            self.img_lb.setPixmap(QtGui.QPixmap('src/resources/console_debug.png'))
         elif self.message_type == MessageType.WARNING:
-            self.img_lb.setPixmap(QPixmap('src/resources/console_warning.png'))
+            self.img_lb.setPixmap(QtGui.QPixmap('src/resources/console_warning.png'))
         else:
-            self.img_lb.setPixmap(QPixmap('src/resources/console_error.png'))
+            self.img_lb.setPixmap(QtGui.QPixmap('src/resources/console_error.png'))
 
     def set_active(self, active: bool):
         self.active = active
@@ -67,68 +63,55 @@ class MessageConsoleContainer(QWidget):
         return self.groupBox
 
 
-class ConsoleMessageListener(QWidget, MessageListener):
+class ConsoleMessageListener(QtWidgets.QWidget, MessageListener):
 
     def __init__(self, parent):
         super().__init__(parent)
 
-        self.console_stylesheet = read_stylesheet("src/resources/console.css")
-
         self.message_list = []
         self.button_list = []
         self.message_display = [MessageType.INFO, MessageType.DEBUG, MessageType.WARNING, MessageType.ERROR]
+
         self.show_console = True
         self.button_spacing = 75
-
         self.console_stylesheet = read_stylesheet("src/resources/console.css")
-        QShortcut(QKeySequence(QtCore.Qt.Key_Space), self).activated.connect(self.on_click_close)
 
-        self.scrollarea = QScrollArea(self)
+        QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Space), self).activated.connect(self.on_click_close)
+
+        self.scrollarea = QtWidgets.QScrollArea(self)
         self.layout_SArea = None
-        self.buttons_grid = QGridLayout()
+        self.buttons_grid = QtWidgets.QGridLayout()
 
-        self.btn_info = QPushButton('Info', self)
-        self.btn_info.setObjectName("enable")
-        self.btn_info.move(355, 10)
-        self.btn_info.resize(70, 35)
-        self.btn_info.clicked.connect(lambda: self.on_click_button_log(MessageType.INFO))
-
-        self.btn_debug = QPushButton('Debug', self)
-        self.btn_debug.setObjectName("enable")
-        self.btn_debug.move(420, 10)
-        self.btn_debug.resize(70, 35)
-        self.btn_debug.clicked.connect(lambda: self.on_click_button_log(MessageType.DEBUG))
-
-        self.btn_warning = QPushButton('Warning', self)
-        self.btn_warning.setObjectName("enable")
-        self.btn_warning.move(485, 10)
-        self.btn_warning.resize(70, 35)
-        self.btn_warning.clicked.connect(lambda: self.on_click_button_log(MessageType.WARNING))
-
-        self.btn_error = QPushButton('Error', self)
-        self.btn_error.setObjectName("enable")
-        self.btn_error.move(560, 10)
-        self.btn_error.resize(70, 35)
-        self.btn_error.clicked.connect(lambda: self.on_click_button_log(MessageType.ERROR))
-
-        self.btn_clear = QPushButton('Clear', self)
-        self.btn_clear.move(635, 10)
-        self.btn_clear.resize(70, 35)
-        self.btn_clear.clicked.connect(self.clear)
+        self.btn_info = self.create_button(QtWidgets.QPushButton("Info", self), True, 355, 10, 70, 35, lambda: self.on_click_button_log(MessageType.INFO))
+        self.btn_debug = self.create_button(QtWidgets.QPushButton("Debug", self), True, 420, 10, 70, 35, lambda: self.on_click_button_log(MessageType.DEBUG))
+        self.btn_warning = self.create_button(QtWidgets.QPushButton("Warning", self), True, 485, 10, 70, 35, lambda: self.on_click_button_log(MessageType.WARNING))
+        self.btn_error = self.create_button(QtWidgets.QPushButton("Error", self), True, 560, 10, 70, 35, lambda: self.on_click_button_log(MessageType.ERROR))
+        self.btn_clear = self.create_button(QtWidgets.QPushButton("Clear", self), True, 635, 10, 70, 35, self.clear)
 
         self.create_scrollArea()
-
-        self.button_list = [self.btn_info, self.btn_debug, self.btn_warning, self.btn_error, self.btn_clear]
 
     def create_scrollArea(self):
         self.scrollarea.setFixedSize(725, 275)
         self.scrollarea.move(10, 60)
         self.scrollarea.setWidgetResizable(True)
 
-        widget = QWidget()
+        widget = QtWidgets.QWidget()
         self.scrollarea.setWidget(widget)
-        self.layout_SArea = QVBoxLayout(widget)
+        self.layout_SArea = QtWidgets.QVBoxLayout(widget)
         self.layout_SArea.addStretch(1)
+
+    def create_button(self, button: QtWidgets.QPushButton, enable: bool, px, py, sx, sy, callback: Callable[[], None]):
+        if enable:
+            button.setObjectName("enable")
+        else:
+            button.setObjectName("disable")
+
+        button.setFixedSize(sx, sy)
+        button.move(px, py)
+        button.clicked.connect(callback)
+        self.button_list.append(button)
+
+        return button
 
     def adjust_console(self, width, height):
         self.setFixedSize(width, height)
@@ -140,7 +123,8 @@ class ConsoleMessageListener(QWidget, MessageListener):
 
         self.scrollarea.setFixedWidth(width - 20)
 
-        # self.move(0, height)
+        print(height)
+        self.move(0, height)
 
     def draw_console(self):
         if self.show_console is False:
@@ -161,9 +145,9 @@ class ConsoleMessageListener(QWidget, MessageListener):
 
     def paintEvent(self, event):
         if self.show_console:
-            qp = QPainter(self)
+            qp = QtGui.QPainter(self)
             qp.setPen(QtCore.Qt.black)
-            qp.setBrush(QColor(187, 187, 187))
+            qp.setBrush(QtGui.QColor(187, 187, 187))
             qp.drawRect(5, 5, self.width() - 10, self.height() - 10)
 
     def clear(self):
