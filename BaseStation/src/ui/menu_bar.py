@@ -29,6 +29,10 @@ class MenuBar(QMenuBar):
         self.open_simulation_action.setShortcut('Ctrl+A')
         self.open_simulation_action.setStatusTip("Ajoute les données d'une simulation OpenRocket aux graphiques")
 
+        self.open_console = QAction('Ouvir console', None)
+        self.open_console.setShortcut('Ctrl+C')
+        self.open_console.setStatusTip("Ouvre une console de debuggage")
+
         self.edit_preferences = QAction(self)
         self.edit_preferences.setObjectName("edit_preferences")
         self.edit_preferences.setText("Préférences")
@@ -40,6 +44,7 @@ class MenuBar(QMenuBar):
         files_menu.addAction(self.new_acquisition_action)
         files_menu.addAction(self.open_csv_file_action)
         files_menu.addAction(self.open_simulation_action)
+        files_menu.addAction(self.open_console)
         files_menu.addAction(self.edit_preferences)
         files_menu.addSeparator()
         files_menu.addAction(self.exit_action)

@@ -5,6 +5,7 @@ from src.ui.utils import *
 from typing import Callable
 from PyQt5 import QtCore, QtWidgets, QtGui
 
+
 class MessageConsoleContainer(QtWidgets.QWidget):
 
     def __init__(self, m_type: MessageType, message: str, parent):
@@ -76,7 +77,7 @@ class ConsoleMessageListener(QtWidgets.QWidget, MessageListener):
         self.button_spacing = 75
         self.console_stylesheet = read_stylesheet("src/resources/console.css")
 
-        QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Space), self).activated.connect(self.on_click_close)
+        # QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Space), self).activated.connect(self.on_click_close)
 
         self.scrollarea = QtWidgets.QScrollArea(self)
         self.layout_SArea = None
@@ -87,6 +88,7 @@ class ConsoleMessageListener(QtWidgets.QWidget, MessageListener):
         self.btn_warning = self.create_button(QtWidgets.QPushButton("Warning", self), True, 485, 10, 70, 35, lambda: self.on_click_button_log(MessageType.WARNING))
         self.btn_error = self.create_button(QtWidgets.QPushButton("Error", self), True, 560, 10, 70, 35, lambda: self.on_click_button_log(MessageType.ERROR))
         self.btn_clear = self.create_button(QtWidgets.QPushButton("Clear", self), True, 635, 10, 70, 35, self.clear)
+        self.btn_close = self.create_button(QtWidgets.QPushButton("Close", self), True, 710, 10, 70, 35, self.close)
 
         self.create_scrollArea()
 
@@ -115,6 +117,7 @@ class ConsoleMessageListener(QtWidgets.QWidget, MessageListener):
 
     def adjust_console(self, width, height):
         self.setFixedSize(width, height)
+        self.btn_close.move(width - self.button_spacing, 10)
         self.btn_clear.move(width - self.button_spacing * 2, 10)
         self.btn_error.move(width - self.button_spacing * 3, 10)
         self.btn_warning.move(width - self.button_spacing * 4, 10)
@@ -122,9 +125,7 @@ class ConsoleMessageListener(QtWidgets.QWidget, MessageListener):
         self.btn_info.move(width - self.button_spacing * 6, 10)
 
         self.scrollarea.setFixedWidth(width - 20)
-
-        print(height)
-        self.move(0, height)
+        self.move(0, height - 345)
 
     def draw_console(self):
         if self.show_console is False:
@@ -177,16 +178,13 @@ class ConsoleMessageListener(QtWidgets.QWidget, MessageListener):
 
     def on_click_close(self):
         if self.show_console:
-            self.show_console = False
-        else:
-            self.show_console = True
-
-        if self.show_console:
-            self.scrollarea.show()
-            self.set_active_button(True)
-        else:
             self.scrollarea.hide()
             self.set_active_button(False)
+            self.show_console = False
+        else:
+            self.scrollarea.show()
+            self.set_active_button(True)
+            self.show_console = True
 
         self.update()
 

@@ -38,13 +38,9 @@ class MainWindow(QMainWindow):
         self.set_stylesheet("src/resources/mainwindow.css")
 
         self.console = ConsoleMessageListener(self)
-        self.console.notify(MessageType.INFO, "Attempted to divide by zero.")
-        self.console.notify(MessageType.DEBUG, "Unable to locate config.init")
-        self.console.notify(MessageType.WARNING, "Unable to initiate the replay mode")
-        self.console.notify(MessageType.ERROR, "Logfile cannot be read-only")
 
     def resizeEvent(self, *args, **kwargs):
-        self.console.adjust_console(self.width(), 345)
+        self.console.adjust_console(self.width(), self.height())
 
     def add_simulation(self):
         filename, _ = QFileDialog.getOpenFileName(caption="Open File", directory="./src/resources/",
