@@ -24,7 +24,7 @@ class AltitudeGraph(PlotWidget):
         self.current_altitude_point = self.plotItem.scatterPlot([], [], pxMode=True, size=8, brush=mkBrush(color='r'))
         self.addItem(self.current_altitude_text, ignoreBounds=True)
 
-        self.simulation_curve = None
+        self.simulation_curve = self.plot([], [], pen=mkPen(color='b', width=3))
         self.apogee = 0
         self.draw_apogee_plot = True
         self.apogee_text = TextItem("", anchor=(1, 1), color=(0, 0, 0, 0))
@@ -52,10 +52,7 @@ class AltitudeGraph(PlotWidget):
         self.plotItem.addLine(y=altitude, pen=mkPen(color=(15, 236, 20), width=3, style=QtCore.Qt.DashDotLine))
 
     def show_simulation(self, time: list, altitude: list):
-        if self.simulation_curve is None:
-            self.simulation_curve = self.plot(time, altitude, pen=mkPen(color='b', width=3))
-        else:
-            self.simulation_curve.setData(time, altitude)
+        self.simulation_curve.setData(time, altitude)
 
     def draw_apogee(self, values: list):
         if len(values) == 2:
@@ -75,6 +72,7 @@ class AltitudeGraph(PlotWidget):
     def reset(self):
         self.reset_altitude()
         self.reset_apogee()
+        self.reset_simulation()
 
     def reset_altitude(self):
         self.altitude_curve.clear()
@@ -88,3 +86,6 @@ class AltitudeGraph(PlotWidget):
         self.apogee_point.clear()
         self.apogee_text.setColor(color=(0, 0, 0, 0))
         self.draw_apogee_plot = True
+
+    def reset_simulation(self):
+        self.simulation_curve.clear()
