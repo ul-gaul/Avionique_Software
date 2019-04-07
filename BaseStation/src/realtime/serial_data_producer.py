@@ -35,7 +35,7 @@ class SerialDataProducer(DataProducer):
 
     def start(self):
         ports = self.detect_serial_ports()
-        if ports:
+        if not ports:
             raise NoConnectedDeviceException("Aucun récepteur connecté")
         self.port.port = ports[0]
         self.port.open()

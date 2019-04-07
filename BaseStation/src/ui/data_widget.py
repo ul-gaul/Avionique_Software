@@ -227,7 +227,7 @@ class DataWidget(QtWidgets.QWidget):
     def reset(self):
         self.altitude_graph.reset()
         self.positions_on_map.clear()
-        self.rotate_rocket_model(Quaternion())
+        self.set_rocket_model_rotation(Quaternion())
         self.reset_leds()
         self.set_thermometer_value(0)
         self.voltage_curve.clear()
