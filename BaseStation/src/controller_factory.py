@@ -12,6 +12,7 @@ from src.realtime.serial_data_producer import SerialDataProducer
 from src.replay.file_data_producer import FileDataProducer
 from src.replay.playback_state import PlaybackState
 from src.replay_controller import ReplayController
+from src.save import SaveManager
 from src.ui.console_message_listener import ConsoleMessageListener
 from src.ui.real_time_widget import RealTimeWidget
 from src.ui.replay_widget import ReplayWidget
@@ -35,15 +36,17 @@ class ControllerFactory:
 
         consumer = Consumer(data_producer, config.rocket_packet_config.sampling_frequency, ApogeeCalculator(), AngularCalculator(config.rocket_packet_config.sampling_frequency))
 
-        return RealTimeController(real_time_widget, data_producer, consumer, config)
+        save_manager = SaveManager(data_producer, real_time_widget)
 
-    def create_replay_controller(self, replay_widget: ReplayWidget, filename: str):
+        return RealTimeController(real_time_widget, data_producer, consumer, save_manager, config)
+
+    def create_replay_controller(self, replay_widget: ReplayWidget):
         config = ConfigLoader.load()
 
         data_lock = threading.RLock()
         playback_lock = threading.Lock()
         playback_state = PlaybackState(1, PlaybackState.Mode.FORWARD)
-        data_producer = FileDataProducer(self.csv_data_persister, filename, data_lock, playback_lock, playback_state)
+        data_producer = FileDataProducer(self.csv_data_persister, data_lock, playback_lock, playback_state)
 
         consumer = Consumer(data_producer, config.rocket_packet_config.sampling_frequency, ApogeeCalculator(), AngularCalculator(config.rocket_packet_config.sampling_frequency))
 

@@ -73,11 +73,9 @@ class ConsoleMessageListener(QtWidgets.QWidget, MessageListener):
         self.button_list = []
         self.message_display = [MessageType.INFO, MessageType.DEBUG, MessageType.WARNING, MessageType.ERROR]
 
-        self.show_console = True
+        self.show_console = False
         self.button_spacing = 75
         self.console_stylesheet = read_stylesheet("src/resources/console.css")
-
-        # QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Space), self).activated.connect(self.on_click_close)
 
         self.scrollarea = QtWidgets.QScrollArea(self)
         self.layout_SArea = None
@@ -123,7 +121,6 @@ class ConsoleMessageListener(QtWidgets.QWidget, MessageListener):
         self.btn_warning.move(width - self.button_spacing * 4, 10)
         self.btn_debug.move(width - self.button_spacing * 5, 10)
         self.btn_info.move(width - self.button_spacing * 6, 10)
-
         self.scrollarea.setFixedWidth(width - 20)
         self.move(0, height - 345)
 

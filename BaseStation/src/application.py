@@ -15,6 +15,7 @@ class Application:
         self.app = QtWidgets.QApplication(sys.argv)
         self.window = MainWindow()
         self.window.show()
+        self.window.center()
         sys.exit(self.app.exec_())
 
     @staticmethod

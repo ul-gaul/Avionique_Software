@@ -34,10 +34,8 @@ class SerialDataProducer(DataProducer):
         self.num_bytes_to_read = self.rocket_packet_parser.get_number_of_bytes() + 1
 
     def start(self):
-        self.available_rocket_packets.clear()
-
         ports = self.detect_serial_ports()
-        if len(ports) <= 0:
+        if ports:
             raise NoConnectedDeviceException("Aucun récepteur connecté")
         self.port.port = ports[0]
         self.port.open()
@@ -72,6 +70,12 @@ class SerialDataProducer(DataProducer):
 
     def has_unsaved_data(self):
         return self.unsaved_data
+
+    def clear_rocket_packets(self):
+        self.lock.acquire()
+        self.available_rocket_packets.clear()
+        self.unsaved_data = False
+        self.lock.release()
 
     @staticmethod
     def detect_serial_ports():
