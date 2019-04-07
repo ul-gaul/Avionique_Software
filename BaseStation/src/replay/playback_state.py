@@ -55,3 +55,7 @@ class PlaybackState:
 
     def is_going_backward(self):
         return self.mode == self.Mode.BACKWARD
+
+    def reset(self):
+        self.mode = self.Mode.FORWARD
+        self.speed_factor = 1.0
