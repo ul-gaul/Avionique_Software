@@ -206,7 +206,7 @@ class RealTimeControllerTest(unittest.TestCase):
 
         self.real_time_controller.deactivate()
 
-        self.serial_data_producer.clear.assert_called_with()
+        self.serial_data_producer.clear_rocket_packets.assert_called_with()
 
     def test_deactivate_should_reset_consumer(self):
         self.real_time_controller.is_running = False
@@ -243,7 +243,7 @@ class RealTimeControllerTest(unittest.TestCase):
 
         self.real_time_controller.deactivate()
 
-        self.serial_data_producer.clear.assert_not_called()
+        self.serial_data_producer.clear_rocket_packets.assert_not_called()
         self.consumer.reset.assert_not_called()
         self.real_time_widget.reset.assert_not_called()
         thread_mock.join.assert_not_called()

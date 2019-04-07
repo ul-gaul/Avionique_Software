@@ -35,7 +35,7 @@ class RealTimeController(Controller):
                     if save_status == SaveStatus.CANCELLED:
                         return
 
-                self.data_producer.clear()
+                self.data_producer.clear_rocket_packets()
                 self.consumer.reset()
                 self.data_widget.reset()
 
@@ -74,7 +74,7 @@ class RealTimeController(Controller):
         if self.is_running:
             self.stop_thread()
 
-        self.data_producer.clear()
+        self.data_producer.clear_rocket_packets()
         self.consumer.reset()
         self.data_widget.reset()
 

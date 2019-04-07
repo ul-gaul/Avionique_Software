@@ -35,6 +35,10 @@ class DataProducer:
         self.lock.release()
 
     @abc.abstractmethod
+    def clear_rocket_packets(self):
+        pass
+
+    @abc.abstractmethod
     def run(self):
         """Acquisition thread function"""
         pass

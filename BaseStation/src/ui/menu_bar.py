@@ -23,7 +23,7 @@ class MenuBar(QMenuBar):
         self.save_as_action = QAction("Enregistrer sous", files_menu)
         self.save_as_action.setObjectName("save_as_action")
         self.save_as_action.setShortcut("Ctrl+S")
-        self.save_as_action.setStatusTip("Enregistrer les données de vol dansun fichier CSV")
+        self.save_as_action.setStatusTip("Enregistrer les données de vol dans un fichier CSV")
         self.save_as_action.setEnabled(False)
 
         self.load_flight_data_action = QAction("Charger des données de vol", files_menu)
@@ -32,15 +32,17 @@ class MenuBar(QMenuBar):
         self.load_flight_data_action.setStatusTip("Ouvre le mode replay avec les données de vol sélectionnées")
 
         self.open_simulation_action = QAction('&Ajouter une simulation', files_menu)
+        self.open_simulation_action.setObjectName("open_simulation_action")
         self.open_simulation_action.setShortcut('Ctrl+A')
         self.open_simulation_action.setStatusTip("Ajoute les données d'une simulation OpenRocket aux graphiques")
         self.open_simulation_action.setEnabled(False)
 
-        self.edit_preferences = QAction(self)
-        self.edit_preferences.setObjectName("edit_preferences")
-        self.edit_preferences.setText("Préférences")
+        self.edit_preferences_action = QAction("Préférences", files_menu)
+        self.edit_preferences_action.setObjectName("edit_preferences_action")
+        self.edit_preferences_action.setStatusTip("Ouvre la fenêtre des paramètres de l'application")
 
         self.exit_action = QAction('&Quitter', files_menu)
+        self.edit_preferences_action.setObjectName("exit_action")
         self.exit_action.setShortcut('Ctrl+Q')
         self.exit_action.setStatusTip("Quitte l'application")
 
@@ -48,7 +50,7 @@ class MenuBar(QMenuBar):
         files_menu.addAction(self.save_as_action)
         files_menu.addAction(self.load_flight_data_action)
         files_menu.addAction(self.open_simulation_action)
-        files_menu.addAction(self.edit_preferences)
+        files_menu.addAction(self.edit_preferences_action)
         files_menu.addSeparator()
         files_menu.addAction(self.exit_action)
 
@@ -70,7 +72,7 @@ class MenuBar(QMenuBar):
         self.exit_action.triggered.connect(callback)
 
     def set_edit_preferences_callback(self, callback: Callable):
-        self.edit_preferences.triggered.connect(callback)
+        self.edit_preferences_action.triggered.connect(callback)
 
     def set_real_time_mode(self):
         self.save_as_action.setEnabled(True)

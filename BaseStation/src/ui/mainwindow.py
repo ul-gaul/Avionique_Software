@@ -6,6 +6,7 @@ from PyQt5.QtWidgets import QDesktopWidget, QMainWindow, QStackedWidget, QFileDi
 from src.controller_factory import ControllerFactory
 from src.message_type import MessageType
 from src.realtime.rocket_packet_parser_factory import RocketPacketVersionException
+from src.ui import utils
 from src.ui.console_message_listener import ConsoleMessageListener
 from src.ui.homewidget import HomeWidget
 from src.ui.menu_bar import MenuBar
@@ -121,8 +122,7 @@ class MainWindow(QMainWindow):
         self.status_bar.clear()
 
     def set_stylesheet(self, stylesheet_path):
-        file = open(stylesheet_path, 'r')
-        stylesheet = file.read()
+        stylesheet = utils.read_stylesheet(stylesheet_path)
         self.setStyleSheet(stylesheet)
 
     def closeEvent(self, event: QCloseEvent):

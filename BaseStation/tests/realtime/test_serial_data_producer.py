@@ -37,17 +37,17 @@ class SerialDataProducerTest(unittest.TestCase):
 
         self.assertFalse(self.serial_data_producer.has_unsaved_data())
 
-    def test_clear_should_clear_all_rocket_packets(self):
+    def test_clear_rocket_packets_should_clear_all_rocket_packets(self):
         rocket_packet = RocketPacket()
         self.serial_data_producer.add_rocket_packet(rocket_packet)
 
-        self.serial_data_producer.clear()
+        self.serial_data_producer.clear_rocket_packets()
 
         self.assertListEqual(self.serial_data_producer.get_available_rocket_packets(), [])
 
-    def test_no_unsaved_data_after_clear(self):
+    def test_no_unsaved_data_after_clear_rocket_packets(self):
         self.serial_data_producer.unsaved_data = True
 
-        self.serial_data_producer.clear()
+        self.serial_data_producer.clear_rocket_packets()
 
         self.assertFalse(self.serial_data_producer.has_unsaved_data())

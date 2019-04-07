@@ -33,12 +33,12 @@ class SaveManager(MessageSender):
             if filename:
                 self._save_data(filename)
                 return SaveStatus.SAVED
-            else:
-                return SaveStatus.CANCELLED
+
+            return SaveStatus.CANCELLED
         elif should_save == QMessageBox.No:
             return SaveStatus.UNSAVED
-        else:
-            return SaveStatus.CANCELLED
+
+        return SaveStatus.CANCELLED
 
     def _get_save_file_name(self) -> str:
         default_path = self.BASE_PATH + datetime.now().strftime("%Y-%m-%d_%Hh%Mm") + ".csv"
