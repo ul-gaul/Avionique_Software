@@ -8,7 +8,7 @@ from PyQt5 import QtCore, QtWidgets, QtGui
 
 class MessageConsoleContainer(QtWidgets.QWidget):
 
-    def __init__(self, m_type: MessageType, message: str, parent):
+    def __init__(self, message: str, m_type: MessageType, parent):
         super().__init__(parent)
 
         self.active = True
