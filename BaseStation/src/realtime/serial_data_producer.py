@@ -57,12 +57,12 @@ class SerialDataProducer(DataProducer):
                         print(rocket_packet)
                         self.add_rocket_packet(rocket_packet)
                         self.unsaved_data = True
-                    except struct.error:
+                    except struct.error as e:
                         """
                         This error can occur if we don't read enough bytes on the serial port or if the packet format is
                         incorrect.
                         """
-                        print("Invalid packet")
+                        print("Invalid packet: " + str(e))
         self.port.close()
 
     def save(self, filename: str):

@@ -14,7 +14,7 @@ class RocketPacketParser:
         return self.num_bytes
 
     @abc.abstractmethod
-    def parse(self, data: bytes):
+    def parse(self, data: bytes) -> RocketPacket:
         pass
 
     @abc.abstractmethod

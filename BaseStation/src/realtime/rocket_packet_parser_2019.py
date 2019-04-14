@@ -8,11 +8,12 @@ class RocketPacketParser2019(RocketPacketParser):
 
     def __init__(self):
         # FIXME: this format is for the Arduino simulator. Validate types and sizes with the acquisition team.
-        super().__init__("<fffccffIfHHHfffHHHHHH", 60)
+        super().__init__("<dddccdfIfHHHfffHHHHHH", 76)
 
     def parse(self, data: bytes):
         # TODO: support all fields
         data_list = struct.unpack(self.format, data)
+        print(data_list)
         return self.from_list(data_list)
 
     def get_field_names(self):
