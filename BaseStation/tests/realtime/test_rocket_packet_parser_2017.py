@@ -33,15 +33,32 @@ class RocketPacketParser2017Test(unittest.TestCase):
     def setUp(self):
         self.parser = RocketPacketParser2017()
         self.expected_rocket_packet = self.create_expected_packet()
+        self.any_rocket_packet = self.create_expected_packet()
+        self.EXPECTED_FIELDS = {"time_stamp": self.TIME_STAMP, "angular_speed_x": self.ANGULAR_SPEED_X,
+                                "angular_speed_y": self.ANGULAR_SPEED_Y, "angular_speed_z": self.ANGULAR_SPEED_Z,
+                                "acceleration_x": self.ACCELERATION_X, "acceleration_y": self.ACCELERATION_Y,
+                                "acceleration_z": self.ACCELERATION_Z, "altitude": self.ALTITUDE,
+                                "latitude": self.LATITUDE, "longitude": self.LONGITUDE,
+                                "temperature": self.TEMPERATURE, "quaternion_w": self.QUATERNION_W,
+                                "quaternion_x": self.QUATERNION_X, "quaternion_y": self.QUATERNION_Y,
+                                "quaternion_z": self.QUATERNION_Z,
+                                "acquisition_board_state_1": self.ACQUISITION_BOARD_STATE_1,
+                                "acquisition_board_state_2": self.ACQUISITION_BOARD_STATE_2,
+                                "acquisition_board_state_3": self.ACQUISITION_BOARD_STATE_3,
+                                "power_supply_state_1": self.POWER_SUPPLY_STATE_1,
+                                "power_supply_state_2": self.POWER_SUPPLY_STATE_2,
+                                "payload_board_state_1": self.PAYLOAD_BOARD_STATE_1, "voltage": self.VOLTAGE,
+                                "current": self.CURRENT}
+        self.data = [self.TIME_STAMP, self.ANGULAR_SPEED_X, self.ANGULAR_SPEED_Y, self.ANGULAR_SPEED_Z,
+                     self.ACCELERATION_X,
+                     self.ACCELERATION_Y, self.ACCELERATION_Z, self.ALTITUDE, self.LATITUDE, self.LONGITUDE,
+                     self.TEMPERATURE, self.QUATERNION_W, self.QUATERNION_X, self.QUATERNION_Y, self.QUATERNION_Z,
+                     self.ACQUISITION_BOARD_STATE_1, self.ACQUISITION_BOARD_STATE_2, self.ACQUISITION_BOARD_STATE_3,
+                     self.POWER_SUPPLY_STATE_1, self.POWER_SUPPLY_STATE_2, self.PAYLOAD_BOARD_STATE_1, self.VOLTAGE,
+                     self.CURRENT]
 
     def test_parse_should_return_rocket_packet_given_valid_data_bytes(self):
-        data = [self.TIME_STAMP, self.ANGULAR_SPEED_X, self.ANGULAR_SPEED_Y, self.ANGULAR_SPEED_Z, self.ACCELERATION_X,
-                self.ACCELERATION_Y, self.ACCELERATION_Z, self.ALTITUDE, self.LATITUDE, self.LONGITUDE,
-                self.TEMPERATURE, self.QUATERNION_W, self.QUATERNION_X, self.QUATERNION_Y, self.QUATERNION_Z,
-                self.ACQUISITION_BOARD_STATE_1, self.ACQUISITION_BOARD_STATE_2, self.ACQUISITION_BOARD_STATE_3,
-                self.POWER_SUPPLY_STATE_1, self.POWER_SUPPLY_STATE_2, self.PAYLOAD_BOARD_STATE_1, self.VOLTAGE,
-                self.CURRENT]
-        data_bytes = struct.pack(self.parser.format, *data)
+        data_bytes = struct.pack(self.parser.format, *self.data)
 
         rocket_packet = self.parser.parse(data_bytes)
 
@@ -51,6 +68,21 @@ class RocketPacketParser2017Test(unittest.TestCase):
         invalid_data_bytes = bytes([])
 
         self.assertRaises(struct.error, self.parser.parse, invalid_data_bytes)
+
+    def test_get_field_names_should_return_the_names_of_all_rocket_packet_2017_fields(self):
+        field_names = self.parser.get_field_names()
+
+        self.assertEquals(set(field_names), set(self.EXPECTED_FIELDS.keys()))
+
+    def test_to_dict_should_return_dict_with_all_rocket_packet_2017_fields(self):
+        fields = self.parser.to_dict(self.any_rocket_packet)
+
+        self.assertEquals(fields, self.EXPECTED_FIELDS)
+
+    def test_from_list_should_return_rocket_packet_properly_assembled(self):
+        rocket_packet = self.parser.from_list(self.data)
+
+        self.assertEquals(rocket_packet, self.create_expected_packet())
 
     def create_expected_packet(self):
         rocket_packet = RocketPacket()

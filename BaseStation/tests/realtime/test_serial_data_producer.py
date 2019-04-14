@@ -28,7 +28,8 @@ class SerialDataProducerTest(unittest.TestCase):
         self.serial_data_producer.save(self.SAVE_FILE_PATH)
 
         self.data_persister.save.assert_called_with(self.SAVE_FILE_PATH,
-                                                    self.serial_data_producer.available_rocket_packets)
+                                                    self.serial_data_producer.available_rocket_packets,
+                                                    self.rocket_packet_parser)
 
     def test_no_unsaved_data_after_save(self):
         self.serial_data_producer.unsaved_data = True

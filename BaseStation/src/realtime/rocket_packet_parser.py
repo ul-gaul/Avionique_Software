@@ -1,5 +1,7 @@
 import abc
 
+from src.rocket_packet import RocketPacket
+
 
 class RocketPacketParser:
     __metaclass__ = abc.ABCMeta
@@ -13,4 +15,16 @@ class RocketPacketParser:
 
     @abc.abstractmethod
     def parse(self, data: bytes):
+        pass
+
+    @abc.abstractmethod
+    def get_field_names(self):
+        pass
+
+    @abc.abstractmethod
+    def to_dict(self, packet: RocketPacket) -> dict:
+        pass
+
+    @abc.abstractmethod
+    def from_list(self, data: list) -> RocketPacket:
         pass

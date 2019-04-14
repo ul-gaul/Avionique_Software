@@ -49,6 +49,7 @@ class SerialDataProducer(DataProducer):
             c = self.port.read(1)
             if c == self.start_character:
                 data_bytes = self.port.read(self.num_bytes_to_read)
+                print(data_bytes)
 
                 if self.checksum_validator.validate(data_bytes):
                     try:
@@ -65,7 +66,7 @@ class SerialDataProducer(DataProducer):
         self.port.close()
 
     def save(self, filename: str):
-        self.data_persister.save(filename, self.available_rocket_packets)
+        self.data_persister.save(filename, self.available_rocket_packets, self.rocket_packet_parser)
         self.unsaved_data = False
 
     def has_unsaved_data(self):
