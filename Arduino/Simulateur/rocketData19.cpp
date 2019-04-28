@@ -1,12 +1,12 @@
 #include "rocketData19.h"
 
 void createRocketPacket2019(RocketPacket19& rp, int timestamp) {
-    rp.data.timestamp = (double) timestamp;
-    rp.data.latitude = (double) latitude(timestamp);
-    rp.data.longitude = (double) longitude(timestamp);
+    toDouble((float)timestamp, rp.data.timestamp); //timestamp;
+    toDouble(latitude(timestamp), rp.data.latitude);
+    toDouble(longitude(timestamp), rp.data.longitude);
     rp.data.NSIndicator = 'N';
     rp.data.EWIndicator = 'W';
-    rp.data.UTCTime = 210837.123;
+    toDouble(-123.36, rp.data.UTCTime);
     rp.data.altitude = altitude(timestamp);
     rp.data.pressure = pressure(timestamp);
     rp.data.temperature = temperature1(timestamp);

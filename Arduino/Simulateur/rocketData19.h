@@ -3,16 +3,17 @@
 
 #include "Arduino.h"
 #include "sensors.h"
+#include "convertor.h"
 
 typedef struct {
   // time since boot in milliseconds
-  double timestamp; // 8
+  byte timestamp[8]; // 8
   // GPS values
-  double latitude; // 16
-  double longitude; // 24
+  byte latitude[8]; // 16
+  byte longitude[8]; // 24
   char NSIndicator; // 32
   char EWIndicator; // 40
-  double UTCTime; // 48
+  byte UTCTime[8]; // 48
   // 10DOF values
   // BMP180
 
