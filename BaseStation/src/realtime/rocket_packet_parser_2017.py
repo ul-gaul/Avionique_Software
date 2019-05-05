@@ -7,7 +7,7 @@ from src.rocket_packet import RocketPacket
 class RocketPacketParser2017(RocketPacketParser):
 
     def __init__(self):
-        super().__init__("<fffffffffffffffBBBBBBff", 74)
+        super().__init__(2017, "<fffffffffffffffBBBBBBff", 74)
 
     def parse(self, data: bytes):
         data_list = struct.unpack(self.format, data)
@@ -20,22 +20,13 @@ class RocketPacketParser2017(RocketPacketParser):
                 "acquisition_board_state_2", "acquisition_board_state_3", "power_supply_state_1",
                 "power_supply_state_2", "payload_board_state_1", "voltage", "current"]
 
-    def to_dict(self, packet: RocketPacket) -> dict:
-        return {"time_stamp": packet.time_stamp, "angular_speed_x": packet.angular_speed_x,
-                "angular_speed_y": packet.angular_speed_y, "angular_speed_z": packet.angular_speed_z,
-                "acceleration_x": packet.acceleration_x, "acceleration_y": packet.acceleration_y,
-                "acceleration_z": packet.acceleration_z, "altitude": packet.altitude,
-                "latitude": packet.latitude, "longitude": packet.longitude,
-                "temperature": packet.temperature, "quaternion_w": packet.quaternion_w,
-                "quaternion_x": packet.quaternion_x, "quaternion_y": packet.quaternion_y,
-                "quaternion_z": packet.quaternion_z,
-                "acquisition_board_state_1": packet.acquisition_board_state_1,
-                "acquisition_board_state_2": packet.acquisition_board_state_2,
-                "acquisition_board_state_3": packet.acquisition_board_state_3,
-                "power_supply_state_1": packet.power_supply_state_1,
-                "power_supply_state_2": packet.power_supply_state_2,
-                "payload_board_state_1": packet.payload_board_state_1, "voltage": packet.voltage,
-                "current": packet.current}
+    def to_list(self, packet: RocketPacket) -> list:
+        return [packet.time_stamp, packet.angular_speed_x, packet.angular_speed_y, packet.angular_speed_z,
+                packet.acceleration_x, packet.acceleration_y, packet.acceleration_z, packet.altitude, packet.latitude,
+                packet.longitude, packet.temperature, packet.quaternion_w, packet.quaternion_x, packet.quaternion_y,
+                packet.quaternion_z, packet.acquisition_board_state_1, packet.acquisition_board_state_2,
+                packet.acquisition_board_state_3, packet.power_supply_state_1, packet.power_supply_state_2,
+                packet.payload_board_state_1, packet.voltage,packet.current]
 
     def from_list(self, data: list) -> RocketPacket:
         rocket_packet = RocketPacket()

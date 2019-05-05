@@ -32,17 +32,11 @@ class RocketPacketParser2019Test(unittest.TestCase):
         self.parser = RocketPacketParser2019()
         self.expected_rocket_packet = self.create_expected_packet()
         self.any_rocket_packet = self.create_expected_packet()
-        self.EXPECTED_FIELDS = {"time_stamp": self.TIME_STAMP, "latitude": self.LATITUDE, "longitude": self.LONGITUDE,
-                                "ns_indicator": self.NS_INDICATOR, "ew_indicator": self.EW_INDICATOR,
-                                "utc_time": self.UTC_TIME, "altitude": self.ALTITUDE, "pressure": self.PRESSURE,
-                                "temperature": self.TEMPERATURE, "acceleration_x_uncomp": self.ACCELERATION_X_UNCOMP,
-                                "acceleration_y_uncomp": self.ACCELERATION_Y_UNCOMP,
-                                "acceleration_z_uncomp": self.ACCELERATION_Z_UNCOMP,
-                                "acceleration_x": self.ACCELERATION_X, "acceleration_y": self.ACCELERATION_Y,
-                                "acceleration_z": self.ACCELERATION_Z, "magnetometer_x": self.MAGNETOMETER_X,
-                                "magnetometer_y": self.MAGNETOMETER_Y, "magnetometer_z": self.MAGNETOMETER_Z,
-                                "angular_speed_x": self.ANGULAR_SPEED_X, "angular_speed_y": self.ANGULAR_SPEED_Y,
-                                "angular_speed_z": self.ANGULAR_SPEED_Z}
+        self.EXPECTED_FIELD_NAMES = ["time_stamp", "latitude", "longitude", "ns_indicator", "ew_indicator", "utc_time",
+                                     "altitude", "pressure", "temperature", "acceleration_x_uncomp",
+                                     "acceleration_y_uncomp", "acceleration_z_uncomp", "acceleration_x",
+                                     "acceleration_y", "acceleration_z", "magnetometer_x", "magnetometer_y",
+                                     "magnetometer_z", "angular_speed_x", "angular_speed_y", "angular_speed_z"]
         self.data = [self.TIME_STAMP, self.LATITUDE, self.LONGITUDE, self.NS_INDICATOR, self.EW_INDICATOR,
                      self.UTC_TIME,
                      self.ALTITUDE, self.PRESSURE, self.TEMPERATURE, self.ACCELERATION_X_UNCOMP,
@@ -66,12 +60,12 @@ class RocketPacketParser2019Test(unittest.TestCase):
     def test_get_field_names_should_return_the_name_of_all_rocket_packet_2019_field(self):
         field_names = self.parser.get_field_names()
 
-        self.assertEquals(set(field_names), set(self.EXPECTED_FIELDS.keys()))
+        self.assertEquals(field_names, self.EXPECTED_FIELD_NAMES)
 
-    def test_to_dict_should_return_dict_with_all_rocket_packet_2019_fields(self):
-        fields = self.parser.to_dict(self.any_rocket_packet)
+    def test_to_list_should_return_list_with_all_rocket_packet_2019_fields(self):
+        fields = self.parser.to_list(self.any_rocket_packet)
 
-        self.assertEquals(fields, self.EXPECTED_FIELDS)
+        self.assertEquals(fields, self.data)
 
     def test_from_list_should_return_rocket_packet_properly_assembled(self):
         rocket_packet = self.parser.from_list(self.data)

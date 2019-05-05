@@ -7,7 +7,7 @@ from src.rocket_packet import RocketPacket
 class RocketPacketParser2018(RocketPacketParser):
 
     def __init__(self):
-        super().__init__("<Lfffffffffffff", 56)
+        super().__init__(2018, "<Lfffffffffffff", 56)
 
     def parse(self, data: bytes):
         data_list = struct.unpack(self.format, data)
@@ -18,13 +18,10 @@ class RocketPacketParser2018(RocketPacketParser):
                 "acceleration_z", "magnetometer_x", "magnetometer_y", "magnetometer_z", "angular_speed_x",
                 "angular_speed_y", "angular_speed_z"]
 
-    def to_dict(self, packet: RocketPacket) -> dict:
-        return {"time_stamp": packet.time_stamp, "latitude": packet.latitude, "longitude": packet.longitude,
-                "altitude": packet.altitude, "temperature": packet.temperature, "acceleration_x": packet.acceleration_x,
-                "acceleration_y": packet.acceleration_y, "acceleration_z": packet.acceleration_z,
-                "magnetometer_x": 0, "magnetometer_y": 0, "magnetometer_z": 0,
-                "angular_speed_x": packet.angular_speed_x, "angular_speed_y": packet.angular_speed_y,
-                "angular_speed_z": packet.angular_speed_z}
+    def to_list(self, packet: RocketPacket) -> list:
+        return [packet.time_stamp, packet.latitude, packet.longitude, packet.altitude, packet.temperature,
+                packet.acceleration_x, packet.acceleration_y, packet.acceleration_z, 0, 0, 0, packet.angular_speed_x,
+                packet.angular_speed_y, packet.angular_speed_z]
 
     def from_list(self, data: list) -> RocketPacket:
         rocket_packet = RocketPacket()

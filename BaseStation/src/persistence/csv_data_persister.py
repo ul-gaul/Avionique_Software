@@ -18,11 +18,14 @@ class CsvDataPersister(DataPersister):
     def save(self, filename: str, rocket_packets: List[RocketPacket], rocket_packet_parser: RocketPacketParser):
         try:
             with open(filename, "w", newline=self.newline) as csv_file:
-                writer = csv.DictWriter(csv_file, fieldnames=rocket_packet_parser.get_field_names(),
-                                        delimiter=self.delimiter, quoting=self.quoting)
-                writer.writeheader()
+                writer = csv.writer(csv_file, delimiter=self.delimiter, quoting=self.quoting)
+
+                writer.writerow([rocket_packet_parser.get_version()])
+                writer.writerow(rocket_packet_parser.get_field_names())
+
                 for packet in rocket_packets:
-                    writer.writerow(rocket_packet_parser.to_dict(packet))
+                    writer.writerow(rocket_packet_parser.to_list(packet))
+
         except PermissionError:
             raise DomainError("Impossible d'ouvrir le fichier " + filename)
 
@@ -30,7 +33,10 @@ class CsvDataPersister(DataPersister):
         data = []
         with open(filename, newline=self.newline) as csv_file:
             reader = csv.reader(csv_file, delimiter=self.delimiter, quoting=self.quoting)
-            next(reader, None)  # Skip headers
+
+            version = next(reader, None)
+            headers = next(reader, None)
+
             for row in reader:
                 if len(row) >= len(rocket_packet_parser.get_field_names()):
                     data.append(rocket_packet_parser.from_list(row))

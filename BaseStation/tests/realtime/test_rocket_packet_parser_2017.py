@@ -34,21 +34,12 @@ class RocketPacketParser2017Test(unittest.TestCase):
         self.parser = RocketPacketParser2017()
         self.expected_rocket_packet = self.create_expected_packet()
         self.any_rocket_packet = self.create_expected_packet()
-        self.EXPECTED_FIELDS = {"time_stamp": self.TIME_STAMP, "angular_speed_x": self.ANGULAR_SPEED_X,
-                                "angular_speed_y": self.ANGULAR_SPEED_Y, "angular_speed_z": self.ANGULAR_SPEED_Z,
-                                "acceleration_x": self.ACCELERATION_X, "acceleration_y": self.ACCELERATION_Y,
-                                "acceleration_z": self.ACCELERATION_Z, "altitude": self.ALTITUDE,
-                                "latitude": self.LATITUDE, "longitude": self.LONGITUDE,
-                                "temperature": self.TEMPERATURE, "quaternion_w": self.QUATERNION_W,
-                                "quaternion_x": self.QUATERNION_X, "quaternion_y": self.QUATERNION_Y,
-                                "quaternion_z": self.QUATERNION_Z,
-                                "acquisition_board_state_1": self.ACQUISITION_BOARD_STATE_1,
-                                "acquisition_board_state_2": self.ACQUISITION_BOARD_STATE_2,
-                                "acquisition_board_state_3": self.ACQUISITION_BOARD_STATE_3,
-                                "power_supply_state_1": self.POWER_SUPPLY_STATE_1,
-                                "power_supply_state_2": self.POWER_SUPPLY_STATE_2,
-                                "payload_board_state_1": self.PAYLOAD_BOARD_STATE_1, "voltage": self.VOLTAGE,
-                                "current": self.CURRENT}
+        self.EXPECTED_FIELD_NAMES = ["time_stamp", "angular_speed_x", "angular_speed_y", "angular_speed_z",
+                                     "acceleration_x", "acceleration_y", "acceleration_z", "altitude", "latitude",
+                                     "longitude", "temperature", "quaternion_w", "quaternion_x", "quaternion_y",
+                                     "quaternion_z", "acquisition_board_state_1", "acquisition_board_state_2",
+                                     "acquisition_board_state_3", "power_supply_state_1", "power_supply_state_2",
+                                     "payload_board_state_1", "voltage", "current"]
         self.data = [self.TIME_STAMP, self.ANGULAR_SPEED_X, self.ANGULAR_SPEED_Y, self.ANGULAR_SPEED_Z,
                      self.ACCELERATION_X,
                      self.ACCELERATION_Y, self.ACCELERATION_Z, self.ALTITUDE, self.LATITUDE, self.LONGITUDE,
@@ -72,12 +63,12 @@ class RocketPacketParser2017Test(unittest.TestCase):
     def test_get_field_names_should_return_the_names_of_all_rocket_packet_2017_fields(self):
         field_names = self.parser.get_field_names()
 
-        self.assertEquals(set(field_names), set(self.EXPECTED_FIELDS.keys()))
+        self.assertEquals(field_names, self.EXPECTED_FIELD_NAMES)
 
-    def test_to_dict_should_return_dict_with_all_rocket_packet_2017_fields(self):
-        fields = self.parser.to_dict(self.any_rocket_packet)
+    def test_to_list_should_return_list_with_all_rocket_packet_2017_fields(self):
+        fields = self.parser.to_list(self.any_rocket_packet)
 
-        self.assertEquals(fields, self.EXPECTED_FIELDS)
+        self.assertEquals(fields, self.data)
 
     def test_from_list_should_return_rocket_packet_properly_assembled(self):
         rocket_packet = self.parser.from_list(self.data)
