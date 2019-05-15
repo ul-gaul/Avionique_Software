@@ -28,19 +28,14 @@ class CsvDataPersisterTest(unittest.TestCase):
         self.persister.save(self.TEMPORARY_FILENAME, self.ROCKET_PACKET_VERSION, self.ROCKET_PACKET_FIELD_NAMES,
                             self.ALL_ROCKET_PACKETS_FIELDS)
 
-        with open(self.TEMPORARY_FILENAME, newline=self.persister.newline) as file:
-            reader = csv.reader(file, delimiter=self.persister.delimiter)
-            version_line = next(reader)
-        self.assertEquals(version_line[0], str(self.ROCKET_PACKET_VERSION))
+        version = self.read_version_from_file(self.TEMPORARY_FILENAME)
+        self.assertEquals(version, str(self.ROCKET_PACKET_VERSION))
 
     def test_save_should_write_rocketPacket_field_names_as_header(self):
         self.persister.save(self.TEMPORARY_FILENAME, self.ROCKET_PACKET_VERSION, self.ROCKET_PACKET_FIELD_NAMES,
                             self.ALL_ROCKET_PACKETS_FIELDS)
 
-        with open(self.TEMPORARY_FILENAME, newline=self.persister.newline) as file:
-            reader = csv.reader(file, delimiter=self.persister.delimiter)
-            next(reader)    # Skip packet version
-            headers = next(reader)
+        headers = self.read_headers_from_file(self.TEMPORARY_FILENAME)
         self.assertEqual(headers, self.ROCKET_PACKET_FIELD_NAMES)
 
     def test_load_should_return_rocket_packet_version_loaded_from_first_line(self):
@@ -62,6 +57,19 @@ class CsvDataPersisterTest(unittest.TestCase):
 
         self.assertEqual(version, self.ROCKET_PACKET_VERSION)
         self.assertEqual(loaded_packets_fields, self.ALL_ROCKET_PACKETS_FIELDS)
+
+    def read_version_from_file(self, filename: str):
+        with open(filename, newline=self.persister.newline) as file:
+            reader = csv.reader(file, delimiter=self.persister.delimiter)
+            version_line = next(reader)
+        return version_line[0]
+
+    def read_headers_from_file(self, filename: str):
+        with open(filename, newline=self.persister.newline) as file:
+            reader = csv.reader(file, delimiter=self.persister.delimiter)
+            next(reader)  # Skip packet version
+            headers = next(reader)
+        return headers
 
     def tearDown(self):
         self.ALL_ROCKET_PACKETS_FIELDS = []

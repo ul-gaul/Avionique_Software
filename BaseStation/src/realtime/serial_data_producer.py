@@ -49,7 +49,6 @@ class SerialDataProducer(DataProducer):
             c = self.port.read(1)
             if c == self.start_character:
                 data_bytes = self.port.read(self.num_bytes_to_read)
-                print(data_bytes)
 
                 if self.checksum_validator.validate(data_bytes):
                     try:

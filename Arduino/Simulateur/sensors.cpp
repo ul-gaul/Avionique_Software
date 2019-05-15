@@ -96,7 +96,7 @@ float longitude(int timestamp)
 }
 
 uint32_t pressure(int timestamp) {
-    return 1013;
+  return 1013;
 }
 
 float temperature1(int timestamp)

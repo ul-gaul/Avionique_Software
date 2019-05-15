@@ -1,22 +1,21 @@
 import unittest
 from unittest.mock import Mock
 
+from src.rocket_packet.rocket_packet_parser import RocketPacketParser
 from src.realtime.checksum_validator import ChecksumValidator
 from src.realtime.serial_data_producer import SerialDataProducer
 from src.rocket_packet.rocket_packet import RocketPacket
-from src.rocket_packet.rocket_packet_parser_2017 import RocketPacketParser2017
 from src.rocket_packet.rocket_packet_repository import RocketPacketRepository
 
 
 class SerialDataProducerTest(unittest.TestCase):
-
     BYTES_IN_PACKET = 74
     SAVE_FILE_PATH = "foo/bar.csv"
 
     def setUp(self):
         self.lock = Mock()
         self.rocket_packet_repository = Mock(spec=RocketPacketRepository)
-        self.rocket_packet_parser = Mock(spec=RocketPacketParser2017)
+        self.rocket_packet_parser = Mock(spec=RocketPacketParser)
         self.rocket_packet_parser.get_number_of_bytes.return_value = self.BYTES_IN_PACKET
         self.checksum_validator = Mock(spec=ChecksumValidator)
 

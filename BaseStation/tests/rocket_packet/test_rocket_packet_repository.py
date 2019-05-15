@@ -19,6 +19,7 @@ class RocketPacketRepositoryTest(TestCase):
     ANOTHER_ROCKET_PACKET = Mock(spec=RocketPacket)
 
     def setUp(self):
+        # TODO: use mockito library to configure mocks
         self.data_persister = Mock(spec=DataPersister)
         self.rocket_packet_parser_factory = Mock(spec=RocketPacketParserFactory)
         self.rocket_packet_parser = Mock(spec=RocketPacketParser)
@@ -44,14 +45,3 @@ class RocketPacketRepositoryTest(TestCase):
         rocket_packets = self.rocket_packet_repository.load(self.A_FILENAME)
 
         self.assertEquals(rocket_packets, [self.A_ROCKET_PACKET, self.ANOTHER_ROCKET_PACKET])
-
-    # TODO: use mockito library to configure mocks
-    # fake_load_values = {A_FILENAME: (A_ROCKET_PACKET_VERSION, A_ROCKET_PACKET_FIELDS_LIST)}
-    #
-    # def fake_load(self, filename):
-    #     return self.fake_load_values[filename]
-    #
-    # fake_create_values = {A_ROCKET_PACKET_VERSION: }
-    #
-    # def fake_create(self, version):
-    #     return self.fake_create_values[version]

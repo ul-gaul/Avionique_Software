@@ -70,7 +70,7 @@ class RocketPacketParser2019Test(unittest.TestCase):
     def test_from_list_should_return_rocket_packet_properly_assembled(self):
         rocket_packet = self.parser.from_list(self.data)
 
-        self.assertEquals(rocket_packet, self.create_expected_packet())
+        self.assertEquals(rocket_packet, self.expected_rocket_packet)
 
     def create_expected_packet(self):
         rocket_packet = RocketPacket()
