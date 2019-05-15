@@ -4,7 +4,7 @@ from src.data_processing.utm_zone import UTMZone
 
 from src.data_processing.geo_coordinate_converter import GeoCoordinateConverter
 from src.data_producer import DataProducer
-from src.rocket_packet import RocketPacket
+from src.rocket_packet.rocket_packet import RocketPacket
 
 from src.data_processing.quaternion import Quaternion
 

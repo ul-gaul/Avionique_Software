@@ -1,8 +1,5 @@
 import abc
-from typing import List
-
-from src.realtime.rocket_packet_parser import RocketPacketParser
-from src.rocket_packet import RocketPacket
+from typing import List, Tuple
 
 
 class DataPersister:
@@ -12,9 +9,10 @@ class DataPersister:
         pass
 
     @abc.abstractmethod
-    def save(self, filename: str, rocket_packets: List[RocketPacket], rocket_packet_parser: RocketPacketParser):
+    def save(self, filename: str, rocket_packet_version: int, field_names: List[str],
+             all_rocket_packets_fields: List[List]):
         pass
 
     @abc.abstractmethod
-    def load(self, filename: str, rocket_packet_parser: RocketPacketParser):
+    def load(self, filename: str) -> Tuple[int, List[List]]:
         pass

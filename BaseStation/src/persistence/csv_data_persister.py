@@ -1,10 +1,8 @@
 import csv
-from typing import List
+from typing import List, Tuple
 
 from src.data_persister import DataPersister
 from src.domain_error import DomainError
-from src.realtime.rocket_packet_parser import RocketPacketParser
-from src.rocket_packet import RocketPacket
 
 
 class CsvDataPersister(DataPersister):
@@ -15,30 +13,33 @@ class CsvDataPersister(DataPersister):
         self.delimiter = ','
         self.quoting = csv.QUOTE_NONNUMERIC
 
-    def save(self, filename: str, rocket_packets: List[RocketPacket], rocket_packet_parser: RocketPacketParser):
+    def save(self, filename: str, rocket_packet_version: int, field_names: List[str],
+             all_rocket_packets_fields: List[List]):
         try:
             with open(filename, "w", newline=self.newline) as csv_file:
                 writer = csv.writer(csv_file, delimiter=self.delimiter, quoting=self.quoting)
 
-                writer.writerow([rocket_packet_parser.get_version()])
-                writer.writerow(rocket_packet_parser.get_field_names())
+                writer.writerow([rocket_packet_version])
+                writer.writerow(field_names)
 
-                for packet in rocket_packets:
-                    writer.writerow(rocket_packet_parser.to_list(packet))
+                for packet_fields in all_rocket_packets_fields:
+                    writer.writerow(packet_fields)
 
         except PermissionError:
             raise DomainError("Impossible d'ouvrir le fichier " + filename)
 
-    def load(self, filename: str, rocket_packet_parser: RocketPacketParser):
-        data = []
+    def load(self, filename: str) -> Tuple[int, List[List]]:
+        all_rocket_packets_fields = []
         with open(filename, newline=self.newline) as csv_file:
             reader = csv.reader(csv_file, delimiter=self.delimiter, quoting=self.quoting)
 
-            version = next(reader, None)
+            version = next(reader, None)[0]
             headers = next(reader, None)
 
-            for row in reader:
-                if len(row) >= len(rocket_packet_parser.get_field_names()):
-                    data.append(rocket_packet_parser.from_list(row))
+            for rocket_packet_field in reader:
+                if len(rocket_packet_field) == len(headers):
+                    all_rocket_packets_fields.append(rocket_packet_field)
+                else:
+                    pass  # FIXME: throw exception or ignore line?
         csv_file.close()
-        return data
+        return version, all_rocket_packets_fields

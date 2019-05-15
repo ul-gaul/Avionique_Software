@@ -9,7 +9,6 @@ from tests.builders.config_builder import ConfigBuilder
 
 
 class ReplayControllerTest(unittest.TestCase):
-
     PACKET_COUNT = 0
     A_FILENAME = "path/to/file.csv"
     ALTITUDE_DATA = [0, 5000, 10000]
@@ -84,6 +83,7 @@ class ReplayControllerTest(unittest.TestCase):
         self.replay_widget.set_play_button_text.assert_called_with()
 
     def test_activate_should_load_data(self):
+
         self.replay_controller.activate(self.A_FILENAME)
 
         self.file_data_producer.load.assert_called_with(self.A_FILENAME)

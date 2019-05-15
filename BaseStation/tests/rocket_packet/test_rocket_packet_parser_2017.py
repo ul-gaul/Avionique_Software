@@ -1,8 +1,8 @@
 import struct
 import unittest
 
-from src.realtime.rocket_packet_parser_2017 import RocketPacketParser2017
-from src.rocket_packet import RocketPacket
+from src.rocket_packet.rocket_packet import RocketPacket
+from src.rocket_packet.rocket_packet_parser_2017 import RocketPacketParser2017
 
 
 class RocketPacketParser2017Test(unittest.TestCase):

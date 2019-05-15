@@ -5,15 +5,15 @@ from PyQt5.QtWidgets import QDesktopWidget, QMainWindow, QStackedWidget, QFileDi
 
 from src.controller_factory import ControllerFactory
 from src.message_type import MessageType
-from src.realtime.rocket_packet_parser_factory import RocketPacketVersionException
+from src.rocket_packet.rocket_packet_parser_factory import RocketPacketVersionException
 from src.ui import utils
+from src.ui.configdialog import ConfigDialog
 from src.ui.console_message_listener import ConsoleMessageListener
 from src.ui.homewidget import HomeWidget
 from src.ui.menu_bar import MenuBar
 from src.ui.real_time_widget import RealTimeWidget
 from src.ui.replay_widget import ReplayWidget
 from src.ui.status_bar import StatusBar
-from src.ui.configdialog import ConfigDialog
 
 
 class MainWindow(QMainWindow):

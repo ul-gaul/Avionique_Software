@@ -1,9 +1,9 @@
 import unittest
 
-from src.realtime.rocket_packet_parser_2017 import RocketPacketParser2017
-from src.realtime.rocket_packet_parser_2018 import RocketPacketParser2018
-from src.realtime.rocket_packet_parser_2019 import RocketPacketParser2019
-from src.realtime.rocket_packet_parser_factory import RocketPacketParserFactory, RocketPacketVersionException
+from src.rocket_packet.rocket_packet_parser_2017 import RocketPacketParser2017
+from src.rocket_packet.rocket_packet_parser_2018 import RocketPacketParser2018
+from src.rocket_packet.rocket_packet_parser_2019 import RocketPacketParser2019
+from src.rocket_packet.rocket_packet_parser_factory import RocketPacketParserFactory, RocketPacketVersionException
 
 
 class RocketPacketParserFactoryTest(unittest.TestCase):

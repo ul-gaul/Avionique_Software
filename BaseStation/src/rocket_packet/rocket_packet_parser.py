@@ -1,6 +1,6 @@
 import abc
 
-from src.rocket_packet import RocketPacket
+from src.rocket_packet.rocket_packet import RocketPacket
 
 
 class RocketPacketParser:

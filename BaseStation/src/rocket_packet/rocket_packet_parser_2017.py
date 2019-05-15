@@ -1,7 +1,7 @@
 import struct
 
-from src.realtime.rocket_packet_parser import RocketPacketParser
-from src.rocket_packet import RocketPacket
+from src.rocket_packet.rocket_packet import RocketPacket
+from src.rocket_packet.rocket_packet_parser import RocketPacketParser
 
 
 class RocketPacketParser2017(RocketPacketParser):
@@ -26,7 +26,7 @@ class RocketPacketParser2017(RocketPacketParser):
                 packet.longitude, packet.temperature, packet.quaternion_w, packet.quaternion_x, packet.quaternion_y,
                 packet.quaternion_z, packet.acquisition_board_state_1, packet.acquisition_board_state_2,
                 packet.acquisition_board_state_3, packet.power_supply_state_1, packet.power_supply_state_2,
-                packet.payload_board_state_1, packet.voltage,packet.current]
+                packet.payload_board_state_1, packet.voltage, packet.current]
 
     def from_list(self, data: list) -> RocketPacket:
         rocket_packet = RocketPacket()

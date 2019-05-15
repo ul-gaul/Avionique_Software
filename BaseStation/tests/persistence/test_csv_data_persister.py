@@ -1,66 +1,72 @@
-import unittest
 import csv
-import os
 import errno
-from unittest.mock import Mock
+import os
+import unittest
 
-from src.realtime.rocket_packet_parser import RocketPacketParser
-from src.rocket_packet import RocketPacket
 from src.persistence.csv_data_persister import CsvDataPersister
+from src.rocket_packet.rocket_packet import RocketPacket
 
 
 class CsvDataPersisterTest(unittest.TestCase):
-    FILENAME = "tmp.csv"
+    TEST_FILENAME = "resources/test.csv"
+    TEMPORARY_FILENAME = "tmp.csv"
     NUMBER_OF_FIELDS = len(RocketPacket.keys())
-    ROCKET_PACKETS = []
-    ROCKET_PACKET_FIELD_NAMES = ["field1", "field2", "field3"]
+    ALL_ROCKET_PACKETS_FIELDS = []
+    ROCKET_PACKET_FIELD_NAMES = []
     ROCKET_PACKET_VERSION = 2019
 
     def setUp(self):
         data_list0 = [i * 10 for i in range(self.NUMBER_OF_FIELDS)]
         data_list1 = [i * 10 + 1 for i in range(self.NUMBER_OF_FIELDS)]
         data_list2 = [i * 10 + 2 for i in range(self.NUMBER_OF_FIELDS)]
-        self.ROCKET_PACKETS = [RocketPacket(data_list0), RocketPacket(data_list1), RocketPacket(data_list2)]
+        self.ALL_ROCKET_PACKETS_FIELDS = [data_list0, data_list1, data_list2]
+        self.ROCKET_PACKET_FIELD_NAMES = ["field" + str(i) for i in range(self.NUMBER_OF_FIELDS)]
 
-        self.rocket_packet_parser = Mock(spec=RocketPacketParser)
-        self.rocket_packet_parser.get_version.return_value = self.ROCKET_PACKET_VERSION
-        self.rocket_packet_parser.get_field_names.return_value = self.ROCKET_PACKET_FIELD_NAMES
-        self.rocket_packet_parser.to_list.side_effect = [data_list0, data_list1, data_list2]
-        self.rocket_packet_parser.from_list.side_effect = self.ROCKET_PACKETS
-
-    def test_save_should_write_rocketPacket_field_names_as_header(self):
-        persister = CsvDataPersister()
-
-        persister.save(self.FILENAME, self.ROCKET_PACKETS, self.rocket_packet_parser)
-
-        with open(self.FILENAME, newline=persister.newline) as file:
-            reader = csv.reader(file, delimiter=persister.delimiter)
-            next(reader)    # Skip packet version
-            header = next(reader)
-        self.assertEqual(header, self.ROCKET_PACKET_FIELD_NAMES)
+        self.persister = CsvDataPersister()
 
     def test_save_should_write_packet_version_on_first_line(self):
-        persister = CsvDataPersister()
+        self.persister.save(self.TEMPORARY_FILENAME, self.ROCKET_PACKET_VERSION, self.ROCKET_PACKET_FIELD_NAMES,
+                            self.ALL_ROCKET_PACKETS_FIELDS)
 
-        persister.save(self.FILENAME, self.ROCKET_PACKETS, self.rocket_packet_parser)
+        with open(self.TEMPORARY_FILENAME, newline=self.persister.newline) as file:
+            reader = csv.reader(file, delimiter=self.persister.delimiter)
+            version_line = next(reader)
+        self.assertEquals(version_line[0], str(self.ROCKET_PACKET_VERSION))
 
-        with open(self.FILENAME, newline=persister.newline) as file:
-            reader = csv.reader(file, delimiter=persister.delimiter)
-            format_line = next(reader)
-        self.assertEquals(format_line[0], str(self.ROCKET_PACKET_VERSION))
+    def test_save_should_write_rocketPacket_field_names_as_header(self):
+        self.persister.save(self.TEMPORARY_FILENAME, self.ROCKET_PACKET_VERSION, self.ROCKET_PACKET_FIELD_NAMES,
+                            self.ALL_ROCKET_PACKETS_FIELDS)
+
+        with open(self.TEMPORARY_FILENAME, newline=self.persister.newline) as file:
+            reader = csv.reader(file, delimiter=self.persister.delimiter)
+            next(reader)    # Skip packet version
+            headers = next(reader)
+        self.assertEqual(headers, self.ROCKET_PACKET_FIELD_NAMES)
+
+    def test_load_should_return_rocket_packet_version_loaded_from_first_line(self):
+        version, _ = self.persister.load(self.TEST_FILENAME)
+
+        self.assertEquals(version, 2018)
+
+    def test_load_should_return_rocket_packets_fields(self):
+        _, rocket_packets_fields = self.persister.load(self.TEST_FILENAME)
+
+        self.assertEquals(len(rocket_packets_fields), 3)
+        self.assertEquals(len(rocket_packets_fields[0]), 23)
 
     def test_save_load(self):
-        persister = CsvDataPersister()
+        self.persister.save(self.TEMPORARY_FILENAME, self.ROCKET_PACKET_VERSION, self.ROCKET_PACKET_FIELD_NAMES,
+                            self.ALL_ROCKET_PACKETS_FIELDS)
 
-        persister.save(self.FILENAME, self.ROCKET_PACKETS, self.rocket_packet_parser)
+        version, loaded_packets_fields = self.persister.load(self.TEMPORARY_FILENAME)
 
-        loaded_packets = persister.load(self.FILENAME, self.rocket_packet_parser)
-        self.assertEqual(loaded_packets, self.ROCKET_PACKETS)
+        self.assertEqual(version, self.ROCKET_PACKET_VERSION)
+        self.assertEqual(loaded_packets_fields, self.ALL_ROCKET_PACKETS_FIELDS)
 
     def tearDown(self):
-        self.ROCKET_PACKETS = []
+        self.ALL_ROCKET_PACKETS_FIELDS = []
         try:
-            os.remove(self.FILENAME)
+            os.remove(self.TEMPORARY_FILENAME)
         except OSError as e:
             if e.errno != errno.ENOENT:
                 raise
