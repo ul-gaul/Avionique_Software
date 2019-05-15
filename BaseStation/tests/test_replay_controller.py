@@ -9,7 +9,6 @@ from tests.builders.config_builder import ConfigBuilder
 
 
 class ReplayControllerTest(unittest.TestCase):
-
     PACKET_COUNT = 0
     A_FILENAME = "path/to/file.csv"
     ALTITUDE_DATA = [0, 5000, 10000]

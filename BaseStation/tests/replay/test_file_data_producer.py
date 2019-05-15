@@ -2,10 +2,10 @@ import threading
 import unittest
 from unittest.mock import MagicMock, patch
 
-from src.data_persister import DataPersister
 from src.replay.file_data_producer import FileDataProducer
 from src.replay.playback_state import PlaybackState
-from src.rocket_packet import RocketPacket
+from src.rocket_packet.rocket_packet import RocketPacket
+from src.rocket_packet.rocket_packet_repository import RocketPacketRepository
 
 
 class FileDataProducerTest(unittest.TestCase):
@@ -30,11 +30,11 @@ class FileDataProducerTest(unittest.TestCase):
         def fake_load(filename):
             return self.data if filename == self.SAVE_FILE_PATH else []
 
-        self.data_persister = DataPersister()
-        self.data_persister.load = MagicMock(side_effect=fake_load)
+        self.rocket_packet_repository = MagicMock(spec=RocketPacketRepository)
+        self.rocket_packet_repository.load.side_effect = fake_load
         self.playback_state = MagicMock(spec=PlaybackState)
 
-        self.file_data_producer = FileDataProducer(self.data_persister, self.DATA_LOCK, self.PLAYBACK_LOCK,
+        self.file_data_producer = FileDataProducer(self.rocket_packet_repository, self.DATA_LOCK, self.PLAYBACK_LOCK,
                                                    self.playback_state)
 
     def test_get_total_packet_count_should_return_total_number_of_packets(self):
@@ -44,7 +44,7 @@ class FileDataProducerTest(unittest.TestCase):
 
         self.assertEqual(num_packets, len(self.data))
 
-    def test_load_should_load_data_from_data_persister(self):
+    def test_load_should_load_data_from_repository(self):
         self.file_data_producer.load(self.SAVE_FILE_PATH)
 
         self.assertEqual(self.file_data_producer.all_rocket_packets, self.data)

@@ -6,7 +6,7 @@ from src.data_processing.angular_position_calculator import AngularCalculator
 from src.data_processing.apogee_calculator import ApogeeCalculator
 from src.data_processing.consumer import Consumer
 from src.data_producer import DataProducer
-from src.rocket_packet import RocketPacket
+from src.rocket_packet.rocket_packet import RocketPacket
 
 
 class ConsumerTest(unittest.TestCase):

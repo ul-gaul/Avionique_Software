@@ -6,7 +6,6 @@ from src.ui.replay_widget import ReplayWidget
 
 
 class ReplayController(Controller):
-
     def __init__(self, replay_widget: ReplayWidget, file_data_producer: FileDataProducer, consumer: Consumer,
                  config: Config):
         super().__init__(replay_widget, file_data_producer, consumer, config)

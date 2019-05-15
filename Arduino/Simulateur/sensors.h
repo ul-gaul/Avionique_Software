@@ -19,6 +19,7 @@ float accel(int timestamp);
 float altitude(int timestamp);
 float latitude(int timestamp);
 float longitude(int timestamp);
+uint32_t pressure(int timestamp);
 float temperature1(int timestamp);
 float temperature2(int timestamp);
 float quaternionA(int timestamp);
@@ -31,5 +32,7 @@ float payloadY(int timestamp);
 float payloadZ(int timestamp);
 float magnetX(int timestamp);
 float magnetZ(int timestamp);
+
+byte computeCheckSum(void* data, size_t numBytes);
 
 #endif

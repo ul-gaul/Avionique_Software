@@ -1,3 +1,4 @@
+2017
 "time_stamp","angular_speed_x","angular_speed_y","angular_speed_z","acceleration_x","acceleration_y","acceleration_z","altitude","latitude","longitude","temperature","quaternion_w","quaternion_x","quaternion_y","quaternion_z","acquisition_board_state_1","acquisition_board_state_2","acquisition_board_state_3","power_supply_state_1","power_supply_state_2","payload_board_state_1","voltage","current"
 0,0.0,0.0,2.0,0.0,0.0,-9.800000190734863,0.0,32.99052429199219,-106.97525024414062,50.0,0,0,0,0,0,0,0,0,0,0,0,0
 1,0.0,0.0,2.0,0.0,0.0,-9.800000190734863,0.0,32.99052429199219,-106.97525024414062,49.9605712890625,0,0,0,0,0,0,0,0,0,0,0,0
