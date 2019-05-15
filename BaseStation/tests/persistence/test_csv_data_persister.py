@@ -8,7 +8,7 @@ from src.rocket_packet.rocket_packet import RocketPacket
 
 
 class CsvDataPersisterTest(unittest.TestCase):
-    TEST_FILENAME = "resources/test.csv"
+    TEST_FILENAME = "tests/resources/test.csv"
     TEMPORARY_FILENAME = "tmp.csv"
     NUMBER_OF_FIELDS = len(RocketPacket.keys())
     ALL_ROCKET_PACKETS_FIELDS = []
