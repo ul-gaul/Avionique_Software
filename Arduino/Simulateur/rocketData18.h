@@ -2,6 +2,7 @@
 #define _rocketData18_h
 
 #include "Arduino.h"
+#include "sensors.h"
 
 typedef struct
 {
@@ -28,5 +29,7 @@ typedef struct
   RocketData18 rocketData;
   byte checksum;
 } RocketPacket18;
+
+void createRocketPacket2018(RocketPacket18& rp, int timestamp);
 
 #endif

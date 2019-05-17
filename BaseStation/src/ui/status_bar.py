@@ -14,11 +14,14 @@ class StatusBar(QStatusBar, MessageListener):
         self.addWidget(self.label)
 
     def notify(self, message: str, message_type: MessageType):
-        self.clearMessage()
-        self.label.hide()
+        self.clear()
 
         if message_type == MessageType.INFO:
             self.showMessage(message, 3000)
         else:
             self.label.setText(message)
             self.label.show()
+
+    def clear(self):
+        self.clearMessage()
+        self.label.hide()

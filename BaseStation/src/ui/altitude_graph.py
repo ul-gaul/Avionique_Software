@@ -24,8 +24,7 @@ class AltitudeGraph(PlotWidget):
         self.current_altitude_point = self.plotItem.scatterPlot([], [], pxMode=True, size=8, brush=mkBrush(color='r'))
         self.addItem(self.current_altitude_text, ignoreBounds=True)
 
-        self.simulation_curve = None
-
+        self.simulation_curve = self.plot([], [], pen=mkPen(color='b', width=3))
         self.apogee = 0
         self.draw_apogee_plot = True
         self.apogee_text = TextItem("", anchor=(1, 1), color=(0, 0, 0, 0))
@@ -47,17 +46,13 @@ class AltitudeGraph(PlotWidget):
             self.altitude_curve.setData(values)
             self.current_altitude_point.setData([nb_points - 1], [self.current_altitude])
             self.current_altitude_text.setPos(nb_points - 1, self.current_altitude)
-
             self.current_altitude_text.setColor(color='k')
 
     def set_target_altitude(self, altitude):
         self.plotItem.addLine(y=altitude, pen=mkPen(color=(15, 236, 20), width=3, style=QtCore.Qt.DashDotLine))
 
     def show_simulation(self, time: list, altitude: list):
-        if self.simulation_curve is None:
-            self.simulation_curve = self.plot(time, altitude, pen=mkPen(color='b', width=3))
-        else:
-            self.simulation_curve.setData(time, altitude)
+        self.simulation_curve.setData(time, altitude)
 
     def draw_apogee(self, values: list):
         if len(values) == 2:
@@ -72,7 +67,25 @@ class AltitudeGraph(PlotWidget):
             self.apogee_text.setPos(apogee_index, self.apogee)
         else:
             if not self.draw_apogee_plot:
-                self.apogee_text.setColor(color=(0, 0, 0, 0))
-                self.apogee_point.clear()
+                self.reset_apogee()
 
-                self.draw_apogee_plot = True
+    def reset(self):
+        self.reset_altitude()
+        self.reset_apogee()
+        self.reset_simulation()
+
+    def reset_altitude(self):
+        self.altitude_curve.clear()
+        self.current_altitude = 0
+        self.current_altitude_point.clear()
+        self.current_altitude_text.setPos(0, self.current_altitude)
+        self.current_altitude_text.setColor(color=(0, 0, 0, 0))
+
+    def reset_apogee(self):
+        self.apogee = 0
+        self.apogee_point.clear()
+        self.apogee_text.setColor(color=(0, 0, 0, 0))
+        self.draw_apogee_plot = True
+
+    def reset_simulation(self):
+        self.simulation_curve.clear()

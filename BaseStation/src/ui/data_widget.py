@@ -11,14 +11,14 @@ from src.ui.led import Led
 from src.ui.utils import *
 from OpenGL.GL import *
 from OpenGL.GLU import *
-import pyqtgraph.opengl as gl
-import numpy as np
+
+from src.data_processing.quaternion import Quaternion
 
 
 # FIXME: make this class abstract
 class DataWidget(QtWidgets.QWidget):
 
-    def __init__(self, parent):
+    def __init__(self, parent=None):
         super().__init__(parent)
         self.set_black_on_white_graph_colors()
         self.thermometer = None
@@ -218,8 +218,20 @@ class DataWidget(QtWidgets.QWidget):
     def show_simulation(self, simulation: OpenRocketSimulation):
         self.altitude_graph.show_simulation(simulation.time, simulation.altitude)
 
-    def rotate_rocket_model(self, w, x, y, z):
-        self.glRocket.rotate_rocket(w, x, y, z)
+    def set_rocket_model_rotation(self, rot: Quaternion):
+        self.glRocket.set_rocket_model_rotation(rot)
 
     def set_thermometer_value(self, temperature: float):
         self.thermometer.set_temperature(temperature)
+
+    def reset(self):
+        self.altitude_graph.reset()
+        self.positions_on_map.clear()
+        self.set_rocket_model_rotation(Quaternion())
+        self.reset_leds()
+        self.set_thermometer_value(0)
+        self.voltage_curve.clear()
+
+    def reset_leds(self):
+        for led in self.leds:
+            led.set_state(False)

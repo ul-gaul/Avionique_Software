@@ -2,7 +2,7 @@ import threading
 import unittest
 
 from src.data_producer import DataProducer
-from src.rocket_packet import RocketPacket
+from src.rocket_packet.rocket_packet import RocketPacket
 
 
 class DataProducerTest(unittest.TestCase):
