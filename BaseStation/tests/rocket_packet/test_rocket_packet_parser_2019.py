@@ -76,15 +76,22 @@ class RocketPacketParser2019Test(unittest.TestCase):
         rocket_packet = RocketPacket()
 
         rocket_packet.time_stamp = self.TIME_STAMP
-        rocket_packet.angular_speed_x = self.ANGULAR_SPEED_X
-        rocket_packet.angular_speed_y = self.ANGULAR_SPEED_Y
-        rocket_packet.angular_speed_z = self.ANGULAR_SPEED_Z
+        rocket_packet.longitude = self.LONGITUDE
+        rocket_packet.latitude = self.LATITUDE
+        rocket_packet.NSIndicator = self.NS_INDICATOR
+        rocket_packet.EWIndicator = self.EW_INDICATOR
+        rocket_packet.UTCtime = self.UTC_TIME
+        rocket_packet.altitude = self.ALTITUDE
+        rocket_packet.temperature = self.TEMPERATURE
+        rocket_packet.pressure = self.PRESSURE
         rocket_packet.acceleration_x = self.ACCELERATION_X
         rocket_packet.acceleration_y = self.ACCELERATION_Y
         rocket_packet.acceleration_z = self.ACCELERATION_Z
-        rocket_packet.altitude = self.ALTITUDE
-        rocket_packet.latitude = self.LATITUDE
-        rocket_packet.longitude = self.LONGITUDE
-        rocket_packet.temperature = self.TEMPERATURE
+        rocket_packet.magnetometer_x = self.MAGNETOMETER_X
+        rocket_packet.magnetometer_y = self.MAGNETOMETER_Y
+        rocket_packet.magnetometer_z = self.MAGNETOMETER_Z
+        rocket_packet.angular_speed_x = self.ANGULAR_SPEED_X
+        rocket_packet.angular_speed_y = self.ANGULAR_SPEED_Y
+        rocket_packet.angular_speed_z = self.ANGULAR_SPEED_Z
 
         return rocket_packet

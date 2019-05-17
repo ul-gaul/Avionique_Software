@@ -22,8 +22,9 @@ class RocketPacketParser2019(RocketPacketParser):
 
     def to_list(self, packet: RocketPacket) -> list:
         return [packet.time_stamp, packet.latitude, packet.longitude, b'N', b'W', 0.0, packet.altitude, 0,
-                packet.temperature, 0, 0, 0, packet.acceleration_x, packet.acceleration_y, packet.acceleration_z, 0, 0,
-                0, packet.angular_speed_x, packet.angular_speed_y, packet.angular_speed_z]
+                packet.temperature, 0, 0, 0, packet.acceleration_x, packet.acceleration_y, packet.acceleration_z,
+                packet.magnetometer_x, packet.magnetometer_y, packet.magnetometer_z, packet.angular_speed_x,
+                packet.angular_speed_y, packet.angular_speed_z]
 
     def from_list(self, data: list) -> RocketPacket:
         rocket_packet = RocketPacket()
@@ -32,13 +33,21 @@ class RocketPacketParser2019(RocketPacketParser):
         rocket_packet.latitude = data[1]
         rocket_packet.longitude = data[2]
 
-        rocket_packet.altitude = data[6]
+        rocket_packet.NSIndicator = data[3]
+        rocket_packet.EWIndicator = data[4]
+        rocket_packet.UTCtime = data[5]
 
+        rocket_packet.altitude = data[6]
+        rocket_packet.pressure = data[7]
         rocket_packet.temperature = data[8]
 
         rocket_packet.acceleration_x = data[12]
         rocket_packet.acceleration_y = data[13]
         rocket_packet.acceleration_z = data[14]
+
+        rocket_packet.magnetometer_x = data[15]
+        rocket_packet.magnetometer_y = data[16]
+        rocket_packet.magnetometer_z = data[17]
 
         rocket_packet.angular_speed_x = data[18]
         rocket_packet.angular_speed_y = data[19]
