@@ -44,7 +44,6 @@ class ConfigController:
                         continue
                     else:
                         settings.remove(settings[doublon_pos])
-            print(settings)
         return settings
 
     def get_dynamic_sections(self):
@@ -86,8 +85,3 @@ class ConfigController:
             except (OSError, serial.SerialException):
                 pass
         return result
-
-    @staticmethod
-    def _infer_type(value_str):
-        """Deviner le type de la valeur selon une certaine heuristique"""
-        pass
