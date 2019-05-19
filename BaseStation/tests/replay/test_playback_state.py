@@ -76,3 +76,17 @@ class PlaybackStateTest(unittest.TestCase):
 
         self.assertEqual(playback_state.get_mode(), PlaybackState.Mode.BACKWARD)
         self.assertEqual(playback_state.get_speed(), PlaybackState.max_speed_factor)
+
+    def test_reset_should_set_mode_forward(self):
+        playback_state = PlaybackState(mode=PlaybackState.Mode.BACKWARD)
+
+        playback_state.reset()
+
+        self.assertTrue(playback_state.is_going_forward())
+
+    def test_reset_should_set_normal_speed(self):
+        playback_state = PlaybackState(speed_factor=PlaybackState.max_speed_factor)
+
+        playback_state.reset()
+
+        self.assertEqual(playback_state.get_speed(), 1)

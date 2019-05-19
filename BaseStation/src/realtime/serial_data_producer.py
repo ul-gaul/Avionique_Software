@@ -5,10 +5,10 @@ import threading
 
 import serial
 
-from src.data_persister import DataPersister
 from src.data_producer import DataProducer
 from src.realtime.checksum_validator import ChecksumValidator
-from src.realtime.rocket_packet_parser import RocketPacketParser
+from src.rocket_packet.rocket_packet_parser import RocketPacketParser
+from src.rocket_packet.rocket_packet_repository import RocketPacketRepository
 
 
 class NoConnectedDeviceException(Exception):
@@ -16,11 +16,11 @@ class NoConnectedDeviceException(Exception):
 
 
 class SerialDataProducer(DataProducer):
-
-    def __init__(self, lock: threading.Lock, data_persister: DataPersister, rocket_packet_parser: RocketPacketParser,
-                 checksum_validator: ChecksumValidator, baudrate=9600, start_character=b's', sampling_frequency=1.0):
+    def __init__(self, lock: threading.Lock, rocket_packet_repository: RocketPacketRepository,
+                 rocket_packet_parser: RocketPacketParser, checksum_validator: ChecksumValidator, baudrate=9600,
+                 start_character=b's', sampling_frequency=1.0):
         super().__init__(lock)
-        self.data_persister = data_persister
+        self.rocket_packet_repository = rocket_packet_repository
         self.rocket_packet_parser = rocket_packet_parser
         self.checksum_validator = checksum_validator
         self.unsaved_data = False
@@ -34,10 +34,8 @@ class SerialDataProducer(DataProducer):
         self.num_bytes_to_read = self.rocket_packet_parser.get_number_of_bytes() + 1
 
     def start(self):
-        self.available_rocket_packets.clear()
-
         ports = self.detect_serial_ports()
-        if len(ports) <= 0:
+        if not ports:
             raise NoConnectedDeviceException("Aucun récepteur connecté")
         self.port.port = ports[0]
         self.port.open()
@@ -58,20 +56,26 @@ class SerialDataProducer(DataProducer):
                         print(rocket_packet)
                         self.add_rocket_packet(rocket_packet)
                         self.unsaved_data = True
-                    except struct.error:
+                    except struct.error as e:
                         """
                         This error can occur if we don't read enough bytes on the serial port or if the packet format is
                         incorrect.
                         """
-                        print("Invalid packet")
+                        print("Invalid packet: " + str(e))
         self.port.close()
 
     def save(self, filename: str):
-        self.data_persister.save(filename, self.available_rocket_packets)
+        self.rocket_packet_repository.save(filename, self.available_rocket_packets, self.rocket_packet_parser)
         self.unsaved_data = False
 
     def has_unsaved_data(self):
         return self.unsaved_data
+
+    def clear_rocket_packets(self):
+        self.lock.acquire()
+        self.available_rocket_packets.clear()
+        self.unsaved_data = False
+        self.lock.release()
 
     @staticmethod
     def detect_serial_ports():

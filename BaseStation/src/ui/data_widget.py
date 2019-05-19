@@ -12,6 +12,8 @@ from src.ui.utils import *
 from OpenGL.GL import *
 from OpenGL.GLU import *
 
+from src.data_processing.quaternion import Quaternion
+
 
 # FIXME: make this class abstract
 class DataWidget(QtWidgets.QWidget):
@@ -216,8 +218,8 @@ class DataWidget(QtWidgets.QWidget):
     def show_simulation(self, simulation: OpenRocketSimulation):
         self.altitude_graph.show_simulation(simulation.time, simulation.altitude)
 
-    def rotate_rocket_model(self, w, x, y, z):
-        self.glRocket.rotate_rocket(w, x, y, z)
+    def set_rocket_model_rotation(self, rot: Quaternion):
+        self.glRocket.set_rocket_model_rotation(rot)
 
     def set_thermometer_value(self, temperature: float):
         self.thermometer.set_temperature(temperature)
@@ -225,7 +227,7 @@ class DataWidget(QtWidgets.QWidget):
     def reset(self):
         self.altitude_graph.reset()
         self.positions_on_map.clear()
-        self.rotate_rocket_model(0, 0, 0, 0)
+        self.set_rocket_model_rotation(Quaternion())
         self.reset_leds()
         self.set_thermometer_value(0)
         self.voltage_curve.clear()

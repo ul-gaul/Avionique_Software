@@ -6,10 +6,12 @@ from src.ui.header import Header
 
 
 class HomeWidget(QtWidgets.QWidget):
-    def __init__(self, parent=None):
+    def __init__(self, real_time_callback, replay_callback, parent=None):
         super().__init__(parent)
         self.real_time_button = None
+        self.real_time_callback = real_time_callback
         self.replay_button = None
+        self.replay_callback = replay_callback
         self.setup_ui()
 
     def setup_ui(self):
@@ -28,12 +30,12 @@ class HomeWidget(QtWidgets.QWidget):
         self.buttons_layout.setObjectName("buttons_layout")
         left_spacer = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.buttons_layout.addItem(left_spacer)
-        self.real_time_button = self._create_button("real_time_button", self.parent().open_real_time)
+        self.real_time_button = self._create_button("real_time_button", self.real_time_callback)
         self.buttons_layout.addWidget(self.real_time_button)
         middle_spacer = QtWidgets.QSpacerItem(180, 20, QtWidgets.QSizePolicy.MinimumExpanding,
                                               QtWidgets.QSizePolicy.Minimum)
         self.buttons_layout.addItem(middle_spacer)
-        self.replay_button = self._create_button("replay_button", self.parent().open_replay)
+        self.replay_button = self._create_button("replay_button", self.replay_callback)
         self.buttons_layout.addWidget(self.replay_button)
         right_spacer = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.buttons_layout.addItem(right_spacer)

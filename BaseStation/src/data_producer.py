@@ -1,7 +1,7 @@
 import abc
 import threading
 
-from src.rocket_packet import RocketPacket
+from src.rocket_packet.rocket_packet import RocketPacket
 
 
 class DataProducer:
@@ -33,6 +33,10 @@ class DataProducer:
         self.lock.acquire()
         self.available_rocket_packets.append(rocket_packet)
         self.lock.release()
+
+    @abc.abstractmethod
+    def clear_rocket_packets(self):
+        pass
 
     @abc.abstractmethod
     def run(self):

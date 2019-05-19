@@ -5,6 +5,9 @@ from src.ui.control_bar import ControlBar
 
 class ReplayWidget(DataWidget):
 
+    PLAY_TEXT = "Play"
+    PAUSE_TEXT = "Pause"
+
     def __init__(self, parent=None):
         super().__init__(parent)
         self.control_bar = ControlBar(self, "control_bar")
@@ -13,7 +16,7 @@ class ReplayWidget(DataWidget):
         self.rewind_button = QPushButton(self.widget)
         self.init_button(self.rewind_button, "rewind_button", "RW", self.rewind)
         self.play_pause_button = QPushButton(self.widget)
-        self.init_button(self.play_pause_button, "play_pause_button", "Play", self.play)
+        self.init_button(self.play_pause_button, "play_pause_button", self.PLAY_TEXT, self.on_play_pause)
         self.fast_forward_button = QPushButton(self.widget)
         self.init_button(self.fast_forward_button, "fast_forward_button", "FF", self.fast_forward)
         self.speedLabel = QLabel()
@@ -28,21 +31,9 @@ class ReplayWidget(DataWidget):
         except KeyError:
             pass
 
-    def play(self):
-        self.play_pause_button.setText('Pause')
-        self.play_pause_button.clicked.disconnect(self.play)
-        self.play_pause_button.clicked.connect(self.pause)
+    def on_play_pause(self):
         try:
-            self.callbacks["play"]()
-        except KeyError:
-            pass
-
-    def pause(self):
-        self.play_pause_button.setText('Play')
-        self.play_pause_button.clicked.disconnect(self.pause)
-        self.play_pause_button.clicked.connect(self.play)
-        try:
-            self.callbacks["pause"]()
+            self.callbacks["play_pause"]()
         except KeyError:
             pass
 
@@ -51,6 +42,12 @@ class ReplayWidget(DataWidget):
             self.callbacks["fast_forward"]()
         except KeyError:
             pass
+
+    def set_play_button_text(self):
+        self.play_pause_button.setText(self.PLAY_TEXT)
+
+    def set_pause_button_text(self):
+        self.play_pause_button.setText(self.PAUSE_TEXT)
 
     def update_replay_speed_text(self, speed):
         self.speedLabel.setText('{}x'.format(speed))

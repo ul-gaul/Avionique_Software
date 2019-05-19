@@ -22,5 +22,5 @@ def set_size_policy(widget: QWidget, horizontal_policy: QSizePolicy, vertical_po
 
 
 def read_stylesheet(path: str):
-    with open(path) as f:
+    with open(path, 'r') as f:
         return f.read()

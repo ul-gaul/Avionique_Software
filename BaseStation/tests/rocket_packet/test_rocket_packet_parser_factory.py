@@ -1,8 +1,9 @@
 import unittest
 
-from src.realtime.rocket_packet_parser_2017 import RocketPacketParser2017
-from src.realtime.rocket_packet_parser_2018 import RocketPacketParser2018
-from src.realtime.rocket_packet_parser_factory import RocketPacketParserFactory, RocketPacketVersionException
+from src.rocket_packet.rocket_packet_parser_2017 import RocketPacketParser2017
+from src.rocket_packet.rocket_packet_parser_2018 import RocketPacketParser2018
+from src.rocket_packet.rocket_packet_parser_2019 import RocketPacketParser2019
+from src.rocket_packet.rocket_packet_parser_factory import RocketPacketParserFactory, RocketPacketVersionException
 
 
 class RocketPacketParserFactoryTest(unittest.TestCase):
@@ -19,6 +20,11 @@ class RocketPacketParserFactoryTest(unittest.TestCase):
         parser = RocketPacketParserFactory.create(2018)
 
         self.assertTrue(isinstance(parser, RocketPacketParser2018))
+
+    def test_create_should_return_2019_parser_given_2019(self):
+        parser = RocketPacketParserFactory.create(2019)
+
+        self.assertTrue(isinstance(parser, RocketPacketParser2019))
 
     def test_create_should_raise_exception_given_invalid_version(self):
         self.assertRaises(RocketPacketVersionException, RocketPacketParserFactory.create,

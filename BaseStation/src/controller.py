@@ -1,3 +1,4 @@
+import abc
 import time
 from threading import Thread
 
@@ -12,8 +13,9 @@ from src.openrocket_simulation import OpenRocketSimulation, InvalidOpenRocketSim
 from src.ui.data_widget import DataWidget
 
 
-# FIXME: this class should be abstract
 class Controller(MessageSender):
+    __metaclass__ = abc.ABCMeta
+
     def __init__(self, data_widget: DataWidget, data_producer: DataProducer, consumer: Consumer, config: Config):
         super().__init__()
         self.data_widget = data_widget
@@ -65,7 +67,7 @@ class Controller(MessageSender):
         self.data_widget.draw_voltage(self.consumer["voltage"])
 
     def update_3d_model(self):
-        self.data_widget.rotate_rocket_model(*self.consumer.get_rocket_rotation())
+        self.data_widget.set_rocket_model_rotation(self.consumer.get_rocket_rotation())
 
     def update_leds(self):
         self.data_widget.set_led_state(1, self.consumer["acquisition_board_state_1"][-1])
@@ -94,3 +96,20 @@ class Controller(MessageSender):
             self.stop_thread()
 
         event.accept()
+
+    @abc.abstractmethod
+    def activate(self, filename: str) -> None:
+        """
+        Prepare the controller before its thread can be started. This method should be used for process-specific setup.
+        This is needed because controllers are not destroyed between processes, only activated/deactivated.
+        :param filename: The name of the flight data file loaded in replay mode. Not used in real time.
+        """
+        pass
+
+    @abc.abstractmethod
+    def deactivate(self) -> bool:
+        """
+        Stop all threads and leave the software in a safe state before closing or switching mode.
+        :return: A boolean that tells if the controller was deactivated successfully.
+        """
+        pass
