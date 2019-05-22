@@ -78,9 +78,9 @@ class RocketPacketParser2019Test(unittest.TestCase):
         rocket_packet.time_stamp = self.TIME_STAMP
         rocket_packet.longitude = self.LONGITUDE
         rocket_packet.latitude = self.LATITUDE
-        rocket_packet.NSIndicator = self.NS_INDICATOR
-        rocket_packet.EWIndicator = self.EW_INDICATOR
-        rocket_packet.UTCtime = self.UTC_TIME
+        rocket_packet.ns_indicator = self.NS_INDICATOR
+        rocket_packet.ew_indicator = self.EW_INDICATOR
+        rocket_packet.utc_time = self.UTC_TIME
         rocket_packet.altitude = self.ALTITUDE
         rocket_packet.temperature = self.TEMPERATURE
         rocket_packet.pressure = self.PRESSURE
