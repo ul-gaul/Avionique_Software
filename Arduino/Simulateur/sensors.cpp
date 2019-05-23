@@ -194,11 +194,11 @@ float magnetZ(int timestamp)
   }
   else if (timestamp < T_APOGEE * FREQUENCY)
   {
-    return 2 * sin(timestamp * M_PI / 10);;
+    return 2 * sin(timestamp * M_PI / 10);
   }
   else if (timestamp < T_PARACHUTE * FREQUENCY)
   {
-    return 5 * sin(timestamp * M_PI / 10);;
+    return 5 * sin(timestamp * M_PI / 10);
   }
   else
   {

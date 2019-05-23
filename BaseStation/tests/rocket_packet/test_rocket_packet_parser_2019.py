@@ -11,9 +11,9 @@ class RocketPacketParser2019Test(unittest.TestCase):
     LONGITUDE = -1076.0
     NS_INDICATOR = b'N'
     EW_INDICATOR = b'W'
-    UTC_TIME = 0.0
+    UTC_TIME = 2.0
     ALTITUDE = 10000.0
-    PRESSURE = 0
+    PRESSURE = 3600
     TEMPERATURE = 50.0
     ACCELERATION_X_UNCOMP = 0
     ACCELERATION_Y_UNCOMP = 0
@@ -21,9 +21,9 @@ class RocketPacketParser2019Test(unittest.TestCase):
     ACCELERATION_X = 0.5
     ACCELERATION_Y = 100.0
     ACCELERATION_Z = 0.5
-    MAGNETOMETER_X = 0
-    MAGNETOMETER_Y = 0
-    MAGNETOMETER_Z = 0
+    MAGNETOMETER_X = 10
+    MAGNETOMETER_Y = 20
+    MAGNETOMETER_Z = 30
     ANGULAR_SPEED_X = 1
     ANGULAR_SPEED_Y = 300
     ANGULAR_SPEED_Z = 2

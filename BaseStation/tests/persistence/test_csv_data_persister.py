@@ -8,7 +8,7 @@ from src.rocket_packet.rocket_packet import RocketPacket
 
 
 class CsvDataPersisterTest(unittest.TestCase):
-    TEST_FILENAME = "tests/resources/test2019.csv"
+    TEST_FILENAME = "tests/resources/test.csv"
     TEMPORARY_FILENAME = "tmp.csv"
     NUMBER_OF_FIELDS = len(RocketPacket.keys())
     ALL_ROCKET_PACKETS_FIELDS = []
@@ -46,7 +46,7 @@ class CsvDataPersisterTest(unittest.TestCase):
         _, rocket_packets_fields = self.persister.load(self.TEST_FILENAME)
 
         self.assertEqual(len(rocket_packets_fields), 3)
-        self.assertEqual(len(rocket_packets_fields[0]), len(self.ROCKET_PACKET_FIELD_NAMES))
+        self.assertEqual(len(rocket_packets_fields[0]), self.NUMBER_OF_FIELDS)
 
     def test_save_load(self):
         self.persister.save(self.TEMPORARY_FILENAME, self.ROCKET_PACKET_VERSION, self.ROCKET_PACKET_FIELD_NAMES,
