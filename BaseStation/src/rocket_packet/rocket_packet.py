@@ -17,13 +17,13 @@ class RocketPacket:
         self.acceleration_y = 0
         self.acceleration_z = 0
 
-        #magnetometre pression milli-gauss
+        # Magnetometre A/m
         self.magnetometer_x = 0
         self.magnetometer_y = 0
         self.magnetometer_z = 0
 
-        #time UTC
-        self.UTCtime = b''
+        # Time UTC
+        self.UTCtime = 0.0
 
         # Altitude en metres
         self.altitude = 0
@@ -43,7 +43,7 @@ class RocketPacket:
         self.quaternion_y = 0
         self.quaternion_z = 0
 
-        # etat des systemes
+        # Etat des systemes
         self.acquisition_board_state_1 = 0
         self.acquisition_board_state_2 = 0
         self.acquisition_board_state_3 = 0
@@ -51,7 +51,7 @@ class RocketPacket:
         self.power_supply_state_2 = 0
         self.payload_board_state_1 = 0
 
-        # donnees alimentation
+        # Donnees alimentation
         self.voltage = 0
         self.current = 0
 

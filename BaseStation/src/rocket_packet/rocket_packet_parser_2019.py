@@ -21,10 +21,10 @@ class RocketPacketParser2019(RocketPacketParser):
                 "magnetometer_z", "angular_speed_x", "angular_speed_y", "angular_speed_z"]
 
     def to_list(self, packet: RocketPacket) -> list:
-        return [packet.time_stamp, packet.latitude, packet.longitude, b'N', b'W', 0.0, packet.altitude, 0,
-                packet.temperature, 0, 0, 0, packet.acceleration_x, packet.acceleration_y, packet.acceleration_z,
-                packet.magnetometer_x, packet.magnetometer_y, packet.magnetometer_z, packet.angular_speed_x,
-                packet.angular_speed_y, packet.angular_speed_z]
+        return [packet.time_stamp, packet.latitude, packet.longitude, b'N', b'W', packet.UTCtime, packet.altitude,
+                packet.pressure, packet.temperature, 0, 0, 0, packet.acceleration_x, packet.acceleration_y,
+                packet.acceleration_z, packet.magnetometer_x, packet.magnetometer_y, packet.magnetometer_z,
+                packet.angular_speed_x, packet.angular_speed_y, packet.angular_speed_z]
 
     def from_list(self, data: list) -> RocketPacket:
         rocket_packet = RocketPacket()
