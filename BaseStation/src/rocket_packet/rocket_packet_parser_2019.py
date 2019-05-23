@@ -10,7 +10,6 @@ class RocketPacketParser2019(RocketPacketParser):
         super().__init__(2019, "<dddccdfIfHHHfffHHHHHH", 76)
 
     def parse(self, data: bytes):
-        # TODO: support all fields
         data_list = struct.unpack(self.format, data)
         return self.from_list(data_list)
 
@@ -21,10 +20,10 @@ class RocketPacketParser2019(RocketPacketParser):
                 "magnetometer_z", "angular_speed_x", "angular_speed_y", "angular_speed_z"]
 
     def to_list(self, packet: RocketPacket) -> list:
-        return [packet.time_stamp, packet.latitude, packet.longitude, b'N', b'W', packet.UTCtime, packet.altitude,
-                packet.pressure, packet.temperature, 0, 0, 0, packet.acceleration_x, packet.acceleration_y,
-                packet.acceleration_z, packet.magnetometer_x, packet.magnetometer_y, packet.magnetometer_z,
-                packet.angular_speed_x, packet.angular_speed_y, packet.angular_speed_z]
+        return [packet.time_stamp, packet.latitude, packet.longitude, packet.ns_indicator, packet.ew_indicator,
+                packet.utc_time, packet.altitude, packet.pressure, packet.temperature, 0, 0, 0, packet.acceleration_x,
+                packet.acceleration_y, packet.acceleration_z, packet.magnetometer_x, packet.magnetometer_y,
+                packet.magnetometer_z, packet.angular_speed_x, packet.angular_speed_y, packet.angular_speed_z]
 
     def from_list(self, data: list) -> RocketPacket:
         rocket_packet = RocketPacket()
@@ -33,9 +32,9 @@ class RocketPacketParser2019(RocketPacketParser):
         rocket_packet.latitude = data[1]
         rocket_packet.longitude = data[2]
 
-        rocket_packet.NSIndicator = data[3]
-        rocket_packet.EWIndicator = data[4]
-        rocket_packet.UTCtime = data[5]
+        rocket_packet.ns_indicator = data[3]
+        rocket_packet.ew_indicator = data[4]
+        rocket_packet.utc_time = data[5]
 
         rocket_packet.altitude = data[6]
         rocket_packet.pressure = data[7]

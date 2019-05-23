@@ -22,8 +22,8 @@ class RocketPacket:
         self.magnetometer_y = 0
         self.magnetometer_z = 0
 
-        # Time UTC
-        self.UTCtime = 0.0
+        # Temps UTC
+        self.utc_time = 0
 
         # Altitude en metres
         self.altitude = 0
@@ -31,8 +31,8 @@ class RocketPacket:
         # Coordonnees GPS en degres
         self.latitude = 0
         self.longitude = 0
-        self.NSIndicator = b''
-        self.EWIndicator = b''
+        self.ns_indicator = b''
+        self.ew_indicator = b''
 
         # Temperature en degres Celsius
         self.temperature = 0
@@ -86,9 +86,9 @@ class RocketPacket:
         self.magnetometer_y = data_list[24]
         self.magnetometer_z = data_list[25]
         self.pressure = data_list[26]
-        self.NSIndicator = data_list[27]
-        self.EWIndicator = data_list[28]
-        self.UTCtime = data_list[29]
+        self.ns_indicator = data_list[27]
+        self.ew_indicator = data_list[28]
+        self.utc_time = data_list[29]
 
     @staticmethod
     def keys():
@@ -97,7 +97,7 @@ class RocketPacket:
                 "quaternion_x", "quaternion_y", "quaternion_z", "acquisition_board_state_1",
                 "acquisition_board_state_2", "acquisition_board_state_3", "power_supply_state_1",
                 "power_supply_state_2", "payload_board_state_1", "voltage", "current", "magnetometer_x",
-                "magnetometer_y", "magnetometer_z", "pressure", "NSIndicator", "EWIndicator", "UTCtime"]
+                "magnetometer_y", "magnetometer_z", "pressure", "ns_indicator", "ew_indicator", "utc_time"]
 
     def items(self):
         return self.__dict__.items()
