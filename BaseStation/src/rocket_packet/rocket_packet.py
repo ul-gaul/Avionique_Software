@@ -17,7 +17,7 @@ class RocketPacket:
         self.acceleration_y = 0
         self.acceleration_z = 0
 
-        # Magnetometre A/m
+        # Champs magnetiques en milli-gauss
         self.magnetometer_x = 0
         self.magnetometer_y = 0
         self.magnetometer_z = 0
