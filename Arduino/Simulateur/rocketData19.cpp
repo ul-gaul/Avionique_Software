@@ -16,9 +16,9 @@ void createRocketPacket2019(RocketPacket19& rp, int timestamp) {
   rp.data.acc_x = 0;
   rp.data.acc_y = 0;
   rp.data.acc_z = accel(timestamp);
-  rp.data.mag_x = (uint16_t) magnetX(timestamp);
+  rp.data.mag_x = (int16_t) magnetX(timestamp);
   rp.data.mag_y = 0;
-  rp.data.mag_z = (uint16_t) magnetZ(timestamp);
+  rp.data.mag_z = (int16_t) magnetZ(timestamp);
   rp.data.x_gyro = 0;
   rp.data.y_gyro = 0;
   rp.data.z_gyro = 42;

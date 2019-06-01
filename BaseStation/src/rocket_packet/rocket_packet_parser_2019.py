@@ -7,11 +7,12 @@ from src.rocket_packet.rocket_packet_parser import RocketPacketParser
 class RocketPacketParser2019(RocketPacketParser):
 
     def __init__(self):
-        super().__init__(2019, "<dddccdfIfHHHfffHHHHHH", 76)
+        super().__init__(2019, "<dddccdfIfhhhfffhhhhhh", 76)
 
     def parse(self, data: bytes):
         # TODO: support all fields
         data_list = struct.unpack(self.format, data)
+        print(data_list)
         return self.from_list(data_list)
 
     def get_field_names(self):
