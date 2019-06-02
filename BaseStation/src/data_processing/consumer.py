@@ -1,12 +1,10 @@
 from src.data_processing.angular_position_calculator import AngularCalculator
 from src.data_processing.apogee_calculator import ApogeeCalculator
+from src.data_processing.coordinate_converter import CoordinateConverter
+from src.data_processing.quaternion import Quaternion
 from src.data_processing.utm_zone import UTMZone
-
-from src.data_processing.geo_coordinate_converter import GeoCoordinateConverter
 from src.data_producer import DataProducer
 from src.rocket_packet.rocket_packet import RocketPacket
-
-from src.data_processing.quaternion import Quaternion
 
 METERS2FEET = 3.28084
 CAMP_POSITION_MEASUREMENT_DELAY = 10  # in seconds
@@ -14,7 +12,8 @@ CAMP_POSITION_MEASUREMENT_DELAY = 10  # in seconds
 
 class Consumer:
 
-    def __init__(self, data_producer: DataProducer, sampling_frequency: float, apogee_calculator: ApogeeCalculator, angular_calculator: AngularCalculator):
+    def __init__(self, data_producer: DataProducer, sampling_frequency: float, apogee_calculator: ApogeeCalculator,
+                 angular_calculator: AngularCalculator):
         self.data_producer = data_producer
         self.sampling_frequency = sampling_frequency
         self.data = {}
@@ -27,7 +26,7 @@ class Consumer:
         self.data["apogee"] = []
         self.base_camp_easting = None
         self.base_camp_northing = None
-        self.coordinate_converter = GeoCoordinateConverter(UTMZone.zone_13S)
+        self.coordinate_converter = CoordinateConverter(UTMZone.zone_13S)
         self.apogee_calculator = apogee_calculator
         self.angular_calculator = angular_calculator
 
@@ -45,7 +44,8 @@ class Consumer:
                 self.manage_coordinates(packet)
 
             self.manage_apogee(self.data["altitude_feet"])
-            self.angular_calculator.integrate_all(self.data["angular_speed_x"], self.data["angular_speed_y"], self.data["angular_speed_z"])
+            self.angular_calculator.integrate_all(self.data["angular_speed_x"], self.data["angular_speed_y"],
+                                                  self.data["angular_speed_z"])
 
     def __getitem__(self, key):
         return self.data[key]
@@ -57,7 +57,7 @@ class Consumer:
             self.data["apogee"].append(rep[0])
             self.data["apogee"].append(rep[1])
 
-    def manage_coordinates(self, packet):
+    def manage_coordinates(self, packet: RocketPacket):
         easting, northing = self.coordinate_converter.from_long_lat_to_utm(packet.longitude, packet.latitude)
 
         num_packets_received = len(self.data["time_stamp"])
@@ -76,10 +76,12 @@ class Consumer:
             self.data["northing"].append(northing - self.base_camp_northing)
 
     def get_rocket_rotation(self):
-        return Quaternion.euler_radians_to_quaternion(self.angular_calculator.yaw, self.angular_calculator.pitch, self.angular_calculator.roll)
+        return Quaternion.euler_radians_to_quaternion(self.angular_calculator.yaw, self.angular_calculator.pitch,
+                                                      self.angular_calculator.roll)
 
     def get_rocket_last_quaternion(self):
-        return self.data["quaternion_w"][-1], self.data["quaternion_x"][-1], self.data["quaternion_y"][-1], self.data["quaternion_z"][-1]
+        return self.data["quaternion_w"][-1], self.data["quaternion_x"][-1], self.data["quaternion_y"][-1],\
+               self.data["quaternion_z"][-1]
 
     def get_rocket_last_angular_velocity(self):
         return self.data["angular_speed_x"][-1], self.data["angular_speed_y"][-1], self.data["angular_speed_z"][-1]
