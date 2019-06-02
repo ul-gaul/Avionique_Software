@@ -18,4 +18,4 @@ class RocketPacketParserFactory:
         elif rocket_packet_version == 2019:
             return RocketPacketParser2019()
         else:
-            raise RocketPacketVersionException("Invalid RocketPacket version: " + str(rocket_packet_version))
+            raise RocketPacketVersionException("Invalid RocketPacket version {}".format(rocket_packet_version))
