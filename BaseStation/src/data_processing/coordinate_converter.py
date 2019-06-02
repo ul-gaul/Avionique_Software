@@ -11,7 +11,7 @@ class CoordinateConverter:
         self.converter = Proj("+proj=utm +zone={0}, +north +ellps=WGS84 +datum=WGS84 +units=m +no_defs"
                               .format(utm_zone.value))
 
-    def from_long_lat_to_utm(self, longitude, latitude):
+    def from_long_lat_to_utm(self, latitude: float, longitude: float):
         return self.converter(longitude, latitude)
 
     @staticmethod

@@ -16,6 +16,7 @@ class Consumer:
                  angular_calculator: AngularCalculator):
         self.data_producer = data_producer
         self.sampling_frequency = sampling_frequency
+        self.rocket_packet_version = 2019
         self.data = {}
         self.create_keys_from_packet_format()
         self.data["altitude_feet"] = []
@@ -26,7 +27,7 @@ class Consumer:
         self.data["apogee"] = []
         self.base_camp_easting = None
         self.base_camp_northing = None
-        self.coordinate_converter = CoordinateConverter(UTMZone.zone_13S)
+        self.coordinate_converter = CoordinateConverter(UTMZone.zone_19u)
         self.apogee_calculator = apogee_calculator
         self.angular_calculator = angular_calculator
 
@@ -58,7 +59,13 @@ class Consumer:
             self.data["apogee"].append(rep[1])
 
     def manage_coordinates(self, packet: RocketPacket):
-        easting, northing = self.coordinate_converter.from_long_lat_to_utm(packet.longitude, packet.latitude)
+        latitude = packet.latitude
+        longitude = packet.longitude
+
+        if self.rocket_packet_version == 2019:
+            latitude, longitude = self.coordinate_converter.degree_decimal_minute_to_decimal_degree(latitude, longitude)
+
+        easting, northing = self.coordinate_converter.from_long_lat_to_utm(latitude, longitude)
 
         num_packets_received = len(self.data["time_stamp"])
 

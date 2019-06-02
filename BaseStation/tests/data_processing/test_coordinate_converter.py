@@ -4,6 +4,9 @@ from src.data_processing.coordinate_converter import CoordinateConverter
 
 
 class CoordinateConverterTest(unittest.TestCase):
+    """
+    UTM coordinates obtained from https://www.geoplaner.com/
+    """
 
     FLOATING_POINT_PRECISION = 6
 
