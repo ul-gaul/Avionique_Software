@@ -11,9 +11,9 @@ class RocketPacketParser2019Test(unittest.TestCase):
     LONGITUDE = -1076.0
     NS_INDICATOR = b'N'
     EW_INDICATOR = b'W'
-    UTC_TIME = 0.0
+    UTC_TIME = 2.0
     ALTITUDE = 10000.0
-    PRESSURE = 0
+    PRESSURE = 3600
     TEMPERATURE = 50.0
     ACCELERATION_X_UNCOMP = 0
     ACCELERATION_Y_UNCOMP = 0
@@ -21,9 +21,9 @@ class RocketPacketParser2019Test(unittest.TestCase):
     ACCELERATION_X = 0.5
     ACCELERATION_Y = 100.0
     ACCELERATION_Z = 0.5
-    MAGNETOMETER_X = 0
-    MAGNETOMETER_Y = 0
-    MAGNETOMETER_Z = 0
+    MAGNETOMETER_X = 10
+    MAGNETOMETER_Y = 20
+    MAGNETOMETER_Z = 30
     ANGULAR_SPEED_X = 1
     ANGULAR_SPEED_Y = 300
     ANGULAR_SPEED_Z = 2
@@ -76,15 +76,22 @@ class RocketPacketParser2019Test(unittest.TestCase):
         rocket_packet = RocketPacket()
 
         rocket_packet.time_stamp = self.TIME_STAMP
-        rocket_packet.angular_speed_x = self.ANGULAR_SPEED_X
-        rocket_packet.angular_speed_y = self.ANGULAR_SPEED_Y
-        rocket_packet.angular_speed_z = self.ANGULAR_SPEED_Z
+        rocket_packet.longitude = self.LONGITUDE
+        rocket_packet.latitude = self.LATITUDE
+        rocket_packet.ns_indicator = self.NS_INDICATOR
+        rocket_packet.ew_indicator = self.EW_INDICATOR
+        rocket_packet.utc_time = self.UTC_TIME
+        rocket_packet.altitude = self.ALTITUDE
+        rocket_packet.temperature = self.TEMPERATURE
+        rocket_packet.pressure = self.PRESSURE
         rocket_packet.acceleration_x = self.ACCELERATION_X
         rocket_packet.acceleration_y = self.ACCELERATION_Y
         rocket_packet.acceleration_z = self.ACCELERATION_Z
-        rocket_packet.altitude = self.ALTITUDE
-        rocket_packet.latitude = self.LATITUDE
-        rocket_packet.longitude = self.LONGITUDE
-        rocket_packet.temperature = self.TEMPERATURE
+        rocket_packet.magnetometer_x = self.MAGNETOMETER_X
+        rocket_packet.magnetometer_y = self.MAGNETOMETER_Y
+        rocket_packet.magnetometer_z = self.MAGNETOMETER_Z
+        rocket_packet.angular_speed_x = self.ANGULAR_SPEED_X
+        rocket_packet.angular_speed_y = self.ANGULAR_SPEED_Y
+        rocket_packet.angular_speed_z = self.ANGULAR_SPEED_Z
 
         return rocket_packet

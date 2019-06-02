@@ -6,7 +6,7 @@ void createRocketPacket2019(RocketPacket19& rp, int timestamp) {
   toDouble(longitude(timestamp), rp.data.longitude);
   rp.data.NSIndicator = 'N';
   rp.data.EWIndicator = 'W';
-  toDouble(-123.36, rp.data.UTCTime);
+  toDouble(123.36, rp.data.UTCTime);
   rp.data.altitude = altitude(timestamp);
   rp.data.pressure = pressure(timestamp);
   rp.data.temperature = temperature1(timestamp);
@@ -17,7 +17,7 @@ void createRocketPacket2019(RocketPacket19& rp, int timestamp) {
   rp.data.acc_y = 0;
   rp.data.acc_z = accel(timestamp);
   rp.data.mag_x = (int16_t) magnetX(timestamp);
-  rp.data.mag_y = 0;
+  rp.data.mag_y = 4321;
   rp.data.mag_z = (int16_t) magnetZ(timestamp);
   rp.data.x_gyro = 0;
   rp.data.y_gyro = 0;

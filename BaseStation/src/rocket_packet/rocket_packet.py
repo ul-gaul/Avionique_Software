@@ -17,12 +17,22 @@ class RocketPacket:
         self.acceleration_y = 0
         self.acceleration_z = 0
 
+        # Champs magnetiques en milli-gauss
+        self.magnetometer_x = 0
+        self.magnetometer_y = 0
+        self.magnetometer_z = 0
+
+        # Temps UTC
+        self.utc_time = 0
+
         # Altitude en metres
         self.altitude = 0
 
         # Coordonnees GPS en degres
         self.latitude = 0
         self.longitude = 0
+        self.ns_indicator = b''
+        self.ew_indicator = b''
 
         # Temperature en degres Celsius
         self.temperature = 0
@@ -33,7 +43,7 @@ class RocketPacket:
         self.quaternion_y = 0
         self.quaternion_z = 0
 
-        # etat des systemes
+        # Etat des systemes
         self.acquisition_board_state_1 = 0
         self.acquisition_board_state_2 = 0
         self.acquisition_board_state_3 = 0
@@ -41,7 +51,7 @@ class RocketPacket:
         self.power_supply_state_2 = 0
         self.payload_board_state_1 = 0
 
-        # donnees alimentation
+        # Donnees alimentation
         self.voltage = 0
         self.current = 0
 
@@ -72,7 +82,13 @@ class RocketPacket:
         self.payload_board_state_1 = data_list[20]
         self.voltage = data_list[21]
         self.current = data_list[22]
-        # TODO: add support for magnetometer
+        self.magnetometer_x = data_list[23]
+        self.magnetometer_y = data_list[24]
+        self.magnetometer_z = data_list[25]
+        self.pressure = data_list[26]
+        self.ns_indicator = data_list[27]
+        self.ew_indicator = data_list[28]
+        self.utc_time = data_list[29]
 
     @staticmethod
     def keys():
@@ -80,7 +96,8 @@ class RocketPacket:
                 "acceleration_y", "acceleration_z", "altitude", "latitude", "longitude", "temperature", "quaternion_w",
                 "quaternion_x", "quaternion_y", "quaternion_z", "acquisition_board_state_1",
                 "acquisition_board_state_2", "acquisition_board_state_3", "power_supply_state_1",
-                "power_supply_state_2", "payload_board_state_1", "voltage", "current"]
+                "power_supply_state_2", "payload_board_state_1", "voltage", "current", "magnetometer_x",
+                "magnetometer_y", "magnetometer_z", "pressure", "ns_indicator", "ew_indicator", "utc_time"]
 
     def items(self):
         return self.__dict__.items()
