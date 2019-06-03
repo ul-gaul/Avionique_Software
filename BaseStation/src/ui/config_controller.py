@@ -3,6 +3,8 @@ import sys
 import glob
 import serial
 
+from src.ui.setting_data import SettingData
+
 
 class ConfigController:
     def __init__(self, chemin_fichier):
@@ -24,34 +26,25 @@ class ConfigController:
         return self.config.sections()
 
     def get_sections(self):
-        return set(list(self.get_parsed_sections() + self.get_dynamic_sections()))
+        return set(self.get_parsed_sections() + self.get_dynamic_sections())
 
-    def get_settings(self, section_name=None):
-        settings = []
-        if section_name in self.get_parsed_sections():
-            settings += [
-                (name, (value, 'edit', None)) for (name, value) in self.config[section_name].items()
-                if name not in self.get_dynamic_sections()]
-        if section_name in self.get_dynamic_sections():
-            parsed_end = len(settings)
-            parsed_names = [name for (name, _) in settings[:parsed_end]]
-            settings += self.get_dynamic_settings(section_name)
-            if len(settings) > parsed_end:
-                for (name, _) in settings[parsed_end:]:
-                    try:
-                        doublon_pos = parsed_names.index(name)
-                    except ValueError:
-                        continue
-                    else:
-                        settings.remove(settings[doublon_pos])
-        return settings
+    def get_settings(self, section=None):
+        settings = {}
+        if section in self.get_parsed_sections():
+            settings = {
+                name: SettingData(name, value, section=section) for (name, value) in self.config[section].items()
+            }
+        if section in self.get_dynamic_sections():
+            settings.update(self.get_dynamic_settings(section))
+        return settings.values()
 
     def get_dynamic_sections(self):
         return ['serial_port']
 
     def get_dynamic_settings(self, section_name):
-        settings = {'serial_port': [
-            ('port_com', (self._get_serial_port_options(), 'list', 'Port COM'))]}
+        settings = {'serial_port': {
+            'port_com': SettingData('port_com', input_type='list', choices=self._get_serial_port_options(), section='serial_port')
+        }}
         return settings.get(section_name)
 
     def _get_serial_port_options(self):

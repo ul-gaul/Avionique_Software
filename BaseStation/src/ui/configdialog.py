@@ -5,6 +5,8 @@ from PyQt5.QtWidgets import (
 from PyQt5 import QtGui
 
 from src.ui.config_controller import ConfigController
+from src.ui.line_setting_input import LineSettingInput
+from src.ui.list_setting_input import ListSettingInput
 
 
 OTHER_SECTION = "__others__"
@@ -68,19 +70,15 @@ class ConfigDialog:
         for section_name in self.controller.get_sections():
             header = QLabel(section_name.upper()) if not section_name == OTHER_SECTION else None
             form = QFormLayout()
-            for name, (value, input_type, label) in self.controller.get_settings(section_name):
-                if input_type.endswith('list'):
-                    input_el = QListWidget()
-                    input_el.addItems(value)
+            self.inputs[section_name] = []
+            for setting in self.controller.get_settings(section_name):
+                if setting.type.endswith('list'):
+                    input_el = ListSettingInput(setting.name, setting.choices)
                 else:
-                    input_el = QLineEdit(value)
-                self.inputs[name] = {
-                    "section": section_name,
-                    "input": input_el,
-                    "type": input_type}
-                label_ = label or " ".join(name.split("_"))
-                form.addRow(QLabel(label_[0].capitalize() + "".join(label_[1:])),
-                            self.inputs[name]["input"])
+                    input_el = LineSettingInput(setting.name, setting.value)
+                self.inputs[section_name].append(input_el)
+                label_ = setting.label or " ".join(setting.name.split("_"))
+                form.addRow(QLabel(label_[0].capitalize() + "".join(label_[1:])), input_el.qt())
             if header is not None:
                 header.setProperty("SectionHeader", True)
             headers.append(header)
@@ -117,19 +115,13 @@ class ConfigDialog:
         self.window.close()
 
     def save(self):
-        for name, inputItem in self.inputs.items():
-            self.controller.set_value(
-                inputItem["section"], name, self._get_value(inputItem["input"], inputItem["type"]))
+        for section_name, inputs in self.inputs.items():
+            for i in inputs:
+                self.controller.set_value(section_name, i.get_name(), i.get_value())
         self.controller.save_to_file()
         QMessageBox.question(self.window, "Configuration", "Settings have been saved !",
                              QMessageBox.Ok, QMessageBox.Ok)
         self.close()
-
-    @staticmethod
-    def _get_value(input_el, input_type):
-        if input_type.endswith('list'):
-            return input_el.currentItem().text()
-        return input_el.text()
 
     def cancel(self):
         self.close()
