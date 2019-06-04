@@ -18,8 +18,8 @@ class ConfigDialog:
         self.set_stylesheet(os.path.join(os.getcwd(), "src/resources/configdialog.css"))
 
     def set_stylesheet(self, stylesheet_path):
-        file = open(stylesheet_path, "r")
-        self.stylesheet = file.read()
+        with open(stylesheet_path, "r") as f:
+            self.stylesheet = f.read()
 
     def _set_stylesheet(self):
         self.window.setStyleSheet(self.stylesheet)
