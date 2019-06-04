@@ -1,7 +1,7 @@
 import os
 from PyQt5.QtWidgets import (
-    QFormLayout, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QDialog,
-    QPushButton, QMessageBox, QListWidget)
+    QFormLayout, QVBoxLayout, QHBoxLayout, QLabel, QDialog,
+    QPushButton, QMessageBox)
 from PyQt5 import QtGui
 
 from src.ui.config_controller import ConfigController
