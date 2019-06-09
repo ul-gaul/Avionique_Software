@@ -5,7 +5,7 @@ from threading import Thread
 from PyQt5.QtGui import QCloseEvent
 
 from src.config import Config
-from src.data_processing.consumer import Consumer
+from src.data_processing.consumer_factory import ConsumerFactory
 from src.data_producer import DataProducer
 from src.message_sender import MessageSender
 from src.message_type import MessageType
@@ -16,16 +16,19 @@ from src.ui.data_widget import DataWidget
 class Controller(MessageSender):
     __metaclass__ = abc.ABCMeta
 
-    def __init__(self, data_widget: DataWidget, data_producer: DataProducer, consumer: Consumer, config: Config):
+    def __init__(self, data_widget: DataWidget, data_producer: DataProducer, consumer_factory: ConsumerFactory,
+                 config: Config):
         super().__init__()
         self.data_widget = data_widget
         self.is_running = False
         self.data_producer = data_producer
         self.target_altitude = config.target_altitude
         self.sampling_frequency = config.rocket_packet_config.sampling_frequency
-        self.consumer = consumer
+        self.consumer = None
+        self.consumer_factory = consumer_factory
         self.refresh_delay = 1.0 / config.gui_fps
         self.thread = None
+        self.current_config = config
 
     def add_open_rocket_simulation(self, filename):
         try:
@@ -96,6 +99,9 @@ class Controller(MessageSender):
             self.stop_thread()
 
         event.accept()
+
+    def create_new_consumer(self):
+        self.consumer = self.consumer_factory.create(self.data_producer, self.current_config)
 
     @abc.abstractmethod
     def activate(self, filename: str) -> None:

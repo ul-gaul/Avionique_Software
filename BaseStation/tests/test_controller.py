@@ -3,6 +3,8 @@ from unittest.mock import Mock, MagicMock, call, patch
 
 from src.controller import Controller
 from src.data_processing.consumer import Consumer
+from src.data_processing.consumer_factory import ConsumerFactory
+from src.data_processing.quaternion import Quaternion
 from src.data_producer import DataProducer
 from src.message_listener import MessageListener
 from src.message_type import MessageType
@@ -11,7 +13,6 @@ from src.ui.data_widget import DataWidget
 from tests.builders.config_builder import ConfigBuilder
 from tests.matchers import AnyStringWith
 
-from src.data_processing.quaternion import Quaternion
 
 class ControllerTest(unittest.TestCase):
 
@@ -34,17 +35,22 @@ class ControllerTest(unittest.TestCase):
         self.data_widget = Mock(spec=DataWidget)
         self.data_producer = Mock(spec=DataProducer)
         self.consumer = MagicMock(spec=Consumer)
+        self.consumer_factory = Mock(spec=ConsumerFactory)
+        self.consumer_factory.create.return_value = self.consumer
 
         config = ConfigBuilder().build()
 
-        self.controller = Controller(self.data_widget, self.data_producer, self.consumer, config)
+        self.controller = Controller(self.data_widget, self.data_producer, self.consumer_factory, config)
 
     def test_update_should_update_consumer(self):
+        self.controller.create_new_consumer()
+
         self.controller.update()
 
         self.consumer.update.assert_called_with()
 
     def test_update_should_update_plots_when_consumer_has_data(self):
+        self.controller.create_new_consumer()
         self.consumer.has_data.return_value = True
         self.setup_consumer_data()
 
@@ -56,6 +62,7 @@ class ControllerTest(unittest.TestCase):
         self.data_widget.draw_voltage.assert_called_with(self.VOLTAGE)
 
     def test_update_should_update_leds_when_consumer_has_data(self):
+        self.controller.create_new_consumer()
         self.consumer.has_data.return_value = True
         self.setup_consumer_data()
 
@@ -64,6 +71,7 @@ class ControllerTest(unittest.TestCase):
         self.assert_leds_updated()
 
     def test_update_should_update_thermometer_when_consumer_has_data(self):
+        self.controller.create_new_consumer()
         self.consumer.has_data.return_value = True
         self.consumer.get_average_temperature.return_value = self.TEMPERATURE
 
@@ -72,6 +80,7 @@ class ControllerTest(unittest.TestCase):
         self.data_widget.set_thermometer_value.assert_called_with(self.TEMPERATURE)
 
     def test_update_should_update_3d_model_when_consumer_has_data(self):
+        self.controller.create_new_consumer()
         self.consumer.has_data.return_value = True
         self.consumer.get_rocket_rotation.return_value = self.QUATERNION
 
@@ -80,6 +89,7 @@ class ControllerTest(unittest.TestCase):
         self.data_widget.set_rocket_model_rotation.assert_called_with(self.QUATERNION)
 
     def test_update_should_not_update_ui_when_consumer_has_no_data(self):
+        self.controller.create_new_consumer()
         self.consumer.has_data.return_value = False
 
         self.controller.update()
@@ -87,6 +97,8 @@ class ControllerTest(unittest.TestCase):
         self.assert_ui_not_updated()
 
     def test_update_should_clear_consumer(self):
+        self.controller.create_new_consumer()
+
         self.controller.update()
 
         self.consumer.clear.assert_called_with()
@@ -119,6 +131,11 @@ class ControllerTest(unittest.TestCase):
         self.controller.add_open_rocket_simulation(self.OPEN_ROCKET_SIMULATION_FILENAME)
 
         message_listener.notify.assert_called_with(AnyStringWith(error_message), MessageType.ERROR)
+
+    def test_create_new_controller_should_delegate_to_factory(self):
+        self.controller.create_new_consumer()
+
+        self.assertEqual(self.controller.consumer, self.consumer)
 
     def setup_consumer_data(self):
         data = {"altitude_feet": self.ALTITUDE, "apogee": self.APOGEE, "easting": self.EASTING,
