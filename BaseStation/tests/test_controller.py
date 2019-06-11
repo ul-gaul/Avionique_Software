@@ -30,6 +30,7 @@ class ControllerTest(unittest.TestCase):
     TEMPERATURE = 100
     QUATERNION = Quaternion(1, 2, 3, 4)
     OPEN_ROCKET_SIMULATION_FILENAME = "simulation.csv"
+    A_ROCKET_PACKET_VERSION = 2019
 
     def setUp(self):
         self.data_widget = Mock(spec=DataWidget)
@@ -41,16 +42,14 @@ class ControllerTest(unittest.TestCase):
         config = ConfigBuilder().build()
 
         self.controller = Controller(self.data_widget, self.data_producer, self.consumer_factory, config)
+        self.controller.create_new_consumer(self.A_ROCKET_PACKET_VERSION)
 
     def test_update_should_update_consumer(self):
-        self.controller.create_new_consumer()
-
         self.controller.update()
 
         self.consumer.update.assert_called_with()
 
     def test_update_should_update_plots_when_consumer_has_data(self):
-        self.controller.create_new_consumer()
         self.consumer.has_data.return_value = True
         self.setup_consumer_data()
 
@@ -62,7 +61,6 @@ class ControllerTest(unittest.TestCase):
         self.data_widget.draw_voltage.assert_called_with(self.VOLTAGE)
 
     def test_update_should_update_leds_when_consumer_has_data(self):
-        self.controller.create_new_consumer()
         self.consumer.has_data.return_value = True
         self.setup_consumer_data()
 
@@ -71,7 +69,6 @@ class ControllerTest(unittest.TestCase):
         self.assert_leds_updated()
 
     def test_update_should_update_thermometer_when_consumer_has_data(self):
-        self.controller.create_new_consumer()
         self.consumer.has_data.return_value = True
         self.consumer.get_average_temperature.return_value = self.TEMPERATURE
 
@@ -80,7 +77,6 @@ class ControllerTest(unittest.TestCase):
         self.data_widget.set_thermometer_value.assert_called_with(self.TEMPERATURE)
 
     def test_update_should_update_3d_model_when_consumer_has_data(self):
-        self.controller.create_new_consumer()
         self.consumer.has_data.return_value = True
         self.consumer.get_rocket_rotation.return_value = self.QUATERNION
 
@@ -89,7 +85,6 @@ class ControllerTest(unittest.TestCase):
         self.data_widget.set_rocket_model_rotation.assert_called_with(self.QUATERNION)
 
     def test_update_should_not_update_ui_when_consumer_has_no_data(self):
-        self.controller.create_new_consumer()
         self.consumer.has_data.return_value = False
 
         self.controller.update()
@@ -97,7 +92,6 @@ class ControllerTest(unittest.TestCase):
         self.assert_ui_not_updated()
 
     def test_update_should_clear_consumer(self):
-        self.controller.create_new_consumer()
 
         self.controller.update()
 
@@ -132,8 +126,10 @@ class ControllerTest(unittest.TestCase):
 
         message_listener.notify.assert_called_with(AnyStringWith(error_message), MessageType.ERROR)
 
-    def test_create_new_controller_should_delegate_to_factory(self):
-        self.controller.create_new_consumer()
+    def test_create_new_consumer_should_delegate_to_factory(self):
+        self.controller.consumer = None
+
+        self.controller.create_new_consumer(self.A_ROCKET_PACKET_VERSION)
 
         self.assertEqual(self.controller.consumer, self.consumer)
 

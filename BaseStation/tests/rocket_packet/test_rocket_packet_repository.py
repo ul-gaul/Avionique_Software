@@ -42,6 +42,13 @@ class RocketPacketRepositoryTest(TestCase):
         self.rocket_packet_parser_factory.create.return_value = self.rocket_packet_parser
         self.rocket_packet_parser.from_list.side_effect = [self.A_ROCKET_PACKET, self.ANOTHER_ROCKET_PACKET]
 
-        rocket_packets = self.rocket_packet_repository.load(self.A_FILENAME)
+        _, rocket_packets = self.rocket_packet_repository.load(self.A_FILENAME)
 
         self.assertEquals(rocket_packets, [self.A_ROCKET_PACKET, self.ANOTHER_ROCKET_PACKET])
+
+    def test_load_should_return_rocket_packet_version(self):
+        self.data_persister.load.return_value = (self.A_ROCKET_PACKET_VERSION, [])
+
+        version, _ = self.rocket_packet_repository.load(self.A_FILENAME)
+
+        self.assertEqual(version, self.A_ROCKET_PACKET_VERSION)

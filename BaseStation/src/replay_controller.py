@@ -56,7 +56,7 @@ class ReplayController(Controller):
         self.data_producer.load(filename)
         self.data_producer.reset_playback_state()
 
-        self.create_new_consumer()
+        self.create_new_consumer(self.data_producer.get_rocket_packet_version())
 
         self.data_widget.set_control_bar_max_value(self.data_producer.get_total_packet_count() - 1)
         self.data_widget.set_play_button_text()

@@ -17,6 +17,7 @@ class RealTimeControllerTest(unittest.TestCase):
 
     VALID_SAVE_FILE_NAME = "file.csv"
     EMPTY_SAVE_FILE_NAME = ""
+    A_ROCKET_PACKET_VERSION = 2019
 
     def setUp(self):
         self.real_time_widget = Mock(spec=RealTimeWidget)
@@ -25,7 +26,7 @@ class RealTimeControllerTest(unittest.TestCase):
         self.save_manager = Mock(spec=SaveManager)
         self.event = Mock(spec=QCloseEvent)
 
-        self.config = ConfigBuilder().build()
+        self.config = ConfigBuilder().with_rocket_packet_version(self.A_ROCKET_PACKET_VERSION).build()
 
         self.real_time_controller = RealTimeController(self.real_time_widget, self.serial_data_producer,
                                                        self.consumer_factory, self.save_manager, self.config)
@@ -71,13 +72,14 @@ class RealTimeControllerTest(unittest.TestCase):
         self.real_time_widget.update_button_text.assert_called_with(True)
 
     @patch("src.controller.Thread")
-    def test_real_time_button_callback_should_create_new_consumer_is_not_running(self, _):
+    def test_real_time_button_callback_should_create_new_consumer_when_is_not_running(self, _):
         self.serial_data_producer.has_unsaved_data.return_value = True
         self.save_manager.save.return_value = SaveStatus.SAVED
 
         self.real_time_controller.real_time_button_callback()
 
-        self.consumer_factory.create.assert_called_with(self.serial_data_producer, self.config)
+        self.consumer_factory.create.assert_called_with(self.serial_data_producer, self.A_ROCKET_PACKET_VERSION,
+                                                        self.config)
 
     @patch("src.controller.Thread")
     def test_real_time_button_callback_should_reset_ui_when_is_not_running(self, _):

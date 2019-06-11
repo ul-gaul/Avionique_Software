@@ -37,7 +37,7 @@ class RealTimeController(Controller):
 
                 self.data_producer.clear_rocket_packets()
                 self.data_widget.reset()
-                self.create_new_consumer()
+                self.create_new_consumer(self.current_config.rocket_packet_config.version)
 
                 self.start_thread()
             except (DomainError, NoConnectedDeviceException) as error:

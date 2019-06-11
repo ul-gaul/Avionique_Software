@@ -19,6 +19,7 @@ float accel(int timestamp);
 float altitude(int timestamp);
 float latitude(int timestamp);
 float longitude(int timestamp);
+float dd2ddmm(float dd_coordinate);
 uint32_t pressure(int timestamp);
 float temperature1(int timestamp);
 float temperature2(int timestamp);

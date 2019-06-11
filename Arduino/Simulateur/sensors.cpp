@@ -95,6 +95,14 @@ float longitude(int timestamp)
   }
 }
 
+float dd2ddmm(float dd_coordinate) {
+    float integer;
+    float fraction = modff(dd_coordinate, &integer);
+
+    float minutes = 60 * fraction;
+    return integer * 100 + minutes;
+}
+
 uint32_t pressure(int timestamp) {
   return 1013;
 }

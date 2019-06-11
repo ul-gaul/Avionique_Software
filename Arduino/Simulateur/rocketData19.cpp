@@ -2,8 +2,8 @@
 
 void createRocketPacket2019(RocketPacket19& rp, int timestamp) {
   toDouble((float)timestamp, rp.data.timestamp);
-  toDouble(latitude(timestamp), rp.data.latitude);
-  toDouble(longitude(timestamp), rp.data.longitude);
+  toDouble(dd2ddmm(latitude(timestamp)), rp.data.latitude);
+  toDouble(dd2ddmm(longitude(timestamp)), rp.data.longitude);
   rp.data.NSIndicator = 'N';
   rp.data.EWIndicator = 'W';
   toDouble(123.36, rp.data.UTCTime);

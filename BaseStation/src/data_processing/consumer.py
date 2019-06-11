@@ -1,8 +1,7 @@
 from src.data_processing.angular_position_calculator import AngularCalculator
 from src.data_processing.apogee_calculator import ApogeeCalculator
-from src.data_processing.coordinate_converter import CoordinateConverter
+from src.data_processing.gps.coordinate_conversion_strategy import CoordinateConversionStrategy
 from src.data_processing.quaternion import Quaternion
-from src.data_processing.utm_zone import UTMZone
 from src.data_producer import DataProducer
 from src.rocket_packet.rocket_packet import RocketPacket
 
@@ -11,9 +10,8 @@ CAMP_POSITION_MEASUREMENT_DELAY = 10  # in seconds
 
 
 class Consumer:
-
     def __init__(self, data_producer: DataProducer, sampling_frequency: float, apogee_calculator: ApogeeCalculator,
-                 angular_calculator: AngularCalculator):
+                 angular_calculator: AngularCalculator, coordinate_conversion_strategy: CoordinateConversionStrategy):
         self.data_producer = data_producer
         self.sampling_frequency = sampling_frequency
         self.rocket_packet_version = 2019
@@ -27,7 +25,7 @@ class Consumer:
         self.data["apogee"] = []
         self.base_camp_easting = None
         self.base_camp_northing = None
-        self.coordinate_converter = CoordinateConverter(UTMZone.zone_19u)
+        self.coordinate_conversion_strategy = coordinate_conversion_strategy
         self.apogee_calculator = apogee_calculator
         self.angular_calculator = angular_calculator
 
@@ -59,13 +57,7 @@ class Consumer:
             self.data["apogee"].append(rep[1])
 
     def manage_coordinates(self, packet: RocketPacket):
-        latitude = packet.latitude
-        longitude = packet.longitude
-
-        if self.rocket_packet_version == 2019:
-            latitude, longitude = self.coordinate_converter.degree_decimal_minute_to_decimal_degree(latitude, longitude)
-
-        easting, northing = self.coordinate_converter.from_long_lat_to_utm(latitude, longitude)
+        easting, northing = self.coordinate_conversion_strategy.to_utm(packet.latitude, packet.longitude)
 
         num_packets_received = len(self.data["time_stamp"])
 
@@ -87,7 +79,7 @@ class Consumer:
                                                       self.angular_calculator.roll)
 
     def get_rocket_last_quaternion(self):
-        return self.data["quaternion_w"][-1], self.data["quaternion_x"][-1], self.data["quaternion_y"][-1],\
+        return self.data["quaternion_w"][-1], self.data["quaternion_x"][-1], self.data["quaternion_y"][-1], \
                self.data["quaternion_z"][-1]
 
     def get_rocket_last_angular_velocity(self):

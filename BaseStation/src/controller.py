@@ -100,8 +100,8 @@ class Controller(MessageSender):
 
         event.accept()
 
-    def create_new_consumer(self):
-        self.consumer = self.consumer_factory.create(self.data_producer, self.current_config)
+    def create_new_consumer(self, rocket_packet_version: int):
+        self.consumer = self.consumer_factory.create(self.data_producer, rocket_packet_version, self.current_config)
 
     @abc.abstractmethod
     def activate(self, filename: str) -> None:
