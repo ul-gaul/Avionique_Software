@@ -16,6 +16,8 @@ class ConsumerTest(unittest.TestCase):
     BASE_CAMP_NORTHING = 168.0
     EASTING = 315470
     NORTHING = 3651941
+    LATITUDE = 46.77930
+    LONGITUDE = -71.27621
     APOGEE = (100, 10000)
 
     def setUp(self):
@@ -26,6 +28,7 @@ class ConsumerTest(unittest.TestCase):
         self.angular_calculator = Mock(spec=AngularCalculator)
         self.coordinate_conversion_strategy = Mock(spec=CoordinateConversionStrategy)
         self.coordinate_conversion_strategy.to_utm.return_value = self.EASTING, self.NORTHING
+        self.coordinate_conversion_strategy.to_decimal_degrees.return_value = (self.LATITUDE, self.LONGITUDE)
 
         self.consumer = Consumer(self.producer, self.sampling_frequency, self.apogee_calculator,
                                  self.angular_calculator, self.coordinate_conversion_strategy)
@@ -107,6 +110,14 @@ class ConsumerTest(unittest.TestCase):
 
         self.assertIsNone(self.consumer.base_camp_easting)
         self.assertIsNone(self.consumer.base_camp_northing)
+
+    def test_reset_should_reset_last_gps_coordinates(self):
+        self.consumer.last_latitude = self.LATITUDE
+        self.consumer.last_longitude = self.LONGITUDE
+
+        self.consumer.reset()
+
+        self.assertEqual(self.consumer.get_last_gps_coordinates(), (0.0, 0.0))
 
     def test_reset_should_reset_apogee_calculator(self):
         self.consumer.reset()

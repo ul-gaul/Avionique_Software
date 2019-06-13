@@ -13,3 +13,7 @@ class CoordinateConversionStrategy:
     @abc.abstractmethod
     def to_utm(self, latitude: float, longitude: float) -> Tuple[float, float]:
         pass
+
+    @abc.abstractmethod
+    def to_decimal_degrees(self, latitude: float, longitude: float) -> Tuple[float, float]:
+        pass
