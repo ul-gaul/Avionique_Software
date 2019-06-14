@@ -14,6 +14,9 @@ class Consumer:
                  angular_calculator: AngularCalculator, coordinate_conversion_strategy: CoordinateConversionStrategy):
         self.data_producer = data_producer
         self.sampling_frequency = sampling_frequency
+        self.coordinate_conversion_strategy = coordinate_conversion_strategy
+        self.apogee_calculator = apogee_calculator
+        self.angular_calculator = angular_calculator
         self.rocket_packet_version = 2019
         self.data = {}
         self.create_keys_from_packet_format()
@@ -25,9 +28,8 @@ class Consumer:
         self.data["apogee"] = []
         self.base_camp_easting = None
         self.base_camp_northing = None
-        self.coordinate_conversion_strategy = coordinate_conversion_strategy
-        self.apogee_calculator = apogee_calculator
-        self.angular_calculator = angular_calculator
+        self.last_latitude = 0.0
+        self.last_longitude = 0.0
 
     def create_keys_from_packet_format(self):
         for key in RocketPacket.keys():
@@ -57,6 +59,8 @@ class Consumer:
             self.data["apogee"].append(rep[1])
 
     def manage_coordinates(self, packet: RocketPacket):
+        self.last_latitude, self.last_longitude = self.coordinate_conversion_strategy.to_decimal_degrees(
+            packet.latitude, packet.longitude)
         easting, northing = self.coordinate_conversion_strategy.to_utm(packet.latitude, packet.longitude)
 
         num_packets_received = len(self.data["time_stamp"])
@@ -79,14 +83,17 @@ class Consumer:
                                                       self.angular_calculator.roll)
 
     def get_rocket_last_quaternion(self):
-        return self.data["quaternion_w"][-1], self.data["quaternion_x"][-1], self.data["quaternion_y"][-1], \
-               self.data["quaternion_z"][-1]
+        return (self.data["quaternion_w"][-1], self.data["quaternion_x"][-1], self.data["quaternion_y"][-1],
+                self.data["quaternion_z"][-1])
 
     def get_rocket_last_angular_velocity(self):
         return self.data["angular_speed_x"][-1], self.data["angular_speed_y"][-1], self.data["angular_speed_z"][-1]
 
     def get_average_temperature(self):
         return self.data["temperature"][-1]
+
+    def get_last_gps_coordinates(self):
+        return self.last_latitude, self.last_longitude
 
     def clear(self):
         for data_list in self.data.values():
@@ -100,6 +107,8 @@ class Consumer:
 
         self.base_camp_easting = None
         self.base_camp_northing = None
+        self.last_latitude = 0.0
+        self.last_longitude = 0.0
 
         self.apogee_calculator.reset()
         self.angular_calculator.reset()

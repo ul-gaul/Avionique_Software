@@ -20,6 +20,8 @@ class ControllerTest(unittest.TestCase):
     APOGEE = 10000
     EASTING = 32
     NORTHING = 52
+    LATITUDE = 46.77930
+    LONGITUDE = -71.27621
     VOLTAGE = 3.3
     BOARD_STATE_1 = True
     BOARD_STATE_2 = True
@@ -57,7 +59,7 @@ class ControllerTest(unittest.TestCase):
 
         self.data_widget.draw_altitude.assert_called_with(self.ALTITUDE)
         self.data_widget.draw_apogee.assert_called_with(self.APOGEE)
-        self.data_widget.draw_map.assert_called_with(self.EASTING, self.NORTHING)
+        self.data_widget.draw_map.assert_called_with(self.EASTING, self.NORTHING, self.LATITUDE, self.LONGITUDE)
         self.data_widget.draw_voltage.assert_called_with(self.VOLTAGE)
 
     def test_update_should_update_leds_when_consumer_has_data(self):
@@ -92,7 +94,6 @@ class ControllerTest(unittest.TestCase):
         self.assert_ui_not_updated()
 
     def test_update_should_clear_consumer(self):
-
         self.controller.update()
 
         self.consumer.clear.assert_called_with()
@@ -141,6 +142,7 @@ class ControllerTest(unittest.TestCase):
                 "power_supply_state_2": [self.POWER_SUPPLY_STATE_2],
                 "payload_board_state_1": [self.PAYLOAD_BOARD_STATE_1]}
         self.consumer.__getitem__.side_effect = lambda arg: data[arg]
+        self.consumer.get_last_gps_coordinates.return_value = (self.LATITUDE, self.LONGITUDE)
 
     def assert_leds_updated(self):
         calls = [call(1, self.BOARD_STATE_1), call(2, self.BOARD_STATE_2), call(3, self.BOARD_STATE_3),

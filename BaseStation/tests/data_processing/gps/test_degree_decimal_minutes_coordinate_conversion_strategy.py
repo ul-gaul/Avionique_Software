@@ -28,35 +28,35 @@ class DegreeDecimalMinutesCoordinateConversionStrategyTest(TestCase):
         self.assertEqual(easting, self.EASTING)
         self.assertEqual(northing, self.NORTHING)
 
-    def test_degree_decimal_minute_to_decimal_degree_gaul_HQ(self):
-        latitude, longitude = self.conversion_strategy.degree_decimal_minutes_to_decimal_degrees(4646.7579, -7116.5728)
+    def test_to_decimal_degree_gaul_HQ(self):
+        latitude, longitude = self.conversion_strategy.to_decimal_degrees(4646.7579, -7116.5728)
 
         self.assertAlmostEqual(latitude, 46.779298, self.FLOATING_POINT_PRECISION)
         self.assertAlmostEqual(longitude, -71.276213, self.FLOATING_POINT_PRECISION)
 
-    def test_degree_decimal_minute_to_decimal_degree_spaceport_america(self):
-        latitude, longitude = self.conversion_strategy.degree_decimal_minutes_to_decimal_degrees(3259.4167, -10658.4988)
+    def test_to_decimal_degree_spaceport_america(self):
+        latitude, longitude = self.conversion_strategy.to_decimal_degrees(3259.4167, -10658.4988)
 
         self.assertAlmostEqual(latitude, 32.990278, self.FLOATING_POINT_PRECISION)
         self.assertAlmostEqual(longitude, -106.974980, self.FLOATING_POINT_PRECISION)
 
-    def test_degree_decimal_minute_to_decimal_degree_north_east_hemisphere(self):
+    def test_to_decimal_degree_north_east_hemisphere(self):
         # Paris
-        latitude, longitude = self.conversion_strategy.degree_decimal_minutes_to_decimal_degrees(4851.3968, 221.1333)
+        latitude, longitude = self.conversion_strategy.to_decimal_degrees(4851.3968, 221.1333)
 
         self.assertAlmostEqual(latitude, 48.856613, self.FLOATING_POINT_PRECISION)
         self.assertAlmostEqual(longitude, 2.3522219, self.FLOATING_POINT_PRECISION)
 
-    def test_degree_decimal_minute_to_decimal_degree_south_west_hemisphere(self):
+    def test_to_decimal_degree_south_west_hemisphere(self):
         # Rio de Janeiro
-        latitude, longitude = self.conversion_strategy.degree_decimal_minutes_to_decimal_degrees(-2254.4108, -4310.3738)
+        latitude, longitude = self.conversion_strategy.to_decimal_degrees(-2254.4108, -4310.3738)
 
         self.assertAlmostEqual(latitude, -22.9068467, self.FLOATING_POINT_PRECISION)
         self.assertAlmostEqual(longitude, -43.1728965, self.FLOATING_POINT_PRECISION)
 
-    def test_degree_decimal_minute_to_decimal_degree_south_east_hemisphere(self):
+    def test_to_decimal_degree_south_east_hemisphere(self):
         # Sydney
-        latitude, longitude = self.conversion_strategy.degree_decimal_minutes_to_decimal_degrees(-3352.0492, 15112.4194)
+        latitude, longitude = self.conversion_strategy.to_decimal_degrees(-3352.0492, 15112.4194)
 
         self.assertAlmostEqual(latitude, -33.867487, self.FLOATING_POINT_PRECISION)
         self.assertAlmostEqual(longitude, 151.206990, self.FLOATING_POINT_PRECISION)

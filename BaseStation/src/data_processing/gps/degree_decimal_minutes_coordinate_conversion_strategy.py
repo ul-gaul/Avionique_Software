@@ -5,12 +5,11 @@ from src.data_processing.gps.coordinate_conversion_strategy import CoordinateCon
 
 class DegreeDecimalMinutesCoordinateConversionStrategy(CoordinateConversionStrategy):
     def to_utm(self, latitude: float, longitude: float) -> Tuple[float, float]:
-        dd_lat, dd_long = self.degree_decimal_minutes_to_decimal_degrees(latitude, longitude)
+        dd_lat, dd_long = self.to_decimal_degrees(latitude, longitude)
 
         return self.utm_coordinates_converter.decimal_degrees_to_utm(dd_lat, dd_long)
 
-    @staticmethod
-    def degree_decimal_minutes_to_decimal_degrees(latitude: float, longitude: float) -> Tuple[float, float]:
+    def to_decimal_degrees(self, latitude: float, longitude: float) -> Tuple[float, float]:
         """
         Converts coordinates in format DDMM.MMMM to DD.DDDD
         """

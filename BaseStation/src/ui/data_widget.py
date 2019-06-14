@@ -1,11 +1,13 @@
 from PyQt5 import QtWidgets
 from PyQt5 import QtCore
 import pyqtgraph as pqtg
+from PyQt5.QtWidgets import QLabel
 
 from src.openrocket_simulation import OpenRocketSimulation
 from src.ui.altitude_graph import AltitudeGraph
 from src.ui.gl_rocket import GlRocket
 from src.ui.header import Header
+from src.ui.map import Map
 from src.ui.thermometer import Thermometer
 from src.ui.led import Led
 from src.ui.utils import *
@@ -22,14 +24,15 @@ class DataWidget(QtWidgets.QWidget):
         super().__init__(parent)
         self.set_black_on_white_graph_colors()
         self.thermometer = None
+        self.altitude_graph = AltitudeGraph(self)
+        self.map = Map(self)
+
+        # FIXME: this is a temporary workaround, put this back in the map when the ui loop is done
+        self.coordinates_label = QLabel(self)
+        self.coordinates_label.setText("Lat: {:.6f} Long: {:.6f}".format(0.0, 0.0))
+
         self.setup_ui()
         self.leds = [self.led_1, self.led_2, self.led_3, self.led_4, self.led_5, self.led_6]
-
-        self.graphicsView_2.plotItem.setTitle("Position relative au camp")
-        self.graphicsView_2.plotItem.setLabel("bottom", "Est", "m")
-        self.graphicsView_2.plotItem.setLabel("left", "Nord", "m")
-        self.graphicsView_2.plotItem.showGrid(x=True, y=True)
-        self.positions_on_map = self.graphicsView_2.plot([0], [0], pen=pqtg.mkPen(color='k', width=3))
 
         self.graphicsView_3.plotItem.setTitle("Battery tension")
         self.graphicsView_3.plotItem.setLabel("bottom", "Temps", "Sec")
@@ -75,17 +78,11 @@ class DataWidget(QtWidgets.QWidget):
         self.verticalLayout = QtWidgets.QVBoxLayout()
         self.verticalLayout.setObjectName("verticalLayout")
 
-        self.altitude_graph = AltitudeGraph(self)
         self.verticalLayout.addWidget(self.altitude_graph)
-
         spacerItem2 = QtWidgets.QSpacerItem(20, 70, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
         self.verticalLayout.addItem(spacerItem2)
-
-        self.graphicsView_2 = pqtg.PlotWidget(self)
-        set_minimum_expanding_size_policy(self.graphicsView_2)
-        self.graphicsView_2.setMinimumSize(QtCore.QSize(400, 150))
-        self.graphicsView_2.setObjectName("graphicsView_2")
-        self.verticalLayout.addWidget(self.graphicsView_2)
+        self.verticalLayout.addWidget(self.map)
+        self.verticalLayout.addWidget(self.coordinates_label)
 
         spacerItem3 = QtWidgets.QSpacerItem(20, 70, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
         self.verticalLayout.addItem(spacerItem3)
@@ -212,8 +209,9 @@ class DataWidget(QtWidgets.QWidget):
     def draw_apogee(self, values: list):
         self.altitude_graph.draw_apogee(values)
 
-    def draw_map(self, eastings: list, northings: list):
-        self.positions_on_map.setData(eastings, northings)
+    def draw_map(self, eastings: list, northings: list, current_latitude: float, current_longitude: float):
+        self.map.draw_map(eastings, northings)
+        self.coordinates_label.setText("Lat: {:.6f} Long: {:.6f}".format(current_latitude, current_longitude))
 
     def show_simulation(self, simulation: OpenRocketSimulation):
         self.altitude_graph.show_simulation(simulation.time, simulation.altitude)
@@ -226,7 +224,7 @@ class DataWidget(QtWidgets.QWidget):
 
     def reset(self):
         self.altitude_graph.reset()
-        self.positions_on_map.clear()
+        self.map.reset()
         self.set_rocket_model_rotation(Quaternion())
         self.reset_leds()
         self.set_thermometer_value(0)
