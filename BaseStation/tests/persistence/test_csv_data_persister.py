@@ -40,14 +40,13 @@ class CsvDataPersisterTest(unittest.TestCase):
 
     def test_load_should_return_rocket_packet_version_loaded_from_first_line(self):
         version, _ = self.persister.load(self.TEST_FILENAME)
-
-        self.assertEquals(version, 2018)
+        self.assertEqual(version, self.ROCKET_PACKET_VERSION)
 
     def test_load_should_return_rocket_packets_fields(self):
         _, rocket_packets_fields = self.persister.load(self.TEST_FILENAME)
 
-        self.assertEquals(len(rocket_packets_fields), 3)
-        self.assertEquals(len(rocket_packets_fields[0]), 23)
+        self.assertEqual(len(rocket_packets_fields), 3)
+        self.assertEqual(len(rocket_packets_fields[0]), self.NUMBER_OF_FIELDS)
 
     def test_save_load(self):
         self.persister.save(self.TEMPORARY_FILENAME, self.ROCKET_PACKET_VERSION, self.ROCKET_PACKET_FIELD_NAMES,

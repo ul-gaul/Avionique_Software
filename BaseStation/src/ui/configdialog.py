@@ -1,9 +1,12 @@
 import os
 from PyQt5.QtWidgets import (
-    QFormLayout, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QDialog,
+    QFormLayout, QVBoxLayout, QHBoxLayout, QLabel, QDialog,
     QPushButton, QMessageBox)
+from PyQt5 import QtGui
 
 from src.ui.config_controller import ConfigController
+from src.ui.line_setting_input import LineSettingInput
+from src.ui.list_setting_input import ListSettingInput
 
 
 OTHER_SECTION = "__others__"
@@ -11,16 +14,12 @@ OTHER_SECTION = "__others__"
 
 class ConfigDialog:
     def __init__(self, parent, *args, **kwargs):
-        self.window = QDialog(parent, *args, **kwargs)
-        self.window.setModal(True)
-        self.window.setWindowTitle("Configuration")
-        self.conteneur = QVBoxLayout()
-        self.window.setLayout(self.conteneur)
+        self._make_window()
         self.set_stylesheet(os.path.join(os.getcwd(), "src/resources/configdialog.css"))
 
     def set_stylesheet(self, stylesheet_path):
-        file = open(stylesheet_path, "r")
-        self.stylesheet = file.read()
+        with open(stylesheet_path, "r") as f:
+            self.stylesheet = f.read()
 
     def _set_stylesheet(self):
         self.window.setStyleSheet(self.stylesheet)
@@ -50,27 +49,65 @@ class ConfigDialog:
         self.buttons.addWidget(buttonOk)
         self.buttons.addWidget(buttonCancel)
 
+    def _make_window(self, parent=None):
+        self.window = QDialog(parent)
+        self.window.setModal(True)
+        self.window.setWindowTitle("Configuration")
+        self.conteneur = QVBoxLayout()
+        self.window.setLayout(self.conteneur)
+
     def _make_ui(self):
         self._clear_ui()
         self._set_stylesheet()
         self._set_layouts()
-        for idx, section_name in enumerate(self.controller.get_sections()):
+        self._show_waiting_msg()
+        self.window.show()
+        QtGui.QGuiApplication.processEvents()
+        headers = []
+        layouts = []
+        spacings = []
+
+        for section_name in self.controller.get_sections():
             header = QLabel(section_name.upper()) if not section_name == OTHER_SECTION else None
             form = QFormLayout()
-            for name, value in self.controller.get_settings(section_name):
-                self.inputs[name] = {"section": section_name, "input": QLineEdit(value)}
-                form.addRow(QLabel(" ".join(name.split("_")).capitalize()),
-                            self.inputs[name]["input"])
+            self.inputs[section_name] = []
+            for setting in self.controller.get_settings(section_name):
+                if setting.type.endswith('list'):
+                    input_el = ListSettingInput(setting.name, setting.choices)
+                else:
+                    input_el = LineSettingInput(setting.name, setting.value)
+                self.inputs[section_name].append(input_el)
+                label_ = setting.label or " ".join(setting.name.split("_"))
+                form.addRow(QLabel(label_[0].capitalize() + "".join(label_[1:])), input_el.qt())
             if header is not None:
                 header.setProperty("SectionHeader", True)
+            headers.append(header)
+            layouts.append(form)
+            spacings.append(12)
+
+        self.window.hide()
+        self._hide_waiting_msg()
+
+        for header, layout, spacing in zip(headers, layouts, spacings):
+            if header is not None:
                 self.conteneur.addWidget(header)
-            self.conteneur.addLayout(form)
-            self.conteneur.addSpacing(12)
+            self.conteneur.addLayout(layout)
+            self.conteneur.addSpacing(spacing)
         self.conteneur.addLayout(self.buttons)
         self.window.exec_()
 
+    def _show_waiting_msg(self):
+        layout = QVBoxLayout()
+        msg = QLabel("Chargement des paramètres...")
+        layout.addWidget(msg)
+        self.conteneur.addLayout(layout)
+
+    def _hide_waiting_msg(self):
+        self._clear_ui()
+
     def open(self, cheminFichier: str):
         self.controller = ConfigController(cheminFichier)
+        self._make_window()
         self._clear_inputs()
         self._make_ui()
 
@@ -78,8 +115,9 @@ class ConfigDialog:
         self.window.close()
 
     def save(self):
-        for name, inputItem in self.inputs.items():
-            self.controller.set_value(inputItem["section"], name, inputItem["input"].text())
+        for section_name, inputs in self.inputs.items():
+            for i in inputs:
+                self.controller.set_value(section_name, i.get_name(), i.get_value())
         self.controller.save_to_file()
         QMessageBox.question(self.window, "Configuration", "Settings have been saved !",
                              QMessageBox.Ok, QMessageBox.Ok)

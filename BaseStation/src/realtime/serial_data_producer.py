@@ -53,7 +53,6 @@ class SerialDataProducer(DataProducer):
                 if self.checksum_validator.validate(data_bytes):
                     try:
                         rocket_packet = self.rocket_packet_parser.parse(data_bytes[:-1])
-                        print(rocket_packet)
                         self.add_rocket_packet(rocket_packet)
                         self.unsaved_data = True
                     except struct.error as e:

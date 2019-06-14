@@ -2,6 +2,7 @@ import unittest
 from unittest.mock import Mock, MagicMock, patch
 
 from src.data_processing.consumer import Consumer
+from src.data_processing.consumer_factory import ConsumerFactory
 from src.replay.file_data_producer import FileDataProducer
 from src.replay_controller import ReplayController
 from src.ui.replay_widget import ReplayWidget
@@ -17,11 +18,15 @@ class ReplayControllerTest(unittest.TestCase):
         self.replay_widget = Mock(spec=ReplayWidget)
         self.file_data_producer = Mock(spec=FileDataProducer)
         self.file_data_producer.get_total_packet_count.return_value = self.PACKET_COUNT
+
         self.consumer = MagicMock(spec=Consumer)
+        self.consumer_factory = Mock(spec=ConsumerFactory)
+        self.consumer_factory.create.return_value = self.consumer   # FIXME: validate input parameters
 
         config = ConfigBuilder().build()
 
-        self.replay_controller = ReplayController(self.replay_widget, self.file_data_producer, self.consumer, config)
+        self.replay_controller = ReplayController(self.replay_widget, self.file_data_producer, self.consumer_factory,
+                                                  config)
 
     def test_control_bar_callback_should_pass_frame_index_to_data_producer(self):
         frame_index = 3
@@ -133,13 +138,6 @@ class ReplayControllerTest(unittest.TestCase):
 
         thread_mock.join.assert_not_called()
         self.file_data_producer.stop.assert_not_called()
-
-    def test_deactivate_should_reset_consumer(self):
-        self.replay_controller.is_running = False
-
-        self.replay_controller.deactivate()
-
-        self.consumer.reset.assert_called_with()
 
     def test_deactivate_should_reset_ui(self):
         self.replay_controller.is_running = False

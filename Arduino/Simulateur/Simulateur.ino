@@ -19,7 +19,6 @@ void writeToSerial(void* data, size_t numBytes)
 
 void setup()
 {
-  // put your setup code here, to run once:
   Serial.begin(BAUDRATE);
 }
 

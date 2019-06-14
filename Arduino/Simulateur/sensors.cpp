@@ -95,6 +95,14 @@ float longitude(int timestamp)
   }
 }
 
+float dd2ddmm(float dd_coordinate) {
+    float integer;
+    float fraction = modff(dd_coordinate, &integer);
+
+    float minutes = 60 * fraction;
+    return integer * 100 + minutes;
+}
+
 uint32_t pressure(int timestamp) {
   return 1013;
 }
@@ -194,11 +202,11 @@ float magnetZ(int timestamp)
   }
   else if (timestamp < T_APOGEE * FREQUENCY)
   {
-    return 2 * sin(timestamp * M_PI / 10);;
+    return 2 * sin(timestamp * M_PI / 10);
   }
   else if (timestamp < T_PARACHUTE * FREQUENCY)
   {
-    return 5 * sin(timestamp * M_PI / 10);;
+    return 5 * sin(timestamp * M_PI / 10);
   }
   else
   {

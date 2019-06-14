@@ -3,6 +3,8 @@ from unittest.mock import Mock, MagicMock, call, patch
 
 from src.controller import Controller
 from src.data_processing.consumer import Consumer
+from src.data_processing.consumer_factory import ConsumerFactory
+from src.data_processing.quaternion import Quaternion
 from src.data_producer import DataProducer
 from src.message_listener import MessageListener
 from src.message_type import MessageType
@@ -11,7 +13,6 @@ from src.ui.data_widget import DataWidget
 from tests.builders.config_builder import ConfigBuilder
 from tests.matchers import AnyStringWith
 
-from src.data_processing.quaternion import Quaternion
 
 class ControllerTest(unittest.TestCase):
 
@@ -19,6 +20,8 @@ class ControllerTest(unittest.TestCase):
     APOGEE = 10000
     EASTING = 32
     NORTHING = 52
+    LATITUDE = 46.77930
+    LONGITUDE = -71.27621
     VOLTAGE = 3.3
     BOARD_STATE_1 = True
     BOARD_STATE_2 = True
@@ -29,15 +32,19 @@ class ControllerTest(unittest.TestCase):
     TEMPERATURE = 100
     QUATERNION = Quaternion(1, 2, 3, 4)
     OPEN_ROCKET_SIMULATION_FILENAME = "simulation.csv"
+    A_ROCKET_PACKET_VERSION = 2019
 
     def setUp(self):
         self.data_widget = Mock(spec=DataWidget)
         self.data_producer = Mock(spec=DataProducer)
         self.consumer = MagicMock(spec=Consumer)
+        self.consumer_factory = Mock(spec=ConsumerFactory)
+        self.consumer_factory.create.return_value = self.consumer
 
         config = ConfigBuilder().build()
 
-        self.controller = Controller(self.data_widget, self.data_producer, self.consumer, config)
+        self.controller = Controller(self.data_widget, self.data_producer, self.consumer_factory, config)
+        self.controller.create_new_consumer(self.A_ROCKET_PACKET_VERSION)
 
     def test_update_should_update_consumer(self):
         self.controller.update()
@@ -52,7 +59,7 @@ class ControllerTest(unittest.TestCase):
 
         self.data_widget.draw_altitude.assert_called_with(self.ALTITUDE)
         self.data_widget.draw_apogee.assert_called_with(self.APOGEE)
-        self.data_widget.draw_map.assert_called_with(self.EASTING, self.NORTHING)
+        self.data_widget.draw_map.assert_called_with(self.EASTING, self.NORTHING, self.LATITUDE, self.LONGITUDE)
         self.data_widget.draw_voltage.assert_called_with(self.VOLTAGE)
 
     def test_update_should_update_leds_when_consumer_has_data(self):
@@ -120,6 +127,13 @@ class ControllerTest(unittest.TestCase):
 
         message_listener.notify.assert_called_with(AnyStringWith(error_message), MessageType.ERROR)
 
+    def test_create_new_consumer_should_delegate_to_factory(self):
+        self.controller.consumer = None
+
+        self.controller.create_new_consumer(self.A_ROCKET_PACKET_VERSION)
+
+        self.assertEqual(self.controller.consumer, self.consumer)
+
     def setup_consumer_data(self):
         data = {"altitude_feet": self.ALTITUDE, "apogee": self.APOGEE, "easting": self.EASTING,
                 "northing": self.NORTHING, "voltage": self.VOLTAGE, "acquisition_board_state_1": [self.BOARD_STATE_1],
@@ -128,6 +142,7 @@ class ControllerTest(unittest.TestCase):
                 "power_supply_state_2": [self.POWER_SUPPLY_STATE_2],
                 "payload_board_state_1": [self.PAYLOAD_BOARD_STATE_1]}
         self.consumer.__getitem__.side_effect = lambda arg: data[arg]
+        self.consumer.get_last_gps_coordinates.return_value = (self.LATITUDE, self.LONGITUDE)
 
     def assert_leds_updated(self):
         calls = [call(1, self.BOARD_STATE_1), call(2, self.BOARD_STATE_2), call(3, self.BOARD_STATE_3),

@@ -2,7 +2,7 @@ from PyQt5.QtGui import QCloseEvent
 
 from src.config import Config
 from src.controller import Controller
-from src.data_processing.consumer import Consumer
+from src.data_processing.consumer_factory import ConsumerFactory
 from src.domain_error import DomainError
 from src.message_type import MessageType
 from src.realtime.serial_data_producer import SerialDataProducer, NoConnectedDeviceException
@@ -11,9 +11,9 @@ from src.ui.real_time_widget import RealTimeWidget
 
 
 class RealTimeController(Controller):
-    def __init__(self, real_time_widget: RealTimeWidget, serial_data_producer: SerialDataProducer, consumer: Consumer,
-                 save_manager: SaveManager, config: Config):
-        super().__init__(real_time_widget, serial_data_producer, consumer, config)
+    def __init__(self, real_time_widget: RealTimeWidget, serial_data_producer: SerialDataProducer,
+                 consumer_factory: ConsumerFactory, save_manager: SaveManager, config: Config):
+        super().__init__(real_time_widget, serial_data_producer, consumer_factory, config)
         self.save_manager = save_manager
 
         self.data_widget.set_target_altitude(self.target_altitude)
@@ -36,8 +36,8 @@ class RealTimeController(Controller):
                         return
 
                 self.data_producer.clear_rocket_packets()
-                self.consumer.reset()
                 self.data_widget.reset()
+                self.create_new_consumer(self.current_config.rocket_packet_config.version)
 
                 self.start_thread()
             except (DomainError, NoConnectedDeviceException) as error:
@@ -75,7 +75,6 @@ class RealTimeController(Controller):
             self.stop_thread()
 
         self.data_producer.clear_rocket_packets()
-        self.consumer.reset()
         self.data_widget.reset()
 
         return True
