@@ -17,6 +17,7 @@ class FileDataProducerTest(unittest.TestCase):
     FAST_SPEED = 2
     DATA_LOCK = threading.RLock()
     PLAYBACK_LOCK = threading.Lock()
+    ROCKET_PACKET_VERSION = 2019
 
     def setUp(self):
         rocket_packet_1 = RocketPacket()
@@ -28,7 +29,7 @@ class FileDataProducerTest(unittest.TestCase):
         self.data = [rocket_packet_1, rocket_packet_2, rocket_packet_3]
 
         def fake_load(filename):
-            return self.data if filename == self.SAVE_FILE_PATH else []
+            return (self.ROCKET_PACKET_VERSION, self.data) if filename == self.SAVE_FILE_PATH else (None, [])
 
         self.rocket_packet_repository = MagicMock(spec=RocketPacketRepository)
         self.rocket_packet_repository.load.side_effect = fake_load
@@ -54,6 +55,11 @@ class FileDataProducerTest(unittest.TestCase):
         self.file_data_producer.load(self.SAVE_FILE_PATH)
 
         self.assertEqual(self.file_data_producer.get_current_packet_index(), len(self.data) - 1)
+
+    def test_load_should_set_rocket_packet_version(self):
+        self.file_data_producer.load(self.SAVE_FILE_PATH)
+
+        self.assertEqual(self.file_data_producer.get_rocket_packet_version(), self.ROCKET_PACKET_VERSION)
 
     def test_reset_playback_state_should_reset_playback_state(self):
         self.file_data_producer.reset_playback_state()

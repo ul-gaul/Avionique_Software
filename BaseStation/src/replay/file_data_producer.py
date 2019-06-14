@@ -18,10 +18,11 @@ class FileDataProducer(DataProducer):
         self.playback_state = playback_state
         self.playback_lock = playback_lock
         self.all_rocket_packets = []
+        self.rocket_packet_version = None
         self.index = -1
 
     def load(self, filename: str):
-        rocket_packets = self.rocket_packet_repository.load(filename)
+        self.rocket_packet_version, rocket_packets = self.rocket_packet_repository.load(filename)
 
         self.lock.acquire()
         self.all_rocket_packets = rocket_packets
@@ -155,3 +156,6 @@ class FileDataProducer(DataProducer):
         self.available_rocket_packets.clear()
         self.index = -1
         self.lock.release()
+
+    def get_rocket_packet_version(self) -> int:
+        return self.rocket_packet_version

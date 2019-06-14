@@ -3,6 +3,8 @@ from unittest.mock import Mock, MagicMock, call, patch
 
 from src.controller import Controller
 from src.data_processing.consumer import Consumer
+from src.data_processing.consumer_factory import ConsumerFactory
+from src.data_processing.quaternion import Quaternion
 from src.data_producer import DataProducer
 from src.message_listener import MessageListener
 from src.message_type import MessageType
@@ -11,7 +13,6 @@ from src.ui.data_widget import DataWidget
 from tests.builders.config_builder import ConfigBuilder
 from tests.matchers import AnyStringWith
 
-from src.data_processing.quaternion import Quaternion
 
 class ControllerTest(unittest.TestCase):
 
@@ -29,15 +30,19 @@ class ControllerTest(unittest.TestCase):
     TEMPERATURE = 100
     QUATERNION = Quaternion(1, 2, 3, 4)
     OPEN_ROCKET_SIMULATION_FILENAME = "simulation.csv"
+    A_ROCKET_PACKET_VERSION = 2019
 
     def setUp(self):
         self.data_widget = Mock(spec=DataWidget)
         self.data_producer = Mock(spec=DataProducer)
         self.consumer = MagicMock(spec=Consumer)
+        self.consumer_factory = Mock(spec=ConsumerFactory)
+        self.consumer_factory.create.return_value = self.consumer
 
         config = ConfigBuilder().build()
 
-        self.controller = Controller(self.data_widget, self.data_producer, self.consumer, config)
+        self.controller = Controller(self.data_widget, self.data_producer, self.consumer_factory, config)
+        self.controller.create_new_consumer(self.A_ROCKET_PACKET_VERSION)
 
     def test_update_should_update_consumer(self):
         self.controller.update()
@@ -87,6 +92,7 @@ class ControllerTest(unittest.TestCase):
         self.assert_ui_not_updated()
 
     def test_update_should_clear_consumer(self):
+
         self.controller.update()
 
         self.consumer.clear.assert_called_with()
@@ -119,6 +125,13 @@ class ControllerTest(unittest.TestCase):
         self.controller.add_open_rocket_simulation(self.OPEN_ROCKET_SIMULATION_FILENAME)
 
         message_listener.notify.assert_called_with(AnyStringWith(error_message), MessageType.ERROR)
+
+    def test_create_new_consumer_should_delegate_to_factory(self):
+        self.controller.consumer = None
+
+        self.controller.create_new_consumer(self.A_ROCKET_PACKET_VERSION)
+
+        self.assertEqual(self.controller.consumer, self.consumer)
 
     def setup_consumer_data(self):
         data = {"altitude_feet": self.ALTITUDE, "apogee": self.APOGEE, "easting": self.EASTING,

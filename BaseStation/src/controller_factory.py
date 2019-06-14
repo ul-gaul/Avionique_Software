@@ -1,9 +1,8 @@
 import threading
 
 from src.config import ConfigLoader
-from src.data_processing.angular_position_calculator import AngularCalculator
-from src.data_processing.apogee_calculator import ApogeeCalculator
-from src.data_processing.consumer import Consumer
+from src.data_processing.consumer_factory import ConsumerFactory
+from src.data_processing.gps.coordinate_conversion_strategy_factory import CoordinateConversionStrategyFactory
 from src.persistence.csv_data_persister import CsvDataPersister
 from src.real_time_controller import RealTimeController
 from src.realtime.checksum_validator import ChecksumValidator
@@ -20,18 +19,18 @@ from src.ui.replay_widget import ReplayWidget
 
 
 class ControllerFactory:
-
     def __init__(self):
         self.csv_data_persister = CsvDataPersister()
         self.rocket_packet_parser_factory = RocketPacketParserFactory()
         self.rocket_packet_repository = RocketPacketRepository(self.csv_data_persister,
                                                                self.rocket_packet_parser_factory)
+        self.coordinate_conversion_strategy_factory = CoordinateConversionStrategyFactory()
 
     def create_real_time_controller(self, real_time_widget: RealTimeWidget, console: ConsoleMessageListener):
         config = ConfigLoader.load()
 
         checksum_validator = ChecksumValidator()
-        checksum_validator.register_message_listener(console)   # FIXME: maybe this should be done elsewhere...
+        checksum_validator.register_message_listener(console)  # FIXME: maybe this should be done elsewhere...
 
         rocket_packet_parser = self.rocket_packet_parser_factory.create(config.rocket_packet_config.version)
         lock = threading.Lock()
@@ -39,12 +38,11 @@ class ControllerFactory:
                                            checksum_validator,
                                            sampling_frequency=config.rocket_packet_config.sampling_frequency)
 
-        consumer = Consumer(data_producer, config.rocket_packet_config.sampling_frequency, ApogeeCalculator(),
-                            AngularCalculator(config.rocket_packet_config.sampling_frequency))
+        consumer_factory = ConsumerFactory(self.coordinate_conversion_strategy_factory)
 
         save_manager = SaveManager(data_producer, real_time_widget)
 
-        return RealTimeController(real_time_widget, data_producer, consumer, save_manager, config)
+        return RealTimeController(real_time_widget, data_producer, consumer_factory, save_manager, config)
 
     def create_replay_controller(self, replay_widget: ReplayWidget):
         config = ConfigLoader.load()
@@ -54,7 +52,6 @@ class ControllerFactory:
         playback_state = PlaybackState(1, PlaybackState.Mode.FORWARD)
         data_producer = FileDataProducer(self.rocket_packet_repository, data_lock, playback_lock, playback_state)
 
-        consumer = Consumer(data_producer, config.rocket_packet_config.sampling_frequency, ApogeeCalculator(),
-                            AngularCalculator(config.rocket_packet_config.sampling_frequency))
+        consumer_factory = ConsumerFactory(self.coordinate_conversion_strategy_factory)
 
-        return ReplayController(replay_widget, data_producer, consumer, config)
+        return ReplayController(replay_widget, data_producer, consumer_factory, config)

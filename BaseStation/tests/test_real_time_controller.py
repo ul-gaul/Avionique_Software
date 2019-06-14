@@ -3,7 +3,7 @@ from unittest.mock import patch, Mock, MagicMock
 
 from PyQt5.QtGui import QCloseEvent
 
-from src.data_processing.consumer import Consumer
+from src.data_processing.consumer_factory import ConsumerFactory
 from src.message_listener import MessageListener
 from src.message_type import MessageType
 from src.real_time_controller import RealTimeController
@@ -17,18 +17,19 @@ class RealTimeControllerTest(unittest.TestCase):
 
     VALID_SAVE_FILE_NAME = "file.csv"
     EMPTY_SAVE_FILE_NAME = ""
+    A_ROCKET_PACKET_VERSION = 2019
 
     def setUp(self):
         self.real_time_widget = Mock(spec=RealTimeWidget)
         self.serial_data_producer = Mock(spec=SerialDataProducer)
-        self.consumer = MagicMock(spec=Consumer)
+        self.consumer_factory = MagicMock(spec=ConsumerFactory)
         self.save_manager = Mock(spec=SaveManager)
         self.event = Mock(spec=QCloseEvent)
 
-        config = ConfigBuilder().build()
+        self.config = ConfigBuilder().with_rocket_packet_version(self.A_ROCKET_PACKET_VERSION).build()
 
-        self.real_time_controller = RealTimeController(self.real_time_widget, self.serial_data_producer, self.consumer,
-                                                       self.save_manager, config)
+        self.real_time_controller = RealTimeController(self.real_time_widget, self.serial_data_producer,
+                                                       self.consumer_factory, self.save_manager, self.config)
         self.real_time_controller.is_running = False
 
     @patch("src.controller.Thread")
@@ -71,13 +72,14 @@ class RealTimeControllerTest(unittest.TestCase):
         self.real_time_widget.update_button_text.assert_called_with(True)
 
     @patch("src.controller.Thread")
-    def test_real_time_button_callback_should_reset_consumer_is_not_running(self, _):
+    def test_real_time_button_callback_should_create_new_consumer_when_is_not_running(self, _):
         self.serial_data_producer.has_unsaved_data.return_value = True
         self.save_manager.save.return_value = SaveStatus.SAVED
 
         self.real_time_controller.real_time_button_callback()
 
-        self.consumer.reset.assert_called_with()
+        self.consumer_factory.create.assert_called_with(self.serial_data_producer, self.A_ROCKET_PACKET_VERSION,
+                                                        self.config)
 
     @patch("src.controller.Thread")
     def test_real_time_button_callback_should_reset_ui_when_is_not_running(self, _):
@@ -97,7 +99,7 @@ class RealTimeControllerTest(unittest.TestCase):
 
         self.real_time_controller.real_time_button_callback()
 
-        self.consumer.reset.assert_not_called()
+        self.consumer_factory.create.assert_not_called()
         self.real_time_widget.reset.assert_not_called()
         self.real_time_widget.update_button_text.assert_not_called()
         self.serial_data_producer.start.assert_not_called()
@@ -208,14 +210,6 @@ class RealTimeControllerTest(unittest.TestCase):
 
         self.serial_data_producer.clear_rocket_packets.assert_called_with()
 
-    def test_deactivate_should_reset_consumer(self):
-        self.real_time_controller.is_running = False
-        self.serial_data_producer.has_unsaved_data.return_value = False
-
-        self.real_time_controller.deactivate()
-
-        self.consumer.reset.assert_called_with()
-
     def test_deactivate_should_reset_data_widget(self):
         self.real_time_controller.is_running = False
         self.serial_data_producer.has_unsaved_data.return_value = False
@@ -244,7 +238,6 @@ class RealTimeControllerTest(unittest.TestCase):
         self.real_time_controller.deactivate()
 
         self.serial_data_producer.clear_rocket_packets.assert_not_called()
-        self.consumer.reset.assert_not_called()
         self.real_time_widget.reset.assert_not_called()
         thread_mock.join.assert_not_called()
         self.serial_data_producer.stop.assert_not_called()

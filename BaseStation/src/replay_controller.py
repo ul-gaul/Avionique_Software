@@ -1,14 +1,14 @@
 from src.config import Config
 from src.controller import Controller
-from src.data_processing.consumer import Consumer
+from src.data_processing.consumer_factory import ConsumerFactory
 from src.replay.file_data_producer import FileDataProducer
 from src.ui.replay_widget import ReplayWidget
 
 
 class ReplayController(Controller):
-    def __init__(self, replay_widget: ReplayWidget, file_data_producer: FileDataProducer, consumer: Consumer,
-                 config: Config):
-        super().__init__(replay_widget, file_data_producer, consumer, config)
+    def __init__(self, replay_widget: ReplayWidget, file_data_producer: FileDataProducer,
+                 consumer_factory: ConsumerFactory, config: Config):
+        super().__init__(replay_widget, file_data_producer, consumer_factory, config)
 
         self.data_widget.set_callback("play_pause", self.play_pause_button_callback)
         self.data_widget.set_callback("fast_forward", self.fast_forward_button_callback)
@@ -56,16 +56,17 @@ class ReplayController(Controller):
         self.data_producer.load(filename)
         self.data_producer.reset_playback_state()
 
-        self.data_widget.set_control_bar_max_value(self.data_producer.get_total_packet_count() - 1)
+        self.create_new_consumer(self.data_producer.get_rocket_packet_version())
 
+        self.data_widget.set_control_bar_max_value(self.data_producer.get_total_packet_count() - 1)
         self.data_widget.set_play_button_text()
+
         self.update()
 
     def deactivate(self) -> bool:
         if self.is_running:
             self.stop_thread()
 
-        self.consumer.reset()
         self.data_widget.reset()
 
         return True
