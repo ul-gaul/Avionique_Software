@@ -23,7 +23,6 @@ class Controller(MessageSender):
         self.is_running = False
         self.data_producer = data_producer
         self.target_altitude = config.target_altitude
-        self.sampling_frequency = config.rocket_packet_config.sampling_frequency
         self.consumer = None
         self.consumer_factory = consumer_factory
         self.refresh_delay = 1.0 / config.gui_fps

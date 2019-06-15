@@ -21,7 +21,6 @@ class ConsumerTest(unittest.TestCase):
     APOGEE = (100, 10000)
 
     def setUp(self):
-        self.sampling_frequency = 1
         self.producer = DataProducer(threading.Lock())
         self.apogee_calculator = Mock(spec=ApogeeCalculator)
         self.apogee_calculator.get_apogee.return_value = self.APOGEE
@@ -30,8 +29,8 @@ class ConsumerTest(unittest.TestCase):
         self.coordinate_conversion_strategy.to_utm.return_value = self.EASTING, self.NORTHING
         self.coordinate_conversion_strategy.to_decimal_degrees.return_value = (self.LATITUDE, self.LONGITUDE)
 
-        self.consumer = Consumer(self.producer, self.sampling_frequency, self.apogee_calculator,
-                                 self.angular_calculator, self.coordinate_conversion_strategy)
+        self.consumer = Consumer(self.producer, self.apogee_calculator, self.angular_calculator,
+                                 self.coordinate_conversion_strategy)
 
     def test_constructor_should_create_dictionary_with_rocket_packet_keys(self):
         self.assertTrue(set(RocketPacket().keys()).issubset(set(self.consumer.data.keys())))

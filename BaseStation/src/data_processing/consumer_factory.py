@@ -14,6 +14,4 @@ class ConsumerFactory:
         coordinate_conversion_strategy = self.coordinate_conversion_strategy_factory.create(rocket_packet_version,
                                                                                             config.gps_config)
 
-        return Consumer(data_producer, config.rocket_packet_config.sampling_frequency, ApogeeCalculator(),
-                        AngularCalculator(config.rocket_packet_config.sampling_frequency),
-                        coordinate_conversion_strategy)
+        return Consumer(data_producer, ApogeeCalculator(), AngularCalculator(), coordinate_conversion_strategy)
