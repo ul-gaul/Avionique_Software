@@ -3,15 +3,23 @@ from src.data_processing.angular_position_calculator import AngularCalculator
 from src.data_processing.apogee_calculator import ApogeeCalculator
 from src.data_processing.consumer import Consumer
 from src.data_processing.gps.coordinate_conversion_strategy_factory import CoordinateConversionStrategyFactory
+from src.data_processing.gps.gps_fix_validator import GpsFixValidatorFactory
+from src.data_processing.gps.gps_processor import GpsProcessor
 from src.data_producer import DataProducer
 
 
 class ConsumerFactory:
-    def __init__(self, coordinate_conversion_strategy_factory: CoordinateConversionStrategyFactory):
+    def __init__(self, coordinate_conversion_strategy_factory: CoordinateConversionStrategyFactory,
+                 gps_fix_validator_factory: GpsFixValidatorFactory):
         self.coordinate_conversion_strategy_factory = coordinate_conversion_strategy_factory
+        self.gps_fix_validator_factory = gps_fix_validator_factory
 
     def create(self, data_producer: DataProducer, rocket_packet_version: int, config: Config) -> Consumer:
         coordinate_conversion_strategy = self.coordinate_conversion_strategy_factory.create(rocket_packet_version,
                                                                                             config.gps_config)
 
-        return Consumer(data_producer, ApogeeCalculator(), AngularCalculator(), coordinate_conversion_strategy)
+        gps_fix_validator = self.gps_fix_validator_factory.create(rocket_packet_version)
+        gps_processor = GpsProcessor(config.gps_config.initialisation_delay, gps_fix_validator,
+                                     coordinate_conversion_strategy)
+
+        return Consumer(data_producer, ApogeeCalculator(), AngularCalculator(), gps_processor)

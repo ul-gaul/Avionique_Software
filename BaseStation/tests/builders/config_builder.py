@@ -9,7 +9,7 @@ class ConfigBuilder:
 
         self.gps_device_name = "gps"
         self.utm_zone = UTMZone.zone_13S
-        self.origin_measurement_delay = 10
+        self.initialisation_delay = 10
 
         self.start_character = b's'
         self.baudrate = 9600
@@ -24,7 +24,7 @@ class ConfigBuilder:
 
     def build(self):
         rocket_packet_config = RocketPacketConfig(self.rocket_packet_version, self.sampling_frequency)
-        gps_config = GpsConfig(self.gps_device_name, self.utm_zone, self.origin_measurement_delay)
+        gps_config = GpsConfig(self.gps_device_name, self.utm_zone, self.initialisation_delay)
         serial_port_config = SerialPortConfig(self.start_character, self.baudrate, self.timeout)
 
         return Config(self.target_altitude, self.gui_fps, rocket_packet_config, gps_config, serial_port_config)

@@ -27,9 +27,9 @@ class Map(PlotWidget):
         self.addItem(self.current_coordinates_text, ignoreBounds=True)
 
     def draw_map(self, eastings: list, northings: list):
-        if len(eastings) > 0:
-            self.positions_on_map.setData(eastings, northings)
+        self.positions_on_map.setData(eastings, northings)
 
+        if len(eastings) > 0:
             self.current_coordinates_point.setData([eastings[-1:]], northings[-1:])
             self.current_coordinates_text.setPos(eastings[-1], northings[-1])
             self.current_coordinates_text.setColor(color='k')

@@ -2,10 +2,12 @@
 
 void createRocketPacket2019(RocketPacket19& rp, int timestamp) {
   toDouble((float)timestamp, rp.data.timestamp);
-  toDouble(dd2ddmm(latitude(timestamp)), rp.data.latitude);
-  toDouble(dd2ddmm(longitude(timestamp)), rp.data.longitude);
-  rp.data.NSIndicator = 'N';
-  rp.data.EWIndicator = 'W';
+  float lat = timestamp >= GPS_FIX_DELAY ? dd2ddmm(latitude(timestamp)) : 0.0;
+  toDouble(lat, rp.data.latitude);
+  float lon = timestamp >= GPS_FIX_DELAY ? dd2ddmm(longitude(timestamp)) : 0.0;
+  toDouble(lon, rp.data.longitude);
+  rp.data.NSIndicator = timestamp >= GPS_FIX_DELAY ? 'N' : 'M';
+  rp.data.EWIndicator = timestamp >= GPS_FIX_DELAY ? 'W' : 'F';
   toDouble(123.36, rp.data.UTCTime);
   rp.data.altitude = altitude(timestamp);
   rp.data.pressure = pressure(timestamp);

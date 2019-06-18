@@ -65,8 +65,7 @@ class Controller(MessageSender):
     def update_plots(self):
         self.data_widget.draw_altitude(self.consumer["altitude_feet"])
         self.data_widget.draw_apogee(self.consumer["apogee"])
-        self.data_widget.draw_map(self.consumer["easting"], self.consumer["northing"],
-                                  *self.consumer.get_last_gps_coordinates())
+        self.data_widget.draw_map(*self.consumer.get_projected_coordinates(), *self.consumer.get_last_gps_coordinates())
         self.data_widget.draw_voltage(self.consumer["voltage"])
 
     def update_3d_model(self):

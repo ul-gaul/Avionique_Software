@@ -59,7 +59,7 @@ class ControllerTest(unittest.TestCase):
 
         self.data_widget.draw_altitude.assert_called_with(self.ALTITUDE)
         self.data_widget.draw_apogee.assert_called_with(self.APOGEE)
-        self.data_widget.draw_map.assert_called_with(self.EASTING, self.NORTHING, self.LATITUDE, self.LONGITUDE)
+        self.data_widget.draw_map.assert_called_with([self.EASTING], [self.NORTHING], self.LATITUDE, self.LONGITUDE)
         self.data_widget.draw_voltage.assert_called_with(self.VOLTAGE)
 
     def test_update_should_update_leds_when_consumer_has_data(self):
@@ -135,13 +135,13 @@ class ControllerTest(unittest.TestCase):
         self.assertEqual(self.controller.consumer, self.consumer)
 
     def setup_consumer_data(self):
-        data = {"altitude_feet": self.ALTITUDE, "apogee": self.APOGEE, "easting": self.EASTING,
-                "northing": self.NORTHING, "voltage": self.VOLTAGE, "acquisition_board_state_1": [self.BOARD_STATE_1],
-                "acquisition_board_state_2": [self.BOARD_STATE_2], "acquisition_board_state_3": [self.BOARD_STATE_3],
-                "power_supply_state_1": [self.POWER_SUPPLY_STATE_1],
+        data = {"altitude_feet": self.ALTITUDE, "apogee": self.APOGEE, "voltage": self.VOLTAGE,
+                "acquisition_board_state_1": [self.BOARD_STATE_1], "acquisition_board_state_2": [self.BOARD_STATE_2],
+                "acquisition_board_state_3": [self.BOARD_STATE_3], "power_supply_state_1": [self.POWER_SUPPLY_STATE_1],
                 "power_supply_state_2": [self.POWER_SUPPLY_STATE_2],
                 "payload_board_state_1": [self.PAYLOAD_BOARD_STATE_1]}
         self.consumer.__getitem__.side_effect = lambda arg: data[arg]
+        self.consumer.get_projected_coordinates.return_value = ([self.EASTING], [self.NORTHING])
         self.consumer.get_last_gps_coordinates.return_value = (self.LATITUDE, self.LONGITUDE)
 
     def assert_leds_updated(self):

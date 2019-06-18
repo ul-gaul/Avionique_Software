@@ -62,12 +62,21 @@ class RocketPacketParser2019Test(unittest.TestCase):
 
         self.assertEquals(field_names, self.EXPECTED_FIELD_NAMES)
 
-    def test_to_list_should_return_list_with_all_rocket_packet_2019_fields(self):
+    def test_to_list_should_return_list_with_all_rocket_packet_2019_fields_and_bytes_fields_as_string(self):
+        self.data[3] = 'N'
+        self.data[4] = 'W'
         fields = self.parser.to_list(self.any_rocket_packet)
 
         self.assertEquals(fields, self.data)
 
-    def test_from_list_should_return_rocket_packet_properly_assembled(self):
+    def test_from_list_should_return_rocket_packet_properly_assembled_when_indicator_as_bytes(self):
+        rocket_packet = self.parser.from_list(self.data)
+
+        self.assertEquals(rocket_packet, self.expected_rocket_packet)
+
+    def test_from_list_should_return_rocket_packet_properly_assembled_when_indicator_as_string(self):
+        self.data[3] = "N"
+        self.data[4] = "W"
         rocket_packet = self.parser.from_list(self.data)
 
         self.assertEquals(rocket_packet, self.expected_rocket_packet)

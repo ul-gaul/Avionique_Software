@@ -5,6 +5,8 @@
 #include "sensors.h"
 #include "convertor.h"
 
+#define GPS_FIX_DELAY 3
+
 typedef struct {
   // time since boot in milliseconds
   byte timestamp[8]; // 8
