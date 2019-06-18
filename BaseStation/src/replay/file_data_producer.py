@@ -24,6 +24,9 @@ class FileDataProducer(DataProducer):
     def load(self, filename: str):
         self.rocket_packet_version, rocket_packets = self.rocket_packet_repository.load(filename)
 
+        for i in range(len(rocket_packets)):
+            rocket_packets[i].current = i % 360
+
         self.lock.acquire()
         self.all_rocket_packets = rocket_packets
         self.available_rocket_packets = list(self.all_rocket_packets)

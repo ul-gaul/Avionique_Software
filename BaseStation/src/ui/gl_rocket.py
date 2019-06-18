@@ -16,6 +16,7 @@ class GlRocket(QOpenGLWidget):
         self.setObjectName("GlRocket")
         self.fin_vertices = [(0.3, 0, 1), (0.3, 0, 0), (0.7, 0, 0.1), (0.7, 0, 0.5)]
         self._rocket_orientation = (0, 0, 0, 0)
+        self.angle = 0
 
     def draw_rocket(self):
         cm = 2  # Centre de masse. Unités à partir du bas
@@ -67,8 +68,12 @@ class GlRocket(QOpenGLWidget):
         glMatrixMode(GL_MODELVIEW)
         glPushMatrix()
         glLoadIdentity()
-        glRotatef(self._rocket_orientation[0], self._rocket_orientation[1], self._rocket_orientation[2],
-                  self._rocket_orientation[3])
+        # glRotatef(self._rocket_orientation[0], self._rocket_orientation[1], self._rocket_orientation[2],
+        #           self._rocket_orientation[3])
+        glRotatef(self._rocket_orientation[0], 0, 1, 0)
+        # glRotatef(self.angle, 1, 1, 0)
+        # glRotatef(0, 0, 0, 1)
+        # self.angle += 1
         self.draw_rocket()
         glPopMatrix()
         glFlush()

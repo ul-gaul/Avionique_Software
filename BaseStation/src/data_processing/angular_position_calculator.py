@@ -8,6 +8,11 @@ class AngularCalculator:
     def __str__(self):
         return "roll({}), pitch({}), yaw({})".format(self.roll, self.pitch, self.yaw)
 
+    def set_initial_angular_position(self, roll, pitch, yaw):
+        self.roll = roll
+        self.pitch = pitch
+        self.yaw = yaw
+
     def integrate_all(self, time_stamp: list, ang_vel_x: list, ang_vel_y: list, ang_vel_z: list):
         self.reset()
 
