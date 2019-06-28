@@ -166,6 +166,15 @@ class ConsoleMessageListener(QtWidgets.QWidget, MessageListener):
         if notif.message_type in self.message_display:
             self.layout_SArea.addWidget(notif.get_widget())
 
+    def notifDebug(self, message: str):
+        self.notify(self, message, MessageType.DEBUG)
+
+    def notifyWarning(self, message: str):
+        self.notify(self, message, MessageType.WARNING)
+
+    def notifError(self, message: str):
+        self.notify(self, message, MessageType.ERROR)
+
     def set_active_button(self, active: bool):
         for button in self.button_list:
             if active:

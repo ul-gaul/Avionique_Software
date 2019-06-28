@@ -40,6 +40,6 @@ class CsvDataPersister(DataPersister):
                 if len(rocket_packet_field) == len(headers):
                     all_rocket_packets_fields.append(rocket_packet_field)
                 else:
-                    pass  # FIXME: throw exception or ignore line?
+                    pass  # FIXME: throw exception or ignore line or put comment in the console ?
         csv_file.close()
         return version, all_rocket_packets_fields
