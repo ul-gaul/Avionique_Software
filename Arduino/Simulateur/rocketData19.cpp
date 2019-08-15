@@ -23,7 +23,7 @@ void createRocketPacket2019(RocketPacket19& rp, int timestamp) {
   rp.data.mag_z = (int16_t) magnetZ(timestamp);
   rp.data.x_gyro = 2;
   rp.data.y_gyro = 0;
-  rp.data.z_gyro = 42;
+  rp.data.z_gyro = 0;
 
   rp.checksum = computeCheckSum(&(rp.data), sizeof(RocketData19));
 }

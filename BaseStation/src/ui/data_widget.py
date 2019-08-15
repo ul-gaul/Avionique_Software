@@ -203,8 +203,8 @@ class DataWidget(QtWidgets.QWidget):
     def draw_voltage(self, values: list):
         self.voltage_curve.setData(values)
 
-    def draw_altitude(self, values: list):
-        self.altitude_graph.draw_altitude_curve(values)
+    def draw_altitude(self, timestamps: list, altitudes: list):
+        self.altitude_graph.draw_altitude_curve(timestamps, altitudes)
 
     def draw_apogee(self, values: list):
         self.altitude_graph.draw_apogee(values)

@@ -1,3 +1,4 @@
+import math
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from PyQt5 import QtCore
@@ -63,6 +64,25 @@ class GlRocket(QOpenGLWidget):
         self._rocket_orientation = (rot.w, rot.x, rot.y, rot.z)
         self.update()
 
+    def _to_axis_angle(self, rot: Quaternion):
+        yaw = math.radians(rot.z)
+        roll = math.radians(rot.x)
+        pitch = math.radians(rot.y)
+
+        c1 = math.cos(yaw / 2)
+        c2 = math.cos(roll / 2)
+        c3 = math.cos(pitch / 2)
+        s1 = math.sin(yaw / 2)
+        s2 = math.sin(roll / 2)
+        s3 = math.sin(pitch / 3)
+
+        angle = 2 * math.acos(c1*c2*c3 - s1*s2*s3)
+        x = s1*s2*c3 + c1*c2*s3
+        y = s1*c2*c3 + c1*s2*s3
+        z = c1*s2*c3 - s1*c2*s3
+
+        return angle, x, y, z
+
     def paintGL(self):
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
         glMatrixMode(GL_MODELVIEW)
@@ -70,7 +90,7 @@ class GlRocket(QOpenGLWidget):
         glLoadIdentity()
         # glRotatef(self._rocket_orientation[0], self._rocket_orientation[1], self._rocket_orientation[2],
         #           self._rocket_orientation[3])
-        glRotatef(self._rocket_orientation[0], 0, 1, 0)
+        glRotatef(self._rocket_orientation[1], 0, 1, 0)
         # glRotatef(self.angle, 1, 1, 0)
         # glRotatef(0, 0, 0, 1)
         # self.angle += 1
