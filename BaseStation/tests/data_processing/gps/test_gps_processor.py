@@ -12,8 +12,10 @@ class GpsProcessorTest(TestCase):
     NO_COORDINATES = (0.0, 0.0)
     DD_LAT = 46.77930
     DD_LONG = -71.27621
-    ANY_EASTING = 1234
-    ANY_NORTHING = 2345
+    INITIAL_COORDINATES = (1234, 2345)
+    MOVEMENT_EASTING = 6
+    MOVEMENT_NORTHING = 7
+    MOVEMENT = (MOVEMENT_EASTING, MOVEMENT_NORTHING)
 
     def setUp(self):
         self.gps_fix_validator = Mock(spec=GpsFixValidator)
@@ -26,7 +28,7 @@ class GpsProcessorTest(TestCase):
         rocket_packet = RocketPacket()
         rocket_packet.latitude = 46
         rocket_packet.longitude = -71
-        self.gps_fix_validator.is_fixed.return_value = False    # TODO: validate parameter
+        self.gps_fix_validator.is_fixed.return_value = False  # TODO: validate parameter
 
         self.gps_processor.update(rocket_packet)
 
@@ -37,25 +39,34 @@ class GpsProcessorTest(TestCase):
         rocket_packet.time_stamp = 0.0
         self.gps_fix_validator.is_fixed.return_value = True
         self.coordinate_conversion_strategy.to_decimal_degrees.return_value = (self.DD_LAT, self.DD_LONG)
-        self.coordinate_conversion_strategy.to_utm.return_value = (self.ANY_EASTING, self.ANY_NORTHING)
+        self.coordinate_conversion_strategy.to_utm.return_value = self.INITIAL_COORDINATES
 
         self.gps_processor.update(rocket_packet)
 
         self.assertEqual(self.gps_processor.get_last_coordinates(), (self.DD_LAT, self.DD_LONG))
 
-    def test_update_should_proess_positions_in_reference_to_base_camp_after_initialisation(self):   # FIXME: this name
+    def test_update_should_process_positions_in_reference_to_base_camp_after_initialisation(self):
         rocket_packets = [self.create_rocket_packet(i) for i in range(4)]
         self.gps_fix_validator.is_fixed.return_value = True
         self.coordinate_conversion_strategy.to_decimal_degrees.return_value = (self.DD_LAT, self.DD_LONG)
-        self.coordinate_conversion_strategy.to_utm.side_effect = (self.ANY_EASTING, self.ANY_NORTHING)
+        self.coordinate_conversion_strategy.to_utm.side_effect = [self.INITIAL_COORDINATES,
+                                                                  self.INITIAL_COORDINATES,
+                                                                  self.INITIAL_COORDINATES,
+                                                                  self._add_vectors(self.INITIAL_COORDINATES,
+                                                                                    self.MOVEMENT)]
 
         for rocket_packet in rocket_packets:
             self.gps_processor.update(rocket_packet)
 
-        self.assertEqual(self.gps_processor.get_projected_coordinates(), ([], []))
+        self.assertEqual(self.gps_processor.get_projected_coordinates(), ([0.0, 0.0, 0.0, self.MOVEMENT_EASTING],
+                                                                          [0.0, 0.0, 0.0, self.MOVEMENT_NORTHING]))
 
     @staticmethod
     def create_rocket_packet(time_stamp: float):
         rocket_packet = RocketPacket()
         rocket_packet.time_stamp = time_stamp
         return rocket_packet
+
+    @staticmethod
+    def _add_vectors(v1, v2):
+        return tuple(map(lambda x, y: x + y, v1, v2))

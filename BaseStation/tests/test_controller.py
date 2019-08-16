@@ -16,7 +16,8 @@ from tests.matchers import AnyStringWith
 
 class ControllerTest(unittest.TestCase):
 
-    ALTITUDE = 9000
+    TIMESTAMPS = [1]
+    ALTITUDES = [9000]
     APOGEE = 10000
     EASTING = 32
     NORTHING = 52
@@ -57,7 +58,7 @@ class ControllerTest(unittest.TestCase):
 
         self.controller.update()
 
-        self.data_widget.draw_altitude.assert_called_with(self.ALTITUDE)
+        self.data_widget.draw_altitude.assert_called_with(self.TIMESTAMPS, self.ALTITUDES)
         self.data_widget.draw_apogee.assert_called_with(self.APOGEE)
         self.data_widget.draw_map.assert_called_with([self.EASTING], [self.NORTHING], self.LATITUDE, self.LONGITUDE)
         self.data_widget.draw_voltage.assert_called_with(self.VOLTAGE)
@@ -135,11 +136,11 @@ class ControllerTest(unittest.TestCase):
         self.assertEqual(self.controller.consumer, self.consumer)
 
     def setup_consumer_data(self):
-        data = {"altitude_feet": self.ALTITUDE, "apogee": self.APOGEE, "voltage": self.VOLTAGE,
+        data = {"altitude_feet": self.ALTITUDES, "apogee": self.APOGEE, "voltage": self.VOLTAGE,
                 "acquisition_board_state_1": [self.BOARD_STATE_1], "acquisition_board_state_2": [self.BOARD_STATE_2],
                 "acquisition_board_state_3": [self.BOARD_STATE_3], "power_supply_state_1": [self.POWER_SUPPLY_STATE_1],
                 "power_supply_state_2": [self.POWER_SUPPLY_STATE_2],
-                "payload_board_state_1": [self.PAYLOAD_BOARD_STATE_1]}
+                "payload_board_state_1": [self.PAYLOAD_BOARD_STATE_1], "time_stamp": self.TIMESTAMPS}
         self.consumer.__getitem__.side_effect = lambda arg: data[arg]
         self.consumer.get_projected_coordinates.return_value = ([self.EASTING], [self.NORTHING])
         self.consumer.get_last_gps_coordinates.return_value = (self.LATITUDE, self.LONGITUDE)
