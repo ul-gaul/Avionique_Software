@@ -14,6 +14,7 @@ class ReplayControllerTest(unittest.TestCase):
     A_FILENAME = "path/to/file.csv"
     TIMESTAMPS = [0, 1, 2]
     ALTITUDE_DATA = [0, 5000, 10000]
+    DEFAULT_VALUES = [0]
 
     def setUp(self):
         self.replay_widget = Mock(spec=ReplayWidget)
@@ -115,7 +116,7 @@ class ReplayControllerTest(unittest.TestCase):
 
     def test_activate_should_update_ui(self):
         data = {"time_stamp": self.TIMESTAMPS, "altitude_feet": self.ALTITUDE_DATA}
-        self.consumer.__getitem__.side_effect = lambda arg: data.get(arg, [0])
+        self.consumer.__getitem__.side_effect = lambda arg: data.get(arg, self.DEFAULT_VALUES)
 
         self.replay_controller.activate(self.A_FILENAME)
 

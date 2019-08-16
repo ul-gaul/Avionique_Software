@@ -209,8 +209,10 @@ class DataWidget(QtWidgets.QWidget):
     def draw_apogee(self, values: list):
         self.altitude_graph.draw_apogee(values)
 
-    def draw_map(self, eastings: list, northings: list, current_latitude: float, current_longitude: float):
+    def draw_map(self, eastings: list, northings: list):
         self.map.draw_map(eastings, northings)
+
+    def show_current_coordinates(self, current_latitude: float, current_longitude: float):
         self.coordinates_label.setText("Lat: {:.6f} Long: {:.6f}".format(current_latitude, current_longitude))
 
     def show_simulation(self, simulation: OpenRocketSimulation):

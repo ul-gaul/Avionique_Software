@@ -14,7 +14,7 @@ METERS2FEET = 3.28084
 ORIENTATION_INITIALISATION_DELAY_IN_SECONDS = 5
 
 
-class Consumer:
+class Consumer: # TODO: add unit tests to this class
     def __init__(self, data_producer: DataProducer, apogee_calculator: ApogeeCalculator,
                  angular_calculator: AngularCalculator, gps_processor: GpsProcessor,
                  orientation_processor: OrientationProcessor):

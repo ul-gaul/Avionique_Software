@@ -12,7 +12,7 @@ class RocketPacketParser2019(RocketPacketParser):
 
     def parse(self, data: bytes):
         data_list = struct.unpack(self.format, data)
-        print(data_list)
+        print(data_list)    # TODO: put this in a logger
         return self.from_list(data_list)
 
     def get_field_names(self):
