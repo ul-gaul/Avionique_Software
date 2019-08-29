@@ -3,7 +3,6 @@ import abc
 from src.rocket_packet.rocket_packet import RocketPacket
 
 
-# TODO: unit test this module
 class GpsFixValidator:
     __metaclass__ = abc.ABCMeta
 
@@ -14,11 +13,8 @@ class GpsFixValidator:
 
 class IndicatorCharacterGpsFixValidator(GpsFixValidator):
     def is_fixed(self, rocket_packet: RocketPacket) -> bool:
-        if (self.is_valid_ns_indicator(rocket_packet.ns_indicator) and
-                self.is_valid_ew_indicator(rocket_packet.ew_indicator)):
-            return True
-        else:
-            return False
+        return (self.is_valid_ns_indicator(rocket_packet.ns_indicator) and
+                self.is_valid_ew_indicator(rocket_packet.ew_indicator))
 
     @staticmethod
     def is_valid_ns_indicator(ns_indicator: bytes):
@@ -39,4 +35,6 @@ class GpsFixValidatorFactory:
         if rocket_packet_version == 2019:
             return IndicatorCharacterGpsFixValidator()
         else:
+            # TODO: use a logger for this
+            print("Warning: UtmZoneGpsFixValidator is not implemented and the GPS will always be considered fixed.")
             return UtmZoneGpsFixValidator()

@@ -1,3 +1,4 @@
+from parameterized import parameterized
 from unittest import TestCase
 
 from src.data_processing.gps.gps_fix_validator import IndicatorCharacterGpsFixValidator
@@ -5,12 +6,16 @@ from src.rocket_packet.rocket_packet import RocketPacket
 
 
 class IndicatorCharacterGpsFixValidatorTest(TestCase):
-
     def setUp(self):
         self.gps_fix_validator = IndicatorCharacterGpsFixValidator()
 
-    def test_is_fixed_should_return_true_given_valid_indicator_character(self):
-        rocket_packet = self.create_rocket_packet(b'N', b'W')
+    @parameterized.expand([
+        ("NE", b'N', b'E'),
+        ("NW", b'N', b'W'),
+        ("SE", b'S', b'E'),
+        ("SW", b'S', b'W')])
+    def test_is_fixed_should_return_true_given_valid_indicator_character(self, _, ns_indicator, ew_indicator):
+        rocket_packet = self.create_rocket_packet(ns_indicator, ew_indicator)
 
         is_fixed = self.gps_fix_validator.is_fixed(rocket_packet)
 
