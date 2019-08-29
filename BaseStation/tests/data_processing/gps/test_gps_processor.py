@@ -61,6 +61,8 @@ class GpsProcessorTest(TestCase):
         self.assertEqual(self.gps_processor.get_projected_coordinates(), ([0.0, 0.0, 0.0, self.MOVEMENT_EASTING],
                                                                           [0.0, 0.0, 0.0, self.MOVEMENT_NORTHING]))
 
+    # TODO: add tests for initialization delay of 0 seconds
+
     @staticmethod
     def create_rocket_packet(time_stamp: float):
         rocket_packet = RocketPacket()

@@ -16,5 +16,3 @@ class UTMCoordinatesConverter:
         :return: easting, northing
         """
         return self.converter(longitude, latitude)
-
-
