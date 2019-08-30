@@ -1,8 +1,9 @@
-from parameterized import parameterized
 from unittest import TestCase
 
+from parameterized import parameterized
+
 from src.data_processing.gps.gps_fix_validator import IndicatorCharacterGpsFixValidator
-from src.rocket_packet.rocket_packet import RocketPacket
+from tests.rocket_packet.rocket_packet_builder import RocketPacketBuilder
 
 
 class IndicatorCharacterGpsFixValidatorTest(TestCase):
@@ -29,8 +30,5 @@ class IndicatorCharacterGpsFixValidatorTest(TestCase):
         self.assertFalse(is_fixed)
 
     @staticmethod
-    def create_rocket_packet(ns_indicator: bytes, ew_indicator: bytes):  # TODO: extract to a builder
-        rocket_packet = RocketPacket()
-        rocket_packet.ns_indicator = ns_indicator
-        rocket_packet.ew_indicator = ew_indicator
-        return rocket_packet
+    def create_rocket_packet(ns_indicator: bytes, ew_indicator: bytes):
+        return RocketPacketBuilder().with_ns_indicator(ns_indicator).with_ew_indicator(ew_indicator).build()

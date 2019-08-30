@@ -21,7 +21,7 @@ class ConsumerFactory:
                                                                                             config.gps_config)
 
         gps_fix_validator = self.gps_fix_validator_factory.create(rocket_packet_version)
-        gps_processor = GpsProcessor(config.gps_config.initialisation_delay, gps_fix_validator,
+        gps_processor = GpsProcessor(config.gps_config.initialization_delay, gps_fix_validator,
                                      coordinate_conversion_strategy)
 
         angular_speed_integrator = AngularSpeedIntegrator()

@@ -17,10 +17,10 @@ class SerialPortConfig:
 
 
 class GpsConfig:
-    def __init__(self, gps_device_name: str, utm_zone: UTMZone, initialisation_delay: int):
+    def __init__(self, gps_device_name: str, utm_zone: UTMZone, initialization_delay: int):
         self.gps_device_name = gps_device_name
         self.utm_zone = utm_zone
-        self.initialisation_delay = initialisation_delay
+        self.initialization_delay = initialization_delay
 
 
 class Config:
@@ -45,8 +45,8 @@ class ConfigLoader:
 
         gps_device_name = config_parser["gps"]["gps_device_name"]
         utm_zone = UTMZone(config_parser["gps"]["utm_zone"])
-        initialisation_delay = int(config_parser["gps"]["initialisation_delay"])
-        gps_config = GpsConfig(gps_device_name, utm_zone, initialisation_delay)
+        initialization_delay = int(config_parser["gps"]["initialization_delay"])
+        gps_config = GpsConfig(gps_device_name, utm_zone, initialization_delay)
 
         start_byte = bytes(config_parser["serial_port"]["start_character"], "utf-8")
         baudrate = int(config_parser["serial_port"]["baudrate"])
