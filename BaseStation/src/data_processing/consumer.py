@@ -4,6 +4,7 @@ import math
 
 from src.data_processing.angular_position_calculator import AngularCalculator
 from src.data_processing.apogee_calculator import ApogeeCalculator
+from src.data_processing.gps.gps_coordinates import GpsCoordinates
 from src.data_processing.gps.gps_processor import GpsProcessor
 from src.data_processing.orientation_processor import OrientationProcessor
 from src.data_processing.quaternion import Quaternion
@@ -108,7 +109,7 @@ class Consumer: # TODO: add unit tests to this class
     def get_projected_coordinates(self) -> Tuple[List, List]:
         return self.gps_processor.get_projected_coordinates()
 
-    def get_last_gps_coordinates(self) -> Tuple[float, float]:
+    def get_last_gps_coordinates(self) -> GpsCoordinates:
         return self.gps_processor.get_last_coordinates()
 
     def clear(self):

@@ -25,11 +25,11 @@ class DecimalDegreesCoordinateConversionStrategyTest(TestCase):
         self.assertEqual(northing, self.NORTHING)
 
     def test_to_decimal_degrees_should_return_same_coordinates(self):
-        latitude, longitude = self.conversion_strategy.to_decimal_degrees(self.LATITUDE, self.LONGITUDE)
+        gps_coordinates = self.conversion_strategy.to_decimal_degrees(self.LATITUDE, self.LONGITUDE)
 
-        self.assertEqual(latitude, self.LATITUDE)
-        self.assertEqual(longitude, self.LONGITUDE)
+        self.assertEqual(gps_coordinates.decimal_degrees_latitude, self.LATITUDE)
+        self.assertEqual(gps_coordinates.decimal_degrees_longitude, self.LONGITUDE)
 
-    def _fake_conversion(self, latitude: float, longitude: float):   # TODO: use mockito for this
+    def _fake_conversion(self, latitude: float, longitude: float):  # TODO: use mockito for this
         if latitude == self.LATITUDE and longitude == self.LONGITUDE:
             return self.EASTING, self.NORTHING

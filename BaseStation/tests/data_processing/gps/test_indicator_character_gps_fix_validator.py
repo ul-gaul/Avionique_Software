@@ -14,7 +14,8 @@ class IndicatorCharacterGpsFixValidatorTest(TestCase):
         ("NE", b'N', b'E'),
         ("NW", b'N', b'W'),
         ("SE", b'S', b'E'),
-        ("SW", b'S', b'W')])
+        ("SW", b'S', b'W')
+    ])
     def test_is_fixed_should_return_true_given_valid_indicator_character(self, _, ns_indicator, ew_indicator):
         rocket_packet = self.create_rocket_packet(ns_indicator, ew_indicator)
 

@@ -4,6 +4,7 @@ from unittest.mock import Mock, MagicMock, call, patch
 from src.controller import Controller
 from src.data_processing.consumer import Consumer
 from src.data_processing.consumer_factory import ConsumerFactory
+from src.data_processing.gps.gps_coordinates import GpsCoordinates
 from src.data_processing.quaternion import Quaternion
 from src.data_producer import DataProducer
 from src.message_listener import MessageListener
@@ -21,8 +22,7 @@ class ControllerTest(unittest.TestCase):
     APOGEE = 10000
     EASTINGS = [32]
     NORTHINGS = [52]
-    LATITUDE = 46.77930
-    LONGITUDE = -71.27621
+    GPS_COORDINATES = GpsCoordinates(46.77930, -71.27621)
     VOLTAGE = 3.3
     BOARD_STATE_1 = True
     BOARD_STATE_2 = True
@@ -61,7 +61,7 @@ class ControllerTest(unittest.TestCase):
         self.data_widget.draw_altitude.assert_called_with(self.TIMESTAMPS, self.ALTITUDES)
         self.data_widget.draw_apogee.assert_called_with(self.APOGEE)
         self.data_widget.draw_map.assert_called_with(self.EASTINGS, self.NORTHINGS)
-        self.data_widget.show_current_coordinates(self.LATITUDE, self.LONGITUDE)
+        self.data_widget.show_current_coordinates.assert_called_with(self.GPS_COORDINATES)
         self.data_widget.draw_voltage.assert_called_with(self.VOLTAGE)
 
     def test_update_should_update_leds_when_consumer_has_data(self):
@@ -144,7 +144,7 @@ class ControllerTest(unittest.TestCase):
                 "payload_board_state_1": [self.PAYLOAD_BOARD_STATE_1], "time_stamp": self.TIMESTAMPS}
         self.consumer.__getitem__.side_effect = lambda arg: data[arg]
         self.consumer.get_projected_coordinates.return_value = (self.EASTINGS, self.NORTHINGS)
-        self.consumer.get_last_gps_coordinates.return_value = (self.LATITUDE, self.LONGITUDE)
+        self.consumer.get_last_gps_coordinates.return_value = self.GPS_COORDINATES
 
     def assert_leds_updated(self):
         calls = [call(1, self.BOARD_STATE_1), call(2, self.BOARD_STATE_2), call(3, self.BOARD_STATE_3),

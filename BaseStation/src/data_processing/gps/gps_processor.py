@@ -1,4 +1,5 @@
 from src.data_processing.gps.coordinate_conversion_strategy import CoordinateConversionStrategy
+from src.data_processing.gps.gps_coordinates import GpsCoordinates
 from src.data_processing.gps.gps_fix_validator import GpsFixValidator
 from src.rocket_packet.rocket_packet import RocketPacket
 
@@ -15,16 +16,14 @@ class GpsProcessor:
         self._initialization_northing = []
         self._base_camp_easting = None
         self._base_camp_northing = None
-        self._last_latitude = 0.0
-        self._last_longitude = 0.0
+        self._last_coordinates = GpsCoordinates(0.0, 0.0)
         self._first_gps_fix_timestamp = None
         self._initializing_gps = True
 
     def update(self, rocket_packet: RocketPacket):
         if self._gps_fix_validator.is_fixed(rocket_packet):
-            self._last_latitude, self._last_longitude = self._coordinate_conversion_strategy.to_decimal_degrees(
-                rocket_packet.latitude, rocket_packet.longitude)
-
+            self._last_coordinates = self._coordinate_conversion_strategy.to_decimal_degrees(rocket_packet.latitude,
+                                                                                             rocket_packet.longitude)
             elapsed_time = self._get_elapsed_time_since_first_gps_fix(rocket_packet)
             easting, northing = self._coordinate_conversion_strategy.to_utm(rocket_packet.latitude,
                                                                             rocket_packet.longitude)
@@ -65,8 +64,8 @@ class GpsProcessor:
     def _average(data: list):
         return sum(data) / len(data)
 
-    def get_last_coordinates(self):
-        return self._last_latitude, self._last_longitude
+    def get_last_coordinates(self) -> GpsCoordinates:
+        return self._last_coordinates
 
     def get_projected_coordinates(self):
         return self._easting, self._northing
@@ -78,7 +77,6 @@ class GpsProcessor:
         self._initialization_northing = []
         self._base_camp_easting = None
         self._base_camp_northing = None
-        self._last_latitude = 0.0
-        self._last_longitude = 0.0
+        self._last_coordinates = GpsCoordinates(0.0, 0.0)
         self._first_gps_fix_timestamp = None
         self._initializing_gps = True
