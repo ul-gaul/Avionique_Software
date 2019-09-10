@@ -9,6 +9,12 @@ class Quaternion:
         self.y = y
         self.z = z
 
+    def set(self, w, x, y, z):
+        self.w = w
+        self.x = x
+        self.y = y
+        self.z = z
+
     def __str__(self):
         return "w({}), x({}), y({}), z({})".format(self.w, self.x, self.y, self.z)
 
@@ -44,9 +50,7 @@ class Quaternion:
         qy = sy * cp * sr + cy * sp * cr
         qz = sy * cp * cr - cy * sp * sr
 
-        result = Quaternion(qw, qx, qy, qz)
-
-        return result
+        return Quaternion(qw, qx, qy, qz)
 
     @staticmethod
     def euler_degrees_to_quaternion(yaw, pitch, roll):  # Z Y X

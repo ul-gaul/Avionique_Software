@@ -14,20 +14,20 @@ class AngularCalculator:
         self.sample_frequency = freq
 
     def integrate_all(self, ang_vel_x: list, ang_vel_y: list, ang_vel_z: list):
-        self.reset()
-
         total_len = len(ang_vel_x)
         if total_len == 0:
             return
 
-        current_x = 0.0
+        self.reset()
+
+        actual_x = 0.0
         for i in range(total_len):
             if i < total_len-1:
-                next_x = current_x + 1.0 / self.sample_frequency
-                self.roll += self.trap_integrate(next_x, ang_vel_x[i+1], current_x, ang_vel_x[i])
-                self.pitch += self.trap_integrate(next_x, ang_vel_y[i+1], current_x, ang_vel_y[i])
-                self.yaw += self.trap_integrate(next_x, ang_vel_z[i+1], current_x, ang_vel_z[i])
-                current_x = next_x
+                next_x = actual_x + 1.0 / self.sample_frequency
+                self.roll += self.trap_integrate(next_x, ang_vel_x[i+1], actual_x, ang_vel_x[i])
+                self.pitch += self.trap_integrate(next_x, ang_vel_y[i+1], actual_x, ang_vel_y[i])
+                self.yaw += self.trap_integrate(next_x, ang_vel_z[i+1], actual_x, ang_vel_z[i])
+                actual_x = next_x
 
         return self.roll, self.pitch, self.yaw
 
