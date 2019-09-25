@@ -44,8 +44,7 @@ class OrientationProcessor:
 
     def get_rocket_rotation(self):
         euler_angles = self._angular_speed_integrator.get_current_rocket_orientation()
-        return Quaternion(0, euler_angles[0], euler_angles[1], euler_angles[2])
-        # return Quaternion.euler_degrees_to_quaternion(euler_angles[2], euler_angles[1], euler_angles[0])
+        return Quaternion.euler_degrees_to_quaternion(euler_angles[2], euler_angles[1], euler_angles[0])
 
     def reset(self):
         self._initialisation_roll = []

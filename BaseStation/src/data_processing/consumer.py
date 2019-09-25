@@ -1,18 +1,15 @@
 from typing import List
 from typing import Tuple
-import math
 
 from src.data_processing.angular_position_calculator import AngularCalculator
 from src.data_processing.apogee_calculator import ApogeeCalculator
 from src.data_processing.gps.gps_coordinates import GpsCoordinates
 from src.data_processing.gps.gps_processor import GpsProcessor
 from src.data_processing.orientation_processor import OrientationProcessor
-from src.data_processing.quaternion import Quaternion
 from src.data_producer import DataProducer
 from src.rocket_packet.rocket_packet import RocketPacket
 
 METERS2FEET = 3.28084
-ORIENTATION_INITIALISATION_DELAY_IN_SECONDS = 5
 
 
 class Consumer: # TODO: add unit tests to this class
@@ -29,12 +26,6 @@ class Consumer: # TODO: add unit tests to this class
         self.create_keys_from_packet_format()
         self.data["altitude_feet"] = []
         self.data["apogee"] = []
-        self.data["initial_roll"] = []
-        self.data["initial_pitch"] = []
-        self.data["initial_yaw"] = []
-        self.first_integral_index = 0
-        self.first_timestamp = 0
-        self.initialising_orientation = True
 
     def create_keys_from_packet_format(self):
         for key in RocketPacket.keys():
@@ -43,7 +34,6 @@ class Consumer: # TODO: add unit tests to this class
     def update(self):
         rocket_packets = self.data_producer.get_available_rocket_packets()
         if len(rocket_packets) > 0:
-            self.first_timestamp = rocket_packets[0].time_stamp
             for packet in rocket_packets:
                 for key, value in packet.items():
                     self.data[key].append(value)
@@ -52,8 +42,6 @@ class Consumer: # TODO: add unit tests to this class
                 self.orientation_processor.update(packet)
 
             self.manage_apogee(self.data["altitude_feet"])
-            # self.angular_calculator.integrate_all(self.data["time_stamp"], self.data["angular_speed_x"],
-            #                                       self.data["angular_speed_y"], self.data["angular_speed_z"])
 
     def __getitem__(self, key):
         return self.data[key]
@@ -67,34 +55,6 @@ class Consumer: # TODO: add unit tests to this class
 
     def get_rocket_rotation(self):
         return self.orientation_processor.get_rocket_rotation()
-        # return Quaternion(self.angular_calculator.roll, self.angular_calculator.pitch, self.angular_calculator.yaw, 0)
-        # return Quaternion.euler_radians_to_quaternion(self.angular_calculator.yaw, self.angular_calculator.pitch,
-        #                                               self.angular_calculator.roll)
-
-    def compute_rotation(self, packet: RocketPacket):   # TODO: remove this
-        elapsed_time = self.data["time_stamp"][-1] - self.first_timestamp
-
-        if self.initialising_orientation and elapsed_time >= ORIENTATION_INITIALISATION_DELAY_IN_SECONDS:
-            roll = self.average(self.data["initial_roll"])
-            pitch = self.average(self.data["initial_roll"])
-            yaw = self.average(self.data["initial_yaw"])
-            self.angular_calculator.set_initial_angular_position(roll, pitch, yaw)
-            self.first_integral_index = len(self.data["time_stamp"]) - 1
-            self.initialising_orientation = False
-
-        if elapsed_time < ORIENTATION_INITIALISATION_DELAY_IN_SECONDS:
-            spherical_coordinates = self.to_spherical(packet.acceleration_x, packet.acceleration_y,
-                                                      packet.acceleration_z)
-            self.data["initial_roll"].append(math.sin(spherical_coordinates[1]) * spherical_coordinates[2])
-            self.data["initial_pitch"].append(math.cos(spherical_coordinates[1]) * spherical_coordinates[2])
-            self.data["initial_yaw"].append(0)
-            self.initialising_orientation = True
-        else:
-            self.angular_calculator.integrate_all(self.data["time_stamp"][self.first_integral_index:],
-                                                  self.data["angular_speed_x"][self.first_integral_index:],
-                                                  self.data["angular_speed_y"][self.first_integral_index:],
-                                                  self.data["angular_speed_z"][self.first_integral_index:])
-            self.initialising_orientation = False
 
     def get_rocket_last_quaternion(self):
         return (self.data["quaternion_w"][-1], self.data["quaternion_x"][-1], self.data["quaternion_y"][-1],
