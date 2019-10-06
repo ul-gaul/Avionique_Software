@@ -5,6 +5,7 @@ from src.data_processing.apogee_calculator import ApogeeCalculator
 from src.data_processing.consumer import Consumer
 from src.data_processing.gps.coordinate_conversion_strategy_factory import CoordinateConversionStrategyFactory
 from src.data_processing.gps.gps_fix_validator import GpsFixValidatorFactory
+from src.data_processing.gps.gps_initializer import GpsInitializer
 from src.data_processing.gps.gps_processor import GpsProcessor
 from src.data_processing.gps.utm_coordinates_converter import UTMCoordinatesConverter
 from src.data_processing.orientation_processor import OrientationProcessor
@@ -22,8 +23,9 @@ class ConsumerFactory:
         utm_coordinates_converter = UTMCoordinatesConverter(config.gps_config.utm_zone)
 
         gps_fix_validator = self.gps_fix_validator_factory.create(rocket_packet_version)
-        gps_processor = GpsProcessor(config.gps_config.initialization_delay, gps_fix_validator,
-                                     coordinate_conversion_strategy, utm_coordinates_converter)
+        gps_initializer = GpsInitializer(config.gps_config.initialization_delay)
+        gps_processor = GpsProcessor(gps_fix_validator, coordinate_conversion_strategy, utm_coordinates_converter,
+                                     gps_initializer)
 
         angular_speed_integrator = AngularSpeedIntegrator()
         orientation_processor = OrientationProcessor(10, angular_speed_integrator)

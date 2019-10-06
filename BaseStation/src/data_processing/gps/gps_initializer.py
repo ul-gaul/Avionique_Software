@@ -32,6 +32,10 @@ class GpsInitializer:
 
             self._notify_listeners(base_camp_coordinates)
 
+    def reset(self):
+        self._first_timestamp = None
+        self._initialization_coordinates = []
+
     def _get_elapsed_time_since_first_timestamp(self, timestamp: float):
         if self._first_timestamp is None:
             self._first_timestamp = timestamp
