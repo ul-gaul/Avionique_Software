@@ -16,11 +16,7 @@ class OrientationProcessor:
         self._initialising = True
 
     def update(self, rocket_packet: RocketPacket):
-        if self._first_timestamp is None:
-            self._first_timestamp = rocket_packet.time_stamp
-            elapsed_time = 0
-        else:
-            elapsed_time = rocket_packet.time_stamp - self._first_timestamp
+        elapsed_time = self._get_elapsed_time_since_first_packet(rocket_packet)
 
         if self._initialising and elapsed_time >= self._initialisation_delay:
             roll = self.average(self._initialisation_roll)
@@ -41,6 +37,13 @@ class OrientationProcessor:
             self._angular_speed_integrator.integrate(rocket_packet.time_stamp, rocket_packet.angular_speed_x,
                                                      rocket_packet.angular_speed_y, rocket_packet.angular_speed_z)
             self._initialising = False
+
+    def _get_elapsed_time_since_first_packet(self, rocket_packet: RocketPacket):
+        if self._first_timestamp is None:
+            self._first_timestamp = rocket_packet.time_stamp
+            return 0
+        else:
+            return rocket_packet.time_stamp - self._first_timestamp
 
     def get_rocket_rotation(self):
         euler_angles = self._angular_speed_integrator.get_current_rocket_orientation()
