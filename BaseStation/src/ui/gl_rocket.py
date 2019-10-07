@@ -1,12 +1,12 @@
 import math
+
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QOpenGLWidget
 
+from src.data_processing.orientation.quaternion import Quaternion
 from src.ui.utils import set_minimum_expanding_size_policy
-
-from src.data_processing.quaternion import Quaternion
 
 
 class GlRocket(QOpenGLWidget):

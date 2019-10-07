@@ -1,3 +1,6 @@
+from src.data_processing.orientation.orientation import Orientation
+
+
 class AngularSpeedIntegrator:
     def __init__(self):
         self.last_time = 0
@@ -8,12 +11,11 @@ class AngularSpeedIntegrator:
         self.pitch = 0
         self.yaw = 0
 
-    def set_initial_orientation(self, initial_time: float, initial_roll: float, initial_pitch: float,
-                                initial_yaw: float):
+    def set_initial_orientation(self, initial_time: float, initial_orientation: Orientation):
         self.last_time = initial_time
-        self.roll = initial_roll
-        self.pitch = initial_pitch
-        self.yaw = initial_yaw
+        self.roll = initial_orientation.roll
+        self.pitch = initial_orientation.pitch
+        self.yaw = initial_orientation.yaw
 
     def integrate(self, current_time: float, angular_speed_x: float, angular_speed_y: float, angular_speed_z: float):
         self.roll += self.trap_integrate(current_time, angular_speed_x, self.last_time, self.last_angular_speed_x)
@@ -23,8 +25,8 @@ class AngularSpeedIntegrator:
         self.last_time = current_time
         self.update_last_angular_speed(angular_speed_x, angular_speed_y, angular_speed_z)
 
-    def get_current_rocket_orientation(self):
-        return self.roll, self.pitch, self.yaw
+    def get_current_rocket_orientation(self) -> Orientation:
+        return Orientation(self.roll, self.pitch, self.yaw)
 
     def reset(self):
         self.last_time = 0

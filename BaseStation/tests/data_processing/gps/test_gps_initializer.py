@@ -22,7 +22,7 @@ class GpsInitializerTest(TestCase):
 
         self.gps_initializer.update(1, self.INITIAL_COORDINATES + self.NOISE)
 
-        self.gps_initializer_listener.notify_initialization_complete.assert_not_called()
+        self.gps_initializer_listener.notify_gps_initialized.assert_not_called()
 
     def test_update_should_notify_listeners_with_average_base_camp_position_after_delay(self):
         self.gps_initializer.update(0, self.INITIAL_COORDINATES)
@@ -30,7 +30,7 @@ class GpsInitializerTest(TestCase):
 
         self.gps_initializer.update(3, self.INITIAL_COORDINATES - self.NOISE)
 
-        self.gps_initializer_listener.notify_initialization_complete.assert_called_with(self.INITIAL_COORDINATES)
+        self.gps_initializer_listener.notify_gps_initialized.assert_called_with(self.INITIAL_COORDINATES)
 
     def test_update_should_notify_listeners_when_elapsed_time_equals_delay(self):
         self.gps_initializer.update(0, UTMCoordinates(1.0, 5.0))
@@ -38,11 +38,11 @@ class GpsInitializerTest(TestCase):
 
         self.gps_initializer.update(2, UTMCoordinates(6.5, 9.0))
 
-        self.gps_initializer_listener.notify_initialization_complete.assert_called_with(UTMCoordinates(3.0, 7.0))
+        self.gps_initializer_listener.notify_gps_initialized.assert_called_with(UTMCoordinates(3.0, 7.0))
 
     def test_update_should_notify_listeners_given_no_delay(self):
         self.gps_initializer.initialization_delay = 0
 
         self.gps_initializer.update(0, self.INITIAL_COORDINATES)
 
-        self.gps_initializer_listener.notify_initialization_complete.assert_called_with(self.INITIAL_COORDINATES)
+        self.gps_initializer_listener.notify_gps_initialized.assert_called_with(self.INITIAL_COORDINATES)

@@ -63,7 +63,7 @@ class GpsProcessorTest(TestCase):
         rocket_packet = RocketPacketBuilder().build()
         self.gps_fix_validator.is_fixed.return_value = True
         self.utm_coordinates_converter.decimal_degrees_to_utm.return_value = self.INITIAL_COORDINATES + self.MOVEMENT
-        self.gps_processor.notify_initialization_complete(self.INITIAL_COORDINATES)
+        self.gps_processor.notify_gps_initialized(self.INITIAL_COORDINATES)
 
         self.gps_processor.update(rocket_packet)
 

@@ -2,11 +2,10 @@ import threading
 import unittest
 from unittest.mock import Mock
 
-from src.data_processing.angular_position_calculator import AngularCalculator
 from src.data_processing.apogee_calculator import ApogeeCalculator
 from src.data_processing.consumer import Consumer
 from src.data_processing.gps.gps_processor import GpsProcessor
-from src.data_processing.orientation_processor import OrientationProcessor
+from src.data_processing.orientation.orientation_processor import OrientationProcessor
 from src.data_producer import DataProducer
 from src.rocket_packet.rocket_packet import RocketPacket
 
@@ -24,12 +23,10 @@ class ConsumerTest(unittest.TestCase):
         self.producer = DataProducer(threading.Lock())
         self.apogee_calculator = Mock(spec=ApogeeCalculator)
         self.apogee_calculator.get_apogee.return_value = self.APOGEE
-        self.angular_calculator = Mock(spec=AngularCalculator)
         self.gps_processor = Mock(spec=GpsProcessor)
         self.orientation_processor = Mock(spec=OrientationProcessor)
 
-        self.consumer = Consumer(self.producer, self.apogee_calculator, self.angular_calculator,
-                                 self.gps_processor, self.orientation_processor)
+        self.consumer = Consumer(self.producer, self.apogee_calculator, self.gps_processor, self.orientation_processor)
 
     def test_constructor_should_create_dictionary_with_rocket_packet_keys(self):
         self.assertTrue(set(RocketPacket().keys()).issubset(set(self.consumer.data.keys())))

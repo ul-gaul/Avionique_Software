@@ -8,7 +8,7 @@ class GpsInitializerListener:
     __metaclass__ = abc.ABCMeta
 
     @abc.abstractmethod
-    def notify_initialization_complete(self, base_camp_coordinates: UTMCoordinates):
+    def notify_gps_initialized(self, base_camp_coordinates: UTMCoordinates):
         pass
 
 
@@ -49,4 +49,4 @@ class GpsInitializer:
 
     def _notify_listeners(self, base_camp_coordinates: UTMCoordinates):
         for listener in self.listeners:
-            listener.notify_initialization_complete(base_camp_coordinates)
+            listener.notify_gps_initialized(base_camp_coordinates)

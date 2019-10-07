@@ -1,6 +1,6 @@
+from src.data_processing.orientation.orientation_processor import OrientationProcessor
+
 from src.config import Config
-from src.data_processing.angular_position_calculator import AngularCalculator
-from src.data_processing.angular_speed_integrator import AngularSpeedIntegrator
 from src.data_processing.apogee_calculator import ApogeeCalculator
 from src.data_processing.consumer import Consumer
 from src.data_processing.gps.coordinate_conversion_strategy_factory import CoordinateConversionStrategyFactory
@@ -8,7 +8,7 @@ from src.data_processing.gps.gps_fix_validator import GpsFixValidatorFactory
 from src.data_processing.gps.gps_initializer import GpsInitializer
 from src.data_processing.gps.gps_processor import GpsProcessor
 from src.data_processing.gps.utm_coordinates_converter import UTMCoordinatesConverter
-from src.data_processing.orientation_processor import OrientationProcessor
+from src.data_processing.orientation.angular_speed_integrator import AngularSpeedIntegrator
 from src.data_producer import DataProducer
 
 
@@ -30,4 +30,4 @@ class ConsumerFactory:
         angular_speed_integrator = AngularSpeedIntegrator()
         orientation_processor = OrientationProcessor(10, angular_speed_integrator)
 
-        return Consumer(data_producer, ApogeeCalculator(), AngularCalculator(), gps_processor, orientation_processor)
+        return Consumer(data_producer, ApogeeCalculator(), gps_processor, orientation_processor)

@@ -1,21 +1,18 @@
-from PyQt5 import QtWidgets
-from PyQt5 import QtCore
 import pyqtgraph as pqtg
+from PyQt5 import QtCore
+from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QLabel
 
 from src.data_processing.gps.gps_coordinates import GpsCoordinates
+from src.data_processing.orientation.quaternion import Quaternion
 from src.openrocket_simulation import OpenRocketSimulation
 from src.ui.altitude_graph import AltitudeGraph
 from src.ui.gl_rocket import GlRocket
 from src.ui.header import Header
+from src.ui.led import Led
 from src.ui.map import Map
 from src.ui.thermometer import Thermometer
-from src.ui.led import Led
 from src.ui.utils import *
-from OpenGL.GL import *
-from OpenGL.GLU import *
-
-from src.data_processing.quaternion import Quaternion
 
 
 # FIXME: make this class abstract

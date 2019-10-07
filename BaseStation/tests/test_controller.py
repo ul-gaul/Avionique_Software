@@ -5,7 +5,7 @@ from src.controller import Controller
 from src.data_processing.consumer import Consumer
 from src.data_processing.consumer_factory import ConsumerFactory
 from src.data_processing.gps.gps_coordinates import GpsCoordinates
-from src.data_processing.quaternion import Quaternion
+from src.data_processing.orientation.quaternion import Quaternion
 from src.data_producer import DataProducer
 from src.message_listener import MessageListener
 from src.message_type import MessageType

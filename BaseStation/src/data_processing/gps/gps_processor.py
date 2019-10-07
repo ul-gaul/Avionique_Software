@@ -40,7 +40,7 @@ class GpsProcessor(GpsInitializerListener):
             self._easting.append(relative_position.easting)
             self._northing.append(relative_position.northing)
 
-    def notify_initialization_complete(self, base_camp_coordinates: UTMCoordinates):
+    def notify_gps_initialized(self, base_camp_coordinates: UTMCoordinates):
         self._base_camp_coordinates = base_camp_coordinates
         self._initializing_gps = False
 

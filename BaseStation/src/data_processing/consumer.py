@@ -1,24 +1,21 @@
 from typing import List
 from typing import Tuple
 
-from src.data_processing.angular_position_calculator import AngularCalculator
 from src.data_processing.apogee_calculator import ApogeeCalculator
 from src.data_processing.gps.gps_coordinates import GpsCoordinates
 from src.data_processing.gps.gps_processor import GpsProcessor
-from src.data_processing.orientation_processor import OrientationProcessor
+from src.data_processing.orientation.orientation_processor import OrientationProcessor
 from src.data_producer import DataProducer
 from src.rocket_packet.rocket_packet import RocketPacket
 
 METERS2FEET = 3.28084
 
 
-class Consumer: # TODO: add unit tests to this class
+class Consumer:  # TODO: add unit tests to this class
     def __init__(self, data_producer: DataProducer, apogee_calculator: ApogeeCalculator,
-                 angular_calculator: AngularCalculator, gps_processor: GpsProcessor,
-                 orientation_processor: OrientationProcessor):
+                 gps_processor: GpsProcessor, orientation_processor: OrientationProcessor):
         self.data_producer = data_producer
         self.apogee_calculator = apogee_calculator
-        self.angular_calculator = angular_calculator
         self.gps_processor = gps_processor
         self.orientation_processor = orientation_processor
         self.rocket_packet_version = 2019
