@@ -71,6 +71,9 @@ class HomeWidget(QtWidgets.QWidget):
         return button
 
     def retranslateUi(self):
+        translator = QtCore.QTranslator()
+        #translator.load("resources/translatorTest.qm")
+
         _translate = QtCore.QCoreApplication.translate
         self.setWindowTitle(_translate("homewidget", "Form"))
         self.real_time_button.setText(_translate("homewidget", "Real Time"))

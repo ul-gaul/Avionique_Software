@@ -34,8 +34,7 @@ class ApogeeCalculator:
         self.apogee_index = 0
 
     def reset(self):
-        self.apogee = 0
-        self.apogee_index = 0
+        self.set_value_none()
 
         self.last_altitude_index = 0
 
