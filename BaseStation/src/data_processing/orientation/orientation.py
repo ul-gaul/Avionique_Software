@@ -17,12 +17,12 @@ class Orientation:
         """
         :return: A tuple as (angle, x, y, z). The angle is in degrees.
         """
-        c1 = math.cos(self.yaw / 2)
-        c2 = math.cos(self.roll / 2)
-        c3 = math.cos(self.pitch / 2)
-        s1 = math.sin(self.yaw / 2)
-        s2 = math.sin(self.roll / 2)
-        s3 = math.sin(self.pitch / 3)
+        c1 = math.cos(self.yaw * 0.5)
+        c2 = math.cos(self.roll * 0.5)
+        c3 = math.cos(self.pitch * 0.5)
+        s1 = math.sin(self.yaw * 0.5)
+        s2 = math.sin(self.roll * 0.5)
+        s3 = math.sin(self.pitch * 0.5)
 
         angle = math.degrees(2 * math.acos(c1 * c2 * c3 - s1 * s2 * s3))
         x = s1 * s2 * c3 + c1 * c2 * s3
