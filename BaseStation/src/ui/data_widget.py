@@ -4,7 +4,7 @@ from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QLabel
 
 from src.data_processing.gps.gps_coordinates import GpsCoordinates
-from src.data_processing.orientation.quaternion import Quaternion
+from src.data_processing.orientation.orientation import Orientation
 from src.openrocket_simulation import OpenRocketSimulation
 from src.ui.altitude_graph import AltitudeGraph
 from src.ui.gl_rocket import GlRocket
@@ -217,8 +217,8 @@ class DataWidget(QtWidgets.QWidget):
     def show_simulation(self, simulation: OpenRocketSimulation):
         self.altitude_graph.show_simulation(simulation.time, simulation.altitude)
 
-    def set_rocket_model_rotation(self, rot: Quaternion):
-        self.glRocket.set_rocket_model_rotation(rot)
+    def set_rocket_model_orientation(self, orientation: Orientation):
+        self.glRocket.set_rocket_model_orientation(orientation)
 
     def set_thermometer_value(self, temperature: float):
         self.thermometer.set_temperature(temperature)
@@ -226,7 +226,7 @@ class DataWidget(QtWidgets.QWidget):
     def reset(self):
         self.altitude_graph.reset()
         self.map.reset()
-        self.set_rocket_model_rotation(Quaternion())
+        self.set_rocket_model_orientation(Orientation())
         self.reset_leds()
         self.set_thermometer_value(0)
         self.voltage_curve.clear()

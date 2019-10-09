@@ -4,6 +4,7 @@ from typing import Tuple
 from src.data_processing.apogee_calculator import ApogeeCalculator
 from src.data_processing.gps.gps_coordinates import GpsCoordinates
 from src.data_processing.gps.gps_processor import GpsProcessor
+from src.data_processing.orientation.orientation import Orientation
 from src.data_processing.orientation.orientation_processor import OrientationProcessor
 from src.data_producer import DataProducer
 from src.rocket_packet.rocket_packet import RocketPacket
@@ -50,8 +51,8 @@ class Consumer:  # TODO: add unit tests to this class
             self.data["apogee"].append(rep[0])
             self.data["apogee"].append(rep[1])
 
-    def get_rocket_rotation(self):
-        return self.orientation_processor.get_rocket_rotation()
+    def get_rocket_orientation(self) -> Orientation:
+        return self.orientation_processor.get_rocket_orientation()
 
     def get_rocket_last_quaternion(self):
         return (self.data["quaternion_w"][-1], self.data["quaternion_x"][-1], self.data["quaternion_y"][-1],

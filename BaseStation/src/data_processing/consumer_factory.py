@@ -1,3 +1,4 @@
+from src.data_processing.orientation.orientation_initializer import OrientationInitializer
 from src.data_processing.orientation.orientation_processor import OrientationProcessor
 
 from src.config import Config
@@ -27,7 +28,8 @@ class ConsumerFactory:
         gps_processor = GpsProcessor(gps_fix_validator, coordinate_conversion_strategy, utm_coordinates_converter,
                                      gps_initializer)
 
+        orientation_initializer = OrientationInitializer(config.orientation_config.initialization_delay_in_seconds)
         angular_speed_integrator = AngularSpeedIntegrator()
-        orientation_processor = OrientationProcessor(10, angular_speed_integrator)
+        orientation_processor = OrientationProcessor(orientation_initializer, angular_speed_integrator)
 
         return Consumer(data_producer, ApogeeCalculator(), gps_processor, orientation_processor)

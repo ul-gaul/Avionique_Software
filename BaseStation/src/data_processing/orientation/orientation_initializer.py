@@ -14,7 +14,7 @@ class OrientationInitializerListener:
         pass
 
 
-# TODO: finish this algorithm
+# TODO: finish this algorithm and test it
 class OrientationInitializer:
     def __init__(self, initialization_delay_in_seconds: float):
         self.initialization_delay = initialization_delay_in_seconds

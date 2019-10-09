@@ -5,7 +5,7 @@ from src.controller import Controller
 from src.data_processing.consumer import Consumer
 from src.data_processing.consumer_factory import ConsumerFactory
 from src.data_processing.gps.gps_coordinates import GpsCoordinates
-from src.data_processing.orientation.quaternion import Quaternion
+from src.data_processing.orientation.orientation import Orientation
 from src.data_producer import DataProducer
 from src.message_listener import MessageListener
 from src.message_type import MessageType
@@ -31,7 +31,7 @@ class ControllerTest(unittest.TestCase):
     POWER_SUPPLY_STATE_2 = False
     PAYLOAD_BOARD_STATE_1 = True
     TEMPERATURE = 100
-    QUATERNION = Quaternion(1, 2, 3, 4)
+    ORIENTATION = Orientation(1, 2, 3)
     OPEN_ROCKET_SIMULATION_FILENAME = "simulation.csv"
     A_ROCKET_PACKET_VERSION = 2019
 
@@ -82,11 +82,11 @@ class ControllerTest(unittest.TestCase):
 
     def test_update_should_update_3d_model_when_consumer_has_data(self):
         self.consumer.has_data.return_value = True
-        self.consumer.get_rocket_rotation.return_value = self.QUATERNION
+        self.consumer.get_rocket_orientation.return_value = self.ORIENTATION
 
         self.controller.update()
 
-        self.data_widget.set_rocket_model_rotation.assert_called_with(self.QUATERNION)
+        self.data_widget.set_rocket_model_orientation.assert_called_with(self.ORIENTATION)
 
     def test_update_should_not_update_ui_when_consumer_has_no_data(self):
         self.consumer.has_data.return_value = False
@@ -159,4 +159,4 @@ class ControllerTest(unittest.TestCase):
         self.data_widget.draw_voltage.assert_not_called()
         self.data_widget.set_led_state.assert_not_called()
         self.data_widget.set_thermometer_value.assert_not_called()
-        self.data_widget.set_rocket_model_rotation.assert_not_called()
+        self.data_widget.set_rocket_model_orientation.assert_not_called()
