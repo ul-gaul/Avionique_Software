@@ -4,7 +4,8 @@ from unittest.mock import Mock, MagicMock, call, patch
 from src.controller import Controller
 from src.data_processing.consumer import Consumer
 from src.data_processing.consumer_factory import ConsumerFactory
-from src.data_processing.quaternion import Quaternion
+from src.data_processing.gps.gps_coordinates import GpsCoordinates
+from src.data_processing.orientation.orientation import Orientation
 from src.data_producer import DataProducer
 from src.message_listener import MessageListener
 from src.message_type import MessageType
@@ -16,12 +17,12 @@ from tests.matchers import AnyStringWith
 
 class ControllerTest(unittest.TestCase):
 
-    ALTITUDE = 9000
+    TIMESTAMPS = [1]
+    ALTITUDES = [9000]
     APOGEE = 10000
-    EASTING = 32
-    NORTHING = 52
-    LATITUDE = 46.77930
-    LONGITUDE = -71.27621
+    EASTINGS = [32]
+    NORTHINGS = [52]
+    GPS_COORDINATES = GpsCoordinates(46.77930, -71.27621)
     VOLTAGE = 3.3
     BOARD_STATE_1 = True
     BOARD_STATE_2 = True
@@ -30,7 +31,7 @@ class ControllerTest(unittest.TestCase):
     POWER_SUPPLY_STATE_2 = False
     PAYLOAD_BOARD_STATE_1 = True
     TEMPERATURE = 100
-    QUATERNION = Quaternion(1, 2, 3, 4)
+    ORIENTATION = Orientation(1, 2, 3)
     OPEN_ROCKET_SIMULATION_FILENAME = "simulation.csv"
     A_ROCKET_PACKET_VERSION = 2019
 
@@ -57,9 +58,10 @@ class ControllerTest(unittest.TestCase):
 
         self.controller.update()
 
-        self.data_widget.draw_altitude.assert_called_with(self.ALTITUDE)
+        self.data_widget.draw_altitude.assert_called_with(self.TIMESTAMPS, self.ALTITUDES)
         self.data_widget.draw_apogee.assert_called_with(self.APOGEE)
-        self.data_widget.draw_map.assert_called_with(self.EASTING, self.NORTHING, self.LATITUDE, self.LONGITUDE)
+        self.data_widget.draw_map.assert_called_with(self.EASTINGS, self.NORTHINGS)
+        self.data_widget.show_current_coordinates.assert_called_with(self.GPS_COORDINATES)
         self.data_widget.draw_voltage.assert_called_with(self.VOLTAGE)
 
     def test_update_should_update_leds_when_consumer_has_data(self):
@@ -80,11 +82,11 @@ class ControllerTest(unittest.TestCase):
 
     def test_update_should_update_3d_model_when_consumer_has_data(self):
         self.consumer.has_data.return_value = True
-        self.consumer.get_rocket_rotation.return_value = self.QUATERNION
+        self.consumer.get_rocket_orientation.return_value = self.ORIENTATION
 
         self.controller.update()
 
-        self.data_widget.set_rocket_model_rotation.assert_called_with(self.QUATERNION)
+        self.data_widget.set_rocket_model_orientation.assert_called_with(self.ORIENTATION)
 
     def test_update_should_not_update_ui_when_consumer_has_no_data(self):
         self.consumer.has_data.return_value = False
@@ -135,14 +137,14 @@ class ControllerTest(unittest.TestCase):
         self.assertEqual(self.controller.consumer, self.consumer)
 
     def setup_consumer_data(self):
-        data = {"altitude_feet": self.ALTITUDE, "apogee": self.APOGEE, "easting": self.EASTING,
-                "northing": self.NORTHING, "voltage": self.VOLTAGE, "acquisition_board_state_1": [self.BOARD_STATE_1],
-                "acquisition_board_state_2": [self.BOARD_STATE_2], "acquisition_board_state_3": [self.BOARD_STATE_3],
-                "power_supply_state_1": [self.POWER_SUPPLY_STATE_1],
+        data = {"altitude_feet": self.ALTITUDES, "apogee": self.APOGEE, "voltage": self.VOLTAGE,
+                "acquisition_board_state_1": [self.BOARD_STATE_1], "acquisition_board_state_2": [self.BOARD_STATE_2],
+                "acquisition_board_state_3": [self.BOARD_STATE_3], "power_supply_state_1": [self.POWER_SUPPLY_STATE_1],
                 "power_supply_state_2": [self.POWER_SUPPLY_STATE_2],
-                "payload_board_state_1": [self.PAYLOAD_BOARD_STATE_1]}
+                "payload_board_state_1": [self.PAYLOAD_BOARD_STATE_1], "time_stamp": self.TIMESTAMPS}
         self.consumer.__getitem__.side_effect = lambda arg: data[arg]
-        self.consumer.get_last_gps_coordinates.return_value = (self.LATITUDE, self.LONGITUDE)
+        self.consumer.get_projected_coordinates.return_value = (self.EASTINGS, self.NORTHINGS)
+        self.consumer.get_last_gps_coordinates.return_value = self.GPS_COORDINATES
 
     def assert_leds_updated(self):
         calls = [call(1, self.BOARD_STATE_1), call(2, self.BOARD_STATE_2), call(3, self.BOARD_STATE_3),
@@ -157,4 +159,4 @@ class ControllerTest(unittest.TestCase):
         self.data_widget.draw_voltage.assert_not_called()
         self.data_widget.set_led_state.assert_not_called()
         self.data_widget.set_thermometer_value.assert_not_called()
-        self.data_widget.set_rocket_model_rotation.assert_not_called()
+        self.data_widget.set_rocket_model_orientation.assert_not_called()

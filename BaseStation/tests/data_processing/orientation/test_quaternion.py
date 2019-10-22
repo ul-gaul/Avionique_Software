@@ -1,5 +1,6 @@
 import unittest
-from src.data_processing.quaternion import Quaternion
+
+from src.data_processing.orientation.quaternion import Quaternion
 
 
 class QuaternionTest(unittest.TestCase):

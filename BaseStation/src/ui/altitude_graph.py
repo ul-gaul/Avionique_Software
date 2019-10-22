@@ -19,6 +19,7 @@ class AltitudeGraph(PlotWidget):
 
         self.altitude_curve = self.plot([0], [0], pen=mkPen(color='k', width=3))
 
+        self.current_timestamp = 0
         self.current_altitude = 0
         self.current_altitude_text = TextItem("", anchor=(1, 1), color=(0, 0, 0, 0))
         self.current_altitude_point = self.plotItem.scatterPlot([], [], pxMode=True, size=8, brush=mkBrush(color='r'))
@@ -37,15 +38,16 @@ class AltitudeGraph(PlotWidget):
 
         super(AltitudeGraph, self).paintEvent(ev)
 
-    def draw_altitude_curve(self, values: list):
-        nb_points = len(values)
+    def draw_altitude_curve(self, timestamps: list, altitudes: list):
+        nb_points = len(altitudes)
 
         if nb_points > 0:
-            self.current_altitude = int(values[-1])
+            self.current_timestamp = timestamps[-1]
+            self.current_altitude = int(altitudes[-1])
 
-            self.altitude_curve.setData(values)
-            self.current_altitude_point.setData([nb_points - 1], [self.current_altitude])
-            self.current_altitude_text.setPos(nb_points - 1, self.current_altitude)
+            self.altitude_curve.setData(timestamps, altitudes)
+            self.current_altitude_point.setData([self.current_timestamp], [self.current_altitude])
+            self.current_altitude_text.setPos(self.current_timestamp, self.current_altitude)
             self.current_altitude_text.setColor(color='k')
 
     def set_target_altitude(self, altitude):
@@ -57,14 +59,14 @@ class AltitudeGraph(PlotWidget):
     def draw_apogee(self, values: list):
         if len(values) == 2:
             self.apogee = values[1]
-            apogee_index = values[0]
+            apogee_index = values[0]    # FIXME: use timestamps
 
             if self.draw_apogee_plot:
                 self.apogee_text.setColor(color='b')
                 self.draw_apogee_plot = False
 
-            self.apogee_point.setData([apogee_index], [self.apogee])
-            self.apogee_text.setPos(apogee_index, self.apogee)
+            # self.apogee_point.setData([apogee_index], [self.apogee])
+            # self.apogee_text.setPos(apogee_index, self.apogee)
         else:
             if not self.draw_apogee_plot:
                 self.reset_apogee()
@@ -76,6 +78,7 @@ class AltitudeGraph(PlotWidget):
 
     def reset_altitude(self):
         self.altitude_curve.clear()
+        self.current_timestamp = 0
         self.current_altitude = 0
         self.current_altitude_point.clear()
         self.current_altitude_text.setPos(0, self.current_altitude)

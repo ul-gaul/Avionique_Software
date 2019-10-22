@@ -3,9 +3,8 @@ from OpenGL.GLU import *
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QOpenGLWidget
 
+from src.data_processing.orientation.orientation import Orientation
 from src.ui.utils import set_minimum_expanding_size_policy
-
-from src.data_processing.quaternion import Quaternion
 
 
 class GlRocket(QOpenGLWidget):
@@ -15,7 +14,8 @@ class GlRocket(QOpenGLWidget):
         self.setMinimumSize(QtCore.QSize(200, 400))
         self.setObjectName("GlRocket")
         self.fin_vertices = [(0.3, 0, 1), (0.3, 0, 0), (0.7, 0, 0.1), (0.7, 0, 0.5)]
-        self._rocket_orientation = (0, 0, 0, 0)
+        self._rocket_orientation = Orientation()
+        self.angle = 0
 
     def draw_rocket(self):
         cm = 2  # Centre de masse. Unités à partir du bas
@@ -58,8 +58,8 @@ class GlRocket(QOpenGLWidget):
         gluQuadricNormals(con, GLU_SMOOTH)
         gluCylinder(con, 0.3, 0, 1.5, 50, 5)
 
-    def set_rocket_model_rotation(self, rot: Quaternion):
-        self._rocket_orientation = (rot.w, rot.x, rot.y, rot.z)
+    def set_rocket_model_orientation(self, orientation: Orientation):
+        self._rocket_orientation = orientation
         self.update()
 
     def paintGL(self):
@@ -67,8 +67,7 @@ class GlRocket(QOpenGLWidget):
         glMatrixMode(GL_MODELVIEW)
         glPushMatrix()
         glLoadIdentity()
-        glRotatef(self._rocket_orientation[0], self._rocket_orientation[1], self._rocket_orientation[2],
-                  self._rocket_orientation[3])
+        glRotatef(*self._rocket_orientation.to_axis_angles())
         self.draw_rocket()
         glPopMatrix()
         glFlush()

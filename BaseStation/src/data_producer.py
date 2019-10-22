@@ -1,5 +1,6 @@
 import abc
 import threading
+from typing import List
 
 from src.rocket_packet.rocket_packet import RocketPacket
 
@@ -22,7 +23,7 @@ class DataProducer:
         self.is_running = False
         self.thread.join()
 
-    def get_available_rocket_packets(self):
+    def get_available_rocket_packets(self) -> List[RocketPacket]:
         self.lock.acquire()
         packet_list = list(self.available_rocket_packets)
         self.lock.release()

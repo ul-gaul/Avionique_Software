@@ -2,16 +2,15 @@ import threading
 import unittest
 from unittest.mock import Mock
 
-from src.data_processing.angular_position_calculator import AngularCalculator
 from src.data_processing.apogee_calculator import ApogeeCalculator
 from src.data_processing.consumer import Consumer
-from src.data_processing.gps.coordinate_conversion_strategy import CoordinateConversionStrategy
+from src.data_processing.gps.gps_processor import GpsProcessor
+from src.data_processing.orientation.orientation_processor import OrientationProcessor
 from src.data_producer import DataProducer
 from src.rocket_packet.rocket_packet import RocketPacket
 
 
 class ConsumerTest(unittest.TestCase):
-
     BASE_CAMP_EASTING = 32.0
     BASE_CAMP_NORTHING = 168.0
     EASTING = 315470
@@ -21,17 +20,13 @@ class ConsumerTest(unittest.TestCase):
     APOGEE = (100, 10000)
 
     def setUp(self):
-        self.sampling_frequency = 1
         self.producer = DataProducer(threading.Lock())
         self.apogee_calculator = Mock(spec=ApogeeCalculator)
         self.apogee_calculator.get_apogee.return_value = self.APOGEE
-        self.angular_calculator = Mock(spec=AngularCalculator)
-        self.coordinate_conversion_strategy = Mock(spec=CoordinateConversionStrategy)
-        self.coordinate_conversion_strategy.to_utm.return_value = self.EASTING, self.NORTHING
-        self.coordinate_conversion_strategy.to_decimal_degrees.return_value = (self.LATITUDE, self.LONGITUDE)
+        self.gps_processor = Mock(spec=GpsProcessor)
+        self.orientation_processor = Mock(spec=OrientationProcessor)
 
-        self.consumer = Consumer(self.producer, self.sampling_frequency, self.apogee_calculator,
-                                 self.angular_calculator, self.coordinate_conversion_strategy)
+        self.consumer = Consumer(self.producer, self.apogee_calculator, self.gps_processor, self.orientation_processor)
 
     def test_constructor_should_create_dictionary_with_rocket_packet_keys(self):
         self.assertTrue(set(RocketPacket().keys()).issubset(set(self.consumer.data.keys())))
@@ -93,34 +88,3 @@ class ConsumerTest(unittest.TestCase):
         consumer_has_data = self.consumer.has_data()
 
         self.assertFalse(consumer_has_data)
-
-    def test_reset_should_empty_data_lists(self):
-        self.producer.get_available_rocket_packets = Mock(return_value=[RocketPacket()])
-        self.consumer.update()
-
-        self.consumer.reset()
-
-        self.assert_consumer_contains_no_data()
-
-    def test_reset_should_remove_base_camp_coordinates(self):
-        self.consumer.base_camp_easting = self.BASE_CAMP_EASTING
-        self.consumer.base_camp_northing = self.BASE_CAMP_NORTHING
-
-        self.consumer.reset()
-
-        self.assertIsNone(self.consumer.base_camp_easting)
-        self.assertIsNone(self.consumer.base_camp_northing)
-
-    def test_reset_should_reset_last_gps_coordinates(self):
-        self.consumer.last_latitude = self.LATITUDE
-        self.consumer.last_longitude = self.LONGITUDE
-
-        self.consumer.reset()
-
-        self.assertEqual(self.consumer.get_last_gps_coordinates(), (0.0, 0.0))
-
-    def test_reset_should_reset_apogee_calculator(self):
-        self.consumer.reset()
-
-        self.apogee_calculator.reset.assert_called_with()
-        self.angular_calculator.reset.assert_called_with()

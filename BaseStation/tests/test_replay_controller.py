@@ -12,7 +12,9 @@ from tests.builders.config_builder import ConfigBuilder
 class ReplayControllerTest(unittest.TestCase):
     PACKET_COUNT = 0
     A_FILENAME = "path/to/file.csv"
+    TIMESTAMPS = [0, 1, 2]
     ALTITUDE_DATA = [0, 5000, 10000]
+    DEFAULT_VALUES = [0]
 
     def setUp(self):
         self.replay_widget = Mock(spec=ReplayWidget)
@@ -21,7 +23,7 @@ class ReplayControllerTest(unittest.TestCase):
 
         self.consumer = MagicMock(spec=Consumer)
         self.consumer_factory = Mock(spec=ConsumerFactory)
-        self.consumer_factory.create.return_value = self.consumer   # FIXME: validate input parameters
+        self.consumer_factory.create.return_value = self.consumer  # FIXME: validate input parameters
 
         config = ConfigBuilder().build()
 
@@ -113,11 +115,12 @@ class ReplayControllerTest(unittest.TestCase):
         self.replay_widget.set_play_button_text.assert_called_with()
 
     def test_activate_should_update_ui(self):
-        self.consumer.__getitem__.return_value = self.ALTITUDE_DATA
+        data = {"time_stamp": self.TIMESTAMPS, "altitude_feet": self.ALTITUDE_DATA}
+        self.consumer.__getitem__.side_effect = lambda arg: data.get(arg, self.DEFAULT_VALUES)
 
         self.replay_controller.activate(self.A_FILENAME)
 
-        self.replay_widget.draw_altitude.assert_called_with(self.ALTITUDE_DATA)
+        self.replay_widget.draw_altitude.assert_called_with(self.TIMESTAMPS, self.ALTITUDE_DATA)
 
     @patch("src.controller.Thread")
     def test_deactivate_should_stop_thread_when_is_running(self, thread_mock):

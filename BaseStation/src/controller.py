@@ -23,7 +23,6 @@ class Controller(MessageSender):
         self.is_running = False
         self.data_producer = data_producer
         self.target_altitude = config.target_altitude
-        self.sampling_frequency = config.rocket_packet_config.sampling_frequency
         self.consumer = None
         self.consumer_factory = consumer_factory
         self.refresh_delay = 1.0 / config.gui_fps
@@ -64,14 +63,14 @@ class Controller(MessageSender):
         self.update_3d_model()
 
     def update_plots(self):
-        self.data_widget.draw_altitude(self.consumer["altitude_feet"])
+        self.data_widget.draw_altitude(self.consumer["time_stamp"], self.consumer["altitude_feet"])
         self.data_widget.draw_apogee(self.consumer["apogee"])
-        self.data_widget.draw_map(self.consumer["easting"], self.consumer["northing"],
-                                  *self.consumer.get_last_gps_coordinates())
+        self.data_widget.draw_map(*self.consumer.get_projected_coordinates())
+        self.data_widget.show_current_coordinates(self.consumer.get_last_gps_coordinates())
         self.data_widget.draw_voltage(self.consumer["voltage"])
 
     def update_3d_model(self):
-        self.data_widget.set_rocket_model_rotation(self.consumer.get_rocket_rotation())
+        self.data_widget.set_rocket_model_orientation(self.consumer.get_rocket_orientation())
 
     def update_leds(self):
         self.data_widget.set_led_state(1, self.consumer["acquisition_board_state_1"][-1])

@@ -3,6 +3,7 @@ import threading
 from src.config import ConfigLoader
 from src.data_processing.consumer_factory import ConsumerFactory
 from src.data_processing.gps.coordinate_conversion_strategy_factory import CoordinateConversionStrategyFactory
+from src.data_processing.gps.gps_fix_validator import GpsFixValidatorFactory
 from src.persistence.csv_data_persister import CsvDataPersister
 from src.real_time_controller import RealTimeController
 from src.realtime.checksum_validator import ChecksumValidator
@@ -25,6 +26,7 @@ class ControllerFactory:
         self.rocket_packet_repository = RocketPacketRepository(self.csv_data_persister,
                                                                self.rocket_packet_parser_factory)
         self.coordinate_conversion_strategy_factory = CoordinateConversionStrategyFactory()
+        self.gps_fix_validator_factory = GpsFixValidatorFactory()
 
     def create_real_time_controller(self, real_time_widget: RealTimeWidget, console: ConsoleMessageListener):
         config = ConfigLoader.load()
@@ -38,7 +40,7 @@ class ControllerFactory:
                                            checksum_validator,
                                            sampling_frequency=config.rocket_packet_config.sampling_frequency)
 
-        consumer_factory = ConsumerFactory(self.coordinate_conversion_strategy_factory)
+        consumer_factory = ConsumerFactory(self.coordinate_conversion_strategy_factory, self.gps_fix_validator_factory)
 
         save_manager = SaveManager(data_producer, real_time_widget)
 
@@ -52,6 +54,6 @@ class ControllerFactory:
         playback_state = PlaybackState(1, PlaybackState.Mode.FORWARD)
         data_producer = FileDataProducer(self.rocket_packet_repository, data_lock, playback_lock, playback_state)
 
-        consumer_factory = ConsumerFactory(self.coordinate_conversion_strategy_factory)
+        consumer_factory = ConsumerFactory(self.coordinate_conversion_strategy_factory, self.gps_fix_validator_factory)
 
         return ReplayController(replay_widget, data_producer, consumer_factory, config)

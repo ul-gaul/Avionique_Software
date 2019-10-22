@@ -24,7 +24,7 @@ class RealTimeController(Controller):
         self.update_timer()
 
     def update_timer(self):
-        self.data_widget.set_time(self.consumer["time_stamp"][-1] / float(self.sampling_frequency))
+        self.data_widget.set_time(self.consumer["time_stamp"][-1])
 
     def real_time_button_callback(self):
         if not self.is_running:

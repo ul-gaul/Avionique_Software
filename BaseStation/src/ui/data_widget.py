@@ -1,20 +1,18 @@
-from PyQt5 import QtWidgets
-from PyQt5 import QtCore
 import pyqtgraph as pqtg
+from PyQt5 import QtCore
+from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QLabel
 
+from src.data_processing.gps.gps_coordinates import GpsCoordinates
+from src.data_processing.orientation.orientation import Orientation
 from src.openrocket_simulation import OpenRocketSimulation
 from src.ui.altitude_graph import AltitudeGraph
 from src.ui.gl_rocket import GlRocket
 from src.ui.header import Header
+from src.ui.led import Led
 from src.ui.map import Map
 from src.ui.thermometer import Thermometer
-from src.ui.led import Led
 from src.ui.utils import *
-from OpenGL.GL import *
-from OpenGL.GLU import *
-
-from src.data_processing.quaternion import Quaternion
 
 
 # FIXME: make this class abstract
@@ -203,21 +201,24 @@ class DataWidget(QtWidgets.QWidget):
     def draw_voltage(self, values: list):
         self.voltage_curve.setData(values)
 
-    def draw_altitude(self, values: list):
-        self.altitude_graph.draw_altitude_curve(values)
+    def draw_altitude(self, timestamps: list, altitudes: list):
+        self.altitude_graph.draw_altitude_curve(timestamps, altitudes)
 
     def draw_apogee(self, values: list):
         self.altitude_graph.draw_apogee(values)
 
-    def draw_map(self, eastings: list, northings: list, current_latitude: float, current_longitude: float):
+    def draw_map(self, eastings: list, northings: list):
         self.map.draw_map(eastings, northings)
-        self.coordinates_label.setText("Lat: {:.6f} Long: {:.6f}".format(current_latitude, current_longitude))
+
+    def show_current_coordinates(self, gps_coordinates: GpsCoordinates):
+        self.coordinates_label.setText("Lat: {:.6f} Long: {:.6f}".format(gps_coordinates.decimal_degrees_latitude,
+                                                                         gps_coordinates.decimal_degrees_longitude))
 
     def show_simulation(self, simulation: OpenRocketSimulation):
         self.altitude_graph.show_simulation(simulation.time, simulation.altitude)
 
-    def set_rocket_model_rotation(self, rot: Quaternion):
-        self.glRocket.set_rocket_model_rotation(rot)
+    def set_rocket_model_orientation(self, orientation: Orientation):
+        self.glRocket.set_rocket_model_orientation(orientation)
 
     def set_thermometer_value(self, temperature: float):
         self.thermometer.set_temperature(temperature)
@@ -225,7 +226,7 @@ class DataWidget(QtWidgets.QWidget):
     def reset(self):
         self.altitude_graph.reset()
         self.map.reset()
-        self.set_rocket_model_rotation(Quaternion())
+        self.set_rocket_model_orientation(Orientation())
         self.reset_leds()
         self.set_thermometer_value(0)
         self.voltage_curve.clear()
