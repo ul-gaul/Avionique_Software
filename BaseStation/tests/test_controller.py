@@ -1,6 +1,8 @@
 import unittest
 from unittest.mock import Mock, MagicMock, call, patch
 
+from PyQt5.QtCore import QTimer
+
 from src.controller import Controller
 from src.data_processing.consumer import Consumer
 from src.data_processing.consumer_factory import ConsumerFactory
@@ -34,6 +36,7 @@ class ControllerTest(unittest.TestCase):
     ORIENTATION = Orientation(1, 2, 3)
     OPEN_ROCKET_SIMULATION_FILENAME = "simulation.csv"
     A_ROCKET_PACKET_VERSION = 2019
+    UPDATES_INTERVAL_IN_MILLIS = 100.0
 
     def setUp(self):
         self.data_widget = Mock(spec=DataWidget)
@@ -41,10 +44,10 @@ class ControllerTest(unittest.TestCase):
         self.consumer = MagicMock(spec=Consumer)
         self.consumer_factory = Mock(spec=ConsumerFactory)
         self.consumer_factory.create.return_value = self.consumer
+        config = ConfigBuilder().with_gui_fps(1000 / self.UPDATES_INTERVAL_IN_MILLIS).build()
+        self.qtimer = Mock(spec=QTimer)
 
-        config = ConfigBuilder().build()
-
-        self.controller = Controller(self.data_widget, self.data_producer, self.consumer_factory, config)
+        self.controller = Controller(self.data_widget, self.data_producer, self.consumer_factory, config, self.qtimer)
         self.controller.create_new_consumer(self.A_ROCKET_PACKET_VERSION)
 
     def test_update_should_update_consumer(self):
@@ -128,6 +131,26 @@ class ControllerTest(unittest.TestCase):
         self.controller.add_open_rocket_simulation(self.OPEN_ROCKET_SIMULATION_FILENAME)
 
         message_listener.notify.assert_called_with(AnyStringWith(error_message), MessageType.ERROR)
+
+    def test_start_updates_should_start_producer(self):
+        self.controller.start_updates()
+
+        self.data_producer.start.assert_called_with()
+
+    def test_start_updates_should_start_timer_with_updates_interval(self):
+        self.controller.start_updates()
+
+        self.qtimer.start.assert_called_with(self.UPDATES_INTERVAL_IN_MILLIS)
+
+    def test_stop_updates_should_stop_producer(self):
+        self.controller.stop_updates()
+
+        self.data_producer.stop.assert_called_with()
+
+    def test_stop_updates_should_stop_timer(self):
+        self.controller.stop_updates()
+
+        self.qtimer.stop.assert_called_with()
 
     def test_create_new_consumer_should_delegate_to_factory(self):
         self.controller.consumer = None

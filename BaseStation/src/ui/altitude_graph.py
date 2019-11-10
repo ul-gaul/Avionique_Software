@@ -32,12 +32,6 @@ class AltitudeGraph(PlotWidget):
         self.apogee_point = self.plotItem.scatterPlot([], [], pxMode=True, size=9, brush=mkBrush(color='b'))
         self.addItem(self.apogee_text, ignoreBounds=True)
 
-    def paintEvent(self, ev):
-        self.apogee_text.setText("{}ft".format(int(self.apogee)))
-        self.current_altitude_text.setText("{}ft".format(self.current_altitude))
-
-        super(AltitudeGraph, self).paintEvent(ev)
-
     def draw_altitude_curve(self, timestamps: list, altitudes: list):
         nb_points = len(altitudes)
 
@@ -49,6 +43,7 @@ class AltitudeGraph(PlotWidget):
             self.current_altitude_point.setData([self.current_timestamp], [self.current_altitude])
             self.current_altitude_text.setPos(self.current_timestamp, self.current_altitude)
             self.current_altitude_text.setColor(color='k')
+            self.current_altitude_text.setText("{}ft".format(self.current_altitude))
 
     def set_target_altitude(self, altitude):
         self.plotItem.addLine(y=altitude, pen=mkPen(color=(15, 236, 20), width=3, style=QtCore.Qt.DashDotLine))
@@ -67,6 +62,7 @@ class AltitudeGraph(PlotWidget):
 
             # self.apogee_point.setData([apogee_index], [self.apogee])
             # self.apogee_text.setPos(apogee_index, self.apogee)
+            self.apogee_text.setText("{}ft".format(int(self.apogee)))
         else:
             if not self.draw_apogee_plot:
                 self.reset_apogee()

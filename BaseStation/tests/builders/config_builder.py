@@ -18,10 +18,14 @@ class ConfigBuilder:
         self.timeout = 1
 
         self.target_altitude = 10000
-        self.gui_fps = 30
+        self.gui_fps = 30.0
 
     def with_rocket_packet_version(self, version: int):
         self.rocket_packet_version = version
+        return self
+
+    def with_gui_fps(self, frame_per_second: float):
+        self.gui_fps = frame_per_second
         return self
 
     def build(self):

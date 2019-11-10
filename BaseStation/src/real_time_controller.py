@@ -1,3 +1,4 @@
+from PyQt5.QtCore import QTimer
 from PyQt5.QtGui import QCloseEvent
 
 from src.config import Config
@@ -12,8 +13,8 @@ from src.ui.real_time_widget import RealTimeWidget
 
 class RealTimeController(Controller):
     def __init__(self, real_time_widget: RealTimeWidget, serial_data_producer: SerialDataProducer,
-                 consumer_factory: ConsumerFactory, save_manager: SaveManager, config: Config):
-        super().__init__(real_time_widget, serial_data_producer, consumer_factory, config)
+                 consumer_factory: ConsumerFactory, save_manager: SaveManager, config: Config, timer: QTimer):
+        super().__init__(real_time_widget, serial_data_producer, consumer_factory, config, timer)
         self.save_manager = save_manager
 
         self.data_widget.set_target_altitude(self.target_altitude)
@@ -39,12 +40,12 @@ class RealTimeController(Controller):
                 self.data_widget.reset()
                 self.create_new_consumer(self.current_config.rocket_packet_config.version)
 
-                self.start_thread()
+                self.start_updates()
             except (DomainError, NoConnectedDeviceException) as error:
                 self.is_running = False
                 self.notify_all_message_listeners(str(error), MessageType.ERROR)
         else:
-            self.stop_thread()
+            self.stop_updates()
 
         self.data_widget.update_button_text(self.is_running)
 
@@ -57,7 +58,7 @@ class RealTimeController(Controller):
                 return
 
         if self.is_running:
-            self.stop_thread()
+            self.stop_updates()
 
         event.accept()
 
@@ -72,7 +73,7 @@ class RealTimeController(Controller):
                 return False
 
         if self.is_running:
-            self.stop_thread()
+            self.stop_updates()
 
         self.data_producer.clear_rocket_packets()
         self.data_widget.reset()

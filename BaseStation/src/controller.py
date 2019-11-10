@@ -1,7 +1,6 @@
 import abc
-import time
-from threading import Thread
 
+from PyQt5.QtCore import QTimer
 from PyQt5.QtGui import QCloseEvent
 
 from src.config import Config
@@ -17,7 +16,7 @@ class Controller(MessageSender):
     __metaclass__ = abc.ABCMeta
 
     def __init__(self, data_widget: DataWidget, data_producer: DataProducer, consumer_factory: ConsumerFactory,
-                 config: Config):
+                 config: Config, timer: QTimer):
         super().__init__()
         self.data_widget = data_widget
         self.is_running = False
@@ -25,9 +24,10 @@ class Controller(MessageSender):
         self.target_altitude = config.target_altitude
         self.consumer = None
         self.consumer_factory = consumer_factory
-        self.refresh_delay = 1.0 / config.gui_fps
-        self.thread = None
+        self.updates_interval_in_millis = 1000.0 / config.gui_fps
         self.current_config = config
+        self.timer = timer
+        self.timer.timeout.connect(self.update)
 
     def add_open_rocket_simulation(self, filename):
         try:
@@ -36,17 +36,6 @@ class Controller(MessageSender):
             self.notify_all_message_listeners("Fichier de simulation " + filename + " chargé", MessageType.INFO)
         except InvalidOpenRocketSimulationFileException as error:
             self.notify_all_message_listeners(str(error), MessageType.ERROR)
-
-    def drawing_thread(self):
-        last_time = time.time()
-        while self.is_running:
-            self.update()
-
-            now = time.time()
-            dt = now - last_time
-            last_time = now
-            if dt < self.refresh_delay:
-                time.sleep(self.refresh_delay - dt)
 
     def update(self):
         self.consumer.update()
@@ -83,20 +72,19 @@ class Controller(MessageSender):
     def update_thermometer(self):
         self.data_widget.set_thermometer_value(self.consumer.get_average_temperature())
 
-    def start_thread(self):
+    def start_updates(self):
         self.data_producer.start()
         self.is_running = True
-        self.thread = Thread(target=self.drawing_thread)
-        self.thread.start()
+        self.timer.start(self.updates_interval_in_millis)
 
-    def stop_thread(self):
+    def stop_updates(self):
         self.is_running = False
-        self.thread.join()
+        self.timer.stop()
         self.data_producer.stop()
 
     def on_close(self, event: QCloseEvent):
         if self.is_running:
-            self.stop_thread()
+            self.stop_updates()
 
         event.accept()
 
