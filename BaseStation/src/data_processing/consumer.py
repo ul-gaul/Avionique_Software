@@ -1,6 +1,7 @@
 from typing import List
 from typing import Tuple
 
+from src.data_processing.apogee import Apogee
 from src.data_processing.apogee_calculator import ApogeeCalculator
 from src.data_processing.gps.gps_coordinates import GpsCoordinates
 from src.data_processing.gps.gps_processor import GpsProcessor
@@ -23,7 +24,6 @@ class Consumer:  # TODO: add unit tests to this class
         self.data = {}
         self.create_keys_from_packet_format()
         self.data["altitude_feet"] = []
-        self.data["apogee"] = []
 
     def create_keys_from_packet_format(self):
         for key in RocketPacket.keys():
@@ -39,17 +39,10 @@ class Consumer:  # TODO: add unit tests to this class
                 self.gps_processor.update(packet)
                 self.orientation_processor.update(packet)
 
-            self.manage_apogee(self.data["altitude_feet"])
+            self.apogee_calculator.update(self.data["time_stamp"], self.data["altitude_feet"])
 
     def __getitem__(self, key):
         return self.data[key]
-
-    def manage_apogee(self, values: list):
-        self.apogee_calculator.update(values)
-        rep = self.apogee_calculator.get_apogee()
-        if rep is not None:
-            self.data["apogee"].append(rep[0])
-            self.data["apogee"].append(rep[1])
 
     def get_rocket_orientation(self) -> Orientation:
         return self.orientation_processor.get_rocket_orientation()
@@ -69,6 +62,9 @@ class Consumer:  # TODO: add unit tests to this class
 
     def get_last_gps_coordinates(self) -> GpsCoordinates:
         return self.gps_processor.get_last_coordinates()
+
+    def get_apogee(self) -> Apogee:
+        return self.apogee_calculator.get_apogee()
 
     def clear(self):
         for data_list in self.data.values():

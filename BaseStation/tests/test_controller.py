@@ -160,7 +160,7 @@ class ControllerTest(unittest.TestCase):
         self.assertEqual(self.controller.consumer, self.consumer)
 
     def setup_consumer_data(self):
-        data = {"altitude_feet": self.ALTITUDES, "apogee": self.APOGEE, "voltage": self.VOLTAGE,
+        data = {"altitude_feet": self.ALTITUDES, "voltage": self.VOLTAGE,
                 "acquisition_board_state_1": [self.BOARD_STATE_1], "acquisition_board_state_2": [self.BOARD_STATE_2],
                 "acquisition_board_state_3": [self.BOARD_STATE_3], "power_supply_state_1": [self.POWER_SUPPLY_STATE_1],
                 "power_supply_state_2": [self.POWER_SUPPLY_STATE_2],
@@ -168,6 +168,7 @@ class ControllerTest(unittest.TestCase):
         self.consumer.__getitem__.side_effect = lambda arg: data[arg]
         self.consumer.get_projected_coordinates.return_value = (self.EASTINGS, self.NORTHINGS)
         self.consumer.get_last_gps_coordinates.return_value = self.GPS_COORDINATES
+        self.consumer.get_apogee.return_value = self.APOGEE
 
     def assert_leds_updated(self):
         calls = [call(1, self.BOARD_STATE_1), call(2, self.BOARD_STATE_2), call(3, self.BOARD_STATE_3),

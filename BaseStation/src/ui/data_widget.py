@@ -3,6 +3,7 @@ from PyQt5 import QtCore
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QLabel
 
+from src.data_processing.apogee import Apogee
 from src.data_processing.gps.gps_coordinates import GpsCoordinates
 from src.data_processing.orientation.orientation import Orientation
 from src.openrocket_simulation import OpenRocketSimulation
@@ -204,8 +205,8 @@ class DataWidget(QtWidgets.QWidget):
     def draw_altitude(self, timestamps: list, altitudes: list):
         self.altitude_graph.draw_altitude_curve(timestamps, altitudes)
 
-    def draw_apogee(self, values: list):
-        self.altitude_graph.draw_apogee(values)
+    def draw_apogee(self, apogee: Apogee):
+        self.altitude_graph.draw_apogee(apogee)
 
     def draw_map(self, eastings: list, northings: list):
         self.map.draw_map(eastings, northings)
