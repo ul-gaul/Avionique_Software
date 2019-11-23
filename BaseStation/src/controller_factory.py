@@ -1,5 +1,7 @@
 import threading
 
+from PyQt5.QtCore import QTimer
+
 from src.config import ConfigLoader
 from src.data_processing.consumer_factory import ConsumerFactory
 from src.data_processing.gps.coordinate_conversion_strategy_factory import CoordinateConversionStrategyFactory
@@ -44,7 +46,7 @@ class ControllerFactory:
 
         save_manager = SaveManager(data_producer, real_time_widget)
 
-        return RealTimeController(real_time_widget, data_producer, consumer_factory, save_manager, config)
+        return RealTimeController(real_time_widget, data_producer, consumer_factory, save_manager, config, QTimer())
 
     def create_replay_controller(self, replay_widget: ReplayWidget):
         config = ConfigLoader.load()
@@ -56,4 +58,4 @@ class ControllerFactory:
 
         consumer_factory = ConsumerFactory(self.coordinate_conversion_strategy_factory, self.gps_fix_validator_factory)
 
-        return ReplayController(replay_widget, data_producer, consumer_factory, config)
+        return ReplayController(replay_widget, data_producer, consumer_factory, config, QTimer())

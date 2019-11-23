@@ -1,5 +1,7 @@
 import unittest
-from unittest.mock import Mock, MagicMock, patch
+from unittest.mock import Mock, MagicMock, ANY
+
+from PyQt5.QtCore import QTimer
 
 from src.data_processing.consumer import Consumer
 from src.data_processing.consumer_factory import ConsumerFactory
@@ -26,9 +28,10 @@ class ReplayControllerTest(unittest.TestCase):
         self.consumer_factory.create.return_value = self.consumer  # FIXME: validate input parameters
 
         config = ConfigBuilder().build()
+        self.qtimer = Mock(spec=QTimer)
 
         self.replay_controller = ReplayController(self.replay_widget, self.file_data_producer, self.consumer_factory,
-                                                  config)
+                                                  config, self.qtimer)
 
     def test_control_bar_callback_should_pass_frame_index_to_data_producer(self):
         frame_index = 3
@@ -37,38 +40,32 @@ class ReplayControllerTest(unittest.TestCase):
 
         self.file_data_producer.set_current_packet_index.assert_called_with(frame_index)
 
-    @patch("src.controller.Thread")
-    def test_play_pause_button_callback_should_restart_data_producer_when_is_paused(self, _):
+    def test_play_pause_button_callback_should_restart_data_producer_when_is_paused(self):
         self.file_data_producer.is_suspended.return_value = True
 
         self.replay_controller.play_pause_button_callback()
 
         self.file_data_producer.restart.assert_called_with()
 
-    @patch("src.controller.Thread")
-    def test_play_pause_button_callback_should_start_thread_when_is_paused_and_not_running(self, thread):
-        thread_mock = thread.return_value
+    def test_play_pause_button_callback_should_start_timer_when_is_paused_and_not_running(self):
         self.file_data_producer.is_suspended.return_value = True
         self.replay_controller.is_running = False
 
         self.replay_controller.play_pause_button_callback()
 
         self.file_data_producer.start.assert_called_with()
-        thread_mock.start.assert_called_with()
+        self.qtimer.start.assert_called_with(ANY)
 
-    @patch("src.controller.Thread")
-    def test_play_pause_button_callback_should_not_start_thread_when_is_paused_and_running(self, thread):
-        thread_mock = thread.return_value
+    def test_play_pause_button_callback_should_not_start_timer_when_is_paused_and_running(self):
         self.file_data_producer.is_suspended.return_value = True
         self.replay_controller.is_running = True
 
         self.replay_controller.play_pause_button_callback()
 
         self.file_data_producer.start.assert_not_called()
-        thread_mock.start.assert_not_called()
+        self.qtimer.start.assert_not_called()
 
-    @patch("src.controller.Thread")
-    def test_play_pause_button_callback_should_set_pause_button_text_when_is_paused(self, _):
+    def test_play_pause_button_callback_should_set_pause_button_text_when_is_paused(self):
         self.file_data_producer.is_suspended.return_value = True
 
         self.replay_controller.play_pause_button_callback()
@@ -122,24 +119,20 @@ class ReplayControllerTest(unittest.TestCase):
 
         self.replay_widget.draw_altitude.assert_called_with(self.TIMESTAMPS, self.ALTITUDE_DATA)
 
-    @patch("src.controller.Thread")
-    def test_deactivate_should_stop_thread_when_is_running(self, thread_mock):
+    def test_deactivate_should_stop_timer_when_is_running(self):
         self.replay_controller.is_running = True
-        self.replay_controller.thread = thread_mock
 
         self.replay_controller.deactivate()
 
-        thread_mock.join.assert_called_with()
+        self.qtimer.stop.assert_called_with()
         self.file_data_producer.stop.assert_called_with()
 
-    @patch("src.controller.Thread")
-    def test_deactivate_should_not_stop_thread_when_is_not_running(self, thread_mock):
+    def test_deactivate_should_not_stop_timer_when_is_not_running(self):
         self.replay_controller.is_running = False
-        self.replay_controller.thread = thread_mock
 
         self.replay_controller.deactivate()
 
-        thread_mock.join.assert_not_called()
+        self.qtimer.stop.assert_not_called()
         self.file_data_producer.stop.assert_not_called()
 
     def test_deactivate_should_reset_ui(self):

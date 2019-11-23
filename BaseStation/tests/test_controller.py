@@ -1,6 +1,8 @@
 import unittest
 from unittest.mock import Mock, MagicMock, call, patch
 
+from PyQt5.QtCore import QTimer
+
 from src.controller import Controller
 from src.data_processing.consumer import Consumer
 from src.data_processing.consumer_factory import ConsumerFactory
@@ -34,6 +36,7 @@ class ControllerTest(unittest.TestCase):
     ORIENTATION = Orientation(1, 2, 3)
     OPEN_ROCKET_SIMULATION_FILENAME = "simulation.csv"
     A_ROCKET_PACKET_VERSION = 2019
+    UPDATES_INTERVAL_IN_MILLIS = 100.0
 
     def setUp(self):
         self.data_widget = Mock(spec=DataWidget)
@@ -41,10 +44,10 @@ class ControllerTest(unittest.TestCase):
         self.consumer = MagicMock(spec=Consumer)
         self.consumer_factory = Mock(spec=ConsumerFactory)
         self.consumer_factory.create.return_value = self.consumer
+        config = ConfigBuilder().with_gui_fps(1000 / self.UPDATES_INTERVAL_IN_MILLIS).build()
+        self.qtimer = Mock(spec=QTimer)
 
-        config = ConfigBuilder().build()
-
-        self.controller = Controller(self.data_widget, self.data_producer, self.consumer_factory, config)
+        self.controller = Controller(self.data_widget, self.data_producer, self.consumer_factory, config, self.qtimer)
         self.controller.create_new_consumer(self.A_ROCKET_PACKET_VERSION)
 
     def test_update_should_update_consumer(self):
@@ -129,6 +132,26 @@ class ControllerTest(unittest.TestCase):
 
         message_listener.notify.assert_called_with(AnyStringWith(error_message), MessageType.ERROR)
 
+    def test_start_updates_should_start_producer(self):
+        self.controller.start_updates()
+
+        self.data_producer.start.assert_called_with()
+
+    def test_start_updates_should_start_timer_with_updates_interval(self):
+        self.controller.start_updates()
+
+        self.qtimer.start.assert_called_with(self.UPDATES_INTERVAL_IN_MILLIS)
+
+    def test_stop_updates_should_stop_producer(self):
+        self.controller.stop_updates()
+
+        self.data_producer.stop.assert_called_with()
+
+    def test_stop_updates_should_stop_timer(self):
+        self.controller.stop_updates()
+
+        self.qtimer.stop.assert_called_with()
+
     def test_create_new_consumer_should_delegate_to_factory(self):
         self.controller.consumer = None
 
@@ -137,7 +160,7 @@ class ControllerTest(unittest.TestCase):
         self.assertEqual(self.controller.consumer, self.consumer)
 
     def setup_consumer_data(self):
-        data = {"altitude_feet": self.ALTITUDES, "apogee": self.APOGEE, "voltage": self.VOLTAGE,
+        data = {"altitude_feet": self.ALTITUDES, "voltage": self.VOLTAGE,
                 "acquisition_board_state_1": [self.BOARD_STATE_1], "acquisition_board_state_2": [self.BOARD_STATE_2],
                 "acquisition_board_state_3": [self.BOARD_STATE_3], "power_supply_state_1": [self.POWER_SUPPLY_STATE_1],
                 "power_supply_state_2": [self.POWER_SUPPLY_STATE_2],
@@ -145,6 +168,7 @@ class ControllerTest(unittest.TestCase):
         self.consumer.__getitem__.side_effect = lambda arg: data[arg]
         self.consumer.get_projected_coordinates.return_value = (self.EASTINGS, self.NORTHINGS)
         self.consumer.get_last_gps_coordinates.return_value = self.GPS_COORDINATES
+        self.consumer.get_apogee.return_value = self.APOGEE
 
     def assert_leds_updated(self):
         calls = [call(1, self.BOARD_STATE_1), call(2, self.BOARD_STATE_2), call(3, self.BOARD_STATE_3),
