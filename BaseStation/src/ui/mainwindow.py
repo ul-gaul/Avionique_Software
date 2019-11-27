@@ -17,6 +17,7 @@ from src.ui.status_bar import StatusBar
 from src.ui.tabs_widget import TabsWidget
 from src.ui.motor_widget import MotorWidget
 
+
 class MainWindow(QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -101,6 +102,7 @@ class MainWindow(QMainWindow):
     def open_real_time(self):
         if self.real_time_controller is None:
             self.real_time_controller = self.controller_factory.create_real_time_controller(self.real_time_widget,
+                                                                                            self.motor_widget,
                                                                                             self.console)
             self.real_time_controller.register_message_listener(self.status_bar)
 
@@ -112,7 +114,8 @@ class MainWindow(QMainWindow):
 
     def open_replay(self):
         if self.replay_controller is None:
-            self.replay_controller = self.controller_factory.create_replay_controller(self.replay_widget)
+            self.replay_controller = self.controller_factory.create_replay_controller(self.replay_widget,
+                                                                                      self.motor_widget)
             self.replay_controller.register_message_listener(self.status_bar)
 
         self.active_controller = self.replay_controller

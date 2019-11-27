@@ -5,12 +5,13 @@ from src.controller import Controller
 from src.data_processing.consumer_factory import ConsumerFactory
 from src.replay.file_data_producer import FileDataProducer
 from src.ui.replay_widget import ReplayWidget
+from src.ui.motor_widget import MotorWidget
 
 
 class ReplayController(Controller):
-    def __init__(self, replay_widget: ReplayWidget, file_data_producer: FileDataProducer,
+    def __init__(self, replay_widget: ReplayWidget, motor_widget: MotorWidget, file_data_producer: FileDataProducer,
                  consumer_factory: ConsumerFactory, config: Config, timer: QTimer):
-        super().__init__(replay_widget, file_data_producer, consumer_factory, config, timer)
+        super().__init__(replay_widget, motor_widget, file_data_producer, consumer_factory, config, timer)
 
         self.data_widget.set_callback("play_pause", self.play_pause_button_callback)
         self.data_widget.set_callback("fast_forward", self.fast_forward_button_callback)
