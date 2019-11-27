@@ -14,7 +14,8 @@ from src.ui.menu_bar import MenuBar
 from src.ui.real_time_widget import RealTimeWidget
 from src.ui.replay_widget import ReplayWidget
 from src.ui.status_bar import StatusBar
-
+from src.ui.tabs_widget import TabsWidget
+from src.ui.motor_widget import MotorWidget
 
 class MainWindow(QMainWindow):
     def __init__(self, parent=None):
@@ -24,9 +25,10 @@ class MainWindow(QMainWindow):
         self.home_widget = HomeWidget(self.new_acquisition, self.load_flight_data, self)
         self.real_time_widget = RealTimeWidget(self)
         self.replay_widget = ReplayWidget(self)
+        self.motor_widget = MotorWidget(self)
+        self.tab_widget = TabsWidget(self)
         self.central_widget.addWidget(self.home_widget)
-        self.central_widget.addWidget(self.real_time_widget)
-        self.central_widget.addWidget(self.replay_widget)
+        self.central_widget.addWidget(self.tab_widget)
 
         self.controller_factory = ControllerFactory()
         self.active_controller = None
@@ -103,7 +105,9 @@ class MainWindow(QMainWindow):
             self.real_time_controller.register_message_listener(self.status_bar)
 
         self.active_controller = self.real_time_controller
-        self.open_widget(self.real_time_widget)
+        self.tab_widget.clearTabs()
+        self.tab_widget.addWidget(self.real_time_widget, "General")
+        self.open_widget(self.tab_widget)
         self.menu_bar.set_real_time_mode()
 
     def open_replay(self):
@@ -112,7 +116,10 @@ class MainWindow(QMainWindow):
             self.replay_controller.register_message_listener(self.status_bar)
 
         self.active_controller = self.replay_controller
-        self.open_widget(self.replay_widget)
+        self.tab_widget.clearTabs()
+        self.tab_widget.addWidget(self.replay_widget, "General")
+        self.tab_widget.addWidget(self.motor_widget, "Motor")
+        self.open_widget(self.tab_widget)
         self.menu_bar.set_replay_mode()
 
     def open_widget(self, widget: QWidget):
