@@ -45,9 +45,9 @@ class ControllerFactory:
 
         consumer_factory = ConsumerFactory(self.coordinate_conversion_strategy_factory, self.gps_fix_validator_factory)
 
-        save_manager = SaveManager(data_producer, real_time_widget, motor_widget)
+        save_manager = SaveManager(data_producer, real_time_widget)
 
-        return RealTimeController(real_time_widget, data_producer, consumer_factory, save_manager, config, QTimer())
+        return RealTimeController(real_time_widget, motor_widget, data_producer, consumer_factory, save_manager, config, QTimer())
 
     def create_replay_controller(self, replay_widget: ReplayWidget, motor_widget: MotorWidget):
         config = ConfigLoader.load()
