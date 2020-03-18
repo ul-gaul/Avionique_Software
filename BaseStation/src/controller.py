@@ -10,7 +10,7 @@ from src.message_sender import MessageSender
 from src.message_type import MessageType
 from src.openrocket_simulation import OpenRocketSimulation, InvalidOpenRocketSimulationFileException
 from src.ui.data_widget import DataWidget
-from src.ui.data_motor_widget import DataMotorWidget
+from src.ui.data_motorwidget import DataMotorWidget
 
 
 class Controller(MessageSender):

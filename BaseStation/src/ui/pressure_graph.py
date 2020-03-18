@@ -8,10 +8,6 @@ class PressureGraph(PlotWidget):
     def __init__(self, parent: QtWidgets.QWidget):
         super().__init__(parent)
 
-        self.setMinimumSize(QtCore.QSize(400, 150))
-        set_minimum_expanding_size_policy(self)
-        self.setObjectName("pressureGraph")
-
         self.set_graph_title("Pressure")
         self.set_graph_bottom_legend("Temps (s)")
         self.set_graph_left_legend("Pressure (p)")
