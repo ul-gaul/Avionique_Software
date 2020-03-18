@@ -13,7 +13,7 @@ from src.message_listener import MessageListener
 from src.message_type import MessageType
 from src.openrocket_simulation import InvalidOpenRocketSimulationFileException
 from src.ui.data_widget import DataWidget
-from src.ui.data_motor_widget import DataMotorWidget
+from src.ui.data_motorwidget import DataMotorWidget
 from tests.builders.config_builder import ConfigBuilder
 from tests.matchers import AnyStringWith
 
