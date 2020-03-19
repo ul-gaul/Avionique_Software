@@ -10,6 +10,7 @@ from src.persistence.csv_data_persister import CsvDataPersister
 from src.real_time_controller import RealTimeController
 from src.realtime.checksum_validator import ChecksumValidator
 from src.realtime.serial_data_producer import SerialDataProducer
+from src.realtime.serial_command_sender import SerialCommandSender
 from src.replay.file_data_producer import FileDataProducer
 from src.replay.playback_state import PlaybackState
 from src.replay_controller import ReplayController
@@ -46,7 +47,9 @@ class ControllerFactory:
 
         save_manager = SaveManager(data_producer, real_time_widget)
 
-        return RealTimeController(real_time_widget, data_producer, consumer_factory, save_manager, config, QTimer())
+        serial_command_sender = SerialCommandSender("COM4", 9600, "bbbbbbb")
+
+        return RealTimeController(real_time_widget, data_producer, consumer_factory, save_manager, config, QTimer(), serial_command_sender)
 
     def create_replay_controller(self, replay_widget: ReplayWidget):
         config = ConfigLoader.load()
