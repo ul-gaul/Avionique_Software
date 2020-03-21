@@ -3,6 +3,7 @@ from PyQt5 import QtCore
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QLabel
 
+from src.data_widget import DataWidget
 from src.data_processing.apogee import Apogee
 from src.data_processing.gps.gps_coordinates import GpsCoordinates
 from src.data_processing.orientation.orientation import Orientation
@@ -16,8 +17,7 @@ from src.ui.thermometer import Thermometer
 from src.ui.utils import *
 
 
-# FIXME: make this class abstract
-class DataWidget(QtWidgets.QWidget):
+class DataMainWindow(DataWidget):
 
     def __init__(self, parent=None):
         super().__init__(parent)

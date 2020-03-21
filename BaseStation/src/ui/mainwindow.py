@@ -35,6 +35,7 @@ class MainWindow(QMainWindow):
         self.active_controller = None
         self.real_time_controller = None
         self.replay_controller = None
+        self.motor_controller = None
 
         self.status_bar = StatusBar(self)
         self.setStatusBar(self.status_bar)
@@ -102,9 +103,10 @@ class MainWindow(QMainWindow):
     def open_real_time(self):
         if self.real_time_controller is None:
             self.real_time_controller = self.controller_factory.create_real_time_controller(self.real_time_widget,
-                                                                                            self.motor_widget,
                                                                                             self.console)
             self.real_time_controller.register_message_listener(self.status_bar)
+
+            self.motor_controller = self.controller_factory.create_motor_controller(self.motor_widget)
 
         self.active_controller = self.real_time_controller
         self.tab_widget.clearTabs()
@@ -115,9 +117,10 @@ class MainWindow(QMainWindow):
 
     def open_replay(self):
         if self.replay_controller is None:
-            self.replay_controller = self.controller_factory.create_replay_controller(self.replay_widget,
-                                                                                      self.motor_widget)
+            self.replay_controller = self.controller_factory.create_replay_controller(self.replay_widget)
             self.replay_controller.register_message_listener(self.status_bar)
+
+            self.motor_controller = self.controller_factory.create_motor_controller(self.motor_widget)
 
         self.active_controller = self.replay_controller
         self.tab_widget.clearTabs()

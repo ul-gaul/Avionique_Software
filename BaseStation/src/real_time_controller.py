@@ -7,24 +7,19 @@ from src.data_processing.consumer_factory import ConsumerFactory
 from src.domain_error import DomainError
 from src.message_type import MessageType
 from src.realtime.serial_data_producer import SerialDataProducer, NoConnectedDeviceException
-from src.realtime.serial_command_sender import SerialCommandSender
 from src.save import SaveManager, SaveStatus
 from src.ui.real_time_widget import RealTimeWidget
-from src.ui.motor_widget import MotorWidget
 
 
 class RealTimeController(Controller):
-    def __init__(self, real_time_widget: RealTimeWidget, motor_widget: MotorWidget, serial_data_producer: SerialDataProducer,
-                 consumer_factory: ConsumerFactory, save_manager: SaveManager, config: Config, timer: QTimer,
-                 command_sender: SerialCommandSender):
-        super().__init__(real_time_widget, motor_widget, serial_data_producer, consumer_factory, config, timer)
+    def __init__(self, real_time_widget: RealTimeWidget, serial_data_producer: SerialDataProducer,
+                 consumer_factory: ConsumerFactory, save_manager: SaveManager, config: Config, timer: QTimer):
+        super().__init__(real_time_widget, serial_data_producer, consumer_factory, config, timer)
 
         self.save_manager = save_manager
 
         self.data_widget.set_target_altitude(self.target_altitude)
         self.data_widget.set_button_callback(self.real_time_button_callback)
-
-        self.command_sender = command_sender
 
     def update_ui(self):
         super().update_ui()

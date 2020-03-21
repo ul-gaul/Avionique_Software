@@ -12,8 +12,7 @@ from src.data_producer import DataProducer
 from src.message_listener import MessageListener
 from src.message_type import MessageType
 from src.openrocket_simulation import InvalidOpenRocketSimulationFileException
-from src.ui.data_widget import DataWidget
-from src.ui.data_motorwidget import DataMotorWidget
+from src.ui.data_main_window import DataMainWindow
 from tests.builders.config_builder import ConfigBuilder
 from tests.matchers import AnyStringWith
 
@@ -40,8 +39,7 @@ class ControllerTest(unittest.TestCase):
     UPDATES_INTERVAL_IN_MILLIS = 100.0
 
     def setUp(self):
-        self.data_widget = Mock(spec=DataWidget)
-        self.data_motor_widget = Mock(spec=DataMotorWidget)
+        self.data_widget = Mock(spec=DataMainWindow)
         self.data_producer = Mock(spec=DataProducer)
         self.consumer = MagicMock(spec=Consumer)
         self.consumer_factory = Mock(spec=ConsumerFactory)
@@ -49,7 +47,7 @@ class ControllerTest(unittest.TestCase):
         config = ConfigBuilder().with_gui_fps(1000 / self.UPDATES_INTERVAL_IN_MILLIS).build()
         self.qtimer = Mock(spec=QTimer)
 
-        self.controller = Controller(self.data_widget, self.data_motor_widget, self.data_producer, self.consumer_factory, config, self.qtimer)
+        self.controller = Controller(self.data_widget, self.data_producer, self.consumer_factory, config, self.qtimer)
         self.controller.create_new_consumer(self.A_ROCKET_PACKET_VERSION)
 
     def test_update_should_update_consumer(self):

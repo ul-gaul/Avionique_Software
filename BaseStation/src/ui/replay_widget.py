@@ -1,9 +1,9 @@
 from PyQt5.QtWidgets import QPushButton, QLabel
-from src.ui.data_widget import DataWidget
+from src.ui.data_main_window import DataMainWindow
 from src.ui.control_bar import ControlBar
 
 
-class ReplayWidget(DataWidget):
+class ReplayWidget(DataMainWindow):
 
     PLAY_TEXT = "Play"
     PAUSE_TEXT = "Pause"

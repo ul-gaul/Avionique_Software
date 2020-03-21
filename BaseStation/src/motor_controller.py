@@ -3,17 +3,30 @@ from src.ui.motor_widget import MotorWidget
 from src.replay_controller import FileDataProducer
 from src.data_processing.consumer_factory import ConsumerFactory
 from src.config import Config
-from PyQt5.QtCore.QTimer import QTimer
+from PyQt5.QtCore import QTimer
+from src.realtime.serial_command_sender import SerialCommandSender
+
 
 class MotorController(Controller):
-    def __init__(self, replay_widget: MotorWidget, file_data_producer: FileDataProducer,
-                 consumer_factory: ConsumerFactory, config: Config, timer: QTimer):
-        super().__init__(replay_widget, file_data_producer, consumer_factory, config, timer)
+    def __init__(self, motor_widget: MotorWidget, file_data_producer: FileDataProducer,
+                 consumer_factory: ConsumerFactory, config: Config, timer: QTimer,
+                 serial_command_sender: SerialCommandSender):
+        super().__init__(motor_widget, file_data_producer, consumer_factory, config, timer)
 
-        self.data_widget.set_callback("play_pause", self.play_pause_button_callback)
-        self.data_widget.set_callback("fast_forward", self.fast_forward_button_callback)
-        self.data_widget.set_callback("rewind", self.rewind_button_callback)
-        self.data_widget.set_control_bar_callback(self.control_bar_callback)
+        self.command_sender = serial_command_sender
+
+        self.data_widget.set_callback("send_cmd_valve_1", lambda: self.send_command_valve_callback(""))
+        self.data_widget.set_callback("send_cmd_valve_2", lambda: self.send_command_valve_callback(""))
+        self.data_widget.set_callback("send_cmd_valve_3", lambda: self.send_command_valve_callback(""))
+        self.data_widget.set_callback("send_cmd_valve_4", lambda: self.send_command_valve_callback(""))
+        self.data_widget.set_callback("send_cmd_valve_5", lambda: self.send_command_valve_callback(""))
+
+    def send_command_valve_callback(self, *args):
+        print("Command sent!")
+        self.command_sender.send_command(args)
+
+    def update_ui(self):
+        super().update_ui()
 
     def activate(self, filename: str):
         self.update()

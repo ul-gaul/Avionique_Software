@@ -9,8 +9,7 @@ from src.data_producer import DataProducer
 from src.message_sender import MessageSender
 from src.message_type import MessageType
 from src.openrocket_simulation import OpenRocketSimulation, InvalidOpenRocketSimulationFileException
-from src.ui.data_widget import DataWidget
-from src.ui.data_motorwidget import DataMotorWidget
+from src.ui.data_main_window import DataWidget
 
 
 class Controller(MessageSender):

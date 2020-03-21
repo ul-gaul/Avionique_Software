@@ -21,7 +21,6 @@ class ReplayControllerTest(unittest.TestCase):
 
     def setUp(self):
         self.replay_widget = Mock(spec=ReplayWidget)
-        self.motor_widget = Mock(spec=MotorWidget)
         self.file_data_producer = Mock(spec=FileDataProducer)
         self.file_data_producer.get_total_packet_count.return_value = self.PACKET_COUNT
 
@@ -32,7 +31,7 @@ class ReplayControllerTest(unittest.TestCase):
         config = ConfigBuilder().build()
         self.qtimer = Mock(spec=QTimer)
 
-        self.replay_controller = ReplayController(self.replay_widget, self.motor_widget, self.file_data_producer, self.consumer_factory,
+        self.replay_controller = ReplayController(self.replay_widget, self.file_data_producer, self.consumer_factory,
                                                   config, self.qtimer)
 
     def test_control_bar_callback_should_pass_frame_index_to_data_producer(self):

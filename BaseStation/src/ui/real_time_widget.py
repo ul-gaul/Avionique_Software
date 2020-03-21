@@ -1,10 +1,10 @@
 from PyQt5.QtWidgets import QLCDNumber, QPushButton, QMessageBox, QFileDialog
 
-from src.ui.data_widget import DataWidget
+from src.ui.data_main_window import DataMainWindow
 from src.ui.utils import set_minimum_expanding_size_policy
 
 
-class RealTimeWidget(DataWidget):
+class RealTimeWidget(DataMainWindow):
 
     def __init__(self, parent=None):
         super().__init__(parent)

@@ -18,9 +18,10 @@ from src.rocket_packet.rocket_packet_parser_factory import RocketPacketParserFac
 from src.rocket_packet.rocket_packet_repository import RocketPacketRepository
 from src.save import SaveManager
 from src.ui.console_message_listener import ConsoleMessageListener
-from src.ui.motor_widget import MotorWidget
 from src.ui.real_time_widget import RealTimeWidget
 from src.ui.replay_widget import ReplayWidget
+from src.ui.motor_widget import MotorWidget
+from src.motor_controller import MotorController
 
 
 class ControllerFactory:
@@ -32,7 +33,7 @@ class ControllerFactory:
         self.coordinate_conversion_strategy_factory = CoordinateConversionStrategyFactory()
         self.gps_fix_validator_factory = GpsFixValidatorFactory()
 
-    def create_real_time_controller(self, real_time_widget: RealTimeWidget, motor_widget: MotorWidget, console: ConsoleMessageListener):
+    def create_real_time_controller(self, real_time_widget: RealTimeWidget, console: ConsoleMessageListener):
         config = ConfigLoader.load()
 
         checksum_validator = ChecksumValidator()
@@ -48,12 +49,9 @@ class ControllerFactory:
 
         save_manager = SaveManager(data_producer, real_time_widget)
 
-        serial_command_sender = SerialCommandSender("COM4", 9600, "bbbbbbb")
+        return RealTimeController(real_time_widget, data_producer, consumer_factory, save_manager, config, QTimer())
 
-        return RealTimeController(real_time_widget, motor_widget, data_producer, consumer_factory, save_manager, config, QTimer(),
-                                  serial_command_sender)
-
-    def create_replay_controller(self, replay_widget: ReplayWidget, motor_widget: MotorWidget):
+    def create_replay_controller(self, replay_widget: ReplayWidget):
         config = ConfigLoader.load()
 
         data_lock = threading.RLock()
@@ -63,4 +61,17 @@ class ControllerFactory:
 
         consumer_factory = ConsumerFactory(self.coordinate_conversion_strategy_factory, self.gps_fix_validator_factory)
 
-        return ReplayController(replay_widget, motor_widget, data_producer, consumer_factory, config, QTimer())
+        return ReplayController(replay_widget, data_producer, consumer_factory, config, QTimer())
+
+    #TODO: Cree une autre class au dessus de DataWidget pour eviter de repasser des arguments en bouble.
+    def create_motor_controller(self, motor_widget: MotorWidget):
+        config = ConfigLoader.load()
+
+        data_lock = threading.RLock()
+        playback_lock = threading.Lock()
+        playback_state = PlaybackState(1, PlaybackState.Mode.FORWARD)
+        data_producer = FileDataProducer(self.rocket_packet_repository, data_lock, playback_lock, playback_state)
+        consumer_factory = ConsumerFactory(self.coordinate_conversion_strategy_factory, self.gps_fix_validator_factory)
+
+        serial_command_sender = SerialCommandSender("COM4", 9600, "bbbbbbb")
+        return MotorController(motor_widget, data_producer, consumer_factory, config, QTimer(), serial_command_sender)

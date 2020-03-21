@@ -1,9 +1,7 @@
-from PyQt5.uic.properties import QtWidgets
-
-from src.ui.data_motorwidget import DataMotorWidget
+from src.ui.data_motor_window import DataMotorWindow
 
 
-class MotorWidget(DataMotorWidget):
+class MotorWidget(DataMotorWindow):
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -28,6 +26,17 @@ class MotorWidget(DataMotorWidget):
             self.is_valve_pushButton_clicked[index] = False
             self.set_valve_pushButton_off(button)
 
+        if index == 0:
+            self.callbacks["send_cmd_valve_1"]()
+        elif index == 1:
+            self.callbacks["send_cmd_valve_2"]()
+        elif index == 2:
+            self.callbacks["send_cmd_valve_3"]()
+        elif index == 3:
+            self.callbacks["send_cmd_valve_4"]()
+        elif index == 4:
+            self.callbacks["send_cmd_valve_5"]()
+
     def register_all_valve_pushButton(self):
         self.register_valve_pushButton(self.valve_pushButton_1)
         self.register_valve_pushButton(self.valve_pushButton_2)
@@ -40,4 +49,5 @@ class MotorWidget(DataMotorWidget):
         button.clicked.connect(lambda: self.valve_pushButton_on_click(len(self.is_valve_pushButton_clicked) - 1, button))
 
     def reset(self):
+
         super().reset()

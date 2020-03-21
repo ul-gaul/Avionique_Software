@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 from PyQt5 import QtCore, QtWidgets
-
-from src.ui import utils
+from src.data_widget import DataWidget
 from src.ui.pressure_graph import PressureGraph
 
 
-class DataMotorWidget(QtWidgets.QWidget):
+class DataMotorWindow(DataWidget):
 
     def __init__(self, parent=None):
         super().__init__(parent)

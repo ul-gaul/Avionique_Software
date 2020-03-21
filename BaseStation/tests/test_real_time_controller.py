@@ -23,7 +23,6 @@ class RealTimeControllerTest(unittest.TestCase):
 
     def setUp(self):
         self.real_time_widget = Mock(spec=RealTimeWidget)
-        self.motor_widget = Mock(spec=MotorWidget)
         self.serial_data_producer = Mock(spec=SerialDataProducer)
         self.consumer_factory = MagicMock(spec=ConsumerFactory)
         self.save_manager = Mock(spec=SaveManager)
@@ -32,7 +31,7 @@ class RealTimeControllerTest(unittest.TestCase):
         self.config = ConfigBuilder().with_rocket_packet_version(self.A_ROCKET_PACKET_VERSION).build()
         self.qtimer = Mock(spec=QTimer)
 
-        self.real_time_controller = RealTimeController(self.real_time_widget, self.motor_widget, self.serial_data_producer,
+        self.real_time_controller = RealTimeController(self.real_time_widget, self.serial_data_producer,
                                                        self.consumer_factory, self.save_manager, self.config,
                                                        self.qtimer)
         self.real_time_controller.is_running = False
