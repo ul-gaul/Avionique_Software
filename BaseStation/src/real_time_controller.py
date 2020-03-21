@@ -10,13 +10,15 @@ from src.realtime.serial_data_producer import SerialDataProducer, NoConnectedDev
 from src.realtime.serial_command_sender import SerialCommandSender
 from src.save import SaveManager, SaveStatus
 from src.ui.real_time_widget import RealTimeWidget
+from src.ui.motor_widget import MotorWidget
 
 
 class RealTimeController(Controller):
-    def __init__(self, real_time_widget: RealTimeWidget, serial_data_producer: SerialDataProducer,
+    def __init__(self, real_time_widget: RealTimeWidget, motor_widget: MotorWidget, serial_data_producer: SerialDataProducer,
                  consumer_factory: ConsumerFactory, save_manager: SaveManager, config: Config, timer: QTimer,
                  command_sender: SerialCommandSender):
-        super().__init__(real_time_widget, serial_data_producer, consumer_factory, config, timer)
+        super().__init__(real_time_widget, motor_widget, serial_data_producer, consumer_factory, config, timer)
+
         self.save_manager = save_manager
 
         self.data_widget.set_target_altitude(self.target_altitude)

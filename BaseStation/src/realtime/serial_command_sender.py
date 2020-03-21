@@ -10,11 +10,10 @@ class SerialCommandSender:
         self.set_port_and_baudrate(port, baudrate)
         self.packet_format = packet_format
 
-        self.open_port()
-
     def set_port_and_baudrate(self, port: str, baudrate: int):
         if port not in self.get_all_opened_ports():
-            raise Exception("Le port specifer n'est pas existant")
+            #raise Exception("Le port specifer n'est pas existant")
+            pass
 
         self.close_port()
 

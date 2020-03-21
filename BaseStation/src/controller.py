@@ -10,13 +10,14 @@ from src.message_sender import MessageSender
 from src.message_type import MessageType
 from src.openrocket_simulation import OpenRocketSimulation, InvalidOpenRocketSimulationFileException
 from src.ui.data_widget import DataWidget
+from src.ui.data_motorwidget import DataMotorWidget
 
 
 class Controller(MessageSender):
     __metaclass__ = abc.ABCMeta
 
-    def __init__(self, data_widget: DataWidget, data_producer: DataProducer, consumer_factory: ConsumerFactory,
-                 config: Config, timer: QTimer):
+    def __init__(self, data_widget: DataWidget, data_producer: DataProducer,
+                 consumer_factory: ConsumerFactory, config: Config, timer: QTimer):
         super().__init__()
         self.data_widget = data_widget
         self.is_running = False
