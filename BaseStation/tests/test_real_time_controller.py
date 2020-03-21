@@ -11,7 +11,6 @@ from src.real_time_controller import RealTimeController
 from src.realtime.serial_data_producer import SerialDataProducer, NoConnectedDeviceException
 from src.save import SaveManager, SaveStatus
 from src.ui.real_time_widget import RealTimeWidget
-from src.ui.motor_widget import MotorWidget
 from tests.builders.config_builder import ConfigBuilder
 
 

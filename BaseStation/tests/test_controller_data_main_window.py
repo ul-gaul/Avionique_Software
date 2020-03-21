@@ -17,7 +17,7 @@ from tests.builders.config_builder import ConfigBuilder
 from tests.matchers import AnyStringWith
 
 
-class ControllerTest(unittest.TestCase):
+class ControllerDataMainWindow(unittest.TestCase):
 
     TIMESTAMPS = [1]
     ALTITUDES = [9000]
