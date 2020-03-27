@@ -21,7 +21,7 @@ class MotorWidget(DataMotorWindow):
     def valve_pushButton_on_click(self, index: int, button):
         if not self.is_valve_pushButton_clicked[index]:
             self.is_valve_pushButton_clicked[index] = True
-            self.set_valve_pushButton_on(button)
+            self.set_valve_pushButton_wait(button)
         else:
             self.is_valve_pushButton_clicked[index] = False
             self.set_valve_pushButton_off(button)
@@ -38,16 +38,27 @@ class MotorWidget(DataMotorWindow):
             self.callbacks["send_cmd_valve_5"]()
 
     def register_all_valve_pushButton(self):
-        self.register_valve_pushButton(self.valve_pushButton_1)
-        self.register_valve_pushButton(self.valve_pushButton_2)
-        self.register_valve_pushButton(self.valve_pushButton_3)
-        self.register_valve_pushButton(self.valve_pushButton_4)
-        self.register_valve_pushButton(self.valve_pushButton_5)
+        self.register_valve_pushButton(0, self.valve_pushButton_1)
+        self.register_valve_pushButton(1, self.valve_pushButton_2)
+        self.register_valve_pushButton(2, self.valve_pushButton_3)
+        self.register_valve_pushButton(3, self.valve_pushButton_4)
+        self.register_valve_pushButton(4, self.valve_pushButton_5)
 
-    def register_valve_pushButton(self, button):
+    def register_valve_pushButton(self, index, button):
         self.is_valve_pushButton_clicked.append(False)
-        button.clicked.connect(lambda: self.valve_pushButton_on_click(len(self.is_valve_pushButton_clicked) - 1, button))
+        button.clicked.connect(lambda: self.valve_pushButton_on_click(index, button))
+
+    def getButtonByCommandID(self, cmd_id: int):
+        if cmd_id == 1:
+            return self.valve_pushButton_1
+        elif cmd_id == 2:
+            return self.valve_pushButton_2
+        elif cmd_id == 3:
+            return self.valve_pushButton_3
+        elif cmd_id == 4:
+            return self.valve_pushButton_4
+        elif cmd_id == 5:
+            return self.valve_pushButton_5
 
     def reset(self):
-
         super().reset()

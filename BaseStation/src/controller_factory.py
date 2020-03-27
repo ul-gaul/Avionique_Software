@@ -1,5 +1,6 @@
 import threading
 
+import serial
 from PyQt5.QtCore import QTimer
 
 from src.config import ConfigLoader
@@ -64,14 +65,15 @@ class ControllerFactory:
         return ReplayController(replay_widget, data_producer, consumer_factory, config, QTimer())
 
     #TODO: Cree une autre class au dessus de DataWidget pour eviter de repasser des arguments en bouble.
-    def create_motor_controller(self, motor_widget: MotorWidget):
-        config = ConfigLoader.load()
+    def create_motor_controller(self, motor_widget: MotorWidget, serial_port: serial):
+        # config = ConfigLoader.load()
+        #
+        # data_lock = threading.RLock()
+        # playback_lock = threading.Lock()
+        # playback_state = PlaybackState(1, PlaybackState.Mode.FORWARD)
+        # data_producer = FileDataProducer(self.rocket_packet_repository, data_lock, playback_lock, playback_state)
+        # consumer_factory = ConsumerFactory(self.coordinate_conversion_strategy_factory, self.gps_fix_validator_factory)
 
-        data_lock = threading.RLock()
-        playback_lock = threading.Lock()
-        playback_state = PlaybackState(1, PlaybackState.Mode.FORWARD)
-        data_producer = FileDataProducer(self.rocket_packet_repository, data_lock, playback_lock, playback_state)
-        consumer_factory = ConsumerFactory(self.coordinate_conversion_strategy_factory, self.gps_fix_validator_factory)
-
-        serial_command_sender = SerialCommandSender("COM4", 9600, "bbbbbbb")
-        return MotorController(motor_widget, data_producer, consumer_factory, config, QTimer(), serial_command_sender)
+        serial_command_sender = SerialCommandSender(serial_port, "bbbbbbb")
+        #motorController = MotorController(motor_widget, data_producer, consumer_factory, config, QTimer(), serial_command_sender)
+        return MotorController(motor_widget, serial_command_sender)

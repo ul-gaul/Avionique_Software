@@ -14,10 +14,6 @@ class DataProducer:
         self.is_running = False
         self.thread = None
 
-    @abc.abstractmethod
-    def start(self):
-        """Start acquisition thread"""
-        pass
 
     def stop(self):
         self.is_running = False
@@ -40,6 +36,16 @@ class DataProducer:
         pass
 
     @abc.abstractmethod
+    def start(self):
+        """Start acquisition thread"""
+        pass
+
+    @abc.abstractmethod
     def run(self):
         """Acquisition thread function"""
+        pass
+
+    @abc.abstractmethod
+    def get_serial_port(self):
+        """Return serial port in use"""
         pass

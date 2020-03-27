@@ -33,6 +33,9 @@ class SerialDataProducer(DataProducer):
         # RocketPacket data + 1 byte for checksum
         self.num_bytes_to_read = self.rocket_packet_parser.get_number_of_bytes() + 1
 
+    def get_serial_port(self):
+        return self.port
+
     def start(self):
         ports = self.detect_serial_ports()
         if not ports:

@@ -3,7 +3,12 @@ from PyQt5 import QtCore, QtWidgets
 from src.data_widget import DataWidget
 from src.ui.pressure_graph import PressureGraph
 
-
+#TODO: Ajouter le port et le baudrate au config.
+#TODO: Trouver un moyens d'ouvrir les ports une fois l'aquision lancer ou mettre un button separer.
+#TODO: Ce que j'envoi [Oxce, Oxfa, <id>, <id>, 0x01, 0x02, <crc>, <crc>] pour activer les valves.
+#TODO: Fusee renvoi [Oxce, Oxfa, <id>, <id>, <ACK/NACK>, <crc>, <crc>] pour verifier si la fusee a bien recus la command.
+#ACK = 0x00
+#NACK = 0xff
 class DataMotorWindow(DataWidget):
 
     def __init__(self, parent=None):
@@ -21,6 +26,10 @@ class DataMotorWindow(DataWidget):
         self.valve_pushButton_3.setText("Off")
         self.valve_pushButton_4.setText("Off")
         self.valve_pushButton_5.setText("Off")
+
+        self.pushButton_on_stylesheet = "background-color: #00ff1a"
+        self.pushButton_wait_stylesheet = "background-color: #fcad03"
+        self.pushButton_off_stylesheet = "background-color: #ec0000"
 
     def setupUi(self):
         self.setObjectName("Form")
@@ -182,13 +191,17 @@ class DataMotorWindow(DataWidget):
         self.label.setText(_translate("Form", "Banc de test"))
         self.pushButton_11.setText(_translate("Form", "PushButton"))
 
-    def set_valve_pushButton_off(self, button: QtWidgets.QPushButton):
-        button.setText("Off")
-        button.setStyleSheet('background-color: #ec0000')
-
     def set_valve_pushButton_on(self, button: QtWidgets.QPushButton):
         button.setText("On")
-        button.setStyleSheet('background-color: #00ff1a')
+        button.setStyleSheet(self.pushButton_on_stylesheet)
+
+    def set_valve_pushButton_wait(self, button: QtWidgets.QPushButton):
+        button.setText("Waiting for response")
+        button.setStyleSheet(self.pushButton_wait_stylesheet)
+
+    def set_valve_pushButton_off(self, button: QtWidgets.QPushButton):
+        button.setText("Off")
+        button.setStyleSheet(self.pushButton_off_stylesheet)
 
     def draw_pressure_graph_1(self, timestamps: list, pressures: list):
         self.pressure_graphic_view_1.draw_altitude_curve(timestamps, pressures)

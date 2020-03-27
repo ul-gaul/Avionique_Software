@@ -41,7 +41,7 @@ class MainWindow(QMainWindow):
         self.setStatusBar(self.status_bar)
         self.menu_bar = self.create_menu_bar()
         self.config_dialog = None
-        self.console = ConsoleMessageListener()
+        self.console_listener = ConsoleMessageListener()
 
         self.setWindowIcon(QIcon("src/resources/logo.jpg"))
         self.setWindowTitle("GAUL BaseStation")
@@ -103,10 +103,11 @@ class MainWindow(QMainWindow):
     def open_real_time(self):
         if self.real_time_controller is None:
             self.real_time_controller = self.controller_factory.create_real_time_controller(self.real_time_widget,
-                                                                                            self.console)
+                                                                                            self.console_listener)
             self.real_time_controller.register_message_listener(self.status_bar)
 
-            self.motor_controller = self.controller_factory.create_motor_controller(self.motor_widget)
+            self.motor_controller = self.controller_factory.create_motor_controller(self.motor_widget,
+                                            self.real_time_controller.data_producer.get_serial_port())
 
         self.active_controller = self.real_time_controller
         self.tab_widget.clearTabs()
@@ -120,7 +121,8 @@ class MainWindow(QMainWindow):
             self.replay_controller = self.controller_factory.create_replay_controller(self.replay_widget)
             self.replay_controller.register_message_listener(self.status_bar)
 
-            self.motor_controller = self.controller_factory.create_motor_controller(self.motor_widget)
+            self.motor_controller = self.controller_factory.create_motor_controller(self.motor_widget,
+                                                self.replay_controller.data_producer.get_serial_port())
 
         self.active_controller = self.replay_controller
         self.tab_widget.clearTabs()
