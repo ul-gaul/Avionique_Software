@@ -33,7 +33,7 @@ def compute_crc(data):
 
 def set_actuator(ser, i, a):
 	data = struct.pack(CMD_PKT_FMT, START_SHORT, i, 1, a)
-	data = struct.pack(CMD_PKT_FMT + 'H', data, compute_crc(data))
+	data += struct.pack('H', compute_crc(data))
 	print('writing:', data)
 	size = ser.write(data)
 	print('wrote:', size)
@@ -41,7 +41,7 @@ def set_actuator(ser, i, a):
 
 def reset_actuator(ser, i, a):
 	data = struct.pack(CMD_PKT_FMT, START_SHORT, i, 2, a)
-	data = struct.pack(CMD_PKT_FMT + 'H', data, compute_crc(data))
+	data += struct.pack('H', compute_crc(data))
 	print('writing:', data)
 	size = ser.write(data)
 	print('wrote:', size)
@@ -51,7 +51,6 @@ def cli(port):
 	i = 0
 	with serial.Serial(port, BAUD_RFD, timeout=1) as ser:
 		while True:
-			print(ser.timeout)
 			# get input
 			s = input('> ')
 			# treat simple functions first
