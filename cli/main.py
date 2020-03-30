@@ -11,6 +11,7 @@ import pycrc.algorithms as crcalgo
 # global configuration variables
 BAUD_RFD = 115200
 CMD_PKT_FMT = '>HHBB'
+CRC_FMT = '>H'
 START_SHORT = 0xface
 CRC = crcalgo.Crc(width=16, poly=0x1021,
 				reflect_in=False, reflect_out=False,
@@ -33,18 +34,30 @@ def compute_crc(data):
 
 def set_actuator(ser, i, a):
 	data = struct.pack(CMD_PKT_FMT, START_SHORT, i, 1, a)
-	data += struct.pack('H', compute_crc(data))
-	print('writing:', data)
+	real_crc = compute_crc(data)
+	# add CRC to data
+	data += struct.pack(CRC_FMT, 0)
 	size = ser.write(data)
-	print('wrote:', size)
+	print('wrote:', [hex(x) for x in list(data)], size)
+	print('CRC on data sent =', hex(real_crc))
+
+
+def test_comm_error(ser, i, a):
+	data = struct.pack(CMD_PKT_FMT, START_SHORT, i, 1, a)
+	# flip a bit in the start short
+	err_data = struct.pack(CMD_PKT_FMT, (START_SHORT ^ 0b00001000), i, 1, a)
+	err_data += struct.pack(CRC_FMT, compute_crc(data)) # crc on original data
+	size = ser.write(err_data)
+	print('wrote:', [hex(x) for x in list(err_data)], size)
+	print('CRC on data sent =', hex(compute_crc(err_data)))
 
 
 def reset_actuator(ser, i, a):
 	data = struct.pack(CMD_PKT_FMT, START_SHORT, i, 2, a)
-	data += struct.pack('H', compute_crc(data))
-	print('writing:', data)
+	data += struct.pack(CRC_FMT, compute_crc(data))
 	size = ser.write(data)
-	print('wrote:', size)
+	print('wrote:', [hex(x) for x in list(data)], size)
+	print('CRC on data sent =', hex(compute_crc(data)))
 
 
 def cli(port):
@@ -70,6 +83,8 @@ def cli(port):
 				set_actuator(ser, i, a)
 			elif f == 'reset':
 				reset_actuator(ser, i, a)
+			elif f == 'error':
+				test_comm_error(ser, i, a)
 			else:
 				print('Invalid command, type -h or --help for help')
 			i += 1
@@ -77,6 +92,9 @@ def cli(port):
 
 if __name__ == '__main__':
 	port = sys.argv[1]
+
+	print(hex(compute_crc("123456789".encode())))
+
 	cli(port)
 
 	sys.exit(0)
