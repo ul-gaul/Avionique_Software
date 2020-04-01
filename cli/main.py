@@ -34,12 +34,14 @@ def compute_crc(data):
 
 def set_actuator(ser, i, a):
 	data = struct.pack(CMD_PKT_FMT, START_SHORT, i, 1, a)
-	real_crc = compute_crc(data)
-	# add CRC to data
-	data += struct.pack(CRC_FMT, 0)
+	data += struct.pack(CRC_FMT, compute_crc(data))
 	size = ser.write(data)
 	print('wrote:', [hex(x) for x in list(data)], size)
-	print('CRC on data sent =', hex(real_crc))
+	print('CRC on data sent =', hex(compute_crc(data)))
+
+	print('waiting for response')
+	r = ser.read(size)
+	print('read:', [hex(x) for x in list(r)])
 
 
 def test_comm_error(ser, i, a):
@@ -62,7 +64,7 @@ def reset_actuator(ser, i, a):
 
 def cli(port):
 	i = 0
-	with serial.Serial(port, BAUD_RFD, timeout=1) as ser:
+	with serial.Serial(port, BAUD_RFD, timeout=None) as ser:
 		while True:
 			# get input
 			s = input('> ')
