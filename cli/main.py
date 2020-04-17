@@ -32,6 +32,10 @@ def compute_crc(data):
 	return CRC.bit_by_bit(data)
 
 
+def get_ack(ser):
+	return ser.read(7)
+
+
 def set_actuator(ser, i, a):
 	data = struct.pack(CMD_PKT_FMT, START_SHORT, i, 1, a)
 	data += struct.pack(CRC_FMT, compute_crc(data))
@@ -40,8 +44,9 @@ def set_actuator(ser, i, a):
 	print('CRC on data sent =', hex(compute_crc(data)))
 
 	print('waiting for response')
-	r = ser.read(size)
-	print('read:', [hex(x) for x in list(r)])
+	ack = get_ack(ser)
+	print([hex(i) for i in list(ack)])
+	print('CRC on ACK:', hex(compute_crc(ack)))
 
 
 def test_comm_error(ser, i, a):
@@ -53,6 +58,11 @@ def test_comm_error(ser, i, a):
 	print('wrote:', [hex(x) for x in list(err_data)], size)
 	print('CRC on data sent =', hex(compute_crc(err_data)))
 
+	print('waiting for response')
+	ack = get_ack(ser)
+	print([hex(i) for i in list(ack)])
+	print('CRC on ACK:', hex(compute_crc(ack)))
+
 
 def reset_actuator(ser, i, a):
 	data = struct.pack(CMD_PKT_FMT, START_SHORT, i, 2, a)
@@ -60,6 +70,11 @@ def reset_actuator(ser, i, a):
 	size = ser.write(data)
 	print('wrote:', [hex(x) for x in list(data)], size)
 	print('CRC on data sent =', hex(compute_crc(data)))
+
+	print('waiting for response')
+	ack = get_ack(ser)
+	print([hex(i) for i in list(ack)])
+	print('CRC on ACK:', hex(compute_crc(ack)))
 
 
 def cli(port):
@@ -95,8 +110,21 @@ def cli(port):
 if __name__ == '__main__':
 	port = sys.argv[1]
 
-	print(hex(compute_crc("123456789".encode())))
+	if len(sys.argv) == 2:
+		cli(port)
 
-	cli(port)
+	else:
+		with serial.Serial(port, BAUD_RFD, timeout=None) as ser:
+			f = sys.argv[2]
+			a = int(sys.argv[3])
+			if f == 'set':
+				set_actuator(ser, 0, a)
+			elif f == 'reset':
+				reset_actuator(ser, 0, a)
+			elif f == 'error':
+				test_comm_error(ser, 0, a)
+			else:
+				print('Invalid command')
+				print_help()
 
 	sys.exit(0)
