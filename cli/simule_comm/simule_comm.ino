@@ -33,17 +33,14 @@ void loop() {
 
 	/* calcul le crc */
 	crc = crc_update(crc, cmdbuf, CMD_PACKET_SIZE);
-	Serial.print("crc update: ");
-	Serial.print(crc);
-	Serial.print("\n");
 
 	crc = crc_finalize(crc);
-	Serial.print("crc finalize: ");
-	Serial.print(crc);
-	Serial.print("\n");
 
-	// si CRC != 0* renvoyer le ack.ack =NACK (NACK = 0xFF) TODO
-	// if (crc != 0)
+	if (crc != 0) {
+		ack.ack = NACK;
+	} else {
+		ack.ack = ACK;
+	}
 
 	// SI CRC == 0 TODO
 	unpack_command_packet(&cmd, (unsigned char *) cmdbuf);
@@ -54,17 +51,20 @@ void loop() {
 	ack.start_short = COMMAND_START;
 	ack.id = cmd.id;
 	ack.crc = 0;
-	//si x> 0.1
-	//ack.ack = ACK
-	if (random(0, 1) >= 0.1){
-		ack.ack = ACK;
-	} else {
+
+	/* simulate command failing with probability 0.1 */
+	if (random(0, 1) < 0.1) {
 		ack.ack = NACK;
 	}
 	
 	// il faut Serialliser le Ack packet dans le ack bufur
 	pack_ack_packet(&ack, (unsigned char *) ackbuf);
-	// calculer le crc sur bufur
+
+	/* compute crc on buffer and append to ack packet */
+	crc = crc_init();
+	crc = crc_update(crc, ackbuf, ACK_PACKET_SIZE);
+	ack.crc = crc_finalize(crc);
+	pack_ack_packet(&ack, (unsigned char *) ackbuf);
 
 	/* send back acknowledge packet */ 
 	Serial.write(ackbuf, ACK_PACKET_SIZE);
