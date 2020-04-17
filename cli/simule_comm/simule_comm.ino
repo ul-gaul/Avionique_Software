@@ -1,56 +1,72 @@
-#include <rocket_packet.h>
+#include "rocket_packet.h"
+#include "crc.h"
+
 
 CommandPacket cmd;
 AckPacket ack;
-char cmdbuffe[CMD_PACKET_SIZE];
-char ackbuffe[ACK_PACKET_SIZE];
-
+char cmdbuf[CMD_PACKET_SIZE];
+char ackbuf[ACK_PACKET_SIZE];
+crc_t crc;
 
 
 void setup() {
-  // put your setup code here, to run once:
-Serial.begin(115200);
+	/* init serial bus */
+	Serial.begin(115200);
 }
+
 
 void loop() {
-  /*recoit le Cmdpacket*/
-  if (Serial.available() >= CMD_PACKET_SIZE) {
-    Serial.readBytes(cmdbuffe, CMD_PACKET_SIZE);
-    
-  } 
-  else 
-  {
-    return;
-  }
-  //calcul le crc TODO 
-  //si CRC != 0* renvoyer le ack.ack =NACK (NACK = 0xFF) TODO/*
- // SI CRC == 0 TODO  
- unpack_command_packet(&cmd, cmdbuffe);
- //attend 0.1s 
- delay(100);
+	/* init the crc */
+	crc = crc_init();
 
-  //x = random();
-  // x entre 0 et 1
-   
-  ack.start_short = COMMAND_START;
-  ack.id = cmd.id;
-  ack.crc = 0;
-  //si x> 0.1
-  //ack.ack = ACK
-  if (random(0, 1) >= 0.1){
-    ack.ack = ACK;
-  }
-  else
-  {
-    ack.ack = NACK;
-  }
-  
-   // il faut Serialliser le Ack packet dans le ack buffeur
-  pack_ack_packet(&ack, ackbuffe);
-   // calculer le crc sur buffeur
+	/* recoit le Cmdpacket */
+	if (Serial.available() >= CMD_PACKET_SIZE) {
+		Serial.readBytes(cmdbuf, CMD_PACKET_SIZE);
+	} else {
+		/* skip to next call of loop() */
+		return;
+	}
 
-   // envoyer le buffeur 
-  Serial.write(ackbuffe, ACK_PACKET_SIZE);
+	Serial.print("received string:");
+	Serial.write(cmdbuf, CMD_PACKET_SIZE);
+	Serial.print("\n");
 
+	/* calcul le crc */
+	crc = crc_update(crc, cmdbuf, CMD_PACKET_SIZE);
+	Serial.print("crc update: ");
+	Serial.print(crc);
+	Serial.print("\n");
 
+	crc = crc_finalize(crc);
+	Serial.print("crc finalize: ");
+	Serial.print(crc);
+	Serial.print("\n");
+
+	// si CRC != 0* renvoyer le ack.ack =NACK (NACK = 0xFF) TODO
+	// if (crc != 0)
+
+	// SI CRC == 0 TODO
+	unpack_command_packet(&cmd, (unsigned char *) cmdbuf);
+
+	/* wait 0.1 sec to simulate sending the command to the motor control unit */
+	delay(100);
+
+	ack.start_short = COMMAND_START;
+	ack.id = cmd.id;
+	ack.crc = 0;
+	//si x> 0.1
+	//ack.ack = ACK
+	if (random(0, 1) >= 0.1){
+		ack.ack = ACK;
+	} else {
+		ack.ack = NACK;
+	}
+	
+	// il faut Serialliser le Ack packet dans le ack bufur
+	pack_ack_packet(&ack, (unsigned char *) ackbuf);
+	// calculer le crc sur bufur
+
+	/* send back acknowledge packet */ 
+	Serial.write(ackbuf, ACK_PACKET_SIZE);
 }
+
